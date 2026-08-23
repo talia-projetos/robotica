@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deliberação — Torneio de Robótica</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .comp-sel {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .equipe-chip {
+      padding: .35rem .75rem;
+      border-radius: 100px;
+      border: 2px solid var(--cinza);
+      background: var(--branco);
+      cursor: pointer;
+      font-size: .82rem;
+      font-weight: 600;
+      transition: var(--trans);
+    }
+    .equipe-chip.sel {
+      border-color: var(--azul);
+      background: var(--azul-lt);
+      color: var(--azul);
+    }
+    .comp-bar-label {
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--texto-sm);
+      margin-bottom: .25rem;
+    }
+    .voto-approved { background: var(--verde); }
+    .voto-denied   { background: var(--coral); }
+    .section-title {
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--marinho);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: .75rem;
+    }
+  </style>
+  <script>
+    window.API_URL = 'https://script.google.com/macros/s/SEU_SCRIPT_ID/exec';
+  </script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__logo">🤖 Torneio</div>
+  <nav class="topbar__nav">
+    <a href="index.html">Hub</a>
+    <a href="ranking.html">Ranking</a>
+    <a href="juiz.html">Avaliação</a>
+    <a href="deliberacao.html" class="ativo">Deliberação</a>
+  </nav>
+  <div class="topbar__badge">
+    <span id="badge-nome" class="text-sm"></span>
+    <button class="btn btn-outline btn-sm" id="btn-sessao">Entrar</button>
+  </div>
+</header>
+
+<!-- Login inline -->
+<div id="login-overlay" class="container hidden">
+  <div class="form-card mt-2" style="max-width:440px;margin:1.5rem auto">
+    <h2>🗳️ Sala de Deliberação</h2>
+    <p class="text-sm mt-1">Entre com seu nome e PIN para participar.</p>
+    <div class="field mt-2">
+      <label>Nome</label>
+      <input id="l-nome" type="text" placeholder="Seu nome" autocomplete="name">
+    </div>
+    <div class="field">
+      <label>PIN</label>
+      <input id="l-pin" type="password" placeholder="PIN" autocomplete="current-password">
+    </div>
+    <button class="btn btn-primary mt-1 w-full" id="btn-login-ok">Entrar na deliberação</button>
+  </div>
+</div>
+
+<div class="container" id="main-content" style="display:none">
+
+  <div class="delib-layout mt-2">
+
+    <!-- LADO ESQUERDO: comparação + votação ─────────────────── -->
+    <div>
+
+      <!-- Comparação -->
+      <div class="card mb-1" style="margin-bottom:1rem">
+        <div class="section-title">📊 Comparação de Equipes</div>
+        <div class="comp-sel" id="chips-equipes">
+          <span class="text-sm" style="padding:.35rem 0">Carregando equipes…</span>
+        </div>
+
+        <div id="comp-vazio" class="text-sm" style="color:var(--texto-sm);text-align:center;padding:1rem">
+          Selecione pelo menos 2 equipes acima para comparar.
+        </div>
+
+        <div id="comp-resultado" class="hidden">
+          <div id="comp-arena"     class="mb-1" style="margin-bottom:.75rem"></div>
+          <div id="comp-projeto"   class="mb-1" style="margin-bottom:.75rem"></div>
+          <div id="comp-design"    class="mb-1" style="margin-bottom:.75rem"></div>
+          <div id="comp-core"      class="mb-1" style="margin-bottom:.75rem"></div>
+          <div id="comp-tampinhas" class="mb-1" style="margin-bottom:.75rem"></div>
+          <div id="comp-total"></div>
+        </div>
+      </div>
+
+      <!-- Votação -->
+      <div class="card">
+        <div class="section-title">🗳️ Votação</div>
+
+        <div class="field">
+          <label>Categoria para votar</label>
+          <select id="v-categoria">
+            <option value="Geral">Geral</option>
+            <option value="Arena">Arena</option>
+            <option value="Projeto de Inovação">Projeto de Inovação</option>
+            <option value="Design do Robô">Design do Robô</option>
+            <option value="Core Values">Core Values</option>
+            <option value="Tampinhas que Transformam">Tampinhas que Transformam</option>
+          </select>
+        </div>
+
+        <div id="votos-lista" style="margin-top:.75rem">
+          <div class="text-sm" style="color:var(--texto-sm)">Carregando…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LADO DIREITO: chat ──────────────────────────────────── -->
+    <div>
+      <div class="section-title" style="margin-bottom:.5rem">💬 Chat dos Juízes</div>
+      <div class="chat-box">
+        <div class="chat-box__msgs" id="chat-msgs">
+          <div class="text-sm" style="color:var(--texto-sm);text-align:center;padding:1rem">
+            Carregando mensagens…
+          </div>
+        </div>
+        <div class="chat-input">
+          <input id="chat-texto" type="text" placeholder="Mensagem para os juízes…"
+            maxlength="400" autocomplete="off">
+          <button class="btn btn-primary btn-sm" id="btn-chat-enviar">→</button>
+        </div>
+      </div>
+
+      <!-- Categoria do chat -->
+      <div class="field mt-1" style="margin-top:.75rem">
+        <label class="text-sm">Associar mensagem a:</label>
+        <select id="chat-categoria" style="font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--cinza);border-radius:7px;background:var(--branco);font-family:inherit">
+          <option value="">— geral —</option>
+          <option value="Arena">Arena</option>
+          <option value="Projeto de Inovação">Projeto de Inovação</option>
+          <option value="Design do Robô">Design do Robô</option>
+          <option value="Core Values">Core Values</option>
+          <option value="Tampinhas que Transformam">Tampinhas que Transformam</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="js/api.js"></script>
+<script>
+  let todasEquipes = [];
+  let equipeSelecionadas = new Set();
+  let dadosRanking = [];
+  let ultimoChat = 0;
+  let ultimoVotos = 0;
+
+  // ── Auth ─────────────────────────────────────────────────────────
+  function atualizarBadge() {
+    const badge = document.getElementById('badge-nome');
+    const btn   = document.getElementById('btn-sessao');
+    if (Sessao.logado()) {
+      badge.textContent = '👤 ' + Sessao.juiz;
+      btn.textContent   = 'Sair';
+      document.getElementById('login-overlay').classList.add('hidden');
+      document.getElementById('main-content').style.display = '';
+      iniciarHub();
+    } else {
+      badge.textContent = '';
+      btn.textContent   = 'Entrar';
+      document.getElementById('login-overlay').classList.remove('hidden');
+      document.getElementById('main-content').style.display = 'none';
+    }
+  }
+
+  document.getElementById('btn-sessao').addEventListener('click', () => {
+    if (Sessao.logado()) { Sessao.clear(); atualizarBadge(); }
+    else document.getElementById('login-overlay').classList.remove('hidden');
+  });
+
+  document.getElementById('btn-login-ok').addEventListener('click', () => {
+    const nome = document.getElementById('l-nome').value.trim();
+    const pin  = document.getElementById('l-pin').value.trim();
+    if (!nome || !pin) { toast('Preencha nome e PIN.', 'err'); return; }
+    Sessao.set(nome, pin);
+    atualizarBadge();
+    toast('Bem-vindo(a), ' + nome + '!', 'ok');
+  });
+
+  // ── Hub ──────────────────────────────────────────────────────────
+  let pollingId;
+  function iniciarHub() {
+    if (pollingId) return;
+    carregarTudo();
+    pollingId = setInterval(carregarTudo, 8000);
+  }
+
+  async function carregarTudo() {
+    try {
+      const [rk, delib] = await Promise.all([API.ranking(), API.deliberacao()]);
+
+      if (rk.ok) {
+        dadosRanking = rk.equipes || [];
+        todasEquipes = dadosRanking;
+        renderChips();
+        renderComparacao();
+        renderVotos(delib.votos || []);
+      }
+
+      if (delib.ok) {
+        renderChat(delib.comentarios || []);
+      }
+    } catch (e) {
+      console.warn(e);
+    }
+  }
+
+  // ── Chips de seleção ─────────────────────────────────────────────
+  function renderChips() {
+    const container = document.getElementById('chips-equipes');
+    if (!todasEquipes.length) {
+      container.innerHTML = '<span class="text-sm" style="color:var(--texto-sm)">Nenhuma equipe cadastrada.</span>';
+      return;
+    }
+    container.innerHTML = todasEquipes.map(e => {
+      const sel = equipeSelecionadas.has(e.id) ? 'sel' : '';
+      return `<span class="equipe-chip ${sel}" data-id="${e.id}" onclick="toggleEquipe('${e.id}')">${e.id}</span>`;
+    }).join('');
+  }
+
+  function toggleEquipe(id) {
+    if (equipeSelecionadas.has(id)) equipeSelecionadas.delete(id);
+    else equipeSelecionadas.add(id);
+    renderChips();
+    renderComparacao();
+  }
+
+  // ── Comparação ────────────────────────────────────────────────────
+  function renderComparacao() {
+    const sel = todasEquipes.filter(e => equipeSelecionadas.has(e.id));
+    const vazio = document.getElementById('comp-vazio');
+    const resultado = document.getElementById('comp-resultado');
+
+    if (sel.length < 2) {
+      vazio.classList.remove('hidden');
+      resultado.classList.add('hidden');
+      return;
+    }
+
+    vazio.classList.add('hidden');
+    resultado.classList.remove('hidden');
+
+    const CAMPOS = [
+      { id: 'comp-arena',     campo: 'arena20',    max: 20, label: '🤖 Arena' },
+      { id: 'comp-projeto',   campo: 'projeto20',  max: 20, label: '💡 Projeto' },
+      { id: 'comp-design',    campo: 'design20',   max: 20, label: '🔧 Design' },
+      { id: 'comp-core',      campo: 'core20',     max: 20, label: '⭐ Core Values' },
+      { id: 'comp-tampinhas', campo: 'tampinhas20',max: 20, label: '♻️ Tampinhas' },
+      { id: 'comp-total',     campo: 'total',      max: 100,label: '🏆 Total' }
+    ];
+
+    CAMPOS.forEach(({ id, campo, max, label }) => {
+      const el = document.getElementById(id);
+      el.innerHTML = `<div class="comp-bar-label">${label}</div>` +
+        sel.map(e => {
+          const val = Number(e[campo] || 0);
+          const pct = max > 0 ? (val / max * 100).toFixed(1) : 0;
+          return `
+            <div class="bar-wrap" style="margin-bottom:.3rem">
+              <span style="font-size:.78rem;font-weight:600;min-width:56px;color:var(--texto)">${e.id}</span>
+              <div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div>
+              <span class="bar-val">${val.toFixed(2)}</span>
+            </div>`;
+        }).join('');
+    });
+  }
+
+  // ── Votação ───────────────────────────────────────────────────────
+  function renderVotos(votos) {
+    const categoria = document.getElementById('v-categoria').value;
+    const container = document.getElementById('votos-lista');
+
+    const votosPorEquipe = {};
+    votos.filter(v => !categoria || v.Categoria === categoria || v.Categoria === 'Geral')
+      .forEach(v => {
+        const id = v.ID_Equipe;
+        if (!votosPorEquipe[id]) votosPorEquipe[id] = { sim: 0, nao: 0 };
+        if (v.Aprovado === 'Sim') votosPorEquipe[id].sim++;
+        else votosPorEquipe[id].nao++;
+      });
+
+    const equipes = todasEquipes.filter(e => votosPorEquipe[e.id]);
+
+    if (!equipes.length) {
+      container.innerHTML = '<div class="text-sm" style="color:var(--texto-sm)">Nenhum voto ainda para esta categoria.</div>';
+      return;
+    }
+
+    container.innerHTML = equipes.map(e => {
+      const v = votosPorEquipe[e.id] || { sim: 0, nao: 0 };
+      return `
+        <div class="voto-row">
+          <span class="voto-equipe">${e.id} <span class="text-sm">${e.turma}</span></span>
+          <span class="voto-contagem">
+            <span class="voto-sim">✔ ${v.sim}</span>
+            <span class="voto-nao">✘ ${v.nao}</span>
+          </span>
+          <div class="flex gap-1">
+            <button class="btn btn-success btn-sm" onclick="emitirVoto('${e.id}', true)">Aprovar</button>
+            <button class="btn btn-danger btn-sm"  onclick="emitirVoto('${e.id}', false)">Rejeitar</button>
+          </div>
+        </div>`;
+    }).join('');
+
+    // Equipes sem votos ainda
+    const semVoto = todasEquipes.filter(e => !votosPorEquipe[e.id]);
+    if (semVoto.length) {
+      container.innerHTML += `<div class="text-sm mt-1" style="margin-top:.75rem;color:var(--texto-sm)">Sem votos: ` +
+        semVoto.map(e => e.id).join(', ') + `</div>` +
+        semVoto.map(e => `
+          <div class="voto-row">
+            <span class="voto-equipe">${e.id} <span class="text-sm">${e.turma}</span></span>
+            <span class="voto-contagem"><span class="text-sm" style="color:var(--texto-sm)">sem votos</span></span>
+            <div class="flex gap-1">
+              <button class="btn btn-success btn-sm" onclick="emitirVoto('${e.id}', true)">Aprovar</button>
+              <button class="btn btn-danger btn-sm"  onclick="emitirVoto('${e.id}', false)">Rejeitar</button>
+            </div>
+          </div>`).join('');
+    }
+  }
+
+  document.getElementById('v-categoria').addEventListener('change', () => {
+    API.deliberacao().then(r => { if (r.ok) renderVotos(r.votos || []); });
+  });
+
+  async function emitirVoto(idEquipe, favor) {
+    const categoria = document.getElementById('v-categoria').value || 'Geral';
+    try {
+      const r = await API.votar(Sessao.juiz, Sessao.pin, idEquipe, categoria, favor);
+      if (r.ok) toast('Voto registrado.', 'ok');
+      else throw new Error(r.erro);
+      carregarTudo();
+    } catch (e) {
+      toast('Erro: ' + e.message, 'err');
+    }
+  }
+
+  // ── Chat ──────────────────────────────────────────────────────────
+  let chatsRendered = 0;
+
+  function renderChat(comentarios) {
+    if (comentarios.length === chatsRendered) return;
+    chatsRendered = comentarios.length;
+
+    const container = document.getElementById('chat-msgs');
+    if (!comentarios.length) {
+      container.innerHTML = '<div class="text-sm" style="color:var(--texto-sm);text-align:center;padding:1rem">Nenhuma mensagem ainda.</div>';
+      return;
+    }
+
+    container.innerHTML = comentarios.map(c => `
+      <div class="chat-msg">
+        <div>
+          <span class="chat-msg__autor">${c.Juiz || 'Juiz'}</span>
+          ${c.Categoria ? `<span class="chat-msg__cat">[${c.Categoria}]</span>` : ''}
+        </div>
+        <div class="chat-msg__texto">${escapeHtml(String(c.Texto || ''))}</div>
+      </div>`).join('');
+
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  async function enviarChat() {
+    const input = document.getElementById('chat-texto');
+    const texto = input.value.trim();
+    if (!texto) return;
+    const categoria = document.getElementById('chat-categoria').value;
+
+    try {
+      const r = await API.comentar(Sessao.juiz, Sessao.pin, texto, categoria);
+      if (r.ok) {
+        input.value = '';
+        carregarTudo();
+      } else {
+        throw new Error(r.erro);
+      }
+    } catch (e) {
+      toast('Erro: ' + e.message, 'err');
+    }
+  }
+
+  document.getElementById('btn-chat-enviar').addEventListener('click', enviarChat);
+  document.getElementById('chat-texto').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviarChat(); }
+  });
+
+  // ── Init ──────────────────────────────────────────────────────────
+  atualizarBadge();
+</script>
+</body>
+</html>

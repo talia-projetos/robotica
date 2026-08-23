@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ranking — Torneio de Robótica</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    window.API_URL = 'https://script.google.com/macros/s/SEU_SCRIPT_ID/exec';
+  </script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__logo">🤖 Torneio</div>
+  <nav class="topbar__nav">
+    <a href="index.html">Hub</a>
+    <a href="ranking.html" class="ativo">Ranking</a>
+    <a href="juiz.html">Avaliação</a>
+    <a href="deliberacao.html">Deliberação</a>
+  </nav>
+  <div class="topbar__badge">
+    <span id="ultimo-update" class="text-sm"></span>
+    <span class="spinner" id="spinner"></span>
+  </div>
+</header>
+
+<div class="container">
+  <div class="flex items-center justify-between mt-2 mb-1" style="margin-bottom:1rem">
+    <h1 class="page-title" style="margin:0">Ranking</h1>
+    <div class="flex gap-1">
+      <button class="btn btn-outline btn-sm" id="btn-geral" onclick="mostrarView('geral')">Geral</button>
+      <button class="btn btn-outline btn-sm" id="btn-cat" onclick="mostrarView('categorias')">Por Categoria</button>
+    </div>
+  </div>
+
+  <!-- ── Ranking Geral ─────────────────────────────────────── -->
+  <div id="view-geral">
+    <div class="table-wrap">
+      <table id="tabela-geral">
+        <thead>
+          <tr>
+            <th style="width:56px">Pos.</th>
+            <th>Equipe</th>
+            <th>Turno</th>
+            <th>Arena</th>
+            <th>Projeto</th>
+            <th>Design</th>
+            <th>Core</th>
+            <th>Tampinhas</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tbody-geral">
+          <tr><td colspan="10" style="text-align:center;padding:2rem">
+            <span class="spinner"></span>
+          </td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Ranking por Categoria ─────────────────────────────── -->
+  <div id="view-categorias" class="hidden">
+    <div class="grid-2">
+      <div class="table-wrap" id="block-arena">
+        <table>
+          <thead><tr>
+            <th colspan="4" style="background:var(--azul)">🤖 Arena</th>
+          </tr><tr>
+            <th>Pos.</th><th>Equipe</th><th>Pontos</th><th>Rounds</th>
+          </tr></thead>
+          <tbody id="tbody-arena"></tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th colspan="4" style="background:var(--roxo)">💡 Projeto</th>
+          </tr><tr>
+            <th>Pos.</th><th>Equipe</th><th>Nota</th><th>Juízes</th>
+          </tr></thead>
+          <tbody id="tbody-projeto"></tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th colspan="4" style="background:var(--laranja)">🔧 Design</th>
+          </tr><tr>
+            <th>Pos.</th><th>Equipe</th><th>Nota</th><th>Juízes</th>
+          </tr></thead>
+          <tbody id="tbody-design"></tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th colspan="4" style="background:var(--verde)">⭐ Core Values</th>
+          </tr><tr>
+            <th>Pos.</th><th>Equipe</th><th>Nota</th><th>Juízes</th>
+          </tr></thead>
+          <tbody id="tbody-core"></tbody>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th colspan="4" style="background:var(--coral)">♻️ Tampinhas</th>
+          </tr><tr>
+            <th>Pos.</th><th>Equipe</th><th>Nota</th><th>Pesagens</th>
+          </tr></thead>
+          <tbody id="tbody-tampinhas"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="js/api.js"></script>
+<script>
+  let dadosEquipes = [];
+
+  function mostrarView(v) {
+    document.getElementById('view-geral').classList.toggle('hidden', v !== 'geral');
+    document.getElementById('view-categorias').classList.toggle('hidden', v !== 'categorias');
+    document.getElementById('btn-geral').className = 'btn btn-sm ' + (v === 'geral' ? 'btn-primary' : 'btn-outline');
+    document.getElementById('btn-cat').className   = 'btn btn-sm ' + (v !== 'geral' ? 'btn-primary' : 'btn-outline');
+    history.replaceState(null, '', v === 'categorias' ? '#categorias' : '#');
+  }
+
+  function posBadge(pos) {
+    const cls = pos === 1 ? 'pos-1' : pos === 2 ? 'pos-2' : pos === 3 ? 'pos-3' : 'pos-n';
+    return `<span class="pos-badge ${cls}">${pos || '—'}</span>`;
+  }
+
+  function statusPill(s) {
+    const cls = s === 'Completo' ? 'completo' : s === 'Pendente' ? 'pendente' : 'sem';
+    return `<span class="status-pill status-${cls}">${s}</span>`;
+  }
+
+  function fmt(v, dec = 2) {
+    return Number(v || 0).toFixed(dec);
+  }
+
+  function renderGeral(equipes) {
+    const tbody = document.getElementById('tbody-geral');
+    if (!equipes.length) {
+      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:1.5rem;color:var(--texto-sm)">Nenhuma equipe ainda.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = equipes.map(e => `
+      <tr>
+        <td>${posBadge(e.posGeral)}</td>
+        <td><strong>${e.id}</strong><br><span class="text-sm">${e.turma}</span></td>
+        <td><span class="text-sm">${e.turno || '—'}</span></td>
+        <td>${fmt(e.arena20)}</td>
+        <td>${fmt(e.projeto20)}</td>
+        <td>${fmt(e.design20)}</td>
+        <td>${fmt(e.core20)}</td>
+        <td>${fmt(e.tampinhas20)}</td>
+        <td><strong>${fmt(e.total)}</strong></td>
+        <td>${statusPill(e.status)}</td>
+      </tr>`).join('');
+  }
+
+  function renderCategoria(tbodyId, equipes, campo, extra) {
+    const tbody = document.getElementById(tbodyId);
+    if (!tbody) return;
+    const com = equipes.filter(e => Number(e[campo] || 0) > 0 || e['pos' + extra.posField]);
+    if (!com.length) {
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:1rem;color:var(--texto-sm)">Sem dados.</td></tr>';
+      return;
+    }
+    const sorted = com.slice().sort((a, b) => {
+      const pa = Number(a['pos' + extra.posField]) || 9999;
+      const pb = Number(b['pos' + extra.posField]) || 9999;
+      return pa - pb;
+    });
+    tbody.innerHTML = sorted.map(e => `
+      <tr>
+        <td>${posBadge(e['pos' + extra.posField])}</td>
+        <td><strong>${e.id}</strong><br><span class="text-sm">${e.turma}</span></td>
+        <td>${fmt(e[campo])}</td>
+        <td class="text-sm">${e[extra.qtdField] || '—'}</td>
+      </tr>`).join('');
+  }
+
+  async function carregar() {
+    document.getElementById('spinner').style.display = '';
+    try {
+      const r = await API.ranking();
+      if (!r.ok) throw new Error(r.erro);
+      dadosEquipes = r.equipes || [];
+
+      renderGeral(dadosEquipes);
+      renderCategoria('tbody-arena',    dadosEquipes, 'arena20',     { posField: 'Arena',    qtdField: 'arenaQtd' });
+      renderCategoria('tbody-projeto',  dadosEquipes, 'projeto20',   { posField: 'Projeto',  qtdField: 'projetoJuizes' });
+      renderCategoria('tbody-design',   dadosEquipes, 'design20',    { posField: 'Design',   qtdField: 'designJuizes' });
+      renderCategoria('tbody-core',     dadosEquipes, 'core20',      { posField: 'Core',     qtdField: 'coreJuizes' });
+      renderCategoria('tbody-tampinhas',dadosEquipes, 'tampinhas20', { posField: 'Tampinhas',qtdField: 'tampinhasPesagens' });
+
+      const agora = new Date();
+      document.getElementById('ultimo-update').textContent =
+        'Atualizado ' + agora.toLocaleTimeString('pt-BR');
+    } catch (e) {
+      toast('Erro ao carregar ranking: ' + e.message, 'err');
+    } finally {
+      document.getElementById('spinner').style.display = 'none';
+    }
+  }
+
+  if (location.hash === '#categorias') mostrarView('categorias');
+  else mostrarView('geral');
+
+  iniciarPolling(carregar, 10000);
+</script>
+</body>
+</html>

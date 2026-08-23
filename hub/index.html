@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hub — Torneio de Robótica</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    // ── CONFIGURE AQUI a URL do seu Apps Script Web App ─────────
+    window.API_URL = 'https://script.google.com/macros/s/SEU_SCRIPT_ID/exec';
+    // ─────────────────────────────────────────────────────────────
+  </script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__logo" id="titulo">🤖 Torneio de Robótica</div>
+  <nav class="topbar__nav">
+    <a href="index.html" class="ativo">Hub</a>
+    <a href="ranking.html">Ranking</a>
+    <a href="juiz.html">Avaliação</a>
+    <a href="deliberacao.html">Deliberação</a>
+  </nav>
+  <div class="topbar__badge" id="badge-sessao">
+    <span id="badge-nome" class="text-sm"></span>
+    <button class="btn btn-outline btn-sm" id="btn-sessao">Entrar</button>
+  </div>
+</header>
+
+<div class="container mt-2">
+
+  <!-- Login modal inline -->
+  <div id="login-box" class="form-card hidden">
+    <h2>Identificação do Juiz</h2>
+    <p class="text-sm mb-1">Digite seu nome e PIN cadastrado para submeter avaliações.</p>
+    <div class="field mt-2">
+      <label>Seu nome</label>
+      <input id="l-nome" type="text" placeholder="Ex: Maria Silva" autocomplete="name">
+    </div>
+    <div class="field">
+      <label>PIN</label>
+      <input id="l-pin" type="password" placeholder="PIN fornecido pela organização" autocomplete="current-password">
+    </div>
+    <div class="flex gap-1 mt-2">
+      <button class="btn btn-primary" id="btn-login-ok">Confirmar</button>
+      <button class="btn btn-outline" id="btn-login-cancel">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Contadores rápidos -->
+  <div class="grid-3 mb-1" id="stats-row" style="margin-bottom:1.25rem">
+    <div class="card">
+      <div class="card__title">Equipes cadastradas</div>
+      <div class="card__val" id="s-equipes">—</div>
+    </div>
+    <div class="card">
+      <div class="card__title">Avaliações completas</div>
+      <div class="card__val" id="s-completas">—</div>
+    </div>
+    <div class="card">
+      <div class="card__title">Líder atual</div>
+      <div class="card__val" id="s-lider" style="font-size:1.2rem">—</div>
+      <div class="card__sub" id="s-lider-pts"></div>
+    </div>
+  </div>
+
+  <!-- Cards de navegação -->
+  <div class="grid-2">
+    <a href="ranking.html" class="hub-card">
+      <div class="hub-card__icon">🏆</div>
+      <div class="hub-card__title">Ranking Geral</div>
+      <div class="hub-card__desc">Classificação ao vivo por categoria e pontuação total. Atualizado automaticamente.</div>
+    </a>
+    <a href="juiz.html" class="hub-card">
+      <div class="hub-card__icon">📝</div>
+      <div class="hub-card__title">Formulário de Avaliação</div>
+      <div class="hub-card__desc">Preenchimento das rubricas de Projeto, Design do Robô, Core Values e pontuação da Arena.</div>
+    </a>
+    <a href="deliberacao.html" class="hub-card">
+      <div class="hub-card__icon">🗳️</div>
+      <div class="hub-card__title">Sala de Deliberação</div>
+      <div class="hub-card__desc">Comparação de equipes lado a lado, chat entre juízes e painel de votação.</div>
+    </a>
+    <a href="ranking.html#categorias" class="hub-card">
+      <div class="hub-card__icon">📊</div>
+      <div class="hub-card__title">Ranking por Categoria</div>
+      <div class="hub-card__desc">Arena, Projeto de Inovação, Design do Robô, Core Values e Tampinhas que Transformam.</div>
+    </a>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script src="js/api.js"></script>
+<script>
+  // ── Login ───────────────────────────────────────────────────────
+  function atualizarBadge() {
+    const nome = Sessao.juiz;
+    const badge = document.getElementById('badge-nome');
+    const btn   = document.getElementById('btn-sessao');
+    if (nome) {
+      badge.textContent = '👤 ' + nome;
+      btn.textContent   = 'Sair';
+    } else {
+      badge.textContent = '';
+      btn.textContent   = 'Entrar';
+    }
+  }
+
+  document.getElementById('btn-sessao').addEventListener('click', () => {
+    if (Sessao.logado()) {
+      Sessao.clear();
+      atualizarBadge();
+      toast('Sessão encerrada.', 'ok');
+    } else {
+      document.getElementById('login-box').classList.remove('hidden');
+    }
+  });
+
+  document.getElementById('btn-login-cancel').addEventListener('click', () => {
+    document.getElementById('login-box').classList.add('hidden');
+  });
+
+  document.getElementById('btn-login-ok').addEventListener('click', () => {
+    const nome = document.getElementById('l-nome').value.trim();
+    const pin  = document.getElementById('l-pin').value.trim();
+    if (!nome || !pin) { toast('Preencha nome e PIN.', 'err'); return; }
+    Sessao.set(nome, pin);
+    document.getElementById('login-box').classList.add('hidden');
+    atualizarBadge();
+    toast('Olá, ' + nome + '!', 'ok');
+  });
+
+  // ── Stats ───────────────────────────────────────────────────────
+  async function carregarStats() {
+    try {
+      const [eq, rk, cfg] = await Promise.all([
+        API.equipes(), API.ranking(), API.config()
+      ]);
+
+      if (cfg.ok && cfg.titulo) {
+        document.title = cfg.titulo + ' — Hub';
+        document.getElementById('titulo').textContent = '🤖 ' + cfg.titulo;
+      }
+
+      if (eq.ok) document.getElementById('s-equipes').textContent = eq.equipes.length;
+
+      if (rk.ok) {
+        const completas = rk.equipes.filter(e => e.status === 'Completo').length;
+        document.getElementById('s-completas').textContent = completas;
+
+        const lider = rk.equipes[0];
+        if (lider) {
+          document.getElementById('s-lider').textContent = lider.id;
+          document.getElementById('s-lider-pts').textContent =
+            lider.turma + ' · ' + (lider.total || 0).toFixed(2) + ' pts';
+        }
+      }
+    } catch (e) {
+      console.warn('Stats:', e.message);
+    }
+  }
+
+  atualizarBadge();
+  carregarStats();
+</script>
+</body>
+</html>
