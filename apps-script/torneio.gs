@@ -441,7 +441,7 @@ function lerRubrica_(ss, nomeAba, categoria, cfg, eq, diag) {
 
   const iEq   = achaCab_(cab, ['id equipe','id_equipe','equipe avaliada','selecione a equipe','selecione equipe','equipe','turma'], -1);
   const iJuiz = achaCab_(cab, ['nome do juiz','nome do avaliador','juiz','avaliador','email','e mail'], -1);
-  const iVal  = achaCab_(cab, ['validado','valida','homologado','considerar'], -1);
+  const iVal  = achaCab_(cab, ['validado','homologado','considerar'], -1);
   const iTS   = achaCab_(cab, ['carimbo','timestamp','data hora','data'], 0);
 
   if (iEq < 0) {
