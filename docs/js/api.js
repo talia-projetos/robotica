@@ -32,6 +32,7 @@ const API = (function () {
     equipes:     () => get({ action: 'equipes' }),
     deliberacao: () => get({ action: 'deliberacao' }),
     config:      () => get({ action: 'config' }),
+    arena:       () => get({ action: 'arena' }),
     categorias:  (cat) => get({ action: 'categorias', categoria: cat || '' }),
 
     salvarRubrica: (juiz, pin, categoria, idEquipe, notas) =>

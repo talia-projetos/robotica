@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arena — Resultados por Round</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    window.API_URL = 'https://script.google.com/macros/s/AKfycbxIV_gmilS_mFiwxvm0Vrs8vPySEwHyzJQmHN37Z4WRUYCAqggChexH_Sn2fY1PfUTYeg/exec';
+  </script>
+  <style>
+    /* ── Modo telão (padrão) ──────────────────────────────────── */
+    :root {
+      --ar-bg:        #0A1628;
+      --ar-bg2:       #0D1F38;
+      --ar-surface:   #0F2444;
+      --ar-border:    #1E3A5F;
+      --ar-text:      #E8F0FE;
+      --ar-muted:     rgba(232,240,254,.45);
+      --ar-gold:      #F2C94C;
+      --ar-gold-bg:   rgba(242,201,76,.14);
+      --ar-head:      #12355B;
+    }
+
+    body {
+      background: var(--ar-bg);
+      color: var(--ar-text);
+    }
+
+    body.claro {
+      --ar-bg:      #F3F6FA;
+      --ar-bg2:     #FFFFFF;
+      --ar-surface: #FFFFFF;
+      --ar-border:  #D9E2EC;
+      --ar-text:    #243447;
+      --ar-muted:   #6B7A90;
+      --ar-gold:    #B7791F;
+      --ar-gold-bg: #FFF9E6;
+      --ar-head:    #12355B;
+    }
+
+    /* ── Topbar override ─────────────────────────────────────── */
+    .topbar { background: #060F1C; }
+    body.claro .topbar { background: var(--marinho); }
+
+    /* ── Header da página ────────────────────────────────────── */
+    .arena-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0 1rem;
+      flex-wrap: wrap;
+    }
+    .arena-titulo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--ar-text);
+      letter-spacing: -.5px;
+    }
+    .arena-controles {
+      margin-left: auto;
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+    }
+    .arena-controles .btn-outline {
+      border-color: var(--ar-border);
+      color: var(--ar-text);
+    }
+    .arena-controles .btn-outline:hover {
+      border-color: var(--azul);
+      color: var(--azul);
+    }
+    .arena-update {
+      font-size: .8rem;
+      color: var(--ar-muted);
+    }
+
+    /* ── Tabela ──────────────────────────────────────────────── */
+    .arena-wrap { overflow-x: auto; border-radius: var(--radius); }
+
+    .arena-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .arena-table thead th {
+      background: var(--ar-head);
+      color: #fff;
+      padding: .9rem 1.25rem;
+      font-size: 1rem;
+      text-align: center;
+      white-space: nowrap;
+      border-bottom: 2px solid var(--ar-border);
+    }
+    .arena-table thead th.th-equipe { text-align: left; }
+
+    .arena-table tbody tr {
+      border-bottom: 1px solid var(--ar-border);
+      transition: background .15s;
+    }
+    .arena-table tbody tr:nth-child(odd)  { background: var(--ar-bg);  }
+    .arena-table tbody tr:nth-child(even) { background: var(--ar-bg2); }
+    .arena-table tbody tr:hover           { background: var(--ar-surface); }
+    .arena-table tbody tr:last-child      { border-bottom: none; }
+
+    .arena-table td {
+      padding: .875rem 1.25rem;
+      text-align: center;
+      font-size: 1.15rem;
+      color: var(--ar-text);
+    }
+    .arena-table td.td-equipe { text-align: left; }
+    .arena-table td.td-equipe strong { font-size: 1.15rem; }
+    .arena-table td.td-equipe .text-sm { color: var(--ar-muted); font-size: .82rem; }
+
+    .arena-table td.td-melhor-round {
+      background: var(--ar-gold-bg);
+      color: var(--ar-gold);
+      font-weight: 700;
+    }
+
+    .arena-table td.td-melhor {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--ar-gold);
+    }
+
+    .arena-table td.td-vazio { color: var(--ar-muted); }
+
+    /* ── Modo grande (telão) — escala via body.grande ─────────── */
+    body.grande .arena-table thead th { font-size: 1.15rem; padding: 1.1rem 1.5rem; }
+    body.grande .arena-table td       { font-size: 1.35rem; padding: 1rem 1.5rem; }
+    body.grande .arena-table td.td-equipe strong { font-size: 1.4rem; }
+    body.grande .arena-table td.td-melhor        { font-size: 1.6rem; }
+
+    /* ── Sem dados ───────────────────────────────────────────── */
+    .arena-vazio {
+      text-align: center;
+      padding: 4rem 1rem;
+      color: var(--ar-muted);
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__logo">🤖 Torneio</div>
+  <nav class="topbar__nav">
+    <a href="index.html">Hub</a>
+    <a href="ranking.html">Ranking</a>
+    <a href="arena.html" class="ativo">Arena</a>
+    <a href="deliberacao.html">Deliberação</a>
+  </nav>
+  <div class="topbar__badge">
+    <span id="arena-update" class="arena-update"></span>
+    <span class="spinner" id="spinner" style="display:none"></span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="arena-header">
+    <span class="arena-titulo">🏟️ Arena — Resultados por Round</span>
+    <div class="arena-controles">
+      <button class="btn btn-outline btn-sm" id="btn-tamanho" onclick="alternarTamanho()">🔍 Grande</button>
+      <button class="btn btn-outline btn-sm" id="btn-tema"    onclick="alternarTema()">☀️ Claro</button>
+      <button class="btn btn-outline btn-sm"                  onclick="telaCheia()">⛶ Tela cheia</button>
+    </div>
+  </div>
+
+  <div class="arena-wrap">
+    <table class="arena-table">
+      <thead id="arena-head">
+        <tr><th colspan="10" style="text-align:center;padding:2.5rem">
+          <span class="spinner"></span>
+        </th></tr>
+      </thead>
+      <tbody id="arena-body"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+<script src="js/api.js"></script>
+<script>
+  function alternarTema() {
+    const claro = document.body.classList.toggle('claro');
+    document.getElementById('btn-tema').textContent = claro ? '🌙 Escuro' : '☀️ Claro';
+  }
+
+  function alternarTamanho() {
+    const grande = document.body.classList.toggle('grande');
+    document.getElementById('btn-tamanho').textContent = grande ? '🔍 Normal' : '🔍 Grande';
+  }
+
+  function telaCheia() {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+    else document.exitFullscreen();
+  }
+
+  function renderArena(data) {
+    const equipes     = data.equipes    || [];
+    const roundsOrdem = data.roundsOrdem || [];
+    const head = document.getElementById('arena-head');
+    const body = document.getElementById('arena-body');
+
+    if (!equipes.length) {
+      head.innerHTML = '';
+      body.innerHTML = '<tr><td colspan="10" class="arena-vazio">Nenhum resultado de Arena ainda.</td></tr>';
+      return;
+    }
+
+    head.innerHTML = `<tr>
+      <th style="width:52px">Pos.</th>
+      <th class="th-equipe">Equipe</th>
+      ${roundsOrdem.map(r => `<th>${r}</th>`).join('')}
+      <th>★ Melhor</th>
+    </tr>`;
+
+    body.innerHTML = equipes.map(function(e, i) {
+      const pos    = i + 1;
+      const posCls = pos === 1 ? 'pos-1' : pos === 2 ? 'pos-2' : pos === 3 ? 'pos-3' : 'pos-n';
+
+      const cells = roundsOrdem.map(function(r) {
+        const pts = e.rounds[r];
+        if (pts === undefined) return '<td class="td-vazio">—</td>';
+        const isBest = pts === e.melhor;
+        return `<td class="${isBest ? 'td-melhor-round' : ''}">${pts}</td>`;
+      }).join('');
+
+      return `<tr>
+        <td><span class="pos-badge ${posCls}">${pos}</span></td>
+        <td class="td-equipe">
+          <strong>${e.id}</strong><br>
+          <span class="text-sm">${e.nome}</span>
+        </td>
+        ${cells}
+        <td class="td-melhor">${e.melhor}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  async function carregar() {
+    document.getElementById('spinner').style.display = '';
+    try {
+      const r = await API.arena();
+      if (!r.ok) throw new Error(r.erro || 'Erro');
+      renderArena(r);
+      document.getElementById('arena-update').textContent =
+        'Atualizado ' + new Date().toLocaleTimeString('pt-BR');
+    } catch (e) {
+      toast('Erro ao carregar: ' + e.message, 'err');
+    } finally {
+      document.getElementById('spinner').style.display = 'none';
+    }
+  }
+
+  iniciarPolling(carregar, 10000);
+</script>
+</body>
+</html>

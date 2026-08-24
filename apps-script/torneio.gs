@@ -848,6 +848,7 @@ function doGet(e) {
       case 'equipes':     r = apiEquipes_();        break;
       case 'deliberacao': r = apiDeliberacao_();    break;
       case 'config':      r = apiConfig_();         break;
+      case 'arena':       r = apiArenaDetalhe_();   break;
       default:            r = { ok: false, erro: 'Ação desconhecida: ' + (p.action || '(vazia)') };
     }
     return jsonOut_(r, cb);
@@ -913,6 +914,73 @@ function autenticarJuiz_(nome, pin) {
 // ================================================================
 // API — LEITURA
 // ================================================================
+
+function apiArenaDetalhe_() {
+  const ss   = SpreadsheetApp.getActiveSpreadsheet();
+  const diag = [];
+  const cfg  = lerConfig_(ss, diag);
+  const eq   = lerEquipes_(ss, cfg, diag);
+  const aba  = ss.getSheetByName(cfg.abaArena);
+  if (!aba || aba.getLastRow() < 2) return { ok: true, equipes: [], roundsOrdem: [] };
+
+  const dados  = aba.getDataRange().getValues();
+  const cab    = dados[0];
+  const iEq    = achaCab_(cab, ['id equipe','id_equipe','equipe','turma'], -1);
+  const iRound = achaCab_(cab, ['round','rodada','partida','tentativa'], -1);
+  const iJuiz  = achaCab_(cab, ['arbitro','árbitro','juiz','avaliador','email'], -1);
+  const iVal   = achaCab_(cab, ['validado','homologado','considerar'], -1);
+  const iPen   = achaCab_(cab, ['penalidade','penalidades','penalty'], -1);
+  const iTS    = achaCab_(cab, ['carimbo','timestamp','data hora','data'], 0);
+  if (iEq < 0) return { ok: true, equipes: [], roundsOrdem: [] };
+
+  const ignora = {};
+  [iEq, iRound, iJuiz, iVal, iPen, iTS].forEach(function(i) { if (i >= 0) ignora[i] = true; });
+  const cMissoes = detectarNumericas_(dados, ignora);
+
+  // Melhor tentativa por equipe+round (mais recente em caso de empate)
+  const melhorMap = {};
+  dados.slice(1).forEach(function(r) {
+    if (r.every(function(v) { return v === ''; })) return;
+    const idEq = resolverEq_(r[iEq], eq);
+    if (!idEq) return;
+    if (iVal >= 0 && !respostaValida_(r[iVal])) return;
+    const round = iRound >= 0 ? String(r[iRound] || '').trim() : 'Round';
+    if (!round) return;
+    const ts   = r[iTS] instanceof Date ? r[iTS] : null;
+    const pen  = iPen >= 0 ? Math.abs(num_(r[iPen])) : 0;
+    const soma = cMissoes.reduce(function(s, c) { return s + Math.max(0, num_(r[c])); }, 0);
+    const total = Math.min(cfg.maxArena, Math.max(0, soma - pen));
+    const k = idEq + '||' + norm_(round);
+    const cur = melhorMap[k];
+    if (!cur || (ts && (!cur.ts || ts >= cur.ts))) melhorMap[k] = { idEq: idEq, round: round, total: total, ts: ts };
+  });
+
+  // Ordem dos rounds (alfabética/natural)
+  const roundsVistos = {};
+  Object.values(melhorMap).forEach(function(l) { roundsVistos[norm_(l.round)] = l.round; });
+  const roundsOrdem = Object.values(roundsVistos).sort(function(a, b) {
+    return String(a).localeCompare(String(b), 'pt-BR', { numeric: true });
+  });
+
+  // Agrupa por equipe
+  const byEq = {};
+  Object.values(melhorMap).forEach(function(l) {
+    if (!byEq[l.idEq]) byEq[l.idEq] = {};
+    byEq[l.idEq][l.round] = l.total;
+  });
+
+  const eqMap = {};
+  eq.forEach(function(e) { eqMap[e.id] = e; });
+
+  const equipes = Object.keys(byEq).map(function(id) {
+    const scores = byEq[id];
+    const vals   = Object.values(scores);
+    const melhor = vals.length ? Math.max.apply(null, vals) : 0;
+    return { id: id, nome: eqMap[id] ? eqMap[id].nome : id, melhor: melhor, rounds: scores };
+  }).sort(function(a, b) { return b.melhor - a.melhor; });
+
+  return { ok: true, equipes: equipes, roundsOrdem: roundsOrdem };
+}
 
 function apiRanking_() {
   const ss  = SpreadsheetApp.getActiveSpreadsheet();
