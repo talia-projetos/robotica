@@ -59,6 +59,10 @@ body {
   align-items: center;
   text-decoration: none;
   flex-shrink: 0;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: .01em;
 }
 
 .topbar__logo-img {
