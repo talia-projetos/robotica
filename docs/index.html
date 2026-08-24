@@ -6,39 +6,86 @@
   <title>Hub — Torneio de Robótica</title>
   <link rel="stylesheet" href="css/styles.css">
   <script>
-    // ── CONFIGURE AQUI a URL do seu Apps Script Web App ─────────
     window.API_URL = 'https://script.google.com/macros/s/AKfycbxIV_gmilS_mFiwxvm0Vrs8vPySEwHyzJQmHN37Z4WRUYCAqggChexH_Sn2fY1PfUTYeg/exec';
-    // ─────────────────────────────────────────────────────────────
   </script>
+  <style>
+    .hub-hero {
+      text-align: center;
+      padding: 2.5rem 1rem 2rem;
+    }
+    .hub-hero__titulo {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--marinho);
+      margin-bottom: .35rem;
+    }
+    .hub-hero__sub {
+      font-size: 1rem;
+      color: var(--texto-sm);
+      margin-bottom: 2rem;
+    }
+    .hub-lider {
+      display: inline-flex;
+      align-items: center;
+      gap: .75rem;
+      background: #fff;
+      border: 2px solid var(--brand-ouro);
+      border-radius: 10px;
+      padding: .65rem 1.25rem;
+      font-size: .95rem;
+      box-shadow: 0 2px 12px rgba(232,152,24,.15);
+    }
+    .hub-lider__label {
+      font-size: .75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--brand-ouro);
+    }
+    .hub-lider__nome {
+      font-weight: 700;
+      color: var(--marinho);
+      font-size: 1.05rem;
+    }
+    .hub-lider__pts {
+      font-size: .85rem;
+      color: var(--texto-sm);
+    }
+  </style>
 </head>
 <body>
 
 <header class="topbar">
-  <div class="topbar__logo" id="titulo">Torneio de Robótica</div>
+  <a href="index.html" class="topbar__brand">
+    <img src="Logotipo.png" alt="Torneio Interno de Robótica" class="topbar__logo-img">
+  </a>
   <nav class="topbar__nav">
     <a href="index.html" class="ativo">Hub</a>
     <a href="ranking.html">Ranking</a>
     <a href="arena.html">Arena</a>
   </nav>
-  <div class="topbar__badge" id="badge-sessao">
+  <div class="topbar__badge">
     <span id="badge-nome" class="text-sm"></span>
-    <button class="btn btn-outline btn-sm" id="btn-sessao">Entrar</button>
+    <button class="btn btn-outline btn-sm" id="btn-sessao" style="border-color:rgba(255,255,255,.3);color:#fff">Entrar</button>
+  </div>
+  <div class="topbar__right">
+    <img src="Liga.png" alt="Liga Robótica Sesi Bahia" class="topbar__liga-img">
+    <img src="Temporada.png" alt="Bioglow" class="topbar__temp-img">
   </div>
 </header>
 
-<div class="container mt-2">
+<div class="container">
 
-  <!-- Login modal inline -->
-  <div id="login-box" class="form-card hidden">
-    <h2>Identificação do Juiz</h2>
-    <p class="text-sm mb-1">Digite seu nome e PIN cadastrado para submeter avaliações.</p>
+  <!-- Login inline -->
+  <div id="login-box" class="form-card hidden" style="max-width:400px;margin:1.5rem auto">
+    <h2>Identificação</h2>
     <div class="field mt-2">
-      <label>Seu nome</label>
-      <input id="l-nome" type="text" placeholder="Ex: Maria Silva" autocomplete="name">
+      <label>Nome</label>
+      <input id="l-nome" type="text" placeholder="Seu nome" autocomplete="name">
     </div>
     <div class="field">
       <label>PIN</label>
-      <input id="l-pin" type="password" placeholder="PIN fornecido pela organização" autocomplete="current-password">
+      <input id="l-pin" type="password" placeholder="PIN" autocomplete="current-password">
     </div>
     <div class="flex gap-1 mt-2">
       <button class="btn btn-primary" id="btn-login-ok">Confirmar</button>
@@ -46,20 +93,18 @@
     </div>
   </div>
 
-  <!-- Contadores rápidos -->
-  <div class="grid-3 mb-1" id="stats-row" style="margin-bottom:1.25rem">
-    <div class="card">
-      <div class="card__title">Equipes cadastradas</div>
-      <div class="card__val" id="s-equipes">—</div>
-    </div>
-    <div class="card">
-      <div class="card__title">Avaliações completas</div>
-      <div class="card__val" id="s-completas">—</div>
-    </div>
-    <div class="card">
-      <div class="card__title">Líder atual</div>
-      <div class="card__val" id="s-lider" style="font-size:1.2rem">—</div>
-      <div class="card__sub" id="s-lider-pts"></div>
+  <!-- Hero + líder -->
+  <div class="hub-hero">
+    <div class="hub-hero__titulo" id="hub-titulo">Torneio Interno de Robótica</div>
+    <div class="hub-hero__sub">Escola Sesi Reitor Miguel Calmon</div>
+    <div id="hub-lider-wrap" class="hidden">
+      <div class="hub-lider">
+        <div>
+          <div class="hub-lider__label">Lider atual</div>
+          <div class="hub-lider__nome" id="s-lider">—</div>
+        </div>
+        <div class="hub-lider__pts" id="s-lider-pts"></div>
+      </div>
     </div>
   </div>
 
@@ -82,28 +127,17 @@
 </div>
 
 <div id="toast"></div>
-
 <script src="js/api.js"></script>
 <script>
-  // ── Login ───────────────────────────────────────────────────────
   function atualizarBadge() {
     const nome = Sessao.juiz;
-    const badge = document.getElementById('badge-nome');
-    const btn   = document.getElementById('btn-sessao');
-    if (nome) {
-      badge.textContent = nome;
-      btn.textContent   = 'Sair';
-    } else {
-      badge.textContent = '';
-      btn.textContent   = 'Entrar';
-    }
+    document.getElementById('badge-nome').textContent = nome || '';
+    document.getElementById('btn-sessao').textContent = nome ? 'Sair' : 'Entrar';
   }
 
   document.getElementById('btn-sessao').addEventListener('click', () => {
     if (Sessao.logado()) {
-      Sessao.clear();
-      atualizarBadge();
-      toast('Sessão encerrada.', 'ok');
+      Sessao.clear(); atualizarBadge(); toast('Sessão encerrada.', 'ok');
     } else {
       document.getElementById('login-box').classList.remove('hidden');
     }
@@ -123,34 +157,20 @@
     toast('Olá, ' + nome + '!', 'ok');
   });
 
-  // ── Stats ───────────────────────────────────────────────────────
   async function carregarStats() {
     try {
-      const [eq, rk, cfg] = await Promise.all([
-        API.equipes(), API.ranking(), API.config()
-      ]);
-
+      const [cfg, rk] = await Promise.all([API.config(), API.ranking()]);
       if (cfg.ok && cfg.titulo) {
+        document.getElementById('hub-titulo').textContent = cfg.titulo;
         document.title = cfg.titulo + ' — Hub';
-        document.getElementById('titulo').textContent = cfg.titulo;
       }
-
-      if (eq.ok) document.getElementById('s-equipes').textContent = eq.equipes.length;
-
-      if (rk.ok) {
-        const completas = rk.equipes.filter(e => e.status === 'Completo').length;
-        document.getElementById('s-completas').textContent = completas;
-
+      if (rk.ok && rk.equipes.length) {
         const lider = rk.equipes[0];
-        if (lider) {
-          document.getElementById('s-lider').textContent = lider.id;
-          document.getElementById('s-lider-pts').textContent =
-            lider.turma + ' · ' + (lider.total || 0).toFixed(2) + ' pts';
-        }
+        document.getElementById('s-lider').textContent     = lider.id + ' — ' + lider.nome;
+        document.getElementById('s-lider-pts').textContent = Number(lider.total || 0).toFixed(1) + ' pts';
+        document.getElementById('hub-lider-wrap').classList.remove('hidden');
       }
-    } catch (e) {
-      console.warn('Stats:', e.message);
-    }
+    } catch (_) {}
   }
 
   atualizarBadge();

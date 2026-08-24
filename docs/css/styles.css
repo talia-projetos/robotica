@@ -17,6 +17,11 @@
   --texto-sm:  #6B7A90;
   --branco:    #FFFFFF;
 
+  /* Paleta do logotipo — usada apenas em destaques */
+  --brand-roxo: #6040A0;
+  --brand-ouro: #E89818;
+  --brand-azul: #2880C8;
+
   --radius:    10px;
   --shadow:    0 2px 12px rgba(18,53,91,.10);
   --shadow-lg: 0 6px 32px rgba(18,53,91,.16);
@@ -36,9 +41,9 @@ body {
 
 /* ── Cabeçalho ─────────────────────────────────────────────── */
 .topbar {
-  background: var(--marinho);
+  background: #0E1E32;
   color: var(--branco);
-  padding: .75rem 1.5rem;
+  padding: .4rem 1.25rem;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -46,13 +51,20 @@ body {
   top: 0;
   z-index: 100;
   box-shadow: var(--shadow);
+  min-height: 58px;
 }
 
-.topbar__logo {
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: -.5px;
-  white-space: nowrap;
+.topbar__brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.topbar__logo-img {
+  height: 46px;
+  width: auto;
+  display: block;
 }
 
 .topbar__nav {
@@ -62,18 +74,24 @@ body {
 }
 
 .topbar__nav a {
-  color: rgba(255,255,255,.75);
+  color: rgba(255,255,255,.7);
   text-decoration: none;
   padding: .35rem .75rem;
   border-radius: 6px;
   font-size: .875rem;
+  font-weight: 500;
   transition: var(--trans);
+  border-bottom: 2px solid transparent;
 }
 
-.topbar__nav a:hover,
-.topbar__nav a.ativo {
-  background: rgba(255,255,255,.15);
+.topbar__nav a:hover {
+  background: rgba(255,255,255,.10);
   color: var(--branco);
+}
+
+.topbar__nav a.ativo {
+  color: var(--branco);
+  border-bottom-color: var(--brand-ouro);
 }
 
 .topbar__badge {
@@ -82,6 +100,26 @@ body {
   align-items: center;
   gap: .5rem;
   font-size: .8rem;
+}
+
+.topbar__right {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  background: rgba(255,255,255,.94);
+  padding: 5px 10px;
+  border-radius: 7px;
+  flex-shrink: 0;
+}
+
+.topbar__liga-img {
+  height: 34px;
+  width: auto;
+}
+
+.topbar__temp-img {
+  height: 24px;
+  width: auto;
 }
 
 /* ── Layout ─────────────────────────────────────────────────── */

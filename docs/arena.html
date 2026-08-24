@@ -40,7 +40,6 @@
     }
 
     /* ── Topbar override ─────────────────────────────────────── */
-    .topbar { background: #060F1C; }
     body.claro .topbar { background: var(--marinho); }
 
     /* ── Header da página ────────────────────────────────────── */
@@ -146,7 +145,9 @@
 <body>
 
 <header class="topbar">
-  <div class="topbar__logo">Torneio</div>
+  <a href="index.html" class="topbar__brand">
+    <img src="Logotipo.png" alt="Torneio Interno de Robótica" class="topbar__logo-img">
+  </a>
   <nav class="topbar__nav">
     <a href="index.html">Hub</a>
     <a href="ranking.html">Ranking</a>
@@ -155,6 +156,10 @@
   <div class="topbar__badge">
     <span id="arena-update" class="arena-update"></span>
     <span class="spinner" id="spinner" style="display:none"></span>
+  </div>
+  <div class="topbar__right">
+    <img src="Liga.png" alt="Liga Robótica Sesi Bahia" class="topbar__liga-img">
+    <img src="Temporada.png" alt="Bioglow" class="topbar__temp-img">
   </div>
 </header>
 
