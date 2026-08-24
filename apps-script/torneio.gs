@@ -439,7 +439,7 @@ function lerRubrica_(ss, nomeAba, categoria, cfg, eq, diag) {
   const exib  = aba.getDataRange().getDisplayValues();
   const cab   = dados[0];
 
-  const iEq   = achaCab_(cab, ['id equipe','id_equipe','equipe avaliada','equipe','turma'], -1);
+  const iEq   = achaCab_(cab, ['id equipe','id_equipe','equipe avaliada','selecione a equipe','selecione equipe','equipe','turma'], -1);
   const iJuiz = achaCab_(cab, ['nome do juiz','nome do avaliador','juiz','avaliador','email','e mail'], -1);
   const iVal  = achaCab_(cab, ['validado','valida','homologado','considerar'], -1);
   const iTS   = achaCab_(cab, ['carimbo','timestamp','data hora','data'], 0);
@@ -451,6 +451,12 @@ function lerRubrica_(ss, nomeAba, categoria, cfg, eq, diag) {
 
   const ignora = {};
   [iEq, iJuiz, iVal, iTS].forEach(function(i) { if (i >= 0) ignora[i] = true; });
+  // Ignora colunas de texto livre que não são critérios de rubrica
+  const IGNORA_TEXTO = ['bom trabalho','reflitam','observacao','observação','comentario','comentário','sala','turma'];
+  cab.forEach(function(h, i) {
+    const hn = norm_(h);
+    if (IGNORA_TEXTO.some(function(k) { return hn.indexOf(k) >= 0; })) ignora[i] = true;
+  });
   const cCrit = detectarRubrica_(dados, exib, ignora, cfg.criterios);
 
   if (cCrit.length !== cfg.criterios) {
@@ -1086,8 +1092,14 @@ function detectarRubrica_(dados, exib, ignora, esperados) {
   const por_codigo = [], por_dados = [];
   for (let c = 0; c < cab.length; c++) {
     if (ignora[c]) continue;
-    const h = norm_(cab[c]);
-    if (/^(p|d|cv|c|criterio)\s*0?\d+/.test(h)) { por_codigo.push(c); continue; }
+    const h    = norm_(cab[c]);
+    const hRaw = String(cab[c]).toLowerCase();
+    // Detecta: "P01", "Critério 1", "Avaliação [Nome]", "Avaliacao Nome"
+    if (
+      /^(p|d|cv|c|criterio)\s*0?\d+/.test(h) ||
+      /^avaliacao[\s\[]/.test(h) ||
+      /^avalia[cç][aã]o[\s\[]/.test(hRaw)
+    ) { por_codigo.push(c); continue; }
     let prench = 0, validos = 0;
     for (let r = 1; r < lim; r++) {
       const v = exib[r][c];
