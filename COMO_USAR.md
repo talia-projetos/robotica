@@ -1,87 +1,120 @@
 # Torneio de Robótica — Hub
 
-## Estrutura
+## Estrutura do projeto
 
 ```
 torneio-robotica/
   apps-script/
-    api.gs          ← cole no mesmo projeto Apps Script do sistema principal
+    torneio.gs          ← arquivo ÚNICO para o Apps Script (script + API)
   hub/
-    index.html      ← página inicial (hub)
-    ranking.html    ← ranking geral e por categoria
-    juiz.html       ← formulário de avaliação (rubricas + arena)
-    deliberacao.html← sala de deliberação (chat + votação + comparação)
+    index.html          ← hub principal
+    ranking.html        ← ranking ao vivo (geral + por categoria)
+    juiz.html           ← formulário de avaliação para juízes
+    deliberacao.html    ← sala de deliberação (chat + votação + comparação)
     css/styles.css
     js/api.js
+  COMO_USAR.md          ← este arquivo
+  INTEGRACAO_FORMS.md   ← como conectar os Google Forms
 ```
 
 ---
 
-## Passo a passo de instalação
+## Instalação do Apps Script
 
-### 1. Apps Script
+1. Abra a planilha do torneio no Google Sheets
+2. **Extensões → Apps Script**
+3. Apague qualquer conteúdo existente no editor
+4. Cole o conteúdo de [apps-script/torneio.gs](apps-script/torneio.gs)
+5. Salve (Ctrl+S)
+6. Execute **`TORNEIO_instalar`** → autorize as permissões
+7. A planilha terá as abas criadas automaticamente
 
-1. Abra a planilha do torneio no Google Sheets.
-2. Menu **Extensões → Apps Script**.
-3. Cole o conteúdo de `apps-script/api.gs` como um **novo arquivo** no projeto.
-   - O arquivo `api.gs` usa funções do script principal (`carregarConfig_`, `lerEquipes_`, etc.) — ambos precisam estar no mesmo projeto.
-4. **Publicar como Web App:**
-   - Clique em **Implantar → Nova implantação**.
-   - Tipo: **Aplicativo da Web**.
-   - Executar como: **Eu mesmo**.
-   - Acesso: **Qualquer pessoa** (ou "Qualquer pessoa da organização").
-   - Clique em **Implantar** e copie a URL gerada.
+### Publicar a API (para o Hub)
 
-### 2. Configure a URL nos HTMLs
+1. **Implantar → Nova implantação**
+2. Tipo: **Aplicativo da Web**
+3. Executar como: **Eu mesmo**
+4. Acesso: **Qualquer pessoa**
+5. Copie a URL gerada
 
-Em cada arquivo HTML (`index.html`, `ranking.html`, `juiz.html`, `deliberacao.html`), localize:
-
+A URL já está configurada nos arquivos HTML. Se precisar trocar, edite a linha:
 ```js
-window.API_URL = 'https://script.google.com/macros/s/SEU_SCRIPT_ID/exec';
+window.API_URL = 'https://script.google.com/macros/s/.../exec';
 ```
-
-Substitua `SEU_SCRIPT_ID` pelo ID real da sua implantação.
-
-### 3. Cadastre os juízes
-
-Na planilha, crie uma aba chamada **`HUB_JUIZES`** com as colunas:
-
-| Nome         | PIN  | Categoria              | Ativo |
-|-------------|------|------------------------|-------|
-| Maria Silva  | 1234 | Projeto de Inovação    | Sim   |
-| João Costa   | 5678 | Design do Robô         | Sim   |
-| Ana Lima     | 9012 |                        | Sim   |
-
-- **PIN** pode ser deixado em branco para acesso sem senha (modo evento).
-- **Categoria** é informativa; não restringe o que o juiz pode avaliar.
-- **Ativo = Não** bloqueia o login.
-
-> O script cria a aba `HUB_JUIZES` automaticamente na primeira chamada se ela não existir.
-
-### 4. Hospede os arquivos HTML
-
-Opções simples:
-- **GitHub Pages** — suba a pasta `hub/` para um repositório e ative Pages.
-- **Google Drive** — carregue os arquivos e compartilhe como página da web.
-- **Qualquer servidor estático** (Netlify, Vercel, etc.).
-
-Os arquivos não precisam de servidor back-end próprio — toda a lógica fica no Apps Script.
+nos 4 arquivos HTML.
 
 ---
 
-## Missões personalizadas (Arena)
+## Configuração (aba CONFIG)
 
-O arquivo `juiz.html` tem a lista `MISSOES_PADRAO` com 15 missões de exemplo. Edite esse array com os nomes reais das missões do torneio antes de usar.
+Após instalar, edite a aba **CONFIG** na planilha:
 
-## Critérios das rubricas
-
-Os critérios exibidos no formulário de rubrica (`CRITERIOS` em `juiz.html`) seguem o padrão FLL. Ajuste os textos conforme o regulamento do seu torneio.
+| Parâmetro                   | Padrão            | O que mudar                          |
+|-----------------------------|-------------------|--------------------------------------|
+| Título do Painel            | TORNEIO DE ROBÓTICA | Nome exibido no painel e no hub    |
+| Aba Form Arena              | FORM_ARENA        | Nome da aba de respostas do Form     |
+| Aba Form Projeto            | FORM_PROJETO      | Idem                                 |
+| Aba Form Design             | FORM_DESIGN       | Idem                                 |
+| Aba Form Core               | FORM_CORE         | Idem                                 |
+| Meta Tampinhas kg/aluno     | 0.5               | Meta antes do início da campanha     |
+| Juízes Esperados por Rubrica| 3                 | Avaliações esperadas por equipe      |
 
 ---
 
-## Fluxo de uso no dia do evento
+## Cadastro de equipes (aba EQUIPES)
 
-1. **Juízes** acessam `juiz.html` em seus celulares/tablets, entram com nome + PIN e preenchem avaliações.
-2. **Ranking** (`ranking.html`) é exibido no telão — atualiza automaticamente a cada 10s.
-3. **Deliberação** (`deliberacao.html`) é aberta pelos juízes para comparar equipes, trocar mensagens e votar antes do anúncio oficial.
-4. Todo dado vai direto para o Google Sheets e o script principal recalcula os resultados automaticamente.
+Preencha a aba **EQUIPES** com:
+
+| ID_Equipe | Nome_Equipe    | Turno     | Tutor     | Qtde_Alunos |
+|-----------|---------------|-----------|-----------|-------------|
+| T01       | Turma Alpha   | Manhã     | Prof. Ana | 5           |
+| T02       | Turma Beta    | Tarde     | Prof. João| 6           |
+
+O **ID_Equipe** deve coincidir com o que os juízes digitam nos Forms.
+
+---
+
+## Integração com Google Forms
+
+Veja o guia completo em [INTEGRACAO_FORMS.md](INTEGRACAO_FORMS.md).
+
+Resumo:
+1. Em cada Form → **Respostas → Vincular ao Sheets** → selecione esta planilha
+2. Renomeie a aba criada (ex: `FORM_ARENA`)
+3. Coloque esse nome na aba CONFIG
+
+---
+
+## Juízes do Hub (aba HUB_JUIZES)
+
+Criada automaticamente na primeira chamada. Preencha com:
+
+| Nome         | PIN  | Categoria           | Ativo |
+|-------------|------|---------------------|-------|
+| Maria Silva  | 1234 | Projeto             | Sim   |
+| João Costa   | 5678 | Design              | Sim   |
+
+- Sem PIN cadastrado → qualquer PIN é aceito (modo aberto)
+- Ativo = Não → bloqueia o acesso do juiz
+
+---
+
+## Hospedagem do Hub (arquivos HTML)
+
+Qualquer hospedagem estática funciona:
+
+**GitHub Pages (mais simples):**
+1. Repositório → Settings → Pages
+2. Branch: `main` / pasta: `/hub`
+3. URL: `https://talia-projetos.github.io/robotica/`
+
+**Vercel / Netlify:** arraste a pasta `hub/` para o dashboard.
+
+---
+
+## Fluxo no dia do evento
+
+1. **Juízes** acessam `juiz.html` no celular → entram com nome + PIN → preenchem avaliações
+2. **Telão** exibe `ranking.html` (atualiza a cada 10s automaticamente)
+3. **Deliberação** (`deliberacao.html`) → juízes comparam equipes, trocam mensagens e votam
+4. Todos os dados vão para o Sheets → o script recalcula tudo automaticamente
