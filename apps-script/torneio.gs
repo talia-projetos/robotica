@@ -937,7 +937,6 @@ function apiArenaDetalhe_() {
   [iEq, iRound, iJuiz, iVal, iPen, iTS].forEach(function(i) { if (i >= 0) ignora[i] = true; });
   const cMissoes = detectarNumericas_(dados, ignora);
 
-  // Melhor tentativa por equipe+round (mais recente em caso de empate)
   const melhorMap = {};
   dados.slice(1).forEach(function(r) {
     if (r.every(function(v) { return v === ''; })) return;
@@ -955,14 +954,12 @@ function apiArenaDetalhe_() {
     if (!cur || (ts && (!cur.ts || ts >= cur.ts))) melhorMap[k] = { idEq: idEq, round: round, total: total, ts: ts };
   });
 
-  // Ordem dos rounds (alfabética/natural)
   const roundsVistos = {};
   Object.values(melhorMap).forEach(function(l) { roundsVistos[norm_(l.round)] = l.round; });
   const roundsOrdem = Object.values(roundsVistos).sort(function(a, b) {
     return String(a).localeCompare(String(b), 'pt-BR', { numeric: true });
   });
 
-  // Agrupa por equipe
   const byEq = {};
   Object.values(melhorMap).forEach(function(l) {
     if (!byEq[l.idEq]) byEq[l.idEq] = {};
@@ -970,7 +967,7 @@ function apiArenaDetalhe_() {
   });
 
   const eqMap = {};
-  eq.forEach(function(e) { eqMap[e.id] = e; });
+  eq.lista.forEach(function(e) { eqMap[e.id] = e; });
 
   const equipes = Object.keys(byEq).map(function(id) {
     const scores = byEq[id];
