@@ -14,12 +14,11 @@
 <body>
 
 <header class="topbar">
-  <div class="topbar__logo" id="titulo">🤖 Torneio de Robótica</div>
+  <div class="topbar__logo" id="titulo">Torneio de Robótica</div>
   <nav class="topbar__nav">
     <a href="index.html" class="ativo">Hub</a>
     <a href="ranking.html">Ranking</a>
     <a href="arena.html">Arena</a>
-    <a href="deliberacao.html">Deliberação</a>
   </nav>
   <div class="topbar__badge" id="badge-sessao">
     <span id="badge-nome" class="text-sm"></span>
@@ -67,17 +66,14 @@
   <!-- Cards de navegação -->
   <div class="grid-2">
     <a href="ranking.html" class="hub-card">
-      <div class="hub-card__icon">🏆</div>
       <div class="hub-card__title">Ranking Geral</div>
       <div class="hub-card__desc">Classificação ao vivo por categoria e pontuação total. Atualizado automaticamente.</div>
     </a>
-    <a href="deliberacao.html" class="hub-card">
-      <div class="hub-card__icon">🗳️</div>
-      <div class="hub-card__title">Sala de Deliberação</div>
-      <div class="hub-card__desc">Comparação de equipes lado a lado, chat entre juízes e painel de votação.</div>
+    <a href="arena.html" class="hub-card">
+      <div class="hub-card__title">Arena — Resultados por Round</div>
+      <div class="hub-card__desc">Pontuações de cada round por equipe. Otimizado para exibição no telão.</div>
     </a>
     <a href="ranking.html#categorias" class="hub-card">
-      <div class="hub-card__icon">📊</div>
       <div class="hub-card__title">Ranking por Categoria</div>
       <div class="hub-card__desc">Arena, Projeto de Inovação, Design do Robô, Core Values e Tampinhas que Transformam.</div>
     </a>
@@ -95,7 +91,7 @@
     const badge = document.getElementById('badge-nome');
     const btn   = document.getElementById('btn-sessao');
     if (nome) {
-      badge.textContent = '👤 ' + nome;
+      badge.textContent = nome;
       btn.textContent   = 'Sair';
     } else {
       badge.textContent = '';
@@ -136,7 +132,7 @@
 
       if (cfg.ok && cfg.titulo) {
         document.title = cfg.titulo + ' — Hub';
-        document.getElementById('titulo').textContent = '🤖 ' + cfg.titulo;
+        document.getElementById('titulo').textContent = cfg.titulo;
       }
 
       if (eq.ok) document.getElementById('s-equipes').textContent = eq.equipes.length;

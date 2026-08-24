@@ -146,12 +146,11 @@
 <body>
 
 <header class="topbar">
-  <div class="topbar__logo">🤖 Torneio</div>
+  <div class="topbar__logo">Torneio</div>
   <nav class="topbar__nav">
     <a href="index.html">Hub</a>
     <a href="ranking.html">Ranking</a>
     <a href="arena.html" class="ativo">Arena</a>
-    <a href="deliberacao.html">Deliberação</a>
   </nav>
   <div class="topbar__badge">
     <span id="arena-update" class="arena-update"></span>
@@ -162,11 +161,11 @@
 <div class="container">
 
   <div class="arena-header">
-    <span class="arena-titulo">🏟️ Arena — Resultados por Round</span>
+    <span class="arena-titulo">Arena — Resultados por Round</span>
     <div class="arena-controles">
-      <button class="btn btn-outline btn-sm" id="btn-tamanho" onclick="alternarTamanho()">🔍 Grande</button>
-      <button class="btn btn-outline btn-sm" id="btn-tema"    onclick="alternarTema()">☀️ Claro</button>
-      <button class="btn btn-outline btn-sm"                  onclick="telaCheia()">⛶ Tela cheia</button>
+      <button class="btn btn-outline btn-sm" id="btn-tamanho" onclick="alternarTamanho()">Grande</button>
+      <button class="btn btn-outline btn-sm" id="btn-tema"    onclick="alternarTema()">Claro</button>
+      <button class="btn btn-outline btn-sm"                  onclick="telaCheia()">Tela cheia</button>
     </div>
   </div>
 
@@ -188,12 +187,12 @@
 <script>
   function alternarTema() {
     const claro = document.body.classList.toggle('claro');
-    document.getElementById('btn-tema').textContent = claro ? '🌙 Escuro' : '☀️ Claro';
+    document.getElementById('btn-tema').textContent = claro ? 'Escuro' : 'Claro';
   }
 
   function alternarTamanho() {
     const grande = document.body.classList.toggle('grande');
-    document.getElementById('btn-tamanho').textContent = grande ? '🔍 Normal' : '🔍 Grande';
+    document.getElementById('btn-tamanho').textContent = grande ? 'Normal' : 'Grande';
   }
 
   function telaCheia() {

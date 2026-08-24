@@ -51,12 +51,11 @@
 <body>
 
 <header class="topbar">
-  <div class="topbar__logo">🤖 Torneio</div>
+  <div class="topbar__logo">Torneio</div>
   <nav class="topbar__nav">
     <a href="index.html">Hub</a>
     <a href="ranking.html">Ranking</a>
     <a href="arena.html">Arena</a>
-    <a href="deliberacao.html" class="ativo">Deliberação</a>
   </nav>
   <div class="topbar__badge">
     <span id="badge-nome" class="text-sm"></span>
@@ -178,7 +177,7 @@
     const badge = document.getElementById('badge-nome');
     const btn   = document.getElementById('btn-sessao');
     if (Sessao.logado()) {
-      badge.textContent = '👤 ' + Sessao.juiz;
+      badge.textContent = Sessao.juiz;
       btn.textContent   = 'Sair';
       document.getElementById('login-overlay').classList.add('hidden');
       document.getElementById('main-content').style.display = '';
@@ -269,12 +268,12 @@
     resultado.classList.remove('hidden');
 
     const CAMPOS = [
-      { id: 'comp-arena',     campo: 'arena20',    max: 20, label: '🤖 Arena' },
-      { id: 'comp-projeto',   campo: 'projeto20',  max: 20, label: '💡 Projeto' },
-      { id: 'comp-design',    campo: 'design20',   max: 20, label: '🔧 Design' },
-      { id: 'comp-core',      campo: 'core20',     max: 20, label: '⭐ Core Values' },
-      { id: 'comp-tampinhas', campo: 'tampinhas20',max: 20, label: '♻️ Tampinhas' },
-      { id: 'comp-total',     campo: 'total',      max: 100,label: '🏆 Total' }
+      { id: 'comp-arena',     campo: 'arena20',    max: 20, label: 'Arena' },
+      { id: 'comp-projeto',   campo: 'projeto20',  max: 20, label: 'Projeto' },
+      { id: 'comp-design',    campo: 'design20',   max: 20, label: 'Design' },
+      { id: 'comp-core',      campo: 'core20',     max: 20, label: 'Core Values' },
+      { id: 'comp-tampinhas', campo: 'tampinhas20',max: 20, label: 'Tampinhas' },
+      { id: 'comp-total',     campo: 'total',      max: 100,label: 'Total' }
     ];
 
     CAMPOS.forEach(({ id, campo, max, label }) => {
