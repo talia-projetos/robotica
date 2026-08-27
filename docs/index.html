@@ -151,23 +151,31 @@
 <div id="toast"></div>
 <script src="js/api.js"></script>
 <script>
-  document.getElementById('btn-sessao').addEventListener('click', () => {
-    CoordAuth.clear(); location.reload();
+  // Botão de sessão — apenas exibe/limpa login salvo
+  const btnSessao = document.getElementById('btn-sessao');
+  if (CoordAuth.logado()) {
+    document.getElementById('badge-nome').textContent = CoordAuth.nome;
+    btnSessao.textContent = 'Sair';
+  }
+  btnSessao.addEventListener('click', () => {
+    if (CoordAuth.logado()) { CoordAuth.clear(); location.reload(); }
+    else location.href = 'deliberacao.html'; // redireciona para login
   });
 
+  // Carrega stats silenciosamente (sem gate — apenas exibe se der certo)
   async function carregarStats() {
     try {
       const [cfg, rk] = await Promise.all([API.config(), API.ranking()]);
       if (cfg.ok && cfg.titulo) {
         document.getElementById('hub-titulo').textContent = cfg.titulo;
-        document.title = cfg.titulo + ' — Hub';
+        document.title = 'Hub: ' + cfg.titulo;
       }
       if (rk.ok && rk.equipes && rk.equipes.length) {
         const equipes = rk.equipes;
         const lider   = equipes[0];
         const nome    = lider.nome || lider.turma || lider.id;
-        document.getElementById('s-lider').textContent    = nome;
-        document.getElementById('s-lider-id').textContent = lider.id !== nome ? lider.id : '';
+        document.getElementById('s-lider').textContent     = nome;
+        document.getElementById('s-lider-id').textContent  = lider.id !== nome ? lider.id : '';
         document.getElementById('s-lider-pts').textContent = Number(lider.total || 0).toFixed(1) + ' pts';
         document.getElementById('hub-lider-wrap').classList.remove('hidden');
 
@@ -183,11 +191,7 @@
     } catch (_) {}
   }
 
-  iniciarGateCoord(function(nome) {
-    document.getElementById('badge-nome').textContent = nome;
-    document.getElementById('btn-sessao').textContent = 'Sair';
-    carregarStats();
-  });
+  carregarStats();
 </script>
 </body>
 </html>
