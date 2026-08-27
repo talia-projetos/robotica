@@ -51,37 +51,6 @@
       Escola SESI Reitor Miguel Calmon
     </div>
 
-    <div id="hub-lider-wrap" class="hidden">
-      <div class="hub-lider">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#F2C94C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;flex-shrink:0"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
-        <div>
-          <div class="hub-lider__label">Liderando</div>
-          <div class="hub-lider__nome" id="s-lider">—</div>
-          <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.1rem" id="s-lider-id"></div>
-        </div>
-        <div class="hub-lider__pts" id="s-lider-pts"></div>
-      </div>
-    </div>
-
-  </div>
-
-  <div id="hub-stats" class="hub-stats-wave" style="display:none">
-    <div class="hub-stat-tile">
-      <div class="hub-stat-tile__val" id="stat-equipes">—</div>
-      <div class="hub-stat-tile__label">Equipes</div>
-    </div>
-    <div class="hub-stat-tile">
-      <div class="hub-stat-tile__val" id="stat-completas">—</div>
-      <div class="hub-stat-tile__label">Completas</div>
-    </div>
-    <div class="hub-stat-tile">
-      <div class="hub-stat-tile__val" id="stat-pendentes">—</div>
-      <div class="hub-stat-tile__label">Pendentes</div>
-    </div>
-    <div class="hub-stat-tile">
-      <div class="hub-stat-tile__val" id="stat-media">—</div>
-      <div class="hub-stat-tile__label">Média geral</div>
-    </div>
   </div>
 </div>
 
@@ -162,36 +131,18 @@
     else location.href = 'deliberacao.html'; // redireciona para login
   });
 
-  // Carrega stats silenciosamente (sem gate — apenas exibe se der certo)
-  async function carregarStats() {
+  // Carrega título da configuração silenciosamente
+  async function carregarTitulo() {
     try {
-      const [cfg, rk] = await Promise.all([API.config(), API.ranking()]);
+      const cfg = await API.config();
       if (cfg.ok && cfg.titulo) {
         document.getElementById('hub-titulo').textContent = cfg.titulo;
         document.title = 'Hub: ' + cfg.titulo;
       }
-      if (rk.ok && rk.equipes && rk.equipes.length) {
-        const equipes = rk.equipes;
-        const lider   = equipes[0];
-        const nome    = lider.nome || lider.turma || lider.id;
-        document.getElementById('s-lider').textContent     = nome;
-        document.getElementById('s-lider-id').textContent  = lider.id !== nome ? lider.id : '';
-        document.getElementById('s-lider-pts').textContent = Number(lider.total || 0).toFixed(1) + ' pts';
-        document.getElementById('hub-lider-wrap').classList.remove('hidden');
-
-        const completas = equipes.filter(e => e.status === 'Completo').length;
-        const pendentes = equipes.filter(e => e.status === 'Pendente').length;
-        const media     = equipes.reduce((s, e) => s + Number(e.total || 0), 0) / equipes.length;
-        document.getElementById('stat-equipes').textContent   = equipes.length;
-        document.getElementById('stat-completas').textContent = completas;
-        document.getElementById('stat-pendentes').textContent = pendentes;
-        document.getElementById('stat-media').textContent     = media.toFixed(1);
-        document.getElementById('hub-stats').style.display   = '';
-      }
     } catch (_) {}
   }
 
-  carregarStats();
+  carregarTitulo();
 </script>
 </body>
 </html>
