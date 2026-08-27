@@ -6,6 +6,19 @@
   <title>Hub — Torneio de Robótica</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/styles.css">
+  <script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js"></script>
+  <style>
+    .hub-card__icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: .5rem;
+    }
+    .hub-card__icon svg { width: 20px; height: 20px; stroke-width: 2; }
+  </style>
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';
   </script>
@@ -41,10 +54,11 @@
 
     <div id="hub-lider-wrap" class="hidden">
       <div class="hub-lider">
-        <span class="hub-lider__icon">🏆</span>
+        <i data-lucide="trophy" style="width:22px;height:22px;color:#F2C94C;stroke-width:2;flex-shrink:0"></i>
         <div>
           <div class="hub-lider__label">Liderando</div>
           <div class="hub-lider__nome" id="s-lider">—</div>
+          <div style="font-size:.72rem;color:rgba(255,255,255,.4);margin-top:.1rem" id="s-lider-id"></div>
         </div>
         <div class="hub-lider__pts" id="s-lider-pts"></div>
       </div>
@@ -52,7 +66,6 @@
 
   </div>
 
-  <!-- Tiles de estatísticas fundidas com o hero -->
   <div id="hub-stats" class="hub-stats-wave" style="display:none">
     <div class="hub-stat-tile">
       <div class="hub-stat-tile__val" id="stat-equipes">—</div>
@@ -80,42 +93,54 @@
 
       <a href="ranking.html" class="hub-card">
         <div class="hub-card__stripe" style="background:linear-gradient(90deg,#2F80ED,#56CCF2)"></div>
-        <div class="hub-card__icon">📊</div>
+        <div class="hub-card__icon" style="background:#EBF3FF;color:#2F80ED">
+          <i data-lucide="bar-chart-2" style="color:#2F80ED"></i>
+        </div>
         <div class="hub-card__title">Ranking Geral</div>
         <div class="hub-card__desc">Classificação ao vivo por pontuação total. Atualizado automaticamente a cada 10 segundos.</div>
       </a>
 
       <a href="arena.html" class="hub-card">
         <div class="hub-card__stripe" style="background:linear-gradient(90deg,#F2994A,#F2C94C)"></div>
-        <div class="hub-card__icon">🤖</div>
+        <div class="hub-card__icon" style="background:#FFF3E0;color:#F2994A">
+          <i data-lucide="monitor" style="color:#F2994A"></i>
+        </div>
         <div class="hub-card__title">Arena — Telão</div>
         <div class="hub-card__desc">Pontuações de cada round por equipe. Modo público, otimizado para exibição no telão.</div>
       </a>
 
       <a href="ranking.html#categorias" class="hub-card">
         <div class="hub-card__stripe" style="background:linear-gradient(90deg,#8E5BD9,#B57BEC)"></div>
-        <div class="hub-card__icon">🏅</div>
+        <div class="hub-card__icon" style="background:#F3EEFF;color:#8E5BD9">
+          <i data-lucide="award" style="color:#8E5BD9"></i>
+        </div>
         <div class="hub-card__title">Ranking por Categoria</div>
         <div class="hub-card__desc">Arena, Projeto de Inovação, Design do Robô, Core Values e Tampinhas que Transformam.</div>
       </a>
 
       <a href="turma.html" class="hub-card">
         <div class="hub-card__stripe" style="background:linear-gradient(90deg,#27AE60,#6FCF97)"></div>
-        <div class="hub-card__icon">🎓</div>
+        <div class="hub-card__icon" style="background:#E8F8EF;color:#27AE60">
+          <i data-lucide="book-open" style="color:#27AE60"></i>
+        </div>
         <div class="hub-card__title">Minha Turma</div>
         <div class="hub-card__desc">Professor: acesse notas e comentários dos juízes da sua equipe com o PIN da turma.</div>
       </a>
 
       <a href="deliberacao.html" class="hub-card">
         <div class="hub-card__stripe" style="background:linear-gradient(90deg,#EB5757,#F97316)"></div>
-        <div class="hub-card__icon">🗳️</div>
+        <div class="hub-card__icon" style="background:#FEF2F2;color:#EB5757">
+          <i data-lucide="users" style="color:#EB5757"></i>
+        </div>
         <div class="hub-card__title">Deliberação</div>
         <div class="hub-card__desc">Comparação de equipes, votação e chat em tempo real entre juízes e coordenação.</div>
       </a>
 
       <a href="coordenacao.html" class="hub-card">
         <div class="hub-card__stripe" style="background:linear-gradient(90deg,#12355B,#2F80ED)"></div>
-        <div class="hub-card__icon">📋</div>
+        <div class="hub-card__icon" style="background:#EBF3FF;color:#12355B">
+          <i data-lucide="layout-dashboard" style="color:#12355B"></i>
+        </div>
         <div class="hub-card__title">Coordenação</div>
         <div class="hub-card__desc">Painel completo com resultados e comentários de todas as turmas por categoria.</div>
       </a>
@@ -127,6 +152,8 @@
 <div id="toast"></div>
 <script src="js/api.js"></script>
 <script>
+  lucide.createIcons();
+
   document.getElementById('btn-sessao').addEventListener('click', () => {
     CoordAuth.clear(); location.reload();
   });
@@ -140,8 +167,10 @@
       }
       if (rk.ok && rk.equipes && rk.equipes.length) {
         const equipes = rk.equipes;
-        const lider = equipes[0];
-        document.getElementById('s-lider').textContent     = lider.id + (lider.turma ? ' — ' + lider.turma : '');
+        const lider   = equipes[0];
+        const nome    = lider.nome || lider.turma || lider.id;
+        document.getElementById('s-lider').textContent    = nome;
+        document.getElementById('s-lider-id').textContent = lider.id !== nome ? lider.id : '';
         document.getElementById('s-lider-pts').textContent = Number(lider.total || 0).toFixed(1) + ' pts';
         document.getElementById('hub-lider-wrap').classList.remove('hidden');
 

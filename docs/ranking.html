@@ -158,7 +158,7 @@
     tbody.innerHTML = equipes.map(e => `
       <tr>
         <td>${posBadge(e.posGeral)}</td>
-        <td><strong>${e.id}</strong><br><span class="text-sm">${e.turma}</span></td>
+        <td><strong>${e.nome || e.turma || e.id}</strong><br><span class="text-sm">${e.id}</span></td>
         <td><span class="text-sm">${e.turno || '—'}</span></td>
         <td>${fmt(e.arena20)}</td>
         <td>${fmt(e.projeto20)}</td>
@@ -186,7 +186,7 @@
     tbody.innerHTML = sorted.map(e => `
       <tr>
         <td>${posBadge(e['pos' + extra.posField])}</td>
-        <td><strong>${e.id}</strong><br><span class="text-sm">${e.turma}</span></td>
+        <td><strong>${e.nome || e.turma || e.id}</strong><br><span class="text-sm">${e.id}</span></td>
         <td>${fmt(e[campo])}</td>
         <td class="text-sm">${e[extra.qtdField] || '—'}</td>
       </tr>`).join('');

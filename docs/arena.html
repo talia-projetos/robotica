@@ -235,8 +235,8 @@
       return `<tr>
         <td><span class="pos-badge ${posCls}">${pos}</span></td>
         <td class="td-equipe">
-          <strong>${e.id}</strong><br>
-          <span class="text-sm">${e.nome}</span>
+          <strong>${e.nome || e.id}</strong><br>
+          <span class="text-sm">${e.id}</span>
         </td>
         ${cells}
         <td class="td-melhor">${e.melhor}</td>
