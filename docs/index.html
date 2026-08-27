@@ -8,77 +8,6 @@
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbyENSmZwGatlhsQbkGuY3gUlnw8EVaUQxHt-xA5AWqEm55eSBVHcj6BmbmAPP4LZTpR/exec';
   </script>
-  <style>
-    .hub-hero {
-      text-align: center;
-      padding: 2.5rem 1rem 2rem;
-    }
-    .hub-hero__titulo {
-      font-size: 1.75rem;
-      font-weight: 800;
-      color: var(--marinho);
-      margin-bottom: .35rem;
-    }
-    .hub-hero__sub {
-      font-size: 1rem;
-      color: var(--texto-sm);
-      margin-bottom: 2rem;
-    }
-    .hub-lider {
-      display: inline-flex;
-      align-items: center;
-      gap: .75rem;
-      background: #fff;
-      border: 2px solid var(--brand-ouro);
-      border-radius: 10px;
-      padding: .65rem 1.25rem;
-      font-size: .95rem;
-      box-shadow: 0 2px 12px rgba(232,152,24,.15);
-    }
-    .hub-lider__label {
-      font-size: .75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      color: var(--brand-ouro);
-    }
-    .hub-lider__nome {
-      font-weight: 700;
-      color: var(--marinho);
-      font-size: 1.05rem;
-    }
-    .hub-lider__pts {
-      font-size: .85rem;
-      color: var(--texto-sm);
-    }
-    .hub-stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: .75rem;
-      margin: 1.5rem 0;
-    }
-    .hub-stat {
-      background: var(--branco);
-      border: 1.5px solid var(--cinza);
-      border-radius: var(--radius);
-      padding: .875rem 1rem;
-      text-align: center;
-    }
-    .hub-stat__val {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--marinho);
-      line-height: 1;
-    }
-    .hub-stat__label {
-      font-size: .72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      color: var(--texto-sm);
-      margin-top: .35rem;
-    }
-  </style>
 </head>
 <body>
 
@@ -93,71 +22,105 @@
   </nav>
   <div class="topbar__badge">
     <span id="badge-nome" class="text-sm"></span>
-    <button class="btn btn-outline btn-sm" id="btn-sessao" style="border-color:rgba(255,255,255,.3);color:#fff">Entrar</button>
+    <button class="btn btn-outline btn-sm" id="btn-sessao"
+      style="border-color:rgba(255,255,255,.3);color:#fff">Entrar</button>
   </div>
 </header>
 
-<div class="container">
+<!-- ── Hero escuro ──────────────────────────────────────────── -->
+<div class="hub-hero-bg">
+  <div class="hub-hero-inner">
 
-  <!-- Hero + líder -->
-  <div class="hub-hero">
-    <div class="hub-hero__titulo" id="hub-titulo">Torneio Interno de Robótica</div>
-    <div class="hub-hero__sub">Escola Sesi Reitor Miguel Calmon</div>
+    <div id="hub-titulo" style="font-size:2rem;font-weight:900;color:#fff;letter-spacing:-.03em;line-height:1.1;margin-bottom:.3rem">
+      Torneio Interno de Robótica
+    </div>
+    <div style="font-size:.95rem;color:rgba(255,255,255,.5);margin-bottom:1.5rem">
+      Escola SESI Reitor Miguel Calmon
+    </div>
+
     <div id="hub-lider-wrap" class="hidden">
       <div class="hub-lider">
+        <span class="hub-lider__icon">🏆</span>
         <div>
-          <div class="hub-lider__label">Lider atual</div>
+          <div class="hub-lider__label">Liderando</div>
           <div class="hub-lider__nome" id="s-lider">—</div>
         </div>
         <div class="hub-lider__pts" id="s-lider-pts"></div>
       </div>
     </div>
+
   </div>
 
-  <!-- Stats ao vivo -->
-  <div class="hub-stats" id="hub-stats" style="display:none">
-    <div class="hub-stat">
-      <div class="hub-stat__val" id="stat-equipes">—</div>
-      <div class="hub-stat__label">Equipes</div>
+  <!-- Tiles de estatísticas fundidas com o hero -->
+  <div id="hub-stats" class="hub-stats-wave" style="display:none">
+    <div class="hub-stat-tile">
+      <div class="hub-stat-tile__val" id="stat-equipes">—</div>
+      <div class="hub-stat-tile__label">Equipes</div>
     </div>
-    <div class="hub-stat">
-      <div class="hub-stat__val" id="stat-completas">—</div>
-      <div class="hub-stat__label">Completas</div>
+    <div class="hub-stat-tile">
+      <div class="hub-stat-tile__val" id="stat-completas">—</div>
+      <div class="hub-stat-tile__label">Completas</div>
     </div>
-    <div class="hub-stat">
-      <div class="hub-stat__val" id="stat-pendentes">—</div>
-      <div class="hub-stat__label">Pendentes</div>
+    <div class="hub-stat-tile">
+      <div class="hub-stat-tile__val" id="stat-pendentes">—</div>
+      <div class="hub-stat-tile__label">Pendentes</div>
     </div>
-    <div class="hub-stat">
-      <div class="hub-stat__val" id="stat-media">—</div>
-      <div class="hub-stat__label">Média geral</div>
+    <div class="hub-stat-tile">
+      <div class="hub-stat-tile__val" id="stat-media">—</div>
+      <div class="hub-stat-tile__label">Média geral</div>
     </div>
   </div>
+</div>
 
-  <!-- Cards de navegação -->
-  <div class="grid-2">
-    <a href="ranking.html" class="hub-card">
-      <div class="hub-card__title">Ranking Geral</div>
-      <div class="hub-card__desc">Classificação ao vivo por categoria e pontuação total. Atualizado automaticamente.</div>
-    </a>
-    <a href="arena.html" class="hub-card">
-      <div class="hub-card__title">Arena — Telão</div>
-      <div class="hub-card__desc">Pontuações de cada round por equipe. Otimizado para exibição no telão.</div>
-    </a>
-    <a href="ranking.html#categorias" class="hub-card">
-      <div class="hub-card__title">Ranking por Categoria</div>
-      <div class="hub-card__desc">Arena, Projeto de Inovação, Design do Robô, Core Values e Tampinhas que Transformam.</div>
-    </a>
-    <a href="turma.html" class="hub-card">
-      <div class="hub-card__title">Minha Turma</div>
-      <div class="hub-card__desc">Professor: acesse os resultados e comentários dos juízes da sua equipe com PIN.</div>
-    </a>
-    <a href="deliberacao.html" class="hub-card">
-      <div class="hub-card__title">Deliberação</div>
-      <div class="hub-card__desc">Comparação de equipes, votação e chat entre juízes e coordenação.</div>
-    </a>
+<!-- ── Cards de navegação ──────────────────────────────────── -->
+<div class="hub-cards-section">
+  <div class="container">
+    <div class="grid-2">
+
+      <a href="ranking.html" class="hub-card">
+        <div class="hub-card__stripe" style="background:linear-gradient(90deg,#2F80ED,#56CCF2)"></div>
+        <div class="hub-card__icon">📊</div>
+        <div class="hub-card__title">Ranking Geral</div>
+        <div class="hub-card__desc">Classificação ao vivo por pontuação total. Atualizado automaticamente a cada 10 segundos.</div>
+      </a>
+
+      <a href="arena.html" class="hub-card">
+        <div class="hub-card__stripe" style="background:linear-gradient(90deg,#F2994A,#F2C94C)"></div>
+        <div class="hub-card__icon">🤖</div>
+        <div class="hub-card__title">Arena — Telão</div>
+        <div class="hub-card__desc">Pontuações de cada round por equipe. Modo público, otimizado para exibição no telão.</div>
+      </a>
+
+      <a href="ranking.html#categorias" class="hub-card">
+        <div class="hub-card__stripe" style="background:linear-gradient(90deg,#8E5BD9,#B57BEC)"></div>
+        <div class="hub-card__icon">🏅</div>
+        <div class="hub-card__title">Ranking por Categoria</div>
+        <div class="hub-card__desc">Arena, Projeto de Inovação, Design do Robô, Core Values e Tampinhas que Transformam.</div>
+      </a>
+
+      <a href="turma.html" class="hub-card">
+        <div class="hub-card__stripe" style="background:linear-gradient(90deg,#27AE60,#6FCF97)"></div>
+        <div class="hub-card__icon">🎓</div>
+        <div class="hub-card__title">Minha Turma</div>
+        <div class="hub-card__desc">Professor: acesse notas e comentários dos juízes da sua equipe com o PIN da turma.</div>
+      </a>
+
+      <a href="deliberacao.html" class="hub-card">
+        <div class="hub-card__stripe" style="background:linear-gradient(90deg,#EB5757,#F97316)"></div>
+        <div class="hub-card__icon">🗳️</div>
+        <div class="hub-card__title">Deliberação</div>
+        <div class="hub-card__desc">Comparação de equipes, votação e chat em tempo real entre juízes e coordenação.</div>
+      </a>
+
+      <a href="coordenacao.html" class="hub-card">
+        <div class="hub-card__stripe" style="background:linear-gradient(90deg,#12355B,#2F80ED)"></div>
+        <div class="hub-card__icon">📋</div>
+        <div class="hub-card__title">Coordenação</div>
+        <div class="hub-card__desc">Painel completo com resultados e comentários de todas as turmas por categoria.</div>
+      </a>
+
+    </div>
   </div>
-
 </div>
 
 <div id="toast"></div>
@@ -177,18 +140,18 @@
       if (rk.ok && rk.equipes && rk.equipes.length) {
         const equipes = rk.equipes;
         const lider = equipes[0];
-        document.getElementById('s-lider').textContent     = lider.id + ' — ' + (lider.nome || lider.turma || '');
+        document.getElementById('s-lider').textContent     = lider.id + (lider.turma ? ' — ' + lider.turma : '');
         document.getElementById('s-lider-pts').textContent = Number(lider.total || 0).toFixed(1) + ' pts';
         document.getElementById('hub-lider-wrap').classList.remove('hidden');
 
         const completas = equipes.filter(e => e.status === 'Completo').length;
         const pendentes = equipes.filter(e => e.status === 'Pendente').length;
-        const media = equipes.reduce((s, e) => s + Number(e.total || 0), 0) / equipes.length;
+        const media     = equipes.reduce((s, e) => s + Number(e.total || 0), 0) / equipes.length;
         document.getElementById('stat-equipes').textContent   = equipes.length;
         document.getElementById('stat-completas').textContent = completas;
         document.getElementById('stat-pendentes').textContent = pendentes;
         document.getElementById('stat-media').textContent     = media.toFixed(1);
-        document.getElementById('hub-stats').style.display    = '';
+        document.getElementById('hub-stats').style.display   = '';
       }
     } catch (_) {}
   }
