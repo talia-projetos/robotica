@@ -92,12 +92,33 @@ function TORNEIO_instalar() {
     criarAbaConfig_(ss);
     criarAbaEquipes_(ss);
     criarAbaTampinhas_(ss);
+    const pinCriado = criarAbaHubJuizes_(ss);
     atualizarInterno_(ss);
     instalarGatilho_(ss);
-    ss.toast('Sistema instalado e resultados calculados.', '🏆 Torneio', 6);
+    const msg = pinCriado
+      ? 'Sistema instalado! Coordenação criada → Nome: "Coordenação"  PIN: ' + pinCriado
+      : 'Sistema instalado e resultados calculados.';
+    ss.toast(msg, '🏆 Torneio', 12);
   } finally {
     lock.releaseLock();
   }
+}
+
+function criarAbaHubJuizes_(ss) {
+  let aba = ss.getSheetByName('HUB_JUIZES');
+  if (!aba) {
+    aba = ss.insertSheet('HUB_JUIZES');
+    aba.getRange(1,1,1,4).setValues([['Nome','PIN','Categoria','Ativo']]);
+  }
+  // Verifica se já existe algum coordenador
+  const dados = aba.getLastRow() > 1 ? aba.getDataRange().getValues() : [[]];
+  const temCoord = dados.slice(1).some(function(r) {
+    return String(r[2]||'').toLowerCase().indexOf('coord') >= 0;
+  });
+  if (temCoord) return null; // já existe, não sobrescreve
+  const pin = String(Math.floor(1000 + Math.random() * 9000)); // PIN de 4 dígitos
+  aba.appendRow(['Coordenação', pin, 'Coordenação', 'Sim']);
+  return pin;
 }
 
 function TORNEIO_atualizar() {
