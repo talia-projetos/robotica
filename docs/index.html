@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hub — Torneio de Robótica</title>
+  <title>Hub: Torneio de Robótica</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/styles.css">
-  <script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js"></script>
   <style>
     .hub-card__icon {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: .5rem;
     }
-    .hub-card__icon svg { width: 20px; height: 20px; stroke-width: 2; }
+    .hub-card__icon svg { width: 20px; height: 20px; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
   </style>
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';
@@ -54,7 +53,7 @@
 
     <div id="hub-lider-wrap" class="hidden">
       <div class="hub-lider">
-        <i data-lucide="trophy" style="width:22px;height:22px;color:#F2C94C;stroke-width:2;flex-shrink:0"></i>
+        <svg viewBox="0 0 24 24" fill="none" stroke="#F2C94C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px;flex-shrink:0"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>
         <div>
           <div class="hub-lider__label">Liderando</div>
           <div class="hub-lider__nome" id="s-lider">—</div>
@@ -93,8 +92,8 @@
 
       <a href="ranking.html" class="hub-card">
         <div class="hub-card__stripe" style="background:linear-gradient(90deg,#2F80ED,#56CCF2)"></div>
-        <div class="hub-card__icon" style="background:#EBF3FF;color:#2F80ED">
-          <i data-lucide="bar-chart-2" style="color:#2F80ED"></i>
+        <div class="hub-card__icon" style="background:#EBF3FF">
+          <svg viewBox="0 0 24 24" stroke="#2F80ED"><polyline points="18 20 18 10"/><polyline points="12 20 12 4"/><polyline points="6 20 6 14"/></svg>
         </div>
         <div class="hub-card__title">Ranking Geral</div>
         <div class="hub-card__desc">Classificação ao vivo por pontuação total. Atualizado automaticamente a cada 10 segundos.</div>
@@ -102,8 +101,8 @@
 
       <a href="arena.html" class="hub-card">
         <div class="hub-card__stripe" style="background:linear-gradient(90deg,#F2994A,#F2C94C)"></div>
-        <div class="hub-card__icon" style="background:#FFF3E0;color:#F2994A">
-          <i data-lucide="monitor" style="color:#F2994A"></i>
+        <div class="hub-card__icon" style="background:#FFF3E0">
+          <svg viewBox="0 0 24 24" stroke="#F2994A"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         </div>
         <div class="hub-card__title">Arena — Telão</div>
         <div class="hub-card__desc">Pontuações de cada round por equipe. Modo público, otimizado para exibição no telão.</div>
@@ -111,8 +110,8 @@
 
       <a href="ranking.html#categorias" class="hub-card">
         <div class="hub-card__stripe" style="background:linear-gradient(90deg,#8E5BD9,#B57BEC)"></div>
-        <div class="hub-card__icon" style="background:#F3EEFF;color:#8E5BD9">
-          <i data-lucide="award" style="color:#8E5BD9"></i>
+        <div class="hub-card__icon" style="background:#F3EEFF">
+          <svg viewBox="0 0 24 24" stroke="#8E5BD9"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
         </div>
         <div class="hub-card__title">Ranking por Categoria</div>
         <div class="hub-card__desc">Arena, Projeto de Inovação, Design do Robô, Core Values e Tampinhas que Transformam.</div>
@@ -120,8 +119,8 @@
 
       <a href="turma.html" class="hub-card">
         <div class="hub-card__stripe" style="background:linear-gradient(90deg,#27AE60,#6FCF97)"></div>
-        <div class="hub-card__icon" style="background:#E8F8EF;color:#27AE60">
-          <i data-lucide="book-open" style="color:#27AE60"></i>
+        <div class="hub-card__icon" style="background:#E8F8EF">
+          <svg viewBox="0 0 24 24" stroke="#27AE60"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         </div>
         <div class="hub-card__title">Minha Turma</div>
         <div class="hub-card__desc">Professor: acesse notas e comentários dos juízes da sua equipe com o PIN da turma.</div>
@@ -129,8 +128,8 @@
 
       <a href="deliberacao.html" class="hub-card">
         <div class="hub-card__stripe" style="background:linear-gradient(90deg,#EB5757,#F97316)"></div>
-        <div class="hub-card__icon" style="background:#FEF2F2;color:#EB5757">
-          <i data-lucide="users" style="color:#EB5757"></i>
+        <div class="hub-card__icon" style="background:#FEF2F2">
+          <svg viewBox="0 0 24 24" stroke="#EB5757"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
         <div class="hub-card__title">Deliberação</div>
         <div class="hub-card__desc">Comparação de equipes, votação e chat em tempo real entre juízes e coordenação.</div>
@@ -138,8 +137,8 @@
 
       <a href="coordenacao.html" class="hub-card">
         <div class="hub-card__stripe" style="background:linear-gradient(90deg,#12355B,#2F80ED)"></div>
-        <div class="hub-card__icon" style="background:#EBF3FF;color:#12355B">
-          <i data-lucide="layout-dashboard" style="color:#12355B"></i>
+        <div class="hub-card__icon" style="background:#E8EFF7">
+          <svg viewBox="0 0 24 24" stroke="#12355B"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         </div>
         <div class="hub-card__title">Coordenação</div>
         <div class="hub-card__desc">Painel completo com resultados e comentários de todas as turmas por categoria.</div>
@@ -152,8 +151,6 @@
 <div id="toast"></div>
 <script src="js/api.js"></script>
 <script>
-  lucide.createIcons();
-
   document.getElementById('btn-sessao').addEventListener('click', () => {
     CoordAuth.clear(); location.reload();
   });
