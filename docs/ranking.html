@@ -21,8 +21,10 @@
     <a href="coordenacao.html">Coordenação</a>
   </nav>
   <div class="topbar__badge">
+    <span id="badge-coord" class="text-sm"></span>
     <span id="ultimo-update" class="text-sm"></span>
     <span class="spinner" id="spinner"></span>
+    <button class="btn btn-outline btn-sm" id="btn-sair" style="border-color:rgba(255,255,255,.3);color:#fff;display:none" onclick="CoordAuth.clear();location.reload()">Sair</button>
   </div>
 </header>
 
@@ -216,7 +218,11 @@
   if (location.hash === '#categorias') mostrarView('categorias');
   else mostrarView('geral');
 
-  iniciarPolling(carregar, 10000);
+  iniciarGateCoord(function(nome) {
+    document.getElementById('badge-coord').textContent = nome;
+    document.getElementById('btn-sair').style.display = '';
+    iniciarPolling(carregar, 10000);
+  });
 </script>
 </body>
 </html>

@@ -67,22 +67,6 @@
 </header>
 
 <!-- Login inline -->
-<div id="login-overlay" class="container hidden">
-  <div class="form-card mt-2" style="max-width:440px;margin:1.5rem auto">
-    <h2>🗳️ Sala de Deliberação</h2>
-    <p class="text-sm mt-1">Entre com seu nome e PIN para participar.</p>
-    <div class="field mt-2">
-      <label>Nome</label>
-      <input id="l-nome" type="text" placeholder="Seu nome" autocomplete="name">
-    </div>
-    <div class="field">
-      <label>PIN</label>
-      <input id="l-pin" type="password" placeholder="PIN" autocomplete="current-password">
-    </div>
-    <button class="btn btn-primary mt-1 w-full" id="btn-login-ok">Entrar na deliberação</button>
-  </div>
-</div>
-
 <div class="container" id="main-content" style="display:none">
 
   <div class="delib-layout mt-2">
@@ -176,46 +160,16 @@
   let ultimoVotos = 0;
 
   // ── Auth ─────────────────────────────────────────────────────────
-  function atualizarBadge() {
-    const badge = document.getElementById('badge-nome');
-    const btn   = document.getElementById('btn-sessao');
-    if (Sessao.logado()) {
-      badge.textContent = Sessao.juiz;
-      btn.textContent   = 'Sair';
-      document.getElementById('login-overlay').classList.add('hidden');
-      document.getElementById('main-content').style.display = '';
-      iniciarHub();
-    } else {
-      badge.textContent = '';
-      btn.textContent   = 'Entrar';
-      document.getElementById('login-overlay').classList.remove('hidden');
-      document.getElementById('main-content').style.display = 'none';
-    }
-  }
-
   document.getElementById('btn-sessao').addEventListener('click', () => {
-    if (Sessao.logado()) { Sessao.clear(); atualizarBadge(); }
-    else document.getElementById('login-overlay').classList.remove('hidden');
+    Sessao.clear(); CoordAuth.clear(); location.reload();
   });
 
-  document.getElementById('btn-login-ok').addEventListener('click', async function() {
-    const nome = document.getElementById('l-nome').value.trim();
-    const pin  = document.getElementById('l-pin').value.trim();
-    if (!nome || !pin) { toast('Preencha nome e PIN.', 'err'); return; }
-    this.disabled = true;
-    this.textContent = 'Verificando…';
-    try {
-      const r = await API.verificarJuiz(nome, pin);
-      if (!r.ok) { toast(r.erro || 'Credenciais inválidas.', 'err'); return; }
-      Sessao.set(nome, pin);
-      atualizarBadge();
-      toast('Bem-vindo(a), ' + nome + '!', 'ok');
-    } catch(e) {
-      toast('Erro: ' + e.message, 'err');
-    } finally {
-      this.disabled = false;
-      this.textContent = 'Entrar na deliberação';
-    }
+  iniciarGateCoord(function(nome) {
+    document.getElementById('badge-nome').textContent = nome;
+    document.getElementById('btn-sessao').textContent = 'Sair';
+    if (!Sessao.logado()) Sessao.set(nome, CoordAuth.pin);
+    document.getElementById('main-content').style.display = '';
+    iniciarHub();
   });
 
   // ── Hub ──────────────────────────────────────────────────────────

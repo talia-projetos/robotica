@@ -99,23 +99,6 @@
 
 <div class="container">
 
-  <!-- Login inline -->
-  <div id="login-box" class="form-card hidden" style="max-width:400px;margin:1.5rem auto">
-    <h2>Identificação</h2>
-    <div class="field mt-2">
-      <label>Nome</label>
-      <input id="l-nome" type="text" placeholder="Seu nome" autocomplete="name">
-    </div>
-    <div class="field">
-      <label>PIN</label>
-      <input id="l-pin" type="password" placeholder="PIN" autocomplete="current-password">
-    </div>
-    <div class="flex gap-1 mt-2">
-      <button class="btn btn-primary" id="btn-login-ok">Confirmar</button>
-      <button class="btn btn-outline" id="btn-login-cancel">Cancelar</button>
-    </div>
-  </div>
-
   <!-- Hero + líder -->
   <div class="hub-hero">
     <div class="hub-hero__titulo" id="hub-titulo">Torneio Interno de Robótica</div>
@@ -180,32 +163,8 @@
 <div id="toast"></div>
 <script src="js/api.js"></script>
 <script>
-  function atualizarBadge() {
-    const nome = Sessao.juiz;
-    document.getElementById('badge-nome').textContent = nome || '';
-    document.getElementById('btn-sessao').textContent = nome ? 'Sair' : 'Entrar';
-  }
-
   document.getElementById('btn-sessao').addEventListener('click', () => {
-    if (Sessao.logado()) {
-      Sessao.clear(); atualizarBadge(); toast('Sessão encerrada.', 'ok');
-    } else {
-      document.getElementById('login-box').classList.remove('hidden');
-    }
-  });
-
-  document.getElementById('btn-login-cancel').addEventListener('click', () => {
-    document.getElementById('login-box').classList.add('hidden');
-  });
-
-  document.getElementById('btn-login-ok').addEventListener('click', () => {
-    const nome = document.getElementById('l-nome').value.trim();
-    const pin  = document.getElementById('l-pin').value.trim();
-    if (!nome || !pin) { toast('Preencha nome e PIN.', 'err'); return; }
-    Sessao.set(nome, pin);
-    document.getElementById('login-box').classList.add('hidden');
-    atualizarBadge();
-    toast('Olá, ' + nome + '!', 'ok');
+    CoordAuth.clear(); location.reload();
   });
 
   async function carregarStats() {
@@ -234,8 +193,11 @@
     } catch (_) {}
   }
 
-  atualizarBadge();
-  carregarStats();
+  iniciarGateCoord(function(nome) {
+    document.getElementById('badge-nome').textContent = nome;
+    document.getElementById('btn-sessao').textContent = 'Sair';
+    carregarStats();
+  });
 </script>
 </body>
 </html>
