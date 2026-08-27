@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coordenação — Torneio de Robótica</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    window.API_URL = 'https://script.google.com/macros/s/AKfycbyENSmZwGatlhsQbkGuY3gUlnw8EVaUQxHt-xA5AWqEm55eSBVHcj6BmbmAPP4LZTpR/exec';
+  </script>
+  <style>
+    /* ── Login ───────────────────────────────────────────────── */
+    .login-wrap { max-width: 420px; margin: 3rem auto; }
+    .login-card {
+      background: var(--branco);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: 0 4px 24px rgba(18,53,91,.10);
+      border: 1.5px solid var(--cinza);
+    }
+    .login-card h2 { font-size: 1.25rem; font-weight: 800; color: var(--marinho); margin-bottom: .25rem; }
+    .login-card p  { font-size: .875rem; color: var(--texto-sm); margin-bottom: 1.25rem; }
+
+    /* ── Filtros ─────────────────────────────────────────────── */
+    .coord-toolbar {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .coord-toolbar select, .coord-toolbar input {
+      padding: .4rem .75rem;
+      border: 1.5px solid var(--cinza);
+      border-radius: 7px;
+      font-family: inherit;
+      font-size: .875rem;
+      background: var(--branco);
+    }
+    .coord-logout { margin-left: auto; display: flex; align-items: center; gap: .75rem; }
+    .coord-logout span { font-size: .85rem; color: var(--texto-sm); }
+
+    /* ── Tabs de categoria ───────────────────────────────────── */
+    .tab-bar {
+      display: flex;
+      gap: .25rem;
+      border-bottom: 2px solid var(--cinza);
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: .5rem 1rem;
+      font-size: .82rem;
+      font-weight: 700;
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      color: var(--texto-sm);
+      border-radius: 6px 6px 0 0;
+      transition: color .15s;
+    }
+    .tab-btn.ativo { border-bottom-color: var(--marinho); color: var(--marinho); }
+    .tab-btn:hover:not(.ativo) { color: var(--azul); }
+
+    /* ── Cards de equipe ─────────────────────────────────────── */
+    .eq-cards { display: flex; flex-direction: column; gap: .75rem; }
+    .eq-card {
+      background: var(--branco);
+      border: 1.5px solid var(--cinza);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .eq-card__header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: .875rem 1.25rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .eq-card__header:hover { background: var(--fundo); }
+    .eq-card__pos {
+      font-size: .9rem;
+      font-weight: 800;
+      color: var(--texto-sm);
+      min-width: 28px;
+    }
+    .eq-card__id  { font-size: 1rem; font-weight: 800; color: var(--marinho); }
+    .eq-card__nome { font-size: .82rem; color: var(--texto-sm); }
+    .eq-card__scores {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .eq-score-mini {
+      text-align: center;
+      min-width: 44px;
+    }
+    .eq-score-mini__val  { font-size: .95rem; font-weight: 700; color: var(--marinho); }
+    .eq-score-mini__label{ font-size: .65rem; color: var(--texto-sm); text-transform: uppercase; letter-spacing: .04em; }
+    .eq-score-total { font-size: 1.1rem; font-weight: 800; color: var(--marinho); border-left: 1.5px solid var(--cinza); padding-left: 1rem; min-width: 54px; text-align: right; }
+    .eq-card__arrow { font-size: .75rem; color: var(--texto-sm); transition: transform .2s; flex-shrink: 0; }
+    .eq-card.open .eq-card__arrow { transform: rotate(180deg); }
+
+    /* ── Detalhe da equipe ───────────────────────────────────── */
+    .eq-card__body { display: none; border-top: 1.5px solid var(--cinza); padding: 1.25rem; }
+    .eq-card.open .eq-card__body { display: block; }
+
+    .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); gap: .75rem; margin-bottom: 1.25rem; }
+    .detail-score {
+      background: var(--fundo);
+      border-radius: 8px;
+      padding: .75rem 1rem;
+      text-align: center;
+    }
+    .detail-score__val { font-size: 1.5rem; font-weight: 800; color: var(--marinho); }
+    .detail-score__label { font-size: .7rem; color: var(--texto-sm); text-transform: uppercase; letter-spacing: .04em; margin-top: .15rem; }
+    .detail-score__bar { height: 5px; border-radius: 3px; background: var(--cinza); margin-top: .5rem; overflow: hidden; }
+    .detail-score__bar-fill { height: 100%; border-radius: 3px; }
+
+    /* ── Comentários inline ──────────────────────────────────── */
+    .comments-title { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--marinho); margin: 1rem 0 .5rem; }
+    .comments-cols { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: .75rem; }
+    .comment-block {
+      background: var(--fundo);
+      border-radius: 8px;
+      padding: .75rem;
+      border-left: 3px solid var(--cinza);
+    }
+    .comment-block__cat { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--texto-sm); margin-bottom: .4rem; }
+    .comment-bom { border-left-color: var(--verde); background: #F0FBF4; padding: .4rem .6rem; border-radius: 0 6px 6px 0; margin-bottom: .35rem; }
+    .comment-ref { border-left-color: var(--laranja); background: #FFF7EE; padding: .4rem .6rem; border-radius: 0 6px 6px 0; }
+    .comment-tag { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin-bottom: .15rem; }
+    .comment-tag.bom { color: var(--verde); }
+    .comment-tag.ref { color: var(--laranja); }
+    .comment-text { font-size: .82rem; color: var(--texto); line-height: 1.45; }
+    .no-comment { font-size: .8rem; color: var(--texto-sm); font-style: italic; }
+
+    /* ── Vista de uma categoria ──────────────────────────────── */
+    #view-cat table { width: 100%; border-collapse: collapse; }
+    #view-cat thead th { background: var(--marinho); color: #fff; padding: .65rem 1rem; font-size: .82rem; text-align: left; }
+    #view-cat tbody tr { border-bottom: 1px solid var(--cinza); }
+    #view-cat tbody tr:hover { background: var(--fundo); }
+    #view-cat tbody td { padding: .7rem 1rem; font-size: .875rem; vertical-align: top; }
+    .cat-comments-cell { font-size: .82rem; }
+    .cat-bom-line { color: var(--verde); }
+    .cat-ref-line { color: var(--laranja); }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="index.html" class="topbar__brand">Torneio de Robótica</a>
+  <nav class="topbar__nav">
+    <a href="index.html">Hub</a>
+    <a href="ranking.html">Ranking</a>
+    <a href="arena.html">Arena</a>
+    <a href="deliberacao.html">Deliberação</a>
+    <a href="coordenacao.html" class="ativo">Coordenação</a>
+  </nav>
+  <div class="topbar__badge">
+    <span id="badge-coord" class="text-sm"></span>
+    <span class="spinner" id="spinner" style="display:none"></span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ── LOGIN ─────────────────────────────────────────────────── -->
+  <div id="view-login" class="login-wrap">
+    <div class="login-card">
+      <h2>Acesso — Coordenação</h2>
+      <p>Entre com suas credenciais de coordenação para visualizar os resultados de todas as turmas.</p>
+      <div class="field">
+        <label>Nome</label>
+        <input id="l-nome" type="text" placeholder="Seu nome" autocomplete="name">
+      </div>
+      <div class="field">
+        <label>PIN</label>
+        <input id="l-pin" type="password" placeholder="PIN" autocomplete="current-password">
+      </div>
+      <div id="login-erro" style="color:var(--coral);font-size:.85rem;margin-top:.5rem;display:none"></div>
+      <button class="btn btn-primary mt-2 w-full" id="btn-acessar">Acessar</button>
+      <p style="margin-top:1rem;font-size:.75rem;color:var(--texto-sm)">
+        Para cadastrar um coordenador, adicione na aba HUB_JUIZES com categoria "Coordenação".
+      </p>
+    </div>
+  </div>
+
+  <!-- ── PAINEL DA COORDENAÇÃO ─────────────────────────────────── -->
+  <div id="view-coord" class="hidden">
+
+    <div class="coord-toolbar">
+      <div class="tab-bar" id="tab-bar" style="border:none;margin:0">
+        <button class="tab-btn ativo" onclick="mudarTab('todas')">Todas as turmas</button>
+        <button class="tab-btn" onclick="mudarTab('projeto')">Projeto</button>
+        <button class="tab-btn" onclick="mudarTab('design')">Design</button>
+        <button class="tab-btn" onclick="mudarTab('core')">Core Values</button>
+      </div>
+      <input id="filtro-busca" type="search" placeholder="Buscar equipe…" oninput="filtrar()" style="min-width:160px">
+      <div class="coord-logout">
+        <span id="logout-info"></span>
+        <button class="btn btn-outline btn-sm" id="btn-sair">Sair</button>
+      </div>
+    </div>
+
+    <!-- Vista: todas as turmas com accordion -->
+    <div id="view-todas">
+      <div class="eq-cards" id="lista-cards"></div>
+    </div>
+
+    <!-- Vista: uma categoria com comentários em tabela -->
+    <div id="view-cat" class="hidden">
+      <div class="table-wrap">
+        <table>
+          <thead id="cat-thead"></thead>
+          <tbody id="cat-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="toast"></div>
+<script src="js/api.js"></script>
+<script>
+  const SK_NOME = 'coord_nome';
+  const SK_PIN  = 'coord_pin';
+
+  let dadosEquipes = [];
+  let tabAtual = 'todas';
+
+  const CAT_MAP = {
+    projeto: { label: 'Projeto de Inovação', color: '#8E5BD9', key: 'projeto' },
+    design:  { label: 'Design do Robô',      color: '#F2994A', key: 'design'  },
+    core:    { label: 'Core Values',          color: '#27AE60', key: 'core'    }
+  };
+
+  const SCORE_DEFS = [
+    { campo: 'arena20',  label: 'Arena',    color: '#2F80ED', max: 20 },
+    { campo: 'proj20',   label: 'Projeto',  color: '#8E5BD9', max: 20 },
+    { campo: 'des20',    label: 'Design',   color: '#F2994A', max: 20 },
+    { campo: 'core20',   label: 'Core',     color: '#27AE60', max: 20 },
+    { campo: 'tamp20',   label: 'Tamp.',    color: '#EB5757', max: 20 }
+  ];
+
+  function fmt(v) { return Number(v || 0).toFixed(2); }
+
+  function statusPill(s) {
+    const cls = s === 'Completo' ? 'completo' : s === 'Pendente' ? 'pendente' : 'sem';
+    return `<span class="status-pill status-${cls}">${s || 'Sem dados'}</span>`;
+  }
+
+  // ── Tabs ──────────────────────────────────────────────────────
+  function mudarTab(tab) {
+    tabAtual = tab;
+    document.querySelectorAll('.tab-btn').forEach(function(b) {
+      b.classList.toggle('ativo', b.textContent.trim().toLowerCase().startsWith(
+        tab === 'todas' ? 'todas' : tab === 'projeto' ? 'proj' : tab === 'design' ? 'des' : 'core'
+      ));
+    });
+    document.getElementById('view-todas').classList.toggle('hidden', tab !== 'todas');
+    document.getElementById('view-cat').classList.toggle('hidden', tab === 'todas');
+    if (tab !== 'todas') renderCat(tab);
+  }
+
+  // ── Filtro ─────────────────────────────────────────────────────
+  function filtrar() {
+    const q = (document.getElementById('filtro-busca').value || '').trim().toLowerCase();
+    document.querySelectorAll('.eq-card').forEach(function(card) {
+      const txt = card.dataset.busca || '';
+      card.style.display = (!q || txt.includes(q)) ? '' : 'none';
+    });
+  }
+
+  // ── Accordion ─────────────────────────────────────────────────
+  function toggleCard(card) {
+    card.classList.toggle('open');
+  }
+
+  // ── Render todas ───────────────────────────────────────────────
+  function renderTodas(equipes) {
+    const container = document.getElementById('lista-cards');
+    if (!equipes.length) {
+      container.innerHTML = '<p class="text-sm" style="color:var(--texto-sm)">Nenhuma equipe encontrada.</p>';
+      return;
+    }
+
+    container.innerHTML = equipes.map(function(item, i) {
+      const eq  = item.equipe;
+      const sc  = item.scores;
+      const pos = sc && sc.posGeral ? sc.posGeral : (i + 1);
+
+      const miniScores = sc ? SCORE_DEFS.map(function(d) {
+        return `<div class="eq-score-mini">
+          <div class="eq-score-mini__val">${fmt(sc[d.campo])}</div>
+          <div class="eq-score-mini__label">${d.label}</div>
+        </div>`;
+      }).join('') : '';
+
+      const totalBlock = sc
+        ? `<div class="eq-score-total">${fmt(sc.total)}<br><span style="font-size:.65rem;font-weight:600;color:var(--texto-sm)">pts</span></div>`
+        : '';
+
+      const statusB = sc ? statusPill(sc.status) : '';
+
+      // Scores detail
+      const detailScores = sc ? SCORE_DEFS.map(function(d) {
+        const val = Number(sc[d.campo] || 0);
+        const pct = Math.min(100, (val / d.max) * 100);
+        return `<div class="detail-score">
+          <div class="detail-score__val">${fmt(val)}</div>
+          <div class="detail-score__label">${d.label}</div>
+          <div class="detail-score__bar"><div class="detail-score__bar-fill" style="width:${pct}%;background:${d.color}"></div></div>
+        </div>`;
+      }).join('') + `<div class="detail-score" style="border:1.5px solid var(--brand-ouro)">
+        <div class="detail-score__val" style="color:#B7791F">${fmt(sc ? sc.total : 0)}</div>
+        <div class="detail-score__label">Total</div>
+        <div class="detail-score__bar"><div class="detail-score__bar-fill" style="width:${Math.min(100,(sc?sc.total:0))}%;background:var(--brand-ouro)"></div></div>
+      </div>` : '<p class="text-sm" style="color:var(--texto-sm)">Sem resultados ainda.</p>';
+
+      // Comentários
+      const comsHtml = Object.keys(CAT_MAP).map(function(catKey) {
+        const cat  = CAT_MAP[catKey];
+        const lista = (item.comentarios && item.comentarios[catKey]) || [];
+        if (!lista.length) return `<div class="comment-block" style="border-left-color:${cat.color}">
+          <div class="comment-block__cat" style="color:${cat.color}">${cat.label}</div>
+          <span class="no-comment">Sem comentários ainda.</span>
+        </div>`;
+        return lista.map(function(c) {
+          const bom = c.bomTrabalho ? `<div class="comment-bom"><div class="comment-tag bom">Bom trabalho!</div><div class="comment-text">${c.bomTrabalho}</div></div>` : '';
+          const ref = c.reflitam    ? `<div class="comment-ref"><div class="comment-tag ref">Reflitam sobre...</div><div class="comment-text">${c.reflitam}</div></div>` : '';
+          const juiz = c.juiz ? `<div style="font-size:.65rem;color:var(--texto-sm);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem">${cat.label} · ${c.juiz}</div>` : `<div style="font-size:.65rem;color:var(--texto-sm);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.35rem">${cat.label}</div>`;
+          return `<div class="comment-block" style="border-left-color:${cat.color}">${juiz}${bom}${ref}</div>`;
+        }).join('');
+      }).join('');
+
+      const busca = (eq.id + ' ' + eq.nome + ' ' + eq.turno).toLowerCase();
+
+      return `<div class="eq-card" data-busca="${busca}" onclick="toggleCard(this)">
+        <div class="eq-card__header">
+          <div class="eq-card__pos">#${pos}</div>
+          <div>
+            <div class="eq-card__id">${eq.id}</div>
+            <div class="eq-card__nome">${eq.nome}${eq.turno ? ' · ' + eq.turno : ''}</div>
+          </div>
+          ${statusB}
+          <div class="eq-card__scores">${miniScores}${totalBlock}</div>
+          <span class="eq-card__arrow">▼</span>
+        </div>
+        <div class="eq-card__body">
+          <div class="detail-grid">${detailScores}</div>
+          <div class="comments-title">Comentários dos Juízes</div>
+          <div class="comments-cols">${comsHtml}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // ── Render por categoria ────────────────────────────────────────
+  function renderCat(catKey) {
+    const cat = CAT_MAP[catKey];
+    if (!cat) return;
+    const thead = document.getElementById('cat-thead');
+    const tbody = document.getElementById('cat-tbody');
+
+    thead.innerHTML = `<tr>
+      <th>Pos.</th>
+      <th>Equipe</th>
+      <th>Turno</th>
+      <th style="text-align:right">Nota (20pts)</th>
+      <th>Juízes</th>
+      <th>Bom trabalho!</th>
+      <th>Reflitam sobre...</th>
+    </tr>`;
+
+    const scoreField = catKey === 'projeto' ? 'proj20' : catKey === 'design' ? 'des20' : 'core20';
+    const posField   = catKey === 'projeto' ? 'posProj': catKey === 'design' ? 'posDes': catKey === 'core' ? 'posCore': 'posGeral';
+    const jzField    = catKey === 'projeto' ? 'projJuizes': catKey === 'design' ? 'desJuizes': 'coreJuizes';
+
+    const sorted = dadosEquipes.slice().sort(function(a, b) {
+      const pa = a.scores ? (a.scores[posField] || 9999) : 9999;
+      const pb = b.scores ? (b.scores[posField] || 9999) : 9999;
+      return pa - pb;
+    });
+
+    tbody.innerHTML = sorted.map(function(item) {
+      const eq   = item.equipe;
+      const sc   = item.scores;
+      const nota = sc ? fmt(sc[scoreField]) : '—';
+      const jz   = sc ? (sc[jzField] || 0) : 0;
+      const pos  = sc && sc[posField] ? '#' + sc[posField] : '—';
+
+      const lista = (item.comentarios && item.comentarios[catKey]) || [];
+      const boms = lista.map(function(c) { return c.bomTrabalho; }).filter(Boolean);
+      const refs = lista.map(function(c) { return c.reflitam;    }).filter(Boolean);
+
+      const bomCell = boms.length
+        ? boms.map(function(t) { return `<div class="cat-bom-line">${t}</div>`; }).join('')
+        : '<span style="color:var(--texto-sm);font-size:.8rem">—</span>';
+      const refCell = refs.length
+        ? refs.map(function(t) { return `<div class="cat-ref-line">${t}</div>`; }).join('')
+        : '<span style="color:var(--texto-sm);font-size:.8rem">—</span>';
+
+      return `<tr>
+        <td><strong>${pos}</strong></td>
+        <td><strong>${eq.id}</strong><br><span class="text-sm">${eq.nome}</span></td>
+        <td class="text-sm">${eq.turno || '—'}</td>
+        <td style="text-align:right;font-weight:700">${nota}</td>
+        <td class="text-sm">${jz}</td>
+        <td class="cat-comments-cell">${bomCell}</td>
+        <td class="cat-comments-cell">${refCell}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── Auth ───────────────────────────────────────────────────────
+  function sair() {
+    localStorage.removeItem(SK_NOME);
+    localStorage.removeItem(SK_PIN);
+    document.getElementById('view-coord').classList.add('hidden');
+    document.getElementById('view-login').classList.remove('hidden');
+    document.getElementById('badge-coord').textContent = '';
+  }
+
+  document.getElementById('btn-sair').addEventListener('click', sair);
+
+  document.getElementById('l-pin').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('btn-acessar').click();
+  });
+
+  document.getElementById('btn-acessar').addEventListener('click', async function() {
+    const nome = document.getElementById('l-nome').value.trim();
+    const pin  = document.getElementById('l-pin').value.trim();
+    const err  = document.getElementById('login-erro');
+    err.style.display = 'none';
+    if (!nome) { err.textContent = 'Preencha o nome.'; err.style.display = ''; return; }
+
+    document.getElementById('spinner').style.display = '';
+    this.disabled = true;
+    try {
+      const r = await API.verificarJuiz(nome, pin);
+      if (!r.ok) { err.textContent = r.erro || 'Credenciais inválidas.'; err.style.display = ''; return; }
+      if (!r.coordenador) { err.textContent = 'Acesso restrito à coordenação. Peça ao administrador para adicionar a categoria "Coordenação" na aba HUB_JUIZES.'; err.style.display = ''; return; }
+      localStorage.setItem(SK_NOME, nome);
+      localStorage.setItem(SK_PIN, pin);
+      await entrar(nome, pin);
+    } catch(e) {
+      err.textContent = 'Erro: ' + e.message;
+      err.style.display = '';
+    } finally {
+      document.getElementById('spinner').style.display = 'none';
+      this.disabled = false;
+    }
+  });
+
+  async function entrar(nome, pin) {
+    document.getElementById('spinner').style.display = '';
+    try {
+      const r = await API.todasTurmas(nome, pin);
+      if (!r.ok) { sair(); toast(r.erro || 'Erro ao carregar.', 'err'); return; }
+      dadosEquipes = r.equipes || [];
+      document.getElementById('view-login').classList.add('hidden');
+      document.getElementById('view-coord').classList.remove('hidden');
+      document.getElementById('badge-coord').textContent = nome;
+      document.getElementById('logout-info').textContent = nome;
+      renderTodas(dadosEquipes);
+    } catch(e) {
+      toast('Erro: ' + e.message, 'err');
+    } finally {
+      document.getElementById('spinner').style.display = 'none';
+    }
+  }
+
+  async function tentarResumir() {
+    const nome = localStorage.getItem(SK_NOME);
+    const pin  = localStorage.getItem(SK_PIN);
+    if (!nome) return;
+    document.getElementById('l-nome').value = nome;
+    await entrar(nome, pin || '');
+  }
+
+  tentarResumir();
+</script>
+</body>
+</html>

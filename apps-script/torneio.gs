@@ -193,6 +193,16 @@ function criarAbaEquipes_(ss) {
     aba.setColumnWidth(5, 120);
     aba.setColumnWidth(6, 100);
     aba.setFrozenRows(1);
+  } else {
+    // Adiciona coluna PIN se ainda não existir
+    const cab = aba.getRange(1, 1, 1, aba.getLastColumn()).getValues()[0];
+    const temPin = cab.some(function(h) { return norm_(String(h)) === 'pin' || norm_(String(h)) === 'senha'; });
+    if (!temPin) {
+      const col = aba.getLastColumn() + 1;
+      aba.getRange(1, col).setValue('PIN')
+        .setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
+      aba.setColumnWidth(col, 100);
+    }
   }
 }
 
@@ -429,6 +439,85 @@ function apiTurma_(p) {
     scores: scores,
     comentarios: comentarios
   };
+}
+
+
+// ================================================================
+// API — VERIFICAÇÃO DE JUIZ / COORDENADOR
+// ================================================================
+
+function apiVerificarJuiz_(p) {
+  const nome = String(p.juiz || '').trim();
+  const pin  = String(p.pin  || '').trim();
+  if (!nome) return { ok: false, erro: 'Nome obrigatório.' };
+  const ss  = SpreadsheetApp.getActiveSpreadsheet();
+  const aba = ss.getSheetByName('HUB_JUIZES');
+  if (!aba || aba.getLastRow() < 2) return { ok: true, nome: nome, categoria: '', coordenador: false };
+  const dados = aba.getDataRange().getValues();
+  for (var i = 1; i < dados.length; i++) {
+    const n = String(dados[i][0] || '').trim().toLowerCase();
+    if (n !== nome.toLowerCase()) continue;
+    const p2    = String(dados[i][1] || '').trim();
+    const cat   = String(dados[i][2] || '').trim();
+    const ativo = dados[i][3] !== false && dados[i][3] !== 'Não';
+    if (!ativo) return { ok: false, erro: 'Usuário inativo.' };
+    if (p2 && p2 !== pin) return { ok: false, erro: 'PIN incorreto.' };
+    const isCoord = norm_(cat).indexOf('coord') >= 0;
+    return { ok: true, nome: dados[i][0], categoria: cat, coordenador: isCoord };
+  }
+  return { ok: false, erro: 'Usuário não encontrado.' };
+}
+
+
+// ================================================================
+// API — TODAS AS TURMAS (coordenação)
+// ================================================================
+
+function apiTodasTurmas_(p) {
+  const auth = apiVerificarJuiz_(p);
+  if (!auth.ok) return auth;
+  if (!auth.coordenador) return { ok: false, erro: 'Acesso restrito à coordenação.' };
+  const ss   = SpreadsheetApp.getActiveSpreadsheet();
+  const diag = [];
+  const cfg  = lerConfig_(ss, diag);
+  const eq   = lerEquipes_(ss, cfg, diag);
+  const scoresMap = {};
+  const abaBase = ss.getSheetByName(T.ABAS.BASE);
+  if (abaBase && abaBase.getLastRow() >= 2) {
+    const dados = abaBase.getDataRange().getValues();
+    const idx = {};
+    dados[0].forEach(function(h, i) { if (h) idx[String(h).trim()] = i; });
+    function g(r, col) { return idx[col] !== undefined ? r[idx[col]] : ''; }
+    dados.slice(1).forEach(function(r) {
+      const id = String(r[idx['ID']] || '').trim().toUpperCase();
+      if (!id) return;
+      scoresMap[id] = {
+        arena20: num_(g(r,'Arena_20')), arenaBruta: num_(g(r,'Arena_Bruta')), arenaRounds: num_(g(r,'Rounds')),
+        proj20:  num_(g(r,'Proj_20')),  projBruta:  num_(g(r,'Proj_Bruta')),  projJuizes:  num_(g(r,'Juizes_Proj')),
+        des20:   num_(g(r,'Des_20')),   desBruta:   num_(g(r,'Des_Bruta')),   desJuizes:   num_(g(r,'Juizes_Des')),
+        core20:  num_(g(r,'Core_20')),  coreBruta:  num_(g(r,'Core_Bruta')),  coreJuizes:  num_(g(r,'Juizes_Core')),
+        tamp20:  num_(g(r,'Tamp_20')),  tampKg:     num_(g(r,'Tamp_kg')),     tampPes:     num_(g(r,'Pesagens')),
+        total:   num_(g(r,'Total')),    status:     String(g(r,'Status') || ''),
+        posGeral: num_(g(r,'Pos_Geral'))
+      };
+    });
+  }
+  const equipes = eq.lista.map(function(e) {
+    return {
+      equipe: { id: e.id, nome: e.nome, turno: e.turno, tutor: e.tutor },
+      scores: scoresMap[e.id] || null,
+      comentarios: {
+        projeto: lerComentariosRubrica_(ss, cfg.abaProj, e.id, eq),
+        design:  lerComentariosRubrica_(ss, cfg.abaDes,  e.id, eq),
+        core:    lerComentariosRubrica_(ss, cfg.abaCore, e.id, eq)
+      }
+    };
+  }).sort(function(a, b) {
+    const pa = a.scores ? (a.scores.posGeral || 9999) : 9999;
+    const pb = b.scores ? (b.scores.posGeral || 9999) : 9999;
+    return pa - pb;
+  });
+  return { ok: true, equipes: equipes };
 }
 
 
@@ -936,6 +1025,8 @@ function doGet(e) {
       case 'config':      r = apiConfig_();         break;
       case 'arena':       r = apiArenaDetalhe_();   break;
       case 'turma':       r = apiTurma_(p);         break;
+      case 'coordenacao': r = apiTodasTurmas_(p);   break;
+      case 'auth':        r = apiVerificarJuiz_(p); break;
       default:            r = { ok: false, erro: 'Ação desconhecida: ' + (p.action || '(vazia)') };
     }
     return jsonOut_(r, cb);

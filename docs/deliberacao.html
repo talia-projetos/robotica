@@ -58,6 +58,7 @@
     <a href="arena.html">Arena</a>
     <a href="turma.html">Minha Turma</a>
     <a href="deliberacao.html" class="ativo">Deliberação</a>
+    <a href="coordenacao.html">Coordenação</a>
   </nav>
   <div class="topbar__badge">
     <span id="badge-nome" class="text-sm"></span>
@@ -197,13 +198,24 @@
     else document.getElementById('login-overlay').classList.remove('hidden');
   });
 
-  document.getElementById('btn-login-ok').addEventListener('click', () => {
+  document.getElementById('btn-login-ok').addEventListener('click', async function() {
     const nome = document.getElementById('l-nome').value.trim();
     const pin  = document.getElementById('l-pin').value.trim();
     if (!nome || !pin) { toast('Preencha nome e PIN.', 'err'); return; }
-    Sessao.set(nome, pin);
-    atualizarBadge();
-    toast('Bem-vindo(a), ' + nome + '!', 'ok');
+    this.disabled = true;
+    this.textContent = 'Verificando…';
+    try {
+      const r = await API.verificarJuiz(nome, pin);
+      if (!r.ok) { toast(r.erro || 'Credenciais inválidas.', 'err'); return; }
+      Sessao.set(nome, pin);
+      atualizarBadge();
+      toast('Bem-vindo(a), ' + nome + '!', 'ok');
+    } catch(e) {
+      toast('Erro: ' + e.message, 'err');
+    } finally {
+      this.disabled = false;
+      this.textContent = 'Entrar na deliberação';
+    }
   });
 
   // ── Hub ──────────────────────────────────────────────────────────

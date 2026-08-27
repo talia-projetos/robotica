@@ -35,6 +35,8 @@ const API = (function () {
     arena:       () => get({ action: 'arena' }),
     categorias:  (cat) => get({ action: 'categorias', categoria: cat || '' }),
     turma:       (id, pin) => get({ action: 'turma', id, pin }),
+    verificarJuiz: (juiz, pin) => get({ action: 'auth', juiz, pin }),
+    todasTurmas: (juiz, pin) => get({ action: 'coordenacao', juiz, pin }),
 
     salvarRubrica: (juiz, pin, categoria, idEquipe, notas) =>
       post({ action: 'rubrica', juiz, pin, categoria, idEquipe, notas }),
