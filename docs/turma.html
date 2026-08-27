@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha Turma — Torneio de Robótica</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script>
+    window.API_URL = 'https://script.google.com/macros/s/AKfycbyjFaR8JydT53tyVl2eSxDlCpUnxjfWXRCWpZ5QzZL5ZPgebuO-pPh4yTlW4sFFGg/exec';
+  </script>
+  <style>
+    /* ── Login ───────────────────────────────────────────────── */
+    .login-wrap {
+      max-width: 420px;
+      margin: 3rem auto;
+    }
+    .login-card {
+      background: var(--branco);
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: 0 4px 24px rgba(18,53,91,.10);
+      border: 1.5px solid var(--cinza);
+    }
+    .login-card h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--marinho);
+      margin-bottom: .25rem;
+    }
+    .login-card p {
+      font-size: .875rem;
+      color: var(--texto-sm);
+      margin-bottom: 1.25rem;
+    }
+
+    /* ── Cabeçalho da equipe ─────────────────────────────────── */
+    .eq-header {
+      background: var(--marinho);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      color: #fff;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .eq-header__id {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+    .eq-header__nome {
+      font-size: 1rem;
+      opacity: .8;
+    }
+    .eq-header__status {
+      margin-left: auto;
+    }
+
+    /* ── Score cards ─────────────────────────────────────────── */
+    .scores-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .score-card {
+      background: var(--branco);
+      border-radius: var(--radius);
+      border: 1.5px solid var(--cinza);
+      padding: 1rem 1.25rem;
+      box-shadow: 0 2px 8px rgba(18,53,91,.06);
+    }
+    .score-card__label {
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--texto-sm);
+      margin-bottom: .5rem;
+    }
+    .score-card__val {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--marinho);
+      line-height: 1;
+    }
+    .score-card__max {
+      font-size: .75rem;
+      color: var(--texto-sm);
+      margin-top: .15rem;
+    }
+    .score-card__bar {
+      height: 6px;
+      border-radius: 3px;
+      background: var(--cinza);
+      margin-top: .75rem;
+      overflow: hidden;
+    }
+    .score-card__bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width .6s ease;
+    }
+    .score-card.total-card {
+      border-color: var(--brand-ouro);
+      box-shadow: 0 2px 14px rgba(232,152,24,.18);
+    }
+    .score-card.total-card .score-card__val {
+      color: #B7791F;
+    }
+
+    /* ── Comentários ─────────────────────────────────────────── */
+    .comments-section {
+      margin-top: 2rem;
+    }
+    .comments-section h3 {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--marinho);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .cat-accordion {
+      border: 1.5px solid var(--cinza);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: .75rem;
+    }
+    .cat-accordion__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .875rem 1.25rem;
+      background: var(--fundo);
+      cursor: pointer;
+      font-weight: 700;
+      font-size: .9rem;
+      color: var(--marinho);
+      user-select: none;
+      border: none;
+      width: 100%;
+      text-align: left;
+    }
+    .cat-accordion__header:hover { background: var(--cinza); }
+    .cat-accordion__dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-right: .5rem;
+    }
+    .cat-accordion__count {
+      font-size: .75rem;
+      font-weight: 600;
+      color: var(--texto-sm);
+      margin-left: auto;
+      margin-right: .75rem;
+    }
+    .cat-accordion__arrow {
+      font-size: .75rem;
+      color: var(--texto-sm);
+      transition: transform .2s;
+    }
+    .cat-accordion.open .cat-accordion__arrow { transform: rotate(180deg); }
+    .cat-accordion__body {
+      display: none;
+      padding: 1rem 1.25rem;
+      background: var(--branco);
+      border-top: 1px solid var(--cinza);
+    }
+    .cat-accordion.open .cat-accordion__body { display: block; }
+
+    .comment-item {
+      padding: .875rem 0;
+      border-bottom: 1px solid var(--cinza);
+    }
+    .comment-item:last-child { border-bottom: none; }
+    .comment-item__juiz {
+      font-size: .72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--texto-sm);
+      margin-bottom: .5rem;
+    }
+    .comment-bom {
+      background: #F0FBF4;
+      border-left: 3px solid var(--verde);
+      border-radius: 0 6px 6px 0;
+      padding: .5rem .75rem;
+      margin-bottom: .5rem;
+    }
+    .comment-ref {
+      background: #FFF7EE;
+      border-left: 3px solid var(--laranja);
+      border-radius: 0 6px 6px 0;
+      padding: .5rem .75rem;
+    }
+    .comment-tag {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: .2rem;
+    }
+    .comment-tag.bom  { color: var(--verde); }
+    .comment-tag.ref  { color: var(--laranja); }
+    .comment-text {
+      font-size: .875rem;
+      color: var(--texto);
+      line-height: 1.5;
+    }
+    .no-comments {
+      color: var(--texto-sm);
+      font-size: .875rem;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    /* ── Logout bar ──────────────────────────────────────────── */
+    .turma-logout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+    .turma-logout__info {
+      font-size: .85rem;
+      color: var(--texto-sm);
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="index.html" class="topbar__brand">Torneio de Robótica</a>
+  <nav class="topbar__nav">
+    <a href="index.html">Hub</a>
+    <a href="ranking.html">Ranking</a>
+    <a href="arena.html">Arena</a>
+    <a href="turma.html" class="ativo">Minha Turma</a>
+  </nav>
+  <div class="topbar__badge">
+    <span id="badge-turma" class="text-sm"></span>
+    <span class="spinner" id="spinner" style="display:none"></span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ── LOGIN ─────────────────────────────────────────────────── -->
+  <div id="view-login" class="login-wrap">
+    <div class="login-card">
+      <h2>Acesso do Professor</h2>
+      <p>Informe o ID da equipe e o PIN para visualizar os resultados e comentários dos juízes.</p>
+      <div class="field">
+        <label>Equipe</label>
+        <select id="l-equipe">
+          <option value="">— carregando equipes… —</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>PIN</label>
+        <input id="l-pin" type="password" placeholder="PIN da turma" autocomplete="current-password">
+      </div>
+      <div id="login-erro" style="color:var(--coral);font-size:.85rem;margin-top:.5rem;display:none"></div>
+      <button class="btn btn-primary mt-2 w-full" id="btn-acessar">Acessar resultados</button>
+    </div>
+  </div>
+
+  <!-- ── RESULTADOS ─────────────────────────────────────────────── -->
+  <div id="view-resultados" class="hidden">
+
+    <div class="turma-logout">
+      <div class="turma-logout__info" id="logout-info"></div>
+      <button class="btn btn-outline btn-sm" id="btn-sair">Sair</button>
+    </div>
+
+    <!-- Cabeçalho da equipe -->
+    <div class="eq-header" id="eq-header">
+      <div>
+        <div class="eq-header__id" id="eq-id">—</div>
+        <div class="eq-header__nome" id="eq-nome">—</div>
+      </div>
+      <div class="eq-header__status" id="eq-status"></div>
+    </div>
+
+    <!-- Score cards -->
+    <div class="scores-grid" id="scores-grid"></div>
+
+    <!-- Comentários -->
+    <div class="comments-section" id="comments-section">
+      <h3>Comentários dos Juízes</h3>
+      <div id="accordions"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<div id="toast"></div>
+<script src="js/api.js"></script>
+<script>
+  const STORAGE_KEY_ID  = 'turma_id';
+  const STORAGE_KEY_PIN = 'turma_pin';
+
+  const CAT_COLORS = {
+    'Projeto de Inovação': { color: '#8E5BD9', bar: '#8E5BD9' },
+    'Design do Robô':      { color: '#F2994A', bar: '#F2994A' },
+    'Core Values':         { color: '#27AE60', bar: '#27AE60' }
+  };
+
+  const SCORE_CARDS = [
+    { label: 'Arena',          campo: 'arena20',  max: 20, color: '#2F80ED', sub: e => e.arenaRounds + ' rounds' },
+    { label: 'Projeto',        campo: 'proj20',   max: 20, color: '#8E5BD9', sub: e => e.projJuizes + ' juízes' },
+    { label: 'Design do Robô', campo: 'des20',    max: 20, color: '#F2994A', sub: e => e.desJuizes + ' juízes' },
+    { label: 'Core Values',    campo: 'core20',   max: 20, color: '#27AE60', sub: e => e.coreJuizes + ' juízes' },
+    { label: 'Tampinhas',      campo: 'tamp20',   max: 20, color: '#EB5757', sub: e => e.tampKg.toFixed(2) + ' kg' }
+  ];
+
+  function fmt(v) { return Number(v || 0).toFixed(2); }
+
+  function statusPill(s) {
+    const cls = s === 'Completo' ? 'completo' : s === 'Pendente' ? 'pendente' : 'sem';
+    return `<span class="status-pill status-${cls}">${s || 'Sem dados'}</span>`;
+  }
+
+  function renderScores(scores) {
+    if (!scores) {
+      document.getElementById('scores-grid').innerHTML =
+        '<p class="text-sm" style="color:var(--texto-sm)">Resultados ainda não disponíveis.</p>';
+      return;
+    }
+
+    const cards = SCORE_CARDS.map(c => {
+      const val  = Number(scores[c.campo] || 0);
+      const pct  = Math.min(100, (val / c.max) * 100);
+      const sub  = c.sub(scores);
+      return `<div class="score-card">
+        <div class="score-card__label">${c.label}</div>
+        <div class="score-card__val">${fmt(val)}</div>
+        <div class="score-card__max">de ${c.max} pts · ${sub}</div>
+        <div class="score-card__bar"><div class="score-card__bar-fill" style="width:${pct}%;background:${c.color}"></div></div>
+      </div>`;
+    });
+
+    const total = Number(scores.total || 0);
+    const totalPct = Math.min(100, (total / 100) * 100);
+    cards.push(`<div class="score-card total-card">
+      <div class="score-card__label">Total</div>
+      <div class="score-card__val">${fmt(total)}</div>
+      <div class="score-card__max">de 100 pts</div>
+      <div class="score-card__bar"><div class="score-card__bar-fill" style="width:${totalPct}%;background:var(--brand-ouro)"></div></div>
+    </div>`);
+
+    document.getElementById('scores-grid').innerHTML = cards.join('');
+  }
+
+  function renderComments(comentarios) {
+    const cats = [
+      { key: 'Projeto de Inovação', label: 'Projeto de Inovação' },
+      { key: 'Design do Robô',      label: 'Design do Robô' },
+      { key: 'Core Values',         label: 'Core Values' }
+    ];
+
+    const html = cats.map(cat => {
+      const lista = (comentarios && comentarios[cat.key]) || [];
+      const c = CAT_COLORS[cat.key] || { color: '#2F80ED' };
+      const count = lista.length;
+
+      const items = count === 0
+        ? '<p class="no-comments">Nenhum comentário disponível ainda.</p>'
+        : lista.map(item => {
+            const partes = [];
+            if (item.bomTrabalho) partes.push(`
+              <div class="comment-bom">
+                <div class="comment-tag bom">Bom trabalho!</div>
+                <div class="comment-text">${item.bomTrabalho}</div>
+              </div>`);
+            if (item.reflitam) partes.push(`
+              <div class="comment-ref">
+                <div class="comment-tag ref">Reflitam sobre...</div>
+                <div class="comment-text">${item.reflitam}</div>
+              </div>`);
+            const juizLine = item.juiz ? `<div class="comment-item__juiz">Juiz: ${item.juiz}</div>` : '';
+            return `<div class="comment-item">${juizLine}${partes.join('')}</div>`;
+          }).join('');
+
+      return `<div class="cat-accordion" id="acc-${cat.key.replace(/\s/g,'_')}">
+        <button class="cat-accordion__header" onclick="toggleAcc(this)">
+          <span class="cat-accordion__dot" style="background:${c.color}"></span>
+          ${cat.label}
+          <span class="cat-accordion__count">${count} comentário${count !== 1 ? 's' : ''}</span>
+          <span class="cat-accordion__arrow">▼</span>
+        </button>
+        <div class="cat-accordion__body">${items}</div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('accordions').innerHTML = html;
+  }
+
+  function toggleAcc(btn) {
+    btn.closest('.cat-accordion').classList.toggle('open');
+  }
+
+  function mostrarResultados(data) {
+    document.getElementById('view-login').classList.add('hidden');
+    document.getElementById('view-resultados').classList.remove('hidden');
+
+    const eq = data.equipe || {};
+    document.getElementById('eq-id').textContent   = eq.id   || '—';
+    document.getElementById('eq-nome').textContent = eq.nome || '—';
+    document.getElementById('eq-status').innerHTML = data.scores ? statusPill(data.scores.status) : '';
+    document.getElementById('badge-turma').textContent = eq.id || '';
+    document.getElementById('logout-info').textContent =
+      'Turma: ' + (eq.nome || eq.id) + (eq.turno ? ' · ' + eq.turno : '');
+
+    renderScores(data.scores);
+    renderComments(data.comentarios);
+
+    // auto-expand first category with comments
+    document.querySelectorAll('.cat-accordion').forEach(function(el) {
+      const count = parseInt(el.querySelector('.cat-accordion__count').textContent) || 0;
+      if (count > 0) el.classList.add('open');
+    });
+  }
+
+  function sair() {
+    localStorage.removeItem(STORAGE_KEY_ID);
+    localStorage.removeItem(STORAGE_KEY_PIN);
+    document.getElementById('view-resultados').classList.add('hidden');
+    document.getElementById('view-login').classList.remove('hidden');
+    document.getElementById('badge-turma').textContent = '';
+    document.getElementById('l-pin').value = '';
+  }
+
+  document.getElementById('btn-sair').addEventListener('click', sair);
+
+  document.getElementById('l-pin').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') document.getElementById('btn-acessar').click();
+  });
+
+  document.getElementById('btn-acessar').addEventListener('click', async function() {
+    const id  = document.getElementById('l-equipe').value.trim().toUpperCase();
+    const pin = document.getElementById('l-pin').value.trim();
+    const erroEl = document.getElementById('login-erro');
+    erroEl.style.display = 'none';
+
+    if (!id) { erroEl.textContent = 'Selecione a equipe.'; erroEl.style.display = ''; return; }
+
+    document.getElementById('spinner').style.display = '';
+    this.disabled = true;
+    try {
+      const r = await API.turma(id, pin);
+      if (!r.ok) {
+        erroEl.textContent = r.erro || 'Erro ao autenticar.';
+        erroEl.style.display = '';
+      } else {
+        localStorage.setItem(STORAGE_KEY_ID, id);
+        localStorage.setItem(STORAGE_KEY_PIN, pin);
+        mostrarResultados(r);
+      }
+    } catch (e) {
+      erroEl.textContent = 'Erro de conexão: ' + e.message;
+      erroEl.style.display = '';
+    } finally {
+      document.getElementById('spinner').style.display = 'none';
+      this.disabled = false;
+    }
+  });
+
+  async function carregarEquipes() {
+    try {
+      const r = await API.equipes();
+      const sel = document.getElementById('l-equipe');
+      if (r.ok && r.equipes && r.equipes.length) {
+        sel.innerHTML = '<option value="">— selecione —</option>' +
+          r.equipes.map(e => `<option value="${e.id}">${e.id} — ${e.nome || ''}</option>`).join('');
+      } else {
+        sel.innerHTML = '<option value="">— nenhuma equipe cadastrada —</option>';
+      }
+    } catch(_) {
+      document.getElementById('l-equipe').innerHTML = '<option value="">— erro ao carregar —</option>';
+    }
+  }
+
+  async function tentarResumir() {
+    const id  = localStorage.getItem(STORAGE_KEY_ID);
+    const pin = localStorage.getItem(STORAGE_KEY_PIN);
+    if (!id) return;
+    document.getElementById('spinner').style.display = '';
+    try {
+      const r = await API.turma(id, pin || '');
+      if (r.ok) mostrarResultados(r);
+    } catch(_) {}
+    finally { document.getElementById('spinner').style.display = 'none'; }
+  }
+
+  carregarEquipes();
+  tentarResumir();
+</script>
+</body>
+</html>

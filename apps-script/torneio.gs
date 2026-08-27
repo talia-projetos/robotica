@@ -184,13 +184,14 @@ function criarAbaEquipes_(ss) {
   let aba = ss.getSheetByName(T.ABAS.EQUIPES);
   if (!aba) {
     aba = ss.insertSheet(T.ABAS.EQUIPES);
-    aba.getRange(1, 1, 1, 5).setValues([['ID_Equipe', 'Nome_Equipe', 'Turno', 'Tutor', 'Qtde_Alunos']]);
-    aba.getRange(1, 1, 1, 5).setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
+    aba.getRange(1, 1, 1, 6).setValues([['ID_Equipe', 'Nome_Equipe', 'Turno', 'Tutor', 'Qtde_Alunos', 'PIN']]);
+    aba.getRange(1, 1, 1, 6).setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
     aba.setColumnWidth(1, 110);
     aba.setColumnWidth(2, 240);
     aba.setColumnWidth(3, 120);
     aba.setColumnWidth(4, 200);
     aba.setColumnWidth(5, 120);
+    aba.setColumnWidth(6, 100);
     aba.setFrozenRows(1);
   }
 }
@@ -314,6 +315,7 @@ function lerEquipes_(ss, cfg, diag) {
   const iTurno= achaCab_(cab, ['turno'], 2);
   const iTutor= achaCab_(cab, ['tutor', 'professor', 'orientador'], 3);
   const iQtd  = achaCab_(cab, ['qtde alunos', 'qtd alunos', 'quantidade alunos', 'alunos'], 4);
+  const iPin  = achaCab_(cab, ['pin', 'senha'], -1);
 
   const lista   = [];
   const porId   = {};
@@ -330,7 +332,8 @@ function lerEquipes_(ss, cfg, diag) {
       nome:  String(r[iNome] || id).trim(),
       turno: String(r[iTurno] || '').trim(),
       tutor: String(r[iTutor] || '').trim(),
-      alunos: Math.max(0, num_(r[iQtd]))
+      alunos: Math.max(0, num_(r[iQtd])),
+      pin:   iPin >= 0 ? String(r[iPin] || '').trim() : ''
     };
 
     lista.push(eq);
@@ -343,6 +346,89 @@ function lerEquipes_(ss, cfg, diag) {
 
   if (!lista.length) diag.push({ nivel: 'ATENÇÃO', cat: 'EQUIPES', msg: 'Nenhuma equipe válida.' });
   return { lista: lista, porId: porId, aliases: aliases };
+}
+
+
+// ================================================================
+// LEITURA DE COMENTÁRIOS DAS RUBRICAS (para visão do professor)
+// ================================================================
+
+function lerComentariosRubrica_(ss, nomeAba, idEquipe, eq) {
+  const aba = ss.getSheetByName(nomeAba);
+  if (!aba || aba.getLastRow() < 2) return [];
+  const dados = aba.getDataRange().getValues();
+  const cab   = dados[0];
+  const iEq   = achaCab_(cab, ['id equipe','id_equipe','equipe avaliada','selecione a equipe','selecione equipe','equipe','turma'], -1);
+  const iVal  = achaCab_(cab, ['validado','homologado','considerar'], -1);
+  const iJuiz = achaCab_(cab, ['nome do juiz','nome do avaliador','juiz','avaliador','email'], -1);
+  const iBom  = achaCab_(cab, ['bom trabalho'], -1);
+  const iRef  = achaCab_(cab, ['reflitam','reflita'], -1);
+  if (iEq < 0 || (iBom < 0 && iRef < 0)) return [];
+  const lista = [];
+  dados.slice(1).forEach(function(r) {
+    if (r.every(function(v) { return v === ''; })) return;
+    if (resolverEq_(r[iEq], eq) !== idEquipe) return;
+    if (iVal >= 0 && !respostaValida_(r[iVal])) return;
+    const bom = iBom >= 0 ? String(r[iBom] || '').trim() : '';
+    const ref = iRef >= 0 ? String(r[iRef] || '').trim() : '';
+    if (!bom && !ref) return;
+    lista.push({
+      juiz: iJuiz >= 0 ? String(r[iJuiz] || '').trim() : '',
+      bomTrabalho: bom,
+      reflitam: ref
+    });
+  });
+  return lista;
+}
+
+
+// ================================================================
+// API — VISÃO DO PROFESSOR (por turma)
+// ================================================================
+
+function apiTurma_(p) {
+  const id  = String(p.id  || '').trim().toUpperCase();
+  const pin = String(p.pin || '').trim();
+  if (!id) return { ok: false, erro: 'ID da equipe obrigatório.' };
+  const ss   = SpreadsheetApp.getActiveSpreadsheet();
+  const diag = [];
+  const cfg  = lerConfig_(ss, diag);
+  const eq   = lerEquipes_(ss, cfg, diag);
+  const equipe = eq.porId[id];
+  if (!equipe) return { ok: false, erro: 'Equipe não encontrada.' };
+  if (equipe.pin) {
+    if (!pin) return { ok: false, erro: 'PIN obrigatório.' };
+    if (equipe.pin !== pin) return { ok: false, erro: 'PIN incorreto.' };
+  }
+  var scores = null;
+  const abaBase = ss.getSheetByName(T.ABAS.BASE);
+  if (abaBase && abaBase.getLastRow() >= 2) {
+    const dados = abaBase.getDataRange().getValues();
+    const idx = {};
+    dados[0].forEach(function(h, i) { if (h) idx[String(h).trim()] = i; });
+    function g(r, col) { return idx[col] !== undefined ? r[idx[col]] : ''; }
+    const row = dados.slice(1).find(function(r) {
+      return String(r[idx['ID']] || '').trim().toUpperCase() === id;
+    });
+    if (row) scores = {
+      arena20: num_(g(row,'Arena_20')),   arenaBruta: num_(g(row,'Arena_Bruta')), arenaRounds: num_(g(row,'Rounds')),
+      proj20:  num_(g(row,'Proj_20')),    projBruta:  num_(g(row,'Proj_Bruta')),  projJuizes:  num_(g(row,'Juizes_Proj')),
+      des20:   num_(g(row,'Des_20')),     desBruta:   num_(g(row,'Des_Bruta')),   desJuizes:   num_(g(row,'Juizes_Des')),
+      core20:  num_(g(row,'Core_20')),    coreBruta:  num_(g(row,'Core_Bruta')),  coreJuizes:  num_(g(row,'Juizes_Core')),
+      tamp20:  num_(g(row,'Tamp_20')),    tampKg:     num_(g(row,'Tamp_kg')),     tampPes:     num_(g(row,'Pesagens')),
+      total:   num_(g(row,'Total')),      status:     String(g(row,'Status') || '')
+    };
+  }
+  const comentarios = {};
+  comentarios[T.CAT.PROJETO] = lerComentariosRubrica_(ss, cfg.abaProj,  id, eq);
+  comentarios[T.CAT.DESIGN]  = lerComentariosRubrica_(ss, cfg.abaDes,   id, eq);
+  comentarios[T.CAT.CORE]    = lerComentariosRubrica_(ss, cfg.abaCore,  id, eq);
+  return {
+    ok: true,
+    equipe: { id: equipe.id, nome: equipe.nome, turno: equipe.turno, tutor: equipe.tutor },
+    scores: scores,
+    comentarios: comentarios
+  };
 }
 
 
@@ -849,6 +935,7 @@ function doGet(e) {
       case 'deliberacao': r = apiDeliberacao_();    break;
       case 'config':      r = apiConfig_();         break;
       case 'arena':       r = apiArenaDetalhe_();   break;
+      case 'turma':       r = apiTurma_(p);         break;
       default:            r = { ok: false, erro: 'Ação desconhecida: ' + (p.action || '(vazia)') };
     }
     return jsonOut_(r, cb);

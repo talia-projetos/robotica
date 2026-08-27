@@ -34,6 +34,7 @@ const API = (function () {
     config:      () => get({ action: 'config' }),
     arena:       () => get({ action: 'arena' }),
     categorias:  (cat) => get({ action: 'categorias', categoria: cat || '' }),
+    turma:       (id, pin) => get({ action: 'turma', id, pin }),
 
     salvarRubrica: (juiz, pin, categoria, idEquipe, notas) =>
       post({ action: 'rubrica', juiz, pin, categoria, idEquipe, notas }),

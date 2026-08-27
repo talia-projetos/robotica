@@ -51,6 +51,33 @@
       font-size: .85rem;
       color: var(--texto-sm);
     }
+    .hub-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: .75rem;
+      margin: 1.5rem 0;
+    }
+    .hub-stat {
+      background: var(--branco);
+      border: 1.5px solid var(--cinza);
+      border-radius: var(--radius);
+      padding: .875rem 1rem;
+      text-align: center;
+    }
+    .hub-stat__val {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--marinho);
+      line-height: 1;
+    }
+    .hub-stat__label {
+      font-size: .72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: var(--texto-sm);
+      margin-top: .35rem;
+    }
   </style>
 </head>
 <body>
@@ -61,6 +88,7 @@
     <a href="index.html" class="ativo">Hub</a>
     <a href="ranking.html">Ranking</a>
     <a href="arena.html">Arena</a>
+    <a href="turma.html">Minha Turma</a>
   </nav>
   <div class="topbar__badge">
     <span id="badge-nome" class="text-sm"></span>
@@ -102,6 +130,26 @@
     </div>
   </div>
 
+  <!-- Stats ao vivo -->
+  <div class="hub-stats" id="hub-stats" style="display:none">
+    <div class="hub-stat">
+      <div class="hub-stat__val" id="stat-equipes">—</div>
+      <div class="hub-stat__label">Equipes</div>
+    </div>
+    <div class="hub-stat">
+      <div class="hub-stat__val" id="stat-completas">—</div>
+      <div class="hub-stat__label">Completas</div>
+    </div>
+    <div class="hub-stat">
+      <div class="hub-stat__val" id="stat-pendentes">—</div>
+      <div class="hub-stat__label">Pendentes</div>
+    </div>
+    <div class="hub-stat">
+      <div class="hub-stat__val" id="stat-media">—</div>
+      <div class="hub-stat__label">Média geral</div>
+    </div>
+  </div>
+
   <!-- Cards de navegação -->
   <div class="grid-2">
     <a href="ranking.html" class="hub-card">
@@ -109,12 +157,20 @@
       <div class="hub-card__desc">Classificação ao vivo por categoria e pontuação total. Atualizado automaticamente.</div>
     </a>
     <a href="arena.html" class="hub-card">
-      <div class="hub-card__title">Arena — Resultados por Round</div>
+      <div class="hub-card__title">Arena — Telão</div>
       <div class="hub-card__desc">Pontuações de cada round por equipe. Otimizado para exibição no telão.</div>
     </a>
     <a href="ranking.html#categorias" class="hub-card">
       <div class="hub-card__title">Ranking por Categoria</div>
       <div class="hub-card__desc">Arena, Projeto de Inovação, Design do Robô, Core Values e Tampinhas que Transformam.</div>
+    </a>
+    <a href="turma.html" class="hub-card">
+      <div class="hub-card__title">Minha Turma</div>
+      <div class="hub-card__desc">Professor: acesse os resultados e comentários dos juízes da sua equipe com PIN.</div>
+    </a>
+    <a href="deliberacao.html" class="hub-card">
+      <div class="hub-card__title">Deliberação</div>
+      <div class="hub-card__desc">Comparação de equipes, votação e chat entre juízes e coordenação.</div>
     </a>
   </div>
 
@@ -158,11 +214,21 @@
         document.getElementById('hub-titulo').textContent = cfg.titulo;
         document.title = cfg.titulo + ' — Hub';
       }
-      if (rk.ok && rk.equipes.length) {
-        const lider = rk.equipes[0];
-        document.getElementById('s-lider').textContent     = lider.id + ' — ' + lider.nome;
+      if (rk.ok && rk.equipes && rk.equipes.length) {
+        const equipes = rk.equipes;
+        const lider = equipes[0];
+        document.getElementById('s-lider').textContent     = lider.id + ' — ' + (lider.nome || lider.turma || '');
         document.getElementById('s-lider-pts').textContent = Number(lider.total || 0).toFixed(1) + ' pts';
         document.getElementById('hub-lider-wrap').classList.remove('hidden');
+
+        const completas = equipes.filter(e => e.status === 'Completo').length;
+        const pendentes = equipes.filter(e => e.status === 'Pendente').length;
+        const media = equipes.reduce((s, e) => s + Number(e.total || 0), 0) / equipes.length;
+        document.getElementById('stat-equipes').textContent   = equipes.length;
+        document.getElementById('stat-completas').textContent = completas;
+        document.getElementById('stat-pendentes').textContent = pendentes;
+        document.getElementById('stat-media').textContent     = media.toFixed(1);
+        document.getElementById('hub-stats').style.display    = '';
       }
     } catch (_) {}
   }
