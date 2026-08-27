@@ -111,7 +111,7 @@ async function iniciarGateCoord(onSuccess) {
 function _abrirGateCoord(onSuccess) {
   const gate = document.createElement('div');
   gate.id = 'coord-gate';
-  gate.style.cssText = 'position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0a1f3a 0%,#12355B 100%);display:flex;align-items:center;justify-content:center;padding:1rem';
+  gate.style.cssText = 'position:fixed;top:64px;left:0;right:0;bottom:0;z-index:9999;background:linear-gradient(135deg,#0a1f3a 0%,#12355B 100%);display:flex;align-items:center;justify-content:center;padding:1rem';
   gate.innerHTML = `
     <div style="background:#fff;border-radius:14px;padding:2rem 2.25rem;width:100%;max-width:380px;box-shadow:0 12px 48px rgba(0,0,0,.35)">
       <div style="font-size:1.15rem;font-weight:800;color:#12355B;margin-bottom:.2rem">Acesso Restrito</div>
