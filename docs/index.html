@@ -131,18 +131,6 @@
     else location.href = 'deliberacao.html'; // redireciona para login
   });
 
-  // Carrega título da configuração silenciosamente
-  async function carregarTitulo() {
-    try {
-      const cfg = await API.config();
-      if (cfg.ok && cfg.titulo) {
-        document.getElementById('hub-titulo').textContent = cfg.titulo;
-        document.title = 'Hub: ' + cfg.titulo;
-      }
-    } catch (_) {}
-  }
-
-  carregarTitulo();
 </script>
 </body>
 </html>
