@@ -342,7 +342,7 @@ function lerEquipes_(ss, cfg, diag) {
   const dados = aba.getDataRange().getValues();
   const cab   = dados[0];
   const iId   = achaCab_(cab, ['id equipe', 'id_equipe', 'codigo', 'n', 'numero'], 0);
-  const iNome = achaCab_(cab, ['nome equipe', 'nome_equipe', 'equipe', 'turma'], 1);
+  const iNome = achaCab_(cab, ['nome equipe', 'nome_equipe', 'turma'], 1);
   const iTurno= achaCab_(cab, ['turno'], 2);
   const iTutor= achaCab_(cab, ['tutor', 'professor', 'orientador'], 3);
   const iQtd  = achaCab_(cab, ['qtde alunos', 'qtd alunos', 'quantidade alunos', 'alunos'], 4);
@@ -1206,7 +1206,7 @@ function apiEquipes_() {
   const dados = aba.getDataRange().getValues();
   const cab   = dados[0];
   const iId   = achaCab_(cab, ['id equipe','id_equipe','id'], 0);
-  const iNome = achaCab_(cab, ['nome equipe','nome_equipe','equipe','turma'], 1);
+  const iNome = achaCab_(cab, ['nome equipe','nome_equipe','turma'], 1);
   const iTurno= achaCab_(cab, ['turno'], 2);
   const iTutor= achaCab_(cab, ['tutor'], 3);
   const iQtd  = achaCab_(cab, ['qtde','qtd','alunos'], 4);
