@@ -134,6 +134,36 @@
     body.grande .arena-table td.td-equipe strong { font-size: 1.4rem; }
     body.grande .arena-table td.td-melhor        { font-size: 1.6rem; }
 
+    /* ── Cronômetro ──────────────────────────────────────────── */
+    .cronometro {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      background: var(--ar-surface);
+      border: 1px solid var(--ar-border);
+      border-radius: var(--radius);
+      padding: .875rem 2rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .crono-display {
+      font-size: 3.2rem;
+      font-weight: 900;
+      color: var(--ar-gold);
+      letter-spacing: .05em;
+      font-variant-numeric: tabular-nums;
+      min-width: 4.5ch;
+      text-align: center;
+    }
+    .crono-display.acabou {
+      color: #EB5757;
+      animation: pisca .6s infinite alternate;
+    }
+    @keyframes pisca { from { opacity:1 } to { opacity:.25 } }
+    .crono-btns { display: flex; gap: .5rem; }
+    body.grande .crono-display { font-size: 5rem; }
+
     /* ── Sem dados ───────────────────────────────────────────── */
     .arena-vazio {
       text-align: center;
@@ -146,7 +176,7 @@
 <body>
 
 <header class="topbar">
-  <a href="index.html" class="topbar__brand"><img src="logo.png" alt="HUB Robótica" style="height:44px;filter:brightness(0) invert(1)"></a>
+  <a href="index.html" class="topbar__brand"><img src="logo.png" alt="HUB Robótica" style="height:56px;filter:brightness(0) invert(1)"></a>
   <nav class="topbar__nav">
     <a href="index.html">Visão Geral</a>
     <a href="ranking.html">Ranking</a>
@@ -168,6 +198,14 @@
       <button class="btn btn-outline btn-sm" id="btn-tamanho" onclick="alternarTamanho()">Grande</button>
       <button class="btn btn-outline btn-sm" id="btn-tema"    onclick="alternarTema()">Claro</button>
       <button class="btn btn-outline btn-sm"                  onclick="telaCheia()">Tela cheia</button>
+    </div>
+  </div>
+
+  <div class="cronometro">
+    <div class="crono-display" id="crono-display">2:30</div>
+    <div class="crono-btns">
+      <button class="btn btn-primary" id="btn-crono-toggle" onclick="cronoToggle()">▶ Iniciar</button>
+      <button class="btn btn-outline" onclick="cronoReset()" style="border-color:var(--ar-border);color:var(--ar-text)">↺ Reset</button>
     </div>
   </div>
 
@@ -235,8 +273,7 @@
       return `<tr>
         <td><span class="pos-badge ${posCls}">${pos}</span></td>
         <td class="td-equipe">
-          <strong>${e.nome || e.id}</strong><br>
-          <span class="text-sm">${e.id}</span>
+          <strong>${e.nome || e.id}</strong>${e.nome && e.nome !== e.id ? `<br><span class="text-sm">${e.id}</span>` : ''}
         </td>
         ${cells}
         <td class="td-melhor">${e.melhor}</td>
@@ -260,6 +297,42 @@
   }
 
   iniciarPolling(carregar, 10000);
+
+  // ── Cronômetro ────────────────────────────────────────────────────
+  let cronoSeg = 150, cronoRodando = false, cronoTimer = null;
+
+  function cronoAtualizar() {
+    const el = document.getElementById('crono-display');
+    el.textContent = Math.floor(cronoSeg / 60) + ':' + String(cronoSeg % 60).padStart(2, '0');
+    el.classList.toggle('acabou', cronoSeg === 0);
+  }
+
+  function cronoToggle() {
+    if (cronoSeg === 0) { cronoReset(); return; }
+    cronoRodando = !cronoRodando;
+    document.getElementById('btn-crono-toggle').textContent = cronoRodando ? '⏸ Pausar' : '▶ Continuar';
+    if (cronoRodando) {
+      cronoTimer = setInterval(function() {
+        if (cronoSeg > 0) cronoSeg--;
+        cronoAtualizar();
+        if (cronoSeg === 0) {
+          clearInterval(cronoTimer);
+          cronoRodando = false;
+          document.getElementById('btn-crono-toggle').textContent = '↺ Reiniciar';
+        }
+      }, 1000);
+    } else {
+      clearInterval(cronoTimer);
+    }
+  }
+
+  function cronoReset() {
+    clearInterval(cronoTimer);
+    cronoRodando = false;
+    cronoSeg = 150;
+    cronoAtualizar();
+    document.getElementById('btn-crono-toggle').textContent = '▶ Iniciar';
+  }
 </script>
 </body>
 </html>
