@@ -13,7 +13,7 @@
 <body>
 
 <header class="topbar">
-  <a href="index.html" class="topbar__brand"><img src="logo.png" alt="HUB Robótica" style="height:56px;filter:brightness(0) invert(1)"></a>
+  <a href="index.html" class="topbar__brand"><img src="logo.png" alt="HUB Robótica" style="height:66px;filter:brightness(0) invert(1)"></a>
   <nav class="topbar__nav">
     <a href="index.html">Visão Geral</a>
     <a href="ranking.html" class="ativo">Ranking</a>
@@ -149,7 +149,15 @@
     return Number(v || 0).toFixed(dec);
   }
 
-  let nomesMap = {};
+  const nomesMap = {
+    TUR01:'6° A - Cyber Panter', TUR02:'6° B - Liga do Choque',
+    TUR03:'6° C - Alpha Tech',   TUR04:'6° D - Pheonics Mecanics',
+    TUR05:'6° E - TecShark',     TUR06:'7° A - Hoppin Robots',
+    TUR07:'7° B - Bivoltx',      TUR08:'7° C - Ecoshift',
+    TUR09:'7° D - Pantera Lego Team', TUR10:'7° E - Império das Onças',
+    TUR11:'7° F - Poseidon',     TUR12:'7° G - Arara Azul',
+    TUR13:'7° H - Nexos'
+  };
 
   function nomeEquipe(e) {
     return nomesMap[e.id] || e.nome || e.turma || e.id;
@@ -201,8 +209,7 @@
   async function carregar() {
     document.getElementById('spinner').style.display = '';
     try {
-      const [r, eq] = await Promise.all([API.ranking(), API.equipes()]);
-      (eq.equipes || []).forEach(e => { if (e.nome) nomesMap[e.id] = e.nome; });
+      const r = await API.ranking();
       if (!r.ok) throw new Error(r.erro);
       dadosEquipes = r.equipes || [];
 
