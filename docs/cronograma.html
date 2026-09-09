@@ -18,7 +18,7 @@
     .day-strip__label { font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; color: #94A3B8; margin-bottom: .5rem; }
     .day-track {
       position: relative;
-      height: 42px;
+      height: 50px;
       background: #F1F5F9;
       border-radius: 10px;
       overflow: hidden;
@@ -30,18 +30,55 @@
       font-size: .72rem; font-weight: 800;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
+    /* barra dividida para avaliações */
+    .dp-split { flex-direction: column; padding: 0; }
+    .dp-half {
+      flex: 1; width: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .65rem; font-weight: 800; color: #fff;
+      overflow: hidden;
+    }
     /* time ticks below strip */
-    .day-ticks { position: relative; height: 20px; margin-top: 2px; }
+    .day-ticks { position: relative; height: 20px; margin-top: 3px; }
     .day-tick {
       position: absolute;
       transform: translateX(-50%);
-      font-size: .68rem; font-weight: 700; color: #64748B;
+      font-size: .67rem; font-weight: 700; color: #64748B;
     }
 
     /* ── Legenda ───────────────────────────────────────────────── */
     .legenda { display: flex; flex-wrap: wrap; gap: .4rem .85rem; margin-bottom: 1.25rem; align-items: center; }
     .li { display: flex; align-items: center; gap: .35rem; font-size: .76rem; font-weight: 600; color: #374151; }
     .lc { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+    /* ── Print ─────────────────────────────────────────────────── */
+    @media print {
+      @page { size: A4 landscape; margin: .8cm 1cm; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body { background: #fff; }
+      .topbar { display: none !important; }
+      .wrap { max-width: 100%; padding: 0; }
+      h1 { font-size: 1rem; margin-bottom: .1rem; }
+      .sub { font-size: .75rem; margin-bottom: .75rem; }
+      .day-strip { margin-bottom: .75rem; }
+      .day-track { height: 40px; }
+      .legenda { margin-bottom: .75rem; }
+      .gantt-card {
+        box-shadow: none; border: 1px solid #CBD5E1;
+        overflow: visible; border-radius: 8px;
+      }
+      .gantt { min-width: 0; width: 100%; }
+      .gb { box-shadow: none; font-size: .62rem; }
+      .gb:hover { transform: none; }
+      .g-row:hover { background: transparent; }
+      .g-axis { position: static; }
+      .g-track { height: 36px; }
+      .gb { top: 4px; height: 28px; }
+      .info-row { margin-top: .75rem; grid-template-columns: repeat(4,1fr); }
+      .ic { padding: .6rem .8rem; border-radius: 8px; }
+      .ic__val { font-size: .9rem; }
+      .ic__sub { font-size: .63rem; }
+    }
 
     /* ── Gantt ─────────────────────────────────────────────────── */
     .gantt-card {
@@ -169,23 +206,31 @@
 <div class="wrap">
 
   <h1>Cronograma do Evento</h1>
-  <p class="sub">Escola SESI Reitor Miguel Calmon · 4 arenas · 2 salas de avaliação · horários por equipe</p>
+  <p class="sub">Escola SESI Reitor Miguel Calmon · 2 arenas · 2 salas de avaliação · horários por equipe</p>
 
-  <!-- ── Visão geral do dia (7:00–12:00 = 300 min) ─────────────── -->
+  <!--
+    Visão geral — 7:00–12:00 = 300 min
+    Abertura      7:00–7:30   left=0%      width=10%
+    Aval.+Round1  7:30–8:40   left=10%     width=23.3%   (split Sala1/Sala2)
+    Round 2       8:40–9:20   left=33.3%   width=13.4%
+    Round 3       9:20–10:00  left=46.7%   width=13.3%   (sem intervalo)
+    Deliberação   10:00–11:30 left=60%     width=30%
+    Premiação     11:30–12:00 left=90%     width=10%
+  -->
   <div class="day-strip">
     <div class="day-strip__label">Visão geral — 07:00 às 12:00</div>
     <div class="day-track">
-      <!-- Abertura: 0–10% (7:00-7:30) -->
       <div class="dp" style="left:0%;width:10%;background:#1A304D;color:#fff">Abertura</div>
-      <!-- Avaliações+R1: 10–33.3% (7:30-8:40) -->
-      <div class="dp" style="left:10%;width:23.3%;background:#4338CA;color:#fff">Avaliações + Arena R1</div>
-      <!-- Arena R2: 33.3–46.7% (8:40-9:20) -->
-      <div class="dp" style="left:33.4%;width:13.3%;background:#059669;color:#fff">Arena R2</div>
-      <!-- Arena R3: 46.7–60% (9:30-10:10) -->
-      <div class="dp" style="left:50%;width:13.3%;background:#D97706;color:#fff">Arena R3</div>
-      <!-- Deliberação: 70–90% (10:30-11:30) -->
-      <div class="dp" style="left:70%;width:20%;background:#64748B;color:#fff">Deliberação</div>
-      <!-- Premiação: 90–100% (11:30-12:00) -->
+
+      <!-- Avaliações: barra dividida Sala 1 (topo) / Sala 2 (baixo) -->
+      <div class="dp dp-split" style="left:10%;width:23.3%">
+        <div class="dp-half" style="background:#7C3AED">Sala 1 — avaliações + Round 1</div>
+        <div class="dp-half" style="background:#BE185D">Sala 2 — avaliações + Round 1</div>
+      </div>
+
+      <div class="dp" style="left:33.4%;width:13.3%;background:#059669;color:#fff">Round 2</div>
+      <div class="dp" style="left:46.7%;width:13.3%;background:#D97706;color:#fff">Round 3</div>
+      <div class="dp" style="left:60%;width:30%;background:#64748B;color:#fff">Deliberação</div>
       <div class="dp" style="left:90%;width:10%;background:#92400E;color:#fff">Premiação</div>
     </div>
     <div class="day-ticks">
@@ -193,11 +238,8 @@
       <span class="day-tick" style="left:10%">07:30</span>
       <span class="day-tick" style="left:20%">08h</span>
       <span class="day-tick" style="left:33.3%">08:40</span>
-      <span class="day-tick" style="left:40%">09h</span>
-      <span class="day-tick" style="left:50%">09:30</span>
+      <span class="day-tick" style="left:46.7%">09:20</span>
       <span class="day-tick" style="left:60%">10h</span>
-      <span class="day-tick" style="left:70%">10:30</span>
-      <span class="day-tick" style="left:80%">11h</span>
       <span class="day-tick" style="left:90%">11:30</span>
       <span class="day-tick" style="left:100%">12h</span>
     </div>
@@ -205,11 +247,11 @@
 
   <!-- Legenda -->
   <div class="legenda">
-    <div class="li"><div class="lc" style="background:#7C3AED"></div>Sala 1</div>
-    <div class="li"><div class="lc" style="background:#BE185D"></div>Sala 2</div>
-    <div class="li"><div class="lc" style="background:#2563EB"></div>Arena Round 1</div>
-    <div class="li"><div class="lc" style="background:#059669"></div>Arena Round 2</div>
-    <div class="li"><div class="lc" style="background:#D97706"></div>Arena Round 3</div>
+    <div class="li"><div class="lc" style="background:#7C3AED"></div>Sala 1 — avaliação</div>
+    <div class="li"><div class="lc" style="background:#BE185D"></div>Sala 2 — avaliação</div>
+    <div class="li"><div class="lc" style="background:#2563EB"></div>Round 1</div>
+    <div class="li"><div class="lc" style="background:#059669"></div>Round 2</div>
+    <div class="li"><div class="lc" style="background:#D97706"></div>Round 3</div>
   </div>
 
   <!-- ── Gantt detalhado 7:30–10:15 (165 min) ─────────────────── -->
@@ -255,9 +297,9 @@
       <div class="g-lbl"><div class="g-lbl__id">TUR01</div><div class="g-lbl__nome">6° A — Cyber Panter</div></div>
       <div class="g-track">
         <div class="gb gb-s1"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Sala 1">Sala 1</div>
-        <div class="gb gb-r1"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Arena R1">R1</div>
-        <div class="gb gb-r2"  style="left:42.7%;width:5.7%" title="08:40–08:50 · Arena R2">R2</div>
-        <div class="gb gb-r3"  style="left:73.0%;width:5.7%" title="09:30–09:40 · Arena R3">R3</div>
+        <div class="gb gb-r1"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Round 1">R1</div>
+        <div class="gb gb-r2"  style="left:42.7%;width:5.7%" title="08:40–08:50 · Round 2">R2</div>
+        <div class="gb gb-r3"  style="left:73.0%;width:5.7%" title="09:30–09:40 · Round 3">R3</div>
       </div>
     </div>
 
@@ -265,10 +307,10 @@
     <div class="g-row">
       <div class="g-lbl"><div class="g-lbl__id">TUR02</div><div class="g-lbl__nome">6° B — Liga do Choque</div></div>
       <div class="g-track">
-        <div class="gb gb-r1"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Arena R1">R1</div>
+        <div class="gb gb-r1"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Round 1">R1</div>
         <div class="gb gb-s1"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Sala 1">Sala 1</div>
-        <div class="gb gb-r2"  style="left:42.7%;width:5.7%" title="08:40–08:50 · Arena R2">R2</div>
-        <div class="gb gb-r3"  style="left:73.0%;width:5.7%" title="09:30–09:40 · Arena R3">R3</div>
+        <div class="gb gb-r2"  style="left:42.7%;width:5.7%" title="08:40–08:50 · Round 2">R2</div>
+        <div class="gb gb-r3"  style="left:73.0%;width:5.7%" title="09:30–09:40 · Round 3">R3</div>
       </div>
     </div>
 
@@ -276,10 +318,10 @@
     <div class="g-row">
       <div class="g-lbl"><div class="g-lbl__id">TUR03</div><div class="g-lbl__nome">6° C — Alpha Tech</div></div>
       <div class="g-track">
-        <div class="gb gb-r1"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Arena R1">R1</div>
+        <div class="gb gb-r1"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Round 1">R1</div>
         <div class="gb gb-s1"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Sala 1">Sala 1</div>
-        <div class="gb gb-r2"  style="left:42.7%;width:5.7%" title="08:40–08:50 · Arena R2">R2</div>
-        <div class="gb gb-r3"  style="left:73.0%;width:5.7%" title="09:30–09:40 · Arena R3">R3</div>
+        <div class="gb gb-r2"  style="left:42.7%;width:5.7%" title="08:40–08:50 · Round 2">R2</div>
+        <div class="gb gb-r3"  style="left:73.0%;width:5.7%" title="09:30–09:40 · Round 3">R3</div>
       </div>
     </div>
 
@@ -287,10 +329,10 @@
     <div class="g-row">
       <div class="g-lbl"><div class="g-lbl__id">TUR04</div><div class="g-lbl__nome">6° D — Pheonics Mecanics</div></div>
       <div class="g-track">
-        <div class="gb gb-r1"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Arena R1">R1</div>
+        <div class="gb gb-r1"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Round 1">R1</div>
         <div class="gb gb-s1"  style="left:18.5%;width:5.7%" title="08:00–08:10 · Sala 1">Sala 1</div>
-        <div class="gb gb-r2"  style="left:42.7%;width:5.7%" title="08:40–08:50 · Arena R2">R2</div>
-        <div class="gb gb-r3"  style="left:73.0%;width:5.7%" title="09:30–09:40 · Arena R3">R3</div>
+        <div class="gb gb-r2"  style="left:42.7%;width:5.7%" title="08:40–08:50 · Round 2">R2</div>
+        <div class="gb gb-r3"  style="left:73.0%;width:5.7%" title="09:30–09:40 · Round 3">R3</div>
       </div>
     </div>
 
@@ -298,10 +340,10 @@
     <div class="g-row">
       <div class="g-lbl"><div class="g-lbl__id">TUR05</div><div class="g-lbl__nome">6° E — TecShark</div></div>
       <div class="g-track">
-        <div class="gb gb-r1"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Arena R1">R1</div>
+        <div class="gb gb-r1"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Round 1">R1</div>
         <div class="gb gb-s1"  style="left:24.5%;width:5.7%" title="08:10–08:20 · Sala 1">Sala 1</div>
-        <div class="gb gb-r2"  style="left:48.8%;width:5.7%" title="08:50–09:00 · Arena R2">R2</div>
-        <div class="gb gb-r3"  style="left:79.1%;width:5.7%" title="09:40–09:50 · Arena R3">R3</div>
+        <div class="gb gb-r2"  style="left:48.8%;width:5.7%" title="08:50–09:00 · Round 2">R2</div>
+        <div class="gb gb-r3"  style="left:79.1%;width:5.7%" title="09:40–09:50 · Round 3">R3</div>
       </div>
     </div>
 
@@ -309,10 +351,10 @@
     <div class="g-row">
       <div class="g-lbl"><div class="g-lbl__id">TUR06</div><div class="g-lbl__nome">7° A — Hoppin Robots</div></div>
       <div class="g-track">
-        <div class="gb gb-r1"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Arena R1">R1</div>
+        <div class="gb gb-r1"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Round 1">R1</div>
         <div class="gb gb-s1"  style="left:30.6%;width:5.7%" title="08:20–08:30 · Sala 1">Sala 1</div>
-        <div class="gb gb-r2"  style="left:48.8%;width:5.7%" title="08:50–09:00 · Arena R2">R2</div>
-        <div class="gb gb-r3"  style="left:79.1%;width:5.7%" title="09:40–09:50 · Arena R3">R3</div>
+        <div class="gb gb-r2"  style="left:48.8%;width:5.7%" title="08:50–09:00 · Round 2">R2</div>
+        <div class="gb gb-r3"  style="left:79.1%;width:5.7%" title="09:40–09:50 · Round 3">R3</div>
       </div>
     </div>
 
@@ -320,10 +362,10 @@
     <div class="g-row">
       <div class="g-lbl"><div class="g-lbl__id">TUR07</div><div class="g-lbl__nome">7° B — Bivoltx</div></div>
       <div class="g-track">
-        <div class="gb gb-r1"  style="left:18.5%;width:5.7%" title="08:00–08:10 · Arena R1">R1</div>
+        <div class="gb gb-r1"  style="left:18.5%;width:5.7%" title="08:00–08:10 · Round 1">R1</div>
         <div class="gb gb-s1"  style="left:36.7%;width:5.7%" title="08:30–08:40 · Sala 1">Sala 1</div>
-        <div class="gb gb-r2"  style="left:48.8%;width:5.7%" title="08:50–09:00 · Arena R2">R2</div>
-        <div class="gb gb-r3"  style="left:79.1%;width:5.7%" title="09:40–09:50 · Arena R3">R3</div>
+        <div class="gb gb-r2"  style="left:48.8%;width:5.7%" title="08:50–09:00 · Round 2">R2</div>
+        <div class="gb gb-r3"  style="left:79.1%;width:5.7%" title="09:40–09:50 · Round 3">R3</div>
       </div>
     </div>
 
@@ -338,9 +380,9 @@
       <div class="g-lbl"><div class="g-lbl__id">TUR08</div><div class="g-lbl__nome">7° C — Ecoshift</div></div>
       <div class="g-track">
         <div class="gb gb-s2"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Sala 2">Sala 2</div>
-        <div class="gb gb-r1"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Arena R1">R1</div>
-        <div class="gb gb-r2"  style="left:48.8%;width:5.7%" title="08:50–09:00 · Arena R2">R2</div>
-        <div class="gb gb-r3"  style="left:79.1%;width:5.7%" title="09:40–09:50 · Arena R3">R3</div>
+        <div class="gb gb-r1"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Round 1">R1</div>
+        <div class="gb gb-r2"  style="left:48.8%;width:5.7%" title="08:50–09:00 · Round 2">R2</div>
+        <div class="gb gb-r3"  style="left:79.1%;width:5.7%" title="09:40–09:50 · Round 3">R3</div>
       </div>
     </div>
 
@@ -348,10 +390,10 @@
     <div class="g-row">
       <div class="g-lbl"><div class="g-lbl__id">TUR09</div><div class="g-lbl__nome">7° D — Pantera Lego Team</div></div>
       <div class="g-track">
-        <div class="gb gb-r1"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Arena R1">R1</div>
+        <div class="gb gb-r1"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Round 1">R1</div>
         <div class="gb gb-s2"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Sala 2">Sala 2</div>
-        <div class="gb gb-r2"  style="left:54.9%;width:5.7%" title="09:00–09:10 · Arena R2">R2</div>
-        <div class="gb gb-r3"  style="left:85.2%;width:5.7%" title="09:50–10:00 · Arena R3">R3</div>
+        <div class="gb gb-r2"  style="left:54.9%;width:5.7%" title="09:00–09:10 · Round 2">R2</div>
+        <div class="gb gb-r3"  style="left:85.2%;width:5.7%" title="09:50–10:00 · Round 3">R3</div>
       </div>
     </div>
 
@@ -359,10 +401,10 @@
     <div class="g-row">
       <div class="g-lbl"><div class="g-lbl__id">TUR10</div><div class="g-lbl__nome">7° E — Império das Onças</div></div>
       <div class="g-track">
-        <div class="gb gb-r1"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Arena R1">R1</div>
+        <div class="gb gb-r1"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Round 1">R1</div>
         <div class="gb gb-s2"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Sala 2">Sala 2</div>
-        <div class="gb gb-r2"  style="left:54.9%;width:5.7%" title="09:00–09:10 · Arena R2">R2</div>
-        <div class="gb gb-r3"  style="left:85.2%;width:5.7%" title="09:50–10:00 · Arena R3">R3</div>
+        <div class="gb gb-r2"  style="left:54.9%;width:5.7%" title="09:00–09:10 · Round 2">R2</div>
+        <div class="gb gb-r3"  style="left:85.2%;width:5.7%" title="09:50–10:00 · Round 3">R3</div>
       </div>
     </div>
 
@@ -370,10 +412,10 @@
     <div class="g-row">
       <div class="g-lbl"><div class="g-lbl__id">TUR11</div><div class="g-lbl__nome">7° F — Poseidon</div></div>
       <div class="g-track">
-        <div class="gb gb-r1"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Arena R1">R1</div>
+        <div class="gb gb-r1"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Round 1">R1</div>
         <div class="gb gb-s2"  style="left:18.5%;width:5.7%" title="08:00–08:10 · Sala 2">Sala 2</div>
-        <div class="gb gb-r2"  style="left:54.9%;width:5.7%" title="09:00–09:10 · Arena R2">R2</div>
-        <div class="gb gb-r3"  style="left:85.2%;width:5.7%" title="09:50–10:00 · Arena R3">R3</div>
+        <div class="gb gb-r2"  style="left:54.9%;width:5.7%" title="09:00–09:10 · Round 2">R2</div>
+        <div class="gb gb-r3"  style="left:85.2%;width:5.7%" title="09:50–10:00 · Round 3">R3</div>
       </div>
     </div>
 
@@ -381,10 +423,10 @@
     <div class="g-row">
       <div class="g-lbl"><div class="g-lbl__id">TUR12</div><div class="g-lbl__nome">7° G — Arara Azul</div></div>
       <div class="g-track">
-        <div class="gb gb-r1"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Arena R1">R1</div>
+        <div class="gb gb-r1"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Round 1">R1</div>
         <div class="gb gb-s2"  style="left:24.5%;width:5.7%" title="08:10–08:20 · Sala 2">Sala 2</div>
-        <div class="gb gb-r2"  style="left:60.9%;width:5.7%" title="09:10–09:20 · Arena R2">R2</div>
-        <div class="gb gb-r3"  style="left:91.2%;width:5.7%" title="10:00–10:10 · Arena R3">R3</div>
+        <div class="gb gb-r2"  style="left:60.9%;width:5.7%" title="09:10–09:20 · Round 2">R2</div>
+        <div class="gb gb-r3"  style="left:91.2%;width:5.7%" title="10:00–10:10 · Round 3">R3</div>
       </div>
     </div>
 
@@ -392,10 +434,10 @@
     <div class="g-row">
       <div class="g-lbl"><div class="g-lbl__id">TUR13</div><div class="g-lbl__nome">7° H — Nexos</div></div>
       <div class="g-track">
-        <div class="gb gb-r1"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Arena R1">R1</div>
+        <div class="gb gb-r1"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Round 1">R1</div>
         <div class="gb gb-s2"  style="left:30.6%;width:5.7%" title="08:20–08:30 · Sala 2">Sala 2</div>
-        <div class="gb gb-r2"  style="left:60.9%;width:5.7%" title="09:10–09:20 · Arena R2">R2</div>
-        <div class="gb gb-r3"  style="left:91.2%;width:5.7%" title="10:00–10:10 · Arena R3">R3</div>
+        <div class="gb gb-r2"  style="left:60.9%;width:5.7%" title="09:10–09:20 · Round 2">R2</div>
+        <div class="gb gb-r3"  style="left:91.2%;width:5.7%" title="10:00–10:10 · Round 3">R3</div>
       </div>
     </div>
 
@@ -415,14 +457,14 @@
       <div class="ic__sub">Sala 1 (TUR01–07) e Sala 2 (TUR08–13)<br>10 min por equipe · simultâneas</div>
     </div>
     <div class="ic">
-      <div class="ic__label">Arena — 3 Rounds</div>
-      <div class="ic__val">07:30 – 10:10</div>
-      <div class="ic__sub">R1: 7:30–8:10 (sem conflito com avaliação)<br>R2: 8:40–9:20 · R3: 9:30–10:10</div>
+      <div class="ic__label">2 Arenas — 3 Rounds</div>
+      <div class="ic__val">07:30 – 10:00</div>
+      <div class="ic__sub">Round 1: 7:30–8:40 (junto com avaliações)<br>Round 2: 8:40–9:20 · Round 3: 9:20–10:00</div>
     </div>
     <div class="ic">
       <div class="ic__label">Deliberação &amp; Premiação</div>
-      <div class="ic__val">10:30 – 12:00</div>
-      <div class="ic__sub">Deliberação: 10:30–11:30 (60 min)<br>Premiação e encerramento: 11:30–12:00</div>
+      <div class="ic__val">10:00 – 12:00</div>
+      <div class="ic__sub">Deliberação logo após Round 3: 10:00–11:30<br>Premiação e encerramento: 11:30–12:00</div>
     </div>
   </div>
 
