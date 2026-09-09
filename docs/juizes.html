@@ -292,7 +292,7 @@
       <div class="acao-card">
         <div class="acao-title">Sala de Deliberação</div>
         <div class="acao-desc">Compare equipes, registre votos por categoria e veja ranking em tempo real.</div>
-        <a href="deliberacao.html" class="btn btn-primary btn-sm" style="align-self:flex-start">Ir para Deliberação →</a>
+        <a href="deliberacao.html" target="_blank" class="btn btn-primary btn-sm" style="align-self:flex-start">Abrir Deliberação →</a>
       </div>
     </div>
 
@@ -352,11 +352,22 @@
   if (Sessao.logado()) verificarSessao();
 
   async function verificarSessao() {
+    // mostra o painel imediatamente com os dados em cache
+    mostrarPainel({ nome: Sessao.juiz, categoria: '' });
     try {
       const r = await API.verificarJuiz(Sessao.juiz, Sessao.pin);
-      if (r.ok) { mostrarPainel(r); return; }
-    } catch(_) {}
-    Sessao.clear();
+      if (r.ok) {
+        // atualiza categoria se a API devolver
+        document.getElementById('juiz-cat').textContent = r.categoria || 'Geral';
+        return;
+      }
+      // só desloga se a API explicitamente negar (não em erros de rede)
+      Sessao.clear();
+      document.getElementById('view-painel').style.display = 'none';
+      document.getElementById('view-login').style.display  = '';
+    } catch(_) {
+      // erro de rede: mantém sessão, juiz continua logado
+    }
   }
 
   async function entrar() {
