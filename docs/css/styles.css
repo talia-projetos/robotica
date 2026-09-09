@@ -3,24 +3,34 @@
    ============================================================ */
 
 :root {
-  --marinho:    #1A3D5C;
-  --azul:       #4C80B2;
-  --azul-lt:    #E4EEF6;
+  /* ── Paleta da marca ──────────────────────── */
+  --brand-azul:   #508FCB;   /* azul principal  */
+  --brand-teal:   #50CCC6;   /* teal / destaque */
+  --brand-ouro:   #CCB650;   /* dourado         */
+  --brand-ambar:  #CC9D50;   /* âmbar           */
+  --brand-slate:  #566777;   /* cinza-azulado   */
+
+  /* ── Tokens semânticos ───────────────────── */
+  --marinho:    #1A3A52;
+  --azul:       #508FCB;
+  --azul-lt:    #E5EFF8;
+  --teal:       #50CCC6;
+  --teal-lt:    #E3F8F7;
+  --dourado:    #CCB650;
+  --dourado-lt: #F8F3DC;
+  --ambar:      #CC9D50;
   --laranja:    #F2994A;
   --roxo:       #8E5BD9;
   --verde:      #27AE60;
   --coral:      #EB5757;
   --amarelo:    #F2C94C;
+  --slate:      #566777;
   --cinza:      #D9E2EC;
-  --fundo:      #F4F7FA;
-  --cinza-lt:   #F4F7FA;
+  --fundo:      #F2F6FA;
+  --cinza-lt:   #F2F6FA;
   --texto:      #1A2B3C;
   --texto-sm:   #6B7A90;
   --branco:     #FFFFFF;
-
-  --brand-roxo: #6040A0;
-  --brand-ouro: #E89818;
-  --brand-azul: #508fcb;
 
   --radius:    12px;
   --radius-lg: 18px;
