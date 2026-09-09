@@ -41,7 +41,7 @@ body {
 
 /* ── Topbar ───────────────────────────────────────────────────── */
 .topbar {
-  background: linear-gradient(135deg, #0D1E2E 0%, #1A3D5C 60%, #2460A0 100%);
+  background: linear-gradient(135deg, #0B1B2B 0%, #1A3D5C 70%, #1E4870 100%);
   color: var(--branco);
   padding: .5rem 1.5rem;
   display: flex;
@@ -195,7 +195,7 @@ tbody td { padding: .7rem 1rem; vertical-align: middle; }
 
 /* ── Hub Hero ─────────────────────────────────────────────────── */
 .hub-hero-bg {
-  background: linear-gradient(135deg, #0D1E2E 0%, #1A3D5C 50%, #2460A0 100%);
+  background: linear-gradient(135deg, #0B1B2B 0%, #1A3D5C 60%, #1E4870 100%);
   padding: 2.5rem 0 0;
   margin-bottom: 0;
   position: relative;
