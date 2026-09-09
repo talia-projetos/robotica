@@ -648,10 +648,37 @@ tbody td { padding: .7rem 1rem; vertical-align: middle; }
 }
 .chip strong { color: #fff; font-size: .88rem; margin-right: .25rem; }
 
+@media (max-width: 700px) {
+  .topbar {
+    flex-wrap: nowrap;
+    padding: .35rem .9rem;
+    min-height: 58px;
+    gap: .4rem;
+  }
+  .topbar__brand img { height: 50px; }
+  .topbar__nav {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin-left: 0;
+    padding-bottom: 2px;
+  }
+  .topbar__nav::-webkit-scrollbar { display: none; }
+  .topbar__nav a {
+    padding: .32rem .7rem;
+    font-size: .78rem;
+    white-space: nowrap;
+  }
+  .topbar__badge {
+    flex-shrink: 0;
+    margin-left: 0;
+  }
+  .topbar__badge span { display: none; }
+}
+
 @media (max-width: 600px) {
   .container { padding: 1rem; }
-  .topbar    { flex-wrap: wrap; }
-  .topbar__badge { width: 100%; justify-content: flex-start; }
   .hub-stats-wave { grid-template-columns: repeat(2, 1fr); }
   .hub-hero__titulo { font-size: 1.5rem; }
 }
