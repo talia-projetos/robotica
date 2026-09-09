@@ -3,87 +3,171 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event HUB</title>
+  <title>Juízes — Torneio de Robótica</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/styles.css">
-  <script>
-    window.API_URL = 'https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';
-  </script>
+  <script>window.API_URL='https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';</script>
   <style>
-    .login-wrap  { max-width: 420px; margin: 3rem auto; }
-    .login-card  {
-      background: var(--branco);
-      border-radius: var(--radius);
-      padding: 2rem;
-      box-shadow: 0 4px 24px rgba(18,53,91,.10);
-      border: 1.5px solid var(--cinza);
-    }
-    .login-card h2 { font-size: 1.25rem; font-weight: 800; color: var(--marinho); margin-bottom: .25rem; }
-    .login-card p  { font-size: .875rem; color: var(--texto-sm); margin-bottom: 1.25rem; }
+    body { background: #F0F4F8; }
 
-    .juiz-header {
+    /* ── Login ───────────────────────────────────────────────────── */
+    .login-outer {
+      min-height: calc(100vh - 72px);
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: .75rem;
-      margin-bottom: 1.5rem;
+      justify-content: center;
+      padding: 2rem 1rem;
     }
-    .juiz-badge {
-      display: flex;
-      align-items: center;
-      gap: .75rem;
+    .login-box {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(15,23,42,.1);
+      border: 1px solid #E2E8F0;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 400px;
     }
-    .juiz-badge__nome { font-size: 1.1rem; font-weight: 800; color: var(--marinho); }
-    .juiz-badge__cat  {
-      font-size: .75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .05em;
-      padding: .25rem .7rem;
-      border-radius: 100px;
-      background: var(--azul);
-      color: #fff;
+    .login-icon {
+      width: 52px; height: 52px;
+      background: #EFF6FF;
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .login-icon svg { width: 26px; height: 26px; stroke: #508fcb; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .login-box h2   { font-size: 1.3rem; font-weight: 900; color: #0F172A; letter-spacing: -.03em; margin-bottom: .3rem; }
+    .login-box p    { font-size: .83rem; color: #64748B; margin-bottom: 1.5rem; }
+    .login-box .field label { font-size: .8rem; font-weight: 700; color: #374151; display: block; margin-bottom: .35rem; }
+    .login-box .field input { width: 100%; box-sizing: border-box; }
+    .login-box .field { margin-bottom: 1rem; }
+    #l-erro { font-size: .82rem; color: #EF4444; margin-bottom: .75rem; display: none; }
+
+    /* ── Painel ──────────────────────────────────────────────────── */
+    .painel-wrap { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+
+    /* ── Juiz header ─────────────────────────────────────────────── */
+    .jh {
+      display: flex; align-items: center; gap: 1rem;
+      background: #fff;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(15,23,42,.05);
+    }
+    .jh-avatar {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg,#508fcb,#2563EB);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.1rem; font-weight: 900;
+      flex-shrink: 0;
+    }
+    .jh-info { flex: 1; }
+    .jh-nome { font-size: 1rem; font-weight: 800; color: #0F172A; }
+    .jh-cat  { font-size: .75rem; color: #64748B; }
+    .jh-cat span {
+      display: inline-block;
+      background: #EFF6FF; color: #2563EB;
+      font-weight: 700; font-size: .72rem;
+      padding: .2rem .6rem; border-radius: 100px;
+    }
+    .jh-btn { margin-left: auto; }
+
+    /* ── Seção ───────────────────────────────────────────────────── */
+    .sec-label {
+      font-size: .7rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .08em; color: #94A3B8;
+      margin-bottom: .75rem;
     }
 
-    .cards-juiz {
+    /* ── Cards de formulário ─────────────────────────────────────── */
+    .form-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(2, 1fr);
+      gap: .75rem;
       margin-bottom: 2rem;
     }
-    .card-juiz {
-      background: var(--branco);
-      border: 1.5px solid var(--cinza);
-      border-radius: var(--radius);
-      padding: 1.25rem 1.5rem;
+    .form-card {
+      background: #fff;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 1.25rem;
       display: flex;
       flex-direction: column;
+      gap: .6rem;
+      box-shadow: 0 1px 4px rgba(15,23,42,.04);
+      text-decoration: none;
+      transition: box-shadow .18s, transform .18s;
+    }
+    .form-card:hover {
+      box-shadow: 0 6px 24px rgba(15,23,42,.1);
+      transform: translateY(-2px);
+    }
+    .form-card__top {
+      display: flex; align-items: center; gap: .75rem;
+    }
+    .form-card__icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .form-card__icon svg { width: 20px; height: 20px; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .form-card__title { font-size: .93rem; font-weight: 800; color: #0F172A; }
+    .form-card__desc  { font-size: .78rem; color: #64748B; line-height: 1.45; }
+    .form-card__cta   {
+      display: inline-flex; align-items: center; gap: .35rem;
+      font-size: .78rem; font-weight: 700;
+      padding: .45rem .9rem; border-radius: 8px;
+      margin-top: .1rem; align-self: flex-start;
+      text-decoration: none;
+    }
+
+    /* ── Rubricas card (destaque) ────────────────────────────────── */
+    .rubrica-banner {
+      background: linear-gradient(135deg, #0F172A 0%, #1A304D 100%);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      text-decoration: none;
+      transition: box-shadow .18s;
+    }
+    .rubrica-banner:hover { box-shadow: 0 8px 28px rgba(15,23,42,.25); }
+    .rubrica-banner__icon {
+      width: 44px; height: 44px;
+      background: rgba(255,255,255,.12);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .rubrica-banner__icon svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .rubrica-banner__body { flex: 1; }
+    .rubrica-banner__title { font-size: .95rem; font-weight: 800; color: #fff; }
+    .rubrica-banner__sub   { font-size: .78rem; color: rgba(255,255,255,.55); }
+    .rubrica-banner__arr   { color: rgba(255,255,255,.4); font-size: 1rem; }
+
+    /* ── Ações pós-avaliação ─────────────────────────────────────── */
+    .acao-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
       gap: .75rem;
-      box-shadow: 0 2px 8px rgba(18,53,91,.06);
     }
-    .card-juiz__stripe {
-      height: 4px;
-      border-radius: 2px;
-      margin: -.25rem -1.5rem 0;
-      margin-top: -1.25rem;
-      border-radius: var(--radius) var(--radius) 0 0;
+    .acao-card {
+      background: #fff;
+      border: 1px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 1.25rem;
+      display: flex; flex-direction: column; gap: .5rem;
+      box-shadow: 0 1px 4px rgba(15,23,42,.04);
     }
-    .card-juiz__titulo {
-      font-size: 1rem;
-      font-weight: 800;
-      color: var(--marinho);
-      margin-top: .25rem;
-    }
-    .card-juiz__desc {
-      font-size: .83rem;
-      color: var(--texto-sm);
-      line-height: 1.5;
-      flex: 1;
-    }
-    .card-juiz--destaque {
-      border-color: var(--azul);
-      box-shadow: 0 2px 16px rgba(47,128,237,.15);
+    .acao-card__title { font-size: .93rem; font-weight: 800; color: #0F172A; }
+    .acao-card__desc  { font-size: .78rem; color: #64748B; line-height: 1.45; flex: 1; }
+
+    @media (max-width: 600px) {
+      .form-grid, .acao-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -106,95 +190,127 @@
   </div>
 </header>
 
-<div class="container">
+<!-- ── LOGIN ──────────────────────────────────────────────────────── -->
+<div id="view-login" class="login-outer">
+  <div class="login-box">
+    <div class="login-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    </div>
+    <h2>Acesso dos Juízes</h2>
+    <p>Entre com seu nome e PIN cadastrados para acessar os formulários de avaliação.</p>
+    <div class="field">
+      <label>Nome</label>
+      <input id="l-nome" type="text" placeholder="Seu nome completo" autocomplete="name">
+    </div>
+    <div class="field">
+      <label>PIN</label>
+      <input id="l-pin" type="password" placeholder="PIN de acesso" autocomplete="current-password">
+    </div>
+    <div id="l-erro"></div>
+    <button class="btn btn-primary" style="width:100%" id="btn-entrar" onclick="entrar()">Entrar</button>
+  </div>
+</div>
 
-  <!-- ── LOGIN ─────────────────────────────────────────────────── -->
-  <div id="view-login" class="login-wrap">
-    <div class="login-card">
-      <h2>Acesso dos Juízes</h2>
-      <p>Entre com seu nome e PIN cadastrados para acessar as rubricas e a deliberação.</p>
-      <div class="field">
-        <label>Nome</label>
-        <input id="l-nome" type="text" placeholder="Seu nome completo" autocomplete="name">
-      </div>
-      <div class="field">
-        <label>PIN</label>
-        <input id="l-pin" type="password" placeholder="PIN" autocomplete="current-password">
-      </div>
-      <div id="l-erro" class="text-sm" style="color:var(--coral);margin-bottom:.75rem;display:none"></div>
-      <button class="btn btn-primary" style="width:100%" id="btn-entrar" onclick="entrar()">Entrar</button>
+<!-- ── PAINEL ─────────────────────────────────────────────────────── -->
+<div id="view-painel" style="display:none">
+<div class="painel-wrap">
+
+  <!-- Cabeçalho do juiz -->
+  <div class="jh">
+    <div class="jh-avatar" id="jh-inicial">J</div>
+    <div class="jh-info">
+      <div class="jh-nome" id="juiz-nome">—</div>
+      <div class="jh-cat">Categoria: <span id="juiz-cat">—</span></div>
+    </div>
+    <div class="jh-btn">
+      <button class="btn btn-outline btn-sm" onclick="sair()"
+        style="border-color:#E2E8F0;color:#64748B">Sair</button>
     </div>
   </div>
 
-  <!-- ── PAINEL DO JUIZ ─────────────────────────────────────────── -->
-  <div id="view-painel" style="display:none">
-
-    <div class="juiz-header mt-2" style="margin-top:1.5rem">
-      <div class="juiz-badge">
-        <div class="juiz-badge__nome" id="juiz-nome"></div>
-        <div class="juiz-badge__cat" id="juiz-cat"></div>
-      </div>
+  <!-- Rubricas -->
+  <a href="rubricas.html" target="_blank" class="rubrica-banner">
+    <div class="rubrica-banner__icon">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
     </div>
-
-    <h2 class="page-title" style="margin-bottom:1rem">Rubricas — Avaliação</h2>
-    <div class="cards-juiz">
-
-      <div class="card-juiz">
-        <div class="card-juiz__stripe" style="background:linear-gradient(90deg,#F2994A,#F2C94C)"></div>
-        <div class="card-juiz__titulo">Desafio do Robô</div>
-        <div class="card-juiz__desc">Registre a pontuação dos rounds da Arena: missões concluídas e penalidades.</div>
-        <a id="link-desafio" href="#" target="_blank" class="btn btn-primary btn-sm">Abrir Formulário →</a>
-      </div>
-
-      <div class="card-juiz">
-        <div class="card-juiz__stripe" style="background:linear-gradient(90deg,#8E5BD9,#B57BEC)"></div>
-        <div class="card-juiz__titulo">Projeto de Inovação</div>
-        <div class="card-juiz__desc">Avalie o projeto de inovação da equipe: problema identificado, solução proposta e impacto.</div>
-        <a id="link-projeto" href="#" target="_blank" class="btn btn-primary btn-sm">Abrir Formulário →</a>
-      </div>
-
-      <div class="card-juiz">
-        <div class="card-juiz__stripe" style="background:linear-gradient(90deg,#2F80ED,#56CCF2)"></div>
-        <div class="card-juiz__titulo">Design do Robô</div>
-        <div class="card-juiz__desc">Avalie o design e a engenharia do robô: estrutura, mecanismos e estratégia de programação.</div>
-        <a id="link-design" href="#" target="_blank" class="btn btn-primary btn-sm">Abrir Formulário →</a>
-      </div>
-
-      <div class="card-juiz">
-        <div class="card-juiz__stripe" style="background:linear-gradient(90deg,#27AE60,#6FCF97)"></div>
-        <div class="card-juiz__titulo">Core Values</div>
-        <div class="card-juiz__desc">Avalie os valores da equipe: trabalho em equipe, inclusão, diversão e espírito esportivo.</div>
-        <a id="link-core" href="#" target="_blank" class="btn btn-primary btn-sm">Abrir Formulário →</a>
-      </div>
-
+    <div class="rubrica-banner__body">
+      <div class="rubrica-banner__title">Rubricas de Avaliação</div>
+      <div class="rubrica-banner__sub">Critérios detalhados · Projeto, Design, Core Values &amp; Arena · Versão para impressão</div>
     </div>
+    <div class="rubrica-banner__arr">→</div>
+  </a>
 
-    <h2 class="page-title" style="margin-bottom:1rem">Deliberação</h2>
-    <div class="cards-juiz">
+  <!-- Formulários -->
+  <div class="sec-label">Formulários de Avaliação</div>
+  <div class="form-grid">
 
-      <div class="card-juiz card-juiz--destaque">
-        <div class="card-juiz__stripe" style="background:linear-gradient(90deg,#2F80ED,#56CCF2)"></div>
-        <div class="card-juiz__titulo">Sala de Deliberação</div>
-        <div class="card-juiz__desc">Compare equipes, registre votos por categoria e converse com os demais juízes em tempo real.</div>
-        <a href="deliberacao.html" class="btn btn-primary btn-sm">Ir para Deliberação →</a>
+    <a id="link-desafio" href="#" target="_blank" class="form-card">
+      <div class="form-card__top">
+        <div class="form-card__icon" style="background:#FFF7ED">
+          <svg viewBox="0 0 24 24" stroke="#F2994A"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="form-card__title">Desafio do Robô</div>
       </div>
+      <div class="form-card__desc">Missões da Arena: registre pontos e penalidades de cada round.</div>
+      <span class="form-card__cta" style="background:#FFF7ED;color:#D97706">Abrir formulário →</span>
+    </a>
 
-      <div class="card-juiz">
-        <div class="card-juiz__stripe" style="background:linear-gradient(90deg,#12355B,#2F80ED)"></div>
-        <div class="card-juiz__titulo">Ranking Geral</div>
-        <div class="card-juiz__desc">Acompanhe a classificação geral e por categoria ao longo do torneio.</div>
-        <a href="ranking.html" class="btn btn-outline btn-sm">Ver Ranking →</a>
+    <a id="link-projeto" href="#" target="_blank" class="form-card">
+      <div class="form-card__top">
+        <div class="form-card__icon" style="background:#F5F0FF">
+          <svg viewBox="0 0 24 24" stroke="#8E5BD9"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <div class="form-card__title">Projeto de Inovação</div>
       </div>
+      <div class="form-card__desc">Problema identificado, solução proposta e impacto da equipe.</div>
+      <span class="form-card__cta" style="background:#F5F0FF;color:#8E5BD9">Abrir formulário →</span>
+    </a>
 
+    <a id="link-design" href="#" target="_blank" class="form-card">
+      <div class="form-card__top">
+        <div class="form-card__icon" style="background:#EFF6FF">
+          <svg viewBox="0 0 24 24" stroke="#2F80ED"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="form-card__title">Design do Robô</div>
+      </div>
+      <div class="form-card__desc">Estrutura, mecanismos e estratégia de programação do robô.</div>
+      <span class="form-card__cta" style="background:#EFF6FF;color:#2F80ED">Abrir formulário →</span>
+    </a>
+
+    <a id="link-core" href="#" target="_blank" class="form-card">
+      <div class="form-card__top">
+        <div class="form-card__icon" style="background:#F0FDF4">
+          <svg viewBox="0 0 24 24" stroke="#27AE60"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="form-card__title">Core Values</div>
+      </div>
+      <div class="form-card__desc">Trabalho em equipe, inclusão, diversão e espírito esportivo.</div>
+      <span class="form-card__cta" style="background:#F0FDF4;color:#27AE60">Abrir formulário →</span>
+    </a>
+
+  </div>
+
+  <!-- Deliberação e ranking -->
+  <div class="sec-label">Após as avaliações</div>
+  <div class="acao-grid">
+    <div class="acao-card">
+      <div class="acao-card__title">Sala de Deliberação</div>
+      <div class="acao-card__desc">Compare equipes, registre votos por categoria e converse com os demais juízes em tempo real.</div>
+      <a href="deliberacao.html" class="btn btn-primary btn-sm" style="align-self:flex-start">Ir para Deliberação →</a>
+    </div>
+    <div class="acao-card">
+      <div class="acao-card__title">Ranking Geral</div>
+      <div class="acao-card__desc">Acompanhe a classificação geral e por categoria ao longo do torneio em tempo real.</div>
+      <a href="ranking.html" class="btn btn-outline btn-sm" style="align-self:flex-start">Ver Ranking →</a>
     </div>
   </div>
 
+</div>
 </div>
 
 <div id="toast"></div>
 <script src="js/api.js"></script>
 <script>
-  // ── URLs dos formulários de rubrica (preencha aqui) ──────────────
   const FORMS = {
     desafio: 'https://forms.gle/6zZxqCMxTdndWUh58',
     projeto: 'https://forms.gle/MpUiT3ALTPMVGNbH6',
@@ -202,16 +318,15 @@
     core:    'https://forms.gle/fWaSW9m89ADv7nQ38'
   };
 
-  // ── Inicialização ────────────────────────────────────────────────
   document.getElementById('link-desafio').href = FORMS.desafio;
   document.getElementById('link-projeto').href = FORMS.projeto;
   document.getElementById('link-design').href  = FORMS.design;
   document.getElementById('link-core').href    = FORMS.core;
 
-  document.getElementById('l-pin').addEventListener('keydown', e => {
+  document.getElementById('l-pin').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') entrar();
   });
-  document.getElementById('l-nome').addEventListener('keydown', e => {
+  document.getElementById('l-nome').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') document.getElementById('l-pin').focus();
   });
 
@@ -230,7 +345,7 @@
     const pin  = document.getElementById('l-pin').value.trim();
     const err  = document.getElementById('l-erro');
     const btn  = document.getElementById('btn-entrar');
-    if (!nome) { err.textContent = 'Informe seu nome.'; err.style.display = ''; return; }
+    if (!nome) { err.textContent = 'Informe seu nome.'; err.style.display = 'block'; return; }
     err.style.display = 'none';
     btn.textContent = 'Verificando…';
     btn.disabled = true;
@@ -238,14 +353,14 @@
       const r = await API.verificarJuiz(nome, pin);
       if (!r.ok) {
         err.textContent = r.erro || 'Acesso negado.';
-        err.style.display = '';
+        err.style.display = 'block';
         return;
       }
       Sessao.set(r.nome, pin);
       mostrarPainel(r);
     } catch(e) {
       err.textContent = 'Erro de conexão. Tente novamente.';
-      err.style.display = '';
+      err.style.display = 'block';
     } finally {
       btn.textContent = 'Entrar';
       btn.disabled = false;
@@ -256,15 +371,17 @@
     document.getElementById('view-login').style.display  = 'none';
     document.getElementById('view-painel').style.display = '';
     document.getElementById('juiz-nome').textContent = r.nome;
-    document.getElementById('juiz-cat').textContent  = r.categoria || 'Juiz';
+    document.getElementById('juiz-cat').textContent  = r.categoria || 'Geral';
     document.getElementById('badge-juiz').textContent = r.nome;
     document.getElementById('btn-sair').style.display = '';
+    const ini = (r.nome || 'J').trim()[0].toUpperCase();
+    document.getElementById('jh-inicial').textContent = ini;
   }
 
   function sair() {
     Sessao.clear();
-    document.getElementById('view-painel').style.display  = 'none';
-    document.getElementById('view-login').style.display   = '';
+    document.getElementById('view-painel').style.display = 'none';
+    document.getElementById('view-login').style.display  = '';
     document.getElementById('badge-juiz').textContent = '';
     document.getElementById('btn-sair').style.display = 'none';
     document.getElementById('l-nome').value = '';

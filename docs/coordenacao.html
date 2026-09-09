@@ -401,12 +401,12 @@
       return pa - pb;
     });
 
-    tbody.innerHTML = sorted.map(function(item) {
+    tbody.innerHTML = sorted.map(function(item, i) {
       const eq   = item.equipe;
       const sc   = item.scores;
       const nota = sc ? fmt(sc[scoreField]) : '—';
       const jz   = sc ? (sc[jzField] || 0) : 0;
-      const pos  = sc && sc[posField] ? '#' + sc[posField] : '—';
+      const pos  = sc ? '#' + (i + 1) : '—';
 
       const lista = (item.comentarios && item.comentarios[catKey]) || [];
       const boms = lista.map(function(c) { return c.bomTrabalho; }).filter(Boolean);
