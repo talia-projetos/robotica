@@ -68,18 +68,20 @@ body {
 
 .topbar__nav {
   display: flex;
-  gap: .15rem;
+  gap: .25rem;
   flex-wrap: wrap;
+  margin-left: .5rem;
 }
 
 .topbar__nav a {
   color: rgba(255,255,255,.65);
   text-decoration: none;
-  padding: .35rem .8rem;
-  border-radius: 7px;
-  font-size: .82rem;
+  padding: .4rem 1rem;
+  border-radius: 8px;
+  font-size: .84rem;
   font-weight: 500;
   transition: var(--trans);
+  letter-spacing: .01em;
 }
 
 .topbar__nav a:hover { background: rgba(255,255,255,.10); color: #fff; }
@@ -100,16 +102,23 @@ body {
 
 /* ── Container ────────────────────────────────────────────────── */
 .container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 2rem 2rem 3rem;
 }
 
 .page-title {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--marinho);
-  margin-bottom: 1.5rem;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: #0F172A;
+  letter-spacing: -.03em;
+  margin-bottom: .25rem;
+}
+
+.page-sub {
+  font-size: .83rem;
+  color: #64748B;
+  margin-bottom: 2rem;
 }
 
 .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.25rem; }
@@ -118,10 +127,10 @@ body {
 /* ── Card genérico ────────────────────────────────────────────── */
 .card {
   background: var(--branco);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 1.5rem;
-  border: 1px solid rgba(18,53,91,.06);
+  border-radius: 16px;
+  box-shadow: 0 1px 6px rgba(15,23,42,.06);
+  padding: 1.75rem;
+  border: 1px solid #E2E8F0;
 }
 
 .card__title {
@@ -594,7 +603,10 @@ tbody td { padding: .7rem 1rem; vertical-align: middle; }
 .mt-1      { margin-top: .5rem; }
 .mt-2      { margin-top: 1rem; }
 .mt-3      { margin-top: 1.5rem; }
+.mt-4      { margin-top: 2rem; }
 .mb-1      { margin-bottom: .5rem; }
+.mb-2      { margin-bottom: 1rem; }
+.mb-3      { margin-bottom: 1.5rem; }
 .flex      { display: flex; }
 .gap-1     { gap: .5rem; }
 .gap-2     { gap: 1rem; }
@@ -602,6 +614,29 @@ tbody td { padding: .7rem 1rem; vertical-align: middle; }
 .justify-between  { justify-content: space-between; }
 .w-full    { width: 100%; }
 .hidden    { display: none !important; }
+
+/* ── Section label (rótulo de seção) ────────────────────────── */
+.sec-title {
+  font-size: .68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: #94A3B8;
+  margin-bottom: .75rem;
+}
+
+/* ── Info chip row ───────────────────────────────────────────── */
+.chip-row { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1.5rem; }
+.chip {
+  background: rgba(255,255,255,.09);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 100px;
+  padding: .3rem .9rem;
+  font-size: .76rem;
+  font-weight: 700;
+  color: rgba(255,255,255,.8);
+}
+.chip strong { color: #fff; font-size: .88rem; margin-right: .25rem; }
 
 @media (max-width: 600px) {
   .container { padding: 1rem; }
