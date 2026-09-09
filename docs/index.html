@@ -7,16 +7,286 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/styles.css">
   <style>
-    .hub-card__icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 9px;
+    /* ── Layout principal ─────────────────────────────────────── */
+    body { background: #F0F4F8; }
+
+    .hub-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      min-height: calc(100vh - 76px);
+    }
+
+    /* ── Área de conteúdo (esquerda) ─────────────────────────── */
+    .hub-content {
+      padding: 2rem 2rem 2rem 2.5rem;
+      max-width: 860px;
+    }
+
+    .hub-heading {
+      margin-bottom: 1.75rem;
+    }
+    .hub-heading h1 {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: #0F172A;
+      letter-spacing: -.03em;
+      line-height: 1.1;
+      margin-bottom: .25rem;
+    }
+    .hub-heading p {
+      font-size: .9rem;
+      color: #64748B;
+    }
+
+    /* ── Cards de navegação ──────────────────────────────────── */
+    .nav-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 1px 4px rgba(15,23,42,.05);
+      transition: box-shadow .18s ease, transform .18s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .nav-card:hover {
+      box-shadow: 0 8px 28px rgba(15,23,42,.12);
+      transform: translateY(-2px);
+    }
+    .nav-card__icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: .5rem;
+      flex-shrink: 0;
     }
-    .hub-card__icon svg { width: 20px; height: 20px; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .nav-card__icon svg {
+      width: 22px;
+      height: 22px;
+      stroke-width: 1.8;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .nav-card__body { flex: 1; min-width: 0; }
+    .nav-card__title {
+      font-size: .98rem;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: .25rem;
+      letter-spacing: -.01em;
+    }
+    .nav-card__desc {
+      font-size: .8rem;
+      color: #64748B;
+      line-height: 1.45;
+    }
+    .nav-card__arrow {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      font-size: .9rem;
+      color: #CBD5E1;
+      transition: color .18s, transform .18s;
+    }
+    .nav-card:hover .nav-card__arrow {
+      color: var(--azul);
+      transform: translateX(3px);
+    }
+
+    /* card destaque (Arena — modo telão) */
+    .nav-card--destaque {
+      grid-column: span 2;
+      flex-direction: row;
+      align-items: center;
+      background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%);
+      border: none;
+      color: #fff;
+    }
+    .nav-card--destaque .nav-card__title { color: #fff; }
+    .nav-card--destaque .nav-card__desc  { color: rgba(255,255,255,.6); }
+    .nav-card--destaque .nav-card__arrow { color: rgba(255,255,255,.3); }
+    .nav-card--destaque:hover .nav-card__arrow { color: #fff; }
+
+    /* ── Sidebar direita ─────────────────────────────────────── */
+    .hub-sidebar {
+      background: #fff;
+      border-left: 1px solid #E2E8F0;
+      padding: 1.75rem 1.5rem;
+      position: sticky;
+      top: 76px;
+      height: calc(100vh - 76px);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .sidebar-section__title {
+      font-size: .68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #94A3B8;
+      margin-bottom: 1rem;
+    }
+
+    /* ── Badge de lider ──────────────────────────────────────── */
+    .lider-card {
+      background: linear-gradient(135deg, #0F172A, #1E3A5F);
+      border-radius: 14px;
+      padding: 1rem 1.25rem;
+      color: #fff;
+    }
+    .lider-card__label {
+      font-size: .65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #F2C94C;
+      margin-bottom: .3rem;
+    }
+    .lider-card__nome {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: .15rem;
+    }
+    .lider-card__pts {
+      font-size: .78rem;
+      color: rgba(255,255,255,.55);
+    }
+
+    /* ── Timeline / Cronograma ───────────────────────────────── */
+    .timeline { display: flex; flex-direction: column; }
+
+    .tl-item {
+      display: grid;
+      grid-template-columns: 44px 16px 1fr;
+      gap: 0 .75rem;
+      align-items: flex-start;
+      position: relative;
+    }
+    .tl-item + .tl-item { margin-top: .1rem; }
+
+    .tl-time {
+      font-size: .72rem;
+      font-weight: 700;
+      color: #94A3B8;
+      padding-top: .45rem;
+      text-align: right;
+      letter-spacing: .02em;
+      white-space: nowrap;
+    }
+
+    .tl-dot-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .tl-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 2.5px solid #E2E8F0;
+      background: #fff;
+      flex-shrink: 0;
+      margin-top: .35rem;
+      position: relative;
+      z-index: 1;
+    }
+    .tl-dot.ativo {
+      border-color: var(--azul);
+      background: var(--azul);
+      box-shadow: 0 0 0 4px rgba(80,143,203,.2);
+    }
+    .tl-line {
+      flex: 1;
+      width: 2px;
+      background: #E2E8F0;
+      min-height: 24px;
+      margin-top: 2px;
+    }
+    .tl-item:last-child .tl-line { display: none; }
+
+    .tl-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 10px;
+      padding: .55rem .875rem;
+      margin-bottom: .5rem;
+      border-left: 3px solid #E2E8F0;
+    }
+    .tl-card.arena   { border-left-color: #508fcb; background: #EFF6FF; }
+    .tl-card.projeto { border-left-color: #8E5BD9; background: #F5F0FF; }
+    .tl-card.design  { border-left-color: #F2994A; background: #FFF7ED; }
+    .tl-card.core    { border-left-color: #27AE60; background: #F0FDF4; }
+    .tl-card.geral   { border-left-color: #64748B; }
+    .tl-card.premio  { border-left-color: #F2C94C; background: #FFFBEB; }
+
+    .tl-card__titulo {
+      font-size: .82rem;
+      font-weight: 700;
+      color: #0F172A;
+      margin-bottom: .1rem;
+    }
+    .tl-card__sub {
+      font-size: .72rem;
+      color: #64748B;
+    }
+
+    /* ── Estatísticas rápidas ─────────────────────────────────── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .75rem;
+    }
+    .stat-pill {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: .75rem;
+      text-align: center;
+    }
+    .stat-pill__val {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #0F172A;
+      letter-spacing: -.03em;
+      line-height: 1;
+    }
+    .stat-pill__label {
+      font-size: .65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: #94A3B8;
+      margin-top: .3rem;
+    }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hub-layout { grid-template-columns: 1fr; }
+      .hub-sidebar { position: static; height: auto; border-left: none; border-top: 1px solid #E2E8F0; }
+      .hub-content { max-width: 100%; }
+    }
+    @media (max-width: 580px) {
+      .nav-cards { grid-template-columns: 1fr; }
+      .nav-card--destaque { grid-column: span 1; }
+    }
   </style>
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';
@@ -40,87 +310,249 @@
   </div>
 </header>
 
-<!-- ── Hero escuro ──────────────────────────────────────────── -->
-<div class="hub-hero-bg">
-  <div class="hub-hero-inner">
+<div class="hub-layout">
 
-    <div id="hub-titulo" style="font-size:2rem;font-weight:900;color:#fff;letter-spacing:-.03em;line-height:1.1;margin-bottom:.3rem">
-      Torneio Interno de Robótica
+  <!-- ── Conteúdo principal ──────────────────────────────────── -->
+  <div class="hub-content">
+
+    <div class="hub-heading">
+      <h1>Torneio Interno de Robótica</h1>
+      <p>Escola SESI Reitor Miguel Calmon</p>
     </div>
-    <div style="font-size:.95rem;color:rgba(255,255,255,.5);margin-bottom:1.5rem">
-      Escola SESI Reitor Miguel Calmon
+
+    <!-- Estatísticas rápidas -->
+    <div class="stats-row" style="margin-bottom:1.5rem">
+      <div class="stat-pill">
+        <div class="stat-pill__val">13</div>
+        <div class="stat-pill__label">Equipes</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-pill__val">3</div>
+        <div class="stat-pill__label">Rounds</div>
+      </div>
+      <div class="stat-pill">
+        <div class="stat-pill__val">4</div>
+        <div class="stat-pill__label">Categorias</div>
+      </div>
     </div>
 
-  </div>
-</div>
+    <!-- Cards de navegação -->
+    <div class="nav-cards">
 
-<!-- ── Cards de navegação ──────────────────────────────────── -->
-<div class="hub-cards-section">
-  <div class="container">
-    <div class="grid-2">
-
-      <a href="ranking.html" class="hub-card">
-        <div class="hub-card__stripe" style="background:linear-gradient(90deg,#2F80ED,#56CCF2)"></div>
-        <div class="hub-card__icon" style="background:#EBF3FF">
-          <svg viewBox="0 0 24 24" stroke="#2F80ED"><polyline points="18 20 18 10"/><polyline points="12 20 12 4"/><polyline points="6 20 6 14"/></svg>
+      <!-- Arena — destaque full-width -->
+      <a href="arena.html" class="nav-card nav-card--destaque">
+        <div class="nav-card__icon" style="background:rgba(255,255,255,.12)">
+          <svg viewBox="0 0 24 24" stroke="white"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         </div>
-        <div class="hub-card__title">Ranking Geral</div>
-        <div class="hub-card__desc">Classificação ao vivo por pontuação total. Atualizado automaticamente a cada 10 segundos.</div>
+        <div class="nav-card__body">
+          <div class="nav-card__title">Arena — Telão</div>
+          <div class="nav-card__desc">Pontuações ao vivo · cronômetro de 2:30 · modo telão e tela cheia</div>
+        </div>
+        <div class="nav-card__arrow">→</div>
       </a>
 
-      <a href="arena.html" class="hub-card">
-        <div class="hub-card__stripe" style="background:linear-gradient(90deg,#F2994A,#F2C94C)"></div>
-        <div class="hub-card__icon" style="background:#FFF3E0">
-          <svg viewBox="0 0 24 24" stroke="#F2994A"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <!-- Ranking -->
+      <a href="ranking.html" class="nav-card">
+        <div class="nav-card__icon" style="background:#EFF6FF">
+          <svg viewBox="0 0 24 24" stroke="#508fcb"><polyline points="18 20 18 10"/><polyline points="12 20 12 4"/><polyline points="6 20 6 14"/></svg>
         </div>
-        <div class="hub-card__title">Arena — Telão</div>
-        <div class="hub-card__desc">Pontuações de cada round por equipe. Modo público, otimizado para exibição no telão.</div>
+        <div class="nav-card__body">
+          <div class="nav-card__title">Ranking Geral</div>
+          <div class="nav-card__desc">Classificação por pontuação total e por categoria</div>
+        </div>
+        <div class="nav-card__arrow">→</div>
       </a>
 
-      <a href="ranking.html#categorias" class="hub-card">
-        <div class="hub-card__stripe" style="background:linear-gradient(90deg,#8E5BD9,#B57BEC)"></div>
-        <div class="hub-card__icon" style="background:#F3EEFF">
-          <svg viewBox="0 0 24 24" stroke="#8E5BD9"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
-        </div>
-        <div class="hub-card__title">Ranking por Categoria</div>
-        <div class="hub-card__desc">Arena, Projeto de Inovação, Design do Robô, Core Values e Tampinhas que Transformam.</div>
-      </a>
-
-      <a href="turma.html" class="hub-card">
-        <div class="hub-card__stripe" style="background:linear-gradient(90deg,#27AE60,#6FCF97)"></div>
-        <div class="hub-card__icon" style="background:#E8F8EF">
+      <!-- Minha Turma -->
+      <a href="turma.html" class="nav-card">
+        <div class="nav-card__icon" style="background:#F0FDF4">
           <svg viewBox="0 0 24 24" stroke="#27AE60"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         </div>
-        <div class="hub-card__title">Minha Turma</div>
-        <div class="hub-card__desc">Professor: acesse notas e comentários dos juízes da sua equipe com o PIN da turma.</div>
+        <div class="nav-card__body">
+          <div class="nav-card__title">Minha Turma</div>
+          <div class="nav-card__desc">Professor: notas e comentários dos juízes com PIN</div>
+        </div>
+        <div class="nav-card__arrow">→</div>
       </a>
 
-      <a href="deliberacao.html" class="hub-card">
-        <div class="hub-card__stripe" style="background:linear-gradient(90deg,#EB5757,#F97316)"></div>
-        <div class="hub-card__icon" style="background:#FEF2F2">
-          <svg viewBox="0 0 24 24" stroke="#EB5757"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <!-- Juízes -->
+      <a href="juizes.html" class="nav-card">
+        <div class="nav-card__icon" style="background:#FFF7ED">
+          <svg viewBox="0 0 24 24" stroke="#F2994A"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
-        <div class="hub-card__title">Deliberação</div>
-        <div class="hub-card__desc">Comparação de equipes, votação e chat em tempo real entre juízes e coordenação.</div>
+        <div class="nav-card__body">
+          <div class="nav-card__title">Juízes</div>
+          <div class="nav-card__desc">Rubricas, formulários de avaliação e deliberação</div>
+        </div>
+        <div class="nav-card__arrow">→</div>
       </a>
 
-      <a href="coordenacao.html" class="hub-card">
-        <div class="hub-card__stripe" style="background:linear-gradient(90deg,#12355B,#2F80ED)"></div>
-        <div class="hub-card__icon" style="background:#E8EFF7">
-          <svg viewBox="0 0 24 24" stroke="#12355B"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      <!-- Coordenação -->
+      <a href="coordenacao.html" class="nav-card">
+        <div class="nav-card__icon" style="background:#F5F0FF">
+          <svg viewBox="0 0 24 24" stroke="#8E5BD9"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
         </div>
-        <div class="hub-card__title">Coordenação</div>
-        <div class="hub-card__desc">Painel completo com resultados e comentários de todas as turmas por categoria.</div>
+        <div class="nav-card__body">
+          <div class="nav-card__title">Coordenação</div>
+          <div class="nav-card__desc">Resultados e comentários de todas as equipes</div>
+        </div>
+        <div class="nav-card__arrow">→</div>
       </a>
 
     </div>
   </div>
+
+  <!-- ── Sidebar direita — Cronograma ───────────────────────── -->
+  <aside class="hub-sidebar">
+
+    <!-- Lider ao vivo -->
+    <div>
+      <div class="sidebar-section__title">Liderança atual</div>
+      <div class="lider-card" id="lider-card">
+        <div class="lider-card__label">1º lugar</div>
+        <div class="lider-card__nome" id="lider-nome">—</div>
+        <div class="lider-card__pts" id="lider-pts">carregando…</div>
+      </div>
+    </div>
+
+    <!-- Cronograma -->
+    <div>
+      <div class="sidebar-section__title">Cronograma do evento</div>
+      <!-- ⚠️ Edite os horários e títulos aqui conforme o evento -->
+      <div class="timeline" id="timeline">
+
+        <div class="tl-item">
+          <div class="tl-time">07:30</div>
+          <div class="tl-dot-col"><div class="tl-dot geral"></div><div class="tl-line"></div></div>
+          <div>
+            <div class="tl-card geral">
+              <div class="tl-card__titulo">Credenciamento</div>
+              <div class="tl-card__sub">Entrada e montagem das equipes</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">08:30</div>
+          <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div>
+            <div class="tl-card geral">
+              <div class="tl-card__titulo">Abertura</div>
+              <div class="tl-card__sub">Cerimônia de abertura</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">09:00</div>
+          <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div>
+            <div class="tl-card arena">
+              <div class="tl-card__titulo">Arena — Round 1</div>
+              <div class="tl-card__sub">Missões do Desafio do Robô</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">10:00</div>
+          <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div>
+            <div class="tl-card projeto">
+              <div class="tl-card__titulo">Projeto de Inovação</div>
+              <div class="tl-card__sub">Apresentações para os juízes</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">11:00</div>
+          <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div>
+            <div class="tl-card arena">
+              <div class="tl-card__titulo">Arena — Round 2</div>
+              <div class="tl-card__sub">Missões do Desafio do Robô</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">12:00</div>
+          <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div>
+            <div class="tl-card geral">
+              <div class="tl-card__titulo">Almoço</div>
+              <div class="tl-card__sub">Intervalo</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">13:00</div>
+          <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div>
+            <div class="tl-card design">
+              <div class="tl-card__titulo">Design do Robô</div>
+              <div class="tl-card__sub">Avaliação de engenharia</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">14:00</div>
+          <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div>
+            <div class="tl-card arena">
+              <div class="tl-card__titulo">Arena — Round 3</div>
+              <div class="tl-card__sub">Missões do Desafio do Robô</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">15:00</div>
+          <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div>
+            <div class="tl-card core">
+              <div class="tl-card__titulo">Core Values</div>
+              <div class="tl-card__sub">Avaliação de valores da equipe</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">16:00</div>
+          <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div>
+            <div class="tl-card geral">
+              <div class="tl-card__titulo">Deliberação</div>
+              <div class="tl-card__sub">Juízes e coordenação</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tl-item">
+          <div class="tl-time">16:45</div>
+          <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+          <div>
+            <div class="tl-card premio">
+              <div class="tl-card__titulo">Premiação</div>
+              <div class="tl-card__sub">Cerimônia de encerramento</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </aside>
+
 </div>
 
 <div id="toast"></div>
 <script src="js/api.js"></script>
 <script>
-  // Botão de sessão — apenas exibe/limpa login salvo
+  // Botão de sessão
   const btnSessao = document.getElementById('btn-sessao');
   if (CoordAuth.logado()) {
     document.getElementById('badge-nome').textContent = CoordAuth.nome;
@@ -128,9 +560,46 @@
   }
   btnSessao.addEventListener('click', () => {
     if (CoordAuth.logado()) { CoordAuth.clear(); location.reload(); }
-    else location.href = 'deliberacao.html'; // redireciona para login
+    else location.href = 'deliberacao.html';
   });
 
+  // Destaca item atual na timeline com base no horário
+  function destacarHorarioAtual() {
+    const agora = new Date();
+    const minAgora = agora.getHours() * 60 + agora.getMinutes();
+    const itens = document.querySelectorAll('.tl-item');
+    let ultimo = null;
+    itens.forEach(item => {
+      const txt = item.querySelector('.tl-time').textContent.trim();
+      const [h, m] = txt.split(':').map(Number);
+      const minItem = h * 60 + m;
+      if (minItem <= minAgora) ultimo = item;
+    });
+    if (ultimo) ultimo.querySelector('.tl-dot').classList.add('ativo');
+  }
+  destacarHorarioAtual();
+
+  // Carrega lider do ranking
+  API.ranking().then(r => {
+    if (r.ok && r.equipes && r.equipes.length > 0) {
+      const top = r.equipes[0];
+      const nomesMap = {
+        TUR01:'6° A — Cyber Panter', TUR02:'6° B — Liga do Choque',
+        TUR03:'6° C — Alpha Tech', TUR04:'6° D — Pheonics Mecanics',
+        TUR05:'6° E — TecShark', TUR06:'7° A — Hoppin Robots',
+        TUR07:'7° B — Bivoltx', TUR08:'7° C — Ecoshift',
+        TUR09:'7° D — Pantera Lego Team', TUR10:'7° E — Império das Onças',
+        TUR11:'7° F — Poseidon', TUR12:'7° G — Arara Azul',
+        TUR13:'7° H — Nexos'
+      };
+      document.getElementById('lider-nome').textContent = nomesMap[top.id] || top.id;
+      document.getElementById('lider-pts').textContent = (top.total || 0).toFixed(1) + ' pts';
+    } else {
+      document.getElementById('lider-card').style.display = 'none';
+    }
+  }).catch(() => {
+    document.getElementById('lider-card').style.display = 'none';
+  });
 </script>
 </body>
 </html>
