@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cronograma — Torneio de Robótica</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body { background: #F0F4F8; }
+
+    .crono-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    .crono-titulo {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #0F172A;
+      letter-spacing: -.03em;
+      margin-bottom: .25rem;
+    }
+    .crono-sub {
+      font-size: .88rem;
+      color: #64748B;
+      margin-bottom: 2rem;
+    }
+
+    /* ── Timeline ──────────────────────────────────────────────── */
+    .timeline { display: flex; flex-direction: column; }
+
+    .tl-item {
+      display: grid;
+      grid-template-columns: 52px 18px 1fr;
+      gap: 0 1rem;
+      align-items: flex-start;
+    }
+    .tl-item + .tl-item { margin-top: .25rem; }
+
+    .tl-time {
+      font-size: .78rem;
+      font-weight: 700;
+      color: #94A3B8;
+      padding-top: .55rem;
+      text-align: right;
+      letter-spacing: .02em;
+      white-space: nowrap;
+    }
+    .tl-time.ativo { color: #508fcb; }
+
+    .tl-dot-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .tl-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2.5px solid #E2E8F0;
+      background: #fff;
+      flex-shrink: 0;
+      margin-top: .4rem;
+      position: relative;
+      z-index: 1;
+    }
+    .tl-dot.ativo {
+      border-color: #508fcb;
+      background: #508fcb;
+      box-shadow: 0 0 0 5px rgba(80,143,203,.2);
+    }
+    .tl-line {
+      flex: 1;
+      width: 2px;
+      background: #E2E8F0;
+      min-height: 20px;
+      margin-top: 2px;
+    }
+    .tl-item:last-child .tl-line { display: none; }
+
+    .tl-cards { display: flex; flex-direction: column; gap: .4rem; padding-bottom: .6rem; }
+
+    .tl-card {
+      background: #fff;
+      border: 1px solid #E2E8F0;
+      border-radius: 12px;
+      padding: .7rem 1rem;
+      border-left: 4px solid #E2E8F0;
+    }
+    .tl-card.arena   { border-left-color: #2F80ED; background: #F0F7FF; }
+    .tl-card.projeto { border-left-color: #8E5BD9; background: #F8F3FF; }
+    .tl-card.design  { border-left-color: #F2994A; background: #FFF8F0; }
+    .tl-card.core    { border-left-color: #27AE60; background: #F2FFF6; }
+    .tl-card.geral   { border-left-color: #64748B; background: #F8FAFC; }
+    .tl-card.premio  { border-left-color: #F2C94C; background: #FFFDF0; }
+
+    .tl-card__titulo {
+      font-size: .92rem;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: .15rem;
+    }
+    .tl-card__sub {
+      font-size: .78rem;
+      color: #64748B;
+      line-height: 1.4;
+    }
+    .tl-card__paralelo {
+      display: inline-block;
+      font-size: .65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      background: #F1F5F9;
+      color: #64748B;
+      border-radius: 4px;
+      padding: .1rem .4rem;
+      margin-bottom: .2rem;
+    }
+
+    /* ── Legenda ────────────────────────────────────────────────── */
+    .legenda {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin-bottom: 2rem;
+    }
+    .legenda__item {
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      font-size: .78rem;
+      color: #475569;
+      font-weight: 600;
+    }
+    .legenda__dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    /* agora badge */
+    .agora-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      background: #508fcb;
+      color: #fff;
+      border-radius: 8px;
+      padding: .25rem .7rem;
+      font-size: .72rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+    }
+    .agora-badge::before {
+      content: '';
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #fff;
+      animation: pulsar .9s ease-in-out infinite alternate;
+    }
+    @keyframes pulsar {
+      from { opacity: 1; }
+      to   { opacity: .35; }
+    }
+  </style>
+  <script>
+    window.API_URL = 'https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';
+  </script>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="index.html" class="topbar__brand"><img src="logo.svg" alt="HUB Robótica" style="height:66px"></a>
+  <nav class="topbar__nav">
+    <a href="index.html">Visão Geral</a>
+    <a href="arena.html">Arena</a>
+    <a href="turma.html">Minha Turma</a>
+    <a href="juizes.html">Juízes</a>
+    <a href="coordenacao.html">Coordenação</a>
+  </nav>
+  <div class="topbar__badge">
+    <span id="badge-nome" class="text-sm"></span>
+  </div>
+</header>
+
+<div class="crono-wrap">
+
+  <h1 class="crono-titulo">Cronograma do Evento</h1>
+  <p class="crono-sub">Escola SESI Reitor Miguel Calmon · Torneio Interno de Robótica</p>
+
+  <div id="agora-container"></div>
+
+  <div class="legenda">
+    <div class="legenda__item"><div class="legenda__dot" style="background:#2F80ED"></div>Arena</div>
+    <div class="legenda__item"><div class="legenda__dot" style="background:#8E5BD9"></div>Projeto de Inovação</div>
+    <div class="legenda__item"><div class="legenda__dot" style="background:#F2994A"></div>Design do Robô / Sala 2</div>
+    <div class="legenda__item"><div class="legenda__dot" style="background:#27AE60"></div>Core Values</div>
+    <div class="legenda__item"><div class="legenda__dot" style="background:#64748B"></div>Geral</div>
+    <div class="legenda__item"><div class="legenda__dot" style="background:#F2C94C"></div>Premiação</div>
+  </div>
+
+  <div class="timeline" id="timeline">
+
+    <div class="tl-item">
+      <div class="tl-time">07:00</div>
+      <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-cards">
+        <div class="tl-card geral">
+          <div class="tl-card__titulo">Cerimônia de Abertura</div>
+          <div class="tl-card__sub">Boas-vindas às equipes e apresentação do regulamento</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">07:30</div>
+      <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-cards">
+        <div class="tl-card projeto">
+          <div class="tl-card__paralelo">Sala 1 · até 08:40</div>
+          <div class="tl-card__titulo">Avaliações em Sala — Grupo A</div>
+          <div class="tl-card__sub">TUR01 → TUR07 · 10 min por equipe · Projeto de Inovação + Design + Core Values</div>
+        </div>
+        <div class="tl-card design">
+          <div class="tl-card__paralelo">Sala 2 · até 08:30</div>
+          <div class="tl-card__titulo">Avaliações em Sala — Grupo B</div>
+          <div class="tl-card__sub">TUR08 → TUR13 · 10 min por equipe · Projeto de Inovação + Design + Core Values</div>
+        </div>
+        <div class="tl-card arena">
+          <div class="tl-card__paralelo">Arena · simultâneo</div>
+          <div class="tl-card__titulo">Arena — Round 1</div>
+          <div class="tl-card__sub">Equipes fora do horário de sala competem na arena</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">08:40</div>
+      <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-cards">
+        <div class="tl-card arena">
+          <div class="tl-card__titulo">Arena — Round 2</div>
+          <div class="tl-card__sub">Todas as 13 equipes disponíveis para a segunda rodada</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">10:00</div>
+      <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-cards">
+        <div class="tl-card arena">
+          <div class="tl-card__titulo">Arena — Round 3</div>
+          <div class="tl-card__sub">Rodada final · a melhor pontuação das 3 conta para o ranking</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">11:00</div>
+      <div class="tl-dot-col"><div class="tl-dot"></div><div class="tl-line"></div></div>
+      <div class="tl-cards">
+        <div class="tl-card geral">
+          <div class="tl-card__titulo">Deliberação dos Juízes</div>
+          <div class="tl-card__sub">Reunião da comissão julgadora para definição dos premiados</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-time">11:30</div>
+      <div class="tl-dot-col"><div class="tl-dot"></div></div>
+      <div class="tl-cards">
+        <div class="tl-card premio">
+          <div class="tl-card__titulo">Cerimônia de Encerramento</div>
+          <div class="tl-card__sub">Premiação por categoria · reconhecimento geral · fotos</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="js/api.js"></script>
+<script>
+  function destacarAtual() {
+    const agora = new Date();
+    const min = agora.getHours() * 60 + agora.getMinutes();
+    const itens = document.querySelectorAll('.tl-item');
+    let ativo = null;
+    itens.forEach(function(item) {
+      const txt = item.querySelector('.tl-time').textContent.trim();
+      const partes = txt.split(':').map(Number);
+      if (partes[0] * 60 + partes[1] <= min) ativo = item;
+    });
+    if (ativo) {
+      ativo.querySelector('.tl-dot').classList.add('ativo');
+      ativo.querySelector('.tl-time').classList.add('ativo');
+
+      const tituloAtivo = ativo.querySelector('.tl-card__titulo');
+      if (tituloAtivo) {
+        document.getElementById('agora-container').innerHTML =
+          '<div class="agora-badge">Agora: ' + tituloAtivo.textContent + '</div>';
+      }
+    }
+  }
+  destacarAtual();
+</script>
+</body>
+</html>

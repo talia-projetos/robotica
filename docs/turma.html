@@ -222,6 +222,25 @@
     }
 
     /* ── Logo circular da equipe ────────────────────────────── */
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: .3rem .7rem;
+      font-size: .78rem;
+      color: #334155;
+    }
+    .rank-badge strong { font-size: .92rem; color: #0F172A; }
+    .rank-badge--geral {
+      background: #0F172A;
+      border-color: #0F172A;
+      color: rgba(255,255,255,.8);
+    }
+    .rank-badge--geral strong { color: #F2C94C; font-size: 1rem; }
+
     .eq-logo {
       width: 72px;
       height: 72px;
@@ -301,6 +320,11 @@
         <div class="eq-header__nome" id="eq-nome">—</div>
       </div>
       <div class="eq-header__status" id="eq-status"></div>
+    </div>
+
+    <!-- Posição no ranking -->
+    <div id="ranking-row" style="display:none;margin-bottom:1rem">
+      <div id="ranking-badges" style="display:flex;flex-wrap:wrap;gap:.5rem"></div>
     </div>
 
     <!-- Score cards -->
@@ -427,12 +451,37 @@
     document.getElementById('view-resultados').classList.remove('hidden');
 
     const eq = data.equipe || {};
-    document.getElementById('eq-id').textContent   = eq.id   || '—';
-    document.getElementById('eq-nome').textContent = eq.nome || '—';
+    const nomeExibido = nomesMap[eq.id] || eq.nome || eq.id;
+    document.getElementById('eq-id').textContent   = nomeExibido;
+    document.getElementById('eq-nome').textContent = eq.id || '—';
     document.getElementById('eq-status').innerHTML = data.scores ? statusPill(data.scores.status) : '';
     document.getElementById('badge-turma').textContent = eq.id || '';
     document.getElementById('logout-info').textContent =
-      'Turma: ' + (eq.nome || eq.id) + (eq.turno ? ' · ' + eq.turno : '');
+      nomeExibido + (eq.turno ? ' · ' + eq.turno : '');
+
+    // Busca posição no ranking
+    document.getElementById('ranking-row').style.display = 'none';
+    API.ranking().then(function(r) {
+      if (!r.ok || !r.equipes || !r.equipes.length) return;
+      const all = r.equipes;
+      const posGeral = all.findIndex(function(e) { return e.id === eq.id; }) + 1;
+      if (!posGeral) return;
+      const cats = [
+        { campo: 'arena20', label: 'Arena',   cor: '#2F80ED' },
+        { campo: 'proj20',  label: 'Projeto',  cor: '#8E5BD9' },
+        { campo: 'des20',   label: 'Design',   cor: '#F2994A' },
+        { campo: 'core20',  label: 'Core',     cor: '#27AE60' },
+      ];
+      const catBadges = cats.map(function(cat) {
+        const sorted = all.slice().sort(function(a,b){ return (b[cat.campo]||0)-(a[cat.campo]||0); });
+        const pos = sorted.findIndex(function(e){ return e.id === eq.id; }) + 1;
+        return '<span class="rank-badge" style="border-left:3px solid '+cat.cor+'">'
+          + '<strong>#'+pos+'</strong> '+cat.label+'</span>';
+      }).join('');
+      document.getElementById('ranking-badges').innerHTML =
+        '<span class="rank-badge rank-badge--geral"><strong>#'+posGeral+'</strong> Geral</span>' + catBadges;
+      document.getElementById('ranking-row').style.display = '';
+    }).catch(function() {});
 
     const logoFiles = {
       TUR01:'TUR01.jpg', TUR02:'TUR02.png', TUR03:'TUR03.png',

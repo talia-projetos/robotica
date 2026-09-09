@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rubricas — Torneio de Robótica SESI</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 11pt;
+      color: #111;
+      background: #fff;
+    }
+
+    /* ── Página A4 ──────────────────────────────────────────────── */
+    .pagina {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto 24px;
+      padding: 16mm 16mm 14mm;
+      background: #fff;
+      page-break-after: always;
+    }
+    .pagina:last-child { page-break-after: auto; }
+
+    /* ── Cabeçalho ──────────────────────────────────────────────── */
+    .cab {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 3px solid currentColor;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+    .cab__titulo {
+      font-size: 15pt;
+      font-weight: 900;
+      letter-spacing: -.02em;
+      line-height: 1.1;
+    }
+    .cab__sub {
+      font-size: 8pt;
+      color: #555;
+      margin-top: 3px;
+    }
+    .cab__logo {
+      font-size: 8pt;
+      color: #555;
+      text-align: right;
+    }
+    .cab__logo strong { display: block; font-size: 9pt; color: #111; }
+
+    /* ── Campos de identificação ────────────────────────────────── */
+    .ident {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .campo {
+      border-bottom: 1.5px solid #999;
+      padding: 2px 0 3px;
+    }
+    .campo__label {
+      font-size: 7pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    .campo__linha { height: 18px; }
+
+    /* ── Escala de referência ───────────────────────────────────── */
+    .escala {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .escala__item {
+      flex: 1;
+      border-radius: 6px;
+      padding: 5px 8px;
+      font-size: 8pt;
+      line-height: 1.3;
+      border: 1.5px solid;
+    }
+    .escala__num {
+      font-size: 13pt;
+      font-weight: 900;
+      line-height: 1;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .escala__nome { font-weight: 700; display: block; font-size: 7.5pt; }
+    .escala__desc { font-size: 7pt; color: #555; }
+
+    .e1 { border-color: #E57373; background: #FFF5F5; }
+    .e1 .escala__num { color: #C62828; }
+    .e2 { border-color: #FFB74D; background: #FFFBF2; }
+    .e2 .escala__num { color: #E65100; }
+    .e3 { border-color: #66BB6A; background: #F5FFF5; }
+    .e3 .escala__num { color: #2E7D32; }
+    .e4 { border-color: #42A5F5; background: #F0F9FF; }
+    .e4 .escala__num { color: #1565C0; }
+
+    /* ── Tabela de rubrica ──────────────────────────────────────── */
+    .rubrica {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 9.5pt;
+      margin-bottom: 12px;
+    }
+    .rubrica thead th {
+      padding: 6px 8px;
+      font-size: 8pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      background: #111;
+      color: #fff;
+      text-align: center;
+    }
+    .rubrica thead th:first-child { text-align: left; }
+
+    .rubrica tbody tr { border-bottom: 1px solid #DDD; }
+    .rubrica tbody tr:last-child { border-bottom: 2px solid #999; }
+    .rubrica tbody tr:nth-child(even) { background: #FAFAFA; }
+
+    .rubrica td {
+      padding: 7px 8px;
+      vertical-align: top;
+    }
+    .rubrica td:not(:first-child) {
+      text-align: center;
+      width: 13%;
+    }
+
+    .criterio__nome {
+      font-weight: 700;
+      font-size: 9.5pt;
+      margin-bottom: 2px;
+    }
+    .criterio__desc {
+      font-size: 8pt;
+      color: #555;
+      line-height: 1.35;
+    }
+
+    /* caixas de pontuação */
+    .score-box {
+      display: inline-block;
+      width: 28px;
+      height: 28px;
+      border: 2px solid #CCC;
+      border-radius: 6px;
+      line-height: 24px;
+      font-weight: 900;
+      font-size: 13pt;
+      color: #AAA;
+    }
+
+    /* ── Total e observações ────────────────────────────────────── */
+    .total-row td {
+      padding: 8px;
+      font-weight: 800;
+      font-size: 10pt;
+      background: #F0F0F0;
+    }
+    .total-box {
+      display: inline-block;
+      border: 2px solid #555;
+      border-radius: 8px;
+      padding: 4px 14px;
+      font-size: 14pt;
+      font-weight: 900;
+      min-width: 60px;
+      text-align: center;
+      background: #fff;
+    }
+
+    .obs-area {
+      border: 1.5px solid #CCC;
+      border-radius: 6px;
+      padding: 8px;
+    }
+    .obs-area__titulo {
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: #666;
+      margin-bottom: 6px;
+    }
+    .obs-linha {
+      border-bottom: 1px solid #DDD;
+      height: 22px;
+      margin-bottom: 2px;
+    }
+
+    /* ── Assinatura ─────────────────────────────────────────────── */
+    .assinatura {
+      display: flex;
+      gap: 24px;
+      margin-top: 10px;
+    }
+    .assinatura__campo {
+      flex: 1;
+      border-top: 1.5px solid #999;
+      padding-top: 4px;
+      font-size: 7.5pt;
+      color: #666;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    /* ── Arena compacta ─────────────────────────────────────────── */
+    .arena-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .arena-round {
+      border: 2px solid #1565C0;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .arena-round__header {
+      background: #1565C0;
+      color: #fff;
+      padding: 6px 10px;
+      font-size: 9pt;
+      font-weight: 800;
+    }
+    .arena-round__body { padding: 8px 10px; }
+    .arena-field {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 8.5pt;
+    }
+    .arena-field__label { color: #444; }
+    .arena-field__box {
+      border: 1.5px solid #999;
+      border-radius: 5px;
+      width: 52px;
+      height: 22px;
+    }
+    .arena-total {
+      border-top: 2px solid #1565C0;
+      padding-top: 6px;
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 800;
+      font-size: 9pt;
+    }
+    .arena-total__box {
+      border: 2px solid #1565C0;
+      border-radius: 6px;
+      width: 60px;
+      height: 24px;
+      background: #EFF6FF;
+    }
+
+    /* ── Cores por categoria ────────────────────────────────────── */
+    .cab--projeto { color: #7B1FA2; border-color: #7B1FA2; }
+    .cab--design  { color: #E65100; border-color: #E65100; }
+    .cab--core    { color: #2E7D32; border-color: #2E7D32; }
+    .cab--arena   { color: #1565C0; border-color: #1565C0; }
+
+    thead.projeto { background: #7B1FA2 !important; }
+    thead.design  { background: #E65100 !important; }
+    thead.core    { background: #2E7D32 !important; }
+
+    /* ── Print ──────────────────────────────────────────────────── */
+    @media print {
+      body { margin: 0; }
+      .pagina { margin: 0; box-shadow: none; }
+      .no-print { display: none !important; }
+    }
+
+    /* ── Tela: botão imprimir ───────────────────────────────────── */
+    @media screen {
+      .pagina {
+        box-shadow: 0 2px 24px rgba(0,0,0,.12);
+        margin-bottom: 32px;
+      }
+      .print-bar {
+        background: #1A304D;
+        color: #fff;
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: .9rem;
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+      .print-bar button {
+        background: #508fcb;
+        border: none;
+        color: #fff;
+        padding: .45rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: .88rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Barra de impressão (apenas tela) -->
+<div class="print-bar no-print">
+  <span>Rubricas — Torneio de Robótica SESI · 3 páginas A4</span>
+  <button onclick="window.print()">Imprimir / Salvar PDF</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- PÁGINA 1 — PROJETO DE INOVAÇÃO                             -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="pagina">
+
+  <div class="cab cab--projeto">
+    <div>
+      <div class="cab__titulo">Projeto de Inovação</div>
+      <div class="cab__sub">Rubrica de Avaliação — Torneio de Robótica</div>
+    </div>
+    <div class="cab__logo">
+      <strong>Escola SESI</strong>
+      Reitor Miguel Calmon
+    </div>
+  </div>
+
+  <div class="ident">
+    <div class="campo"><div class="cab__sub">Equipe</div><div class="campo__linha"></div></div>
+    <div class="campo"><div class="cab__sub">Turma / Código</div><div class="campo__linha"></div></div>
+    <div class="campo"><div class="cab__sub">Juiz</div><div class="campo__linha"></div></div>
+  </div>
+
+  <div class="escala">
+    <div class="escala__item e1"><span class="escala__num">1</span><span class="escala__nome">Iniciante</span><span class="escala__desc">Tentativa superficial, sem evidências claras</span></div>
+    <div class="escala__item e2"><span class="escala__num">2</span><span class="escala__nome">Em desenvolvimento</span><span class="escala__desc">Demonstra entendimento parcial, com lacunas</span></div>
+    <div class="escala__item e3"><span class="escala__num">3</span><span class="escala__nome">Finalizado</span><span class="escala__desc">Atende às expectativas com clareza</span></div>
+    <div class="escala__item e4"><span class="escala__num">4</span><span class="escala__nome">Excedente</span><span class="escala__desc">Supera expectativas de forma notável</span></div>
+  </div>
+
+  <table class="rubrica">
+    <thead class="projeto">
+      <tr>
+        <th>Critério</th>
+        <th>1</th><th>2</th><th>3</th><th>4</th>
+        <th>Nota</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="criterio__nome">Identificação do Problema</div>
+          <div class="criterio__desc">O problema está claramente definido, é relevante e a equipe demonstra entendimento de suas causas e impactos.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="criterio__nome">Pesquisa e Análise</div>
+          <div class="criterio__desc">A equipe realizou pesquisa com fontes confiáveis, consultou especialistas ou comunidade afetada.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="criterio__nome">Solução Proposta</div>
+          <div class="criterio__desc">A solução é original, viável e responde diretamente ao problema. Demonstra criatividade e inovação.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="criterio__nome">Impacto e Compartilhamento</div>
+          <div class="criterio__desc">A equipe considera o potencial de impacto real e demonstrou a solução para a comunidade ou partes interessadas.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="criterio__nome">Apresentação e Comunicação</div>
+          <div class="criterio__desc">A equipe apresenta com clareza, confiança e responde bem às perguntas dos juízes. Todos participam.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="5" style="text-align:right">Total (máx. 20 pts)</td>
+        <td><div class="total-box" style="border-width:2.5px;border-color:#7B1FA2"></div></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="obs-area">
+    <div class="obs-area__titulo">Bom trabalho! (pontos fortes)</div>
+    <div class="obs-linha"></div><div class="obs-linha"></div><div class="obs-linha"></div>
+  </div>
+  <div class="obs-area" style="margin-top:8px">
+    <div class="obs-area__titulo">Reflitam sobre… (pontos de melhoria)</div>
+    <div class="obs-linha"></div><div class="obs-linha"></div><div class="obs-linha"></div>
+  </div>
+
+  <div class="assinatura" style="margin-top:14px">
+    <div class="assinatura__campo">Assinatura do Juiz</div>
+    <div class="assinatura__campo">Data: _____ / _____ / 2025</div>
+    <div class="assinatura__campo">Horário: ________ h</div>
+  </div>
+
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- PÁGINA 2 — DESIGN DO ROBÔ                                  -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="pagina">
+
+  <div class="cab cab--design">
+    <div>
+      <div class="cab__titulo">Design do Robô</div>
+      <div class="cab__sub">Rubrica de Avaliação — Torneio de Robótica</div>
+    </div>
+    <div class="cab__logo">
+      <strong>Escola SESI</strong>
+      Reitor Miguel Calmon
+    </div>
+  </div>
+
+  <div class="ident">
+    <div class="campo"><div class="cab__sub">Equipe</div><div class="campo__linha"></div></div>
+    <div class="campo"><div class="cab__sub">Turma / Código</div><div class="campo__linha"></div></div>
+    <div class="campo"><div class="cab__sub">Juiz</div><div class="campo__linha"></div></div>
+  </div>
+
+  <div class="escala">
+    <div class="escala__item e1"><span class="escala__num">1</span><span class="escala__nome">Iniciante</span><span class="escala__desc">Tentativa superficial, sem evidências claras</span></div>
+    <div class="escala__item e2"><span class="escala__num">2</span><span class="escala__nome">Em desenvolvimento</span><span class="escala__desc">Demonstra entendimento parcial, com lacunas</span></div>
+    <div class="escala__item e3"><span class="escala__num">3</span><span class="escala__nome">Finalizado</span><span class="escala__desc">Atende às expectativas com clareza</span></div>
+    <div class="escala__item e4"><span class="escala__num">4</span><span class="escala__nome">Excedente</span><span class="escala__desc">Supera expectativas de forma notável</span></div>
+  </div>
+
+  <table class="rubrica">
+    <thead class="design">
+      <tr>
+        <th>Critério</th>
+        <th>1</th><th>2</th><th>3</th><th>4</th>
+        <th>Nota</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="criterio__nome">Design Mecânico</div>
+          <div class="criterio__desc">Os mecanismos do robô são eficientes, bem construídos e adequados às missões do desafio.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="criterio__nome">Estratégia de Programação</div>
+          <div class="criterio__desc">O código é organizado, eficiente e reflete pensamento lógico claro. A equipe explica as escolhas de programação.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="criterio__nome">Autonomia e Confiabilidade</div>
+          <div class="criterio__desc">O robô executa missões de forma consistente e autônoma, com mínimas falhas. A equipe testa e ajusta com método.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="criterio__nome">Inovação no Design</div>
+          <div class="criterio__desc">A equipe apresenta soluções originais ou criativas que vão além das abordagens mais óbvias.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="criterio__nome">Processo de Engenharia</div>
+          <div class="criterio__desc">A equipe documenta, testa e itera seu design. Identifica problemas e melhora a solução com base em evidências.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="5" style="text-align:right">Total (máx. 20 pts)</td>
+        <td><div class="total-box" style="border-width:2.5px;border-color:#E65100"></div></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="obs-area">
+    <div class="obs-area__titulo">Bom trabalho! (pontos fortes)</div>
+    <div class="obs-linha"></div><div class="obs-linha"></div><div class="obs-linha"></div>
+  </div>
+  <div class="obs-area" style="margin-top:8px">
+    <div class="obs-area__titulo">Reflitam sobre… (pontos de melhoria)</div>
+    <div class="obs-linha"></div><div class="obs-linha"></div><div class="obs-linha"></div>
+  </div>
+
+  <div class="assinatura" style="margin-top:14px">
+    <div class="assinatura__campo">Assinatura do Juiz</div>
+    <div class="assinatura__campo">Data: _____ / _____ / 2025</div>
+    <div class="assinatura__campo">Horário: ________ h</div>
+  </div>
+
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- PÁGINA 3 — CORE VALUES + ARENA                             -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="pagina">
+
+  <!-- Core Values -->
+  <div class="cab cab--core">
+    <div>
+      <div class="cab__titulo">Core Values</div>
+      <div class="cab__sub">Rubrica de Avaliação — Torneio de Robótica</div>
+    </div>
+    <div class="cab__logo">
+      <strong>Escola SESI</strong>
+      Reitor Miguel Calmon
+    </div>
+  </div>
+
+  <div class="ident">
+    <div class="campo"><div class="cab__sub">Equipe</div><div class="campo__linha"></div></div>
+    <div class="campo"><div class="cab__sub">Turma / Código</div><div class="campo__linha"></div></div>
+    <div class="campo"><div class="cab__sub">Juiz</div><div class="campo__linha"></div></div>
+  </div>
+
+  <div class="escala">
+    <div class="escala__item e1"><span class="escala__num">1</span><span class="escala__nome">Iniciante</span><span class="escala__desc">Tentativa superficial</span></div>
+    <div class="escala__item e2"><span class="escala__num">2</span><span class="escala__nome">Em desenvolvimento</span><span class="escala__desc">Entendimento parcial</span></div>
+    <div class="escala__item e3"><span class="escala__num">3</span><span class="escala__nome">Finalizado</span><span class="escala__desc">Atende às expectativas</span></div>
+    <div class="escala__item e4"><span class="escala__num">4</span><span class="escala__nome">Excedente</span><span class="escala__desc">Supera expectativas</span></div>
+  </div>
+
+  <table class="rubrica">
+    <thead class="core">
+      <tr>
+        <th>Critério</th>
+        <th>1</th><th>2</th><th>3</th><th>4</th>
+        <th>Nota</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="criterio__nome">Descoberta</div>
+          <div class="criterio__desc">A equipe demonstra curiosidade, aprende com os erros e busca sempre melhorar.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="criterio__nome">Inclusão</div>
+          <div class="criterio__desc">Todos os membros participam ativamente e contribuem de forma valorizada.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="criterio__nome">Inovação</div>
+          <div class="criterio__desc">A equipe usa pensamento criativo para superar desafios, dentro e fora da arena.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="criterio__nome">Impacto</div>
+          <div class="criterio__desc">A equipe aplica o que aprende para contribuir positivamente com a comunidade.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="criterio__nome">Trabalho em Equipe</div>
+          <div class="criterio__desc">A equipe se comunica bem, colabora e resolve conflitos de forma construtiva.</div>
+        </td>
+        <td><div class="score-box">1</div></td>
+        <td><div class="score-box">2</div></td>
+        <td><div class="score-box">3</div></td>
+        <td><div class="score-box">4</div></td>
+        <td><div class="total-box"></div></td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="5" style="text-align:right">Total (máx. 20 pts)</td>
+        <td><div class="total-box" style="border-width:2.5px;border-color:#2E7D32"></div></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="obs-area">
+    <div class="obs-area__titulo">Bom trabalho! / Reflitam sobre…</div>
+    <div class="obs-linha"></div><div class="obs-linha"></div><div class="obs-linha"></div>
+  </div>
+
+  <!-- Separador -->
+  <div style="border-top:2px dashed #CCC;margin:14px 0 12px;"></div>
+
+  <!-- Arena compacta -->
+  <div class="cab cab--arena" style="margin-bottom:10px">
+    <div>
+      <div class="cab__titulo" style="font-size:12pt">Desafio do Robô — Arena</div>
+      <div class="cab__sub">Registro de pontuação por round</div>
+    </div>
+    <div class="cab__logo" style="font-size:8pt">
+      Equipe: ________________________<br>
+      Turma: ____________
+    </div>
+  </div>
+
+  <div class="arena-grid">
+    <div class="arena-round">
+      <div class="arena-round__header">Round 1</div>
+      <div class="arena-round__body">
+        <div class="arena-field">
+          <span class="arena-field__label">Missões (pts)</span>
+          <div class="arena-field__box"></div>
+        </div>
+        <div class="arena-field">
+          <span class="arena-field__label">Penalidade (−)</span>
+          <div class="arena-field__box"></div>
+        </div>
+        <div class="arena-total">
+          <span>Total</span>
+          <div class="arena-total__box"></div>
+        </div>
+      </div>
+    </div>
+    <div class="arena-round">
+      <div class="arena-round__header">Round 2</div>
+      <div class="arena-round__body">
+        <div class="arena-field">
+          <span class="arena-field__label">Missões (pts)</span>
+          <div class="arena-field__box"></div>
+        </div>
+        <div class="arena-field">
+          <span class="arena-field__label">Penalidade (−)</span>
+          <div class="arena-field__box"></div>
+        </div>
+        <div class="arena-total">
+          <span>Total</span>
+          <div class="arena-total__box"></div>
+        </div>
+      </div>
+    </div>
+    <div class="arena-round">
+      <div class="arena-round__header">Round 3</div>
+      <div class="arena-round__body">
+        <div class="arena-field">
+          <span class="arena-field__label">Missões (pts)</span>
+          <div class="arena-field__box"></div>
+        </div>
+        <div class="arena-field">
+          <span class="arena-field__label">Penalidade (−)</span>
+          <div class="arena-field__box"></div>
+        </div>
+        <div class="arena-total">
+          <span>Total</span>
+          <div class="arena-total__box"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:10px">
+    <span style="font-size:9pt;font-weight:700;color:#555">MELHOR PONTUAÇÃO (conta para o ranking):</span>
+    <div class="total-box" style="font-size:16pt;border-color:#1565C0;border-width:2.5px;min-width:80px"></div>
+    <span style="font-size:8pt;color:#777">Round nº ____</span>
+  </div>
+
+  <div class="assinatura">
+    <div class="assinatura__campo">Assinatura do Árbitro</div>
+    <div class="assinatura__campo">Data: _____ / _____ / 2025</div>
+    <div class="assinatura__campo">Horário: ________ h</div>
+  </div>
+
+</div>
+
+</body>
+</html>
