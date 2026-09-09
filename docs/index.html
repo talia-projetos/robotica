@@ -11,7 +11,7 @@
 
     /* ── Hero ─────────────────────────────────────────────────── */
     .hub-hero {
-      background: linear-gradient(180deg, #0C0E15 0%, #1A304D 55%, #1E3F65 100%);
+      background: linear-gradient(180deg, #0B0D14 0%, #14202F 52%, #1B2D41 100%);
       padding: 2.25rem 0 2.75rem;
       position: relative;
       overflow: hidden;
@@ -20,7 +20,15 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse 70% 120% at 90% 50%, rgba(80,143,203,.18) 0%, transparent 65%);
+      background:
+        radial-gradient(ellipse 70% 120% at 88% 50%, rgba(75,130,180,.13) 0%, transparent 60%),
+        repeating-linear-gradient(
+          -55deg,
+          transparent 0,
+          transparent 17px,
+          rgba(255,255,255,.048) 17px,
+          rgba(255,255,255,.048) 18px
+        );
       pointer-events: none;
     }
     .hub-hero-inner {

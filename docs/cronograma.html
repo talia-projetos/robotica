@@ -18,7 +18,7 @@
     .day-strip__label { font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; color: #94A3B8; margin-bottom: .5rem; }
     .day-track {
       position: relative;
-      height: 50px;
+      height: 64px;
       background: #F1F5F9;
       border-radius: 10px;
       overflow: hidden;
@@ -29,6 +29,7 @@
       display: flex; align-items: center; justify-content: center;
       font-size: .72rem; font-weight: 800;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      border-right: 2px solid rgba(255,255,255,.35);
     }
     /* barra dividida para avaliações */
     .dp-split { flex-direction: column; padding: 0; }
@@ -61,7 +62,7 @@
       h1 { font-size: 1rem; margin-bottom: .1rem; }
       .sub { font-size: .75rem; margin-bottom: .75rem; }
       .day-strip { margin-bottom: .75rem; }
-      .day-track { height: 40px; }
+      .day-track { height: 48px; }
       .legenda { margin-bottom: .75rem; }
       .gantt-card {
         box-shadow: none; border: 1px solid #CBD5E1;
@@ -224,8 +225,8 @@
 
       <!-- Avaliações: barra dividida Sala 1 (topo) / Sala 2 (baixo) -->
       <div class="dp dp-split" style="left:10%;width:23.3%">
-        <div class="dp-half" style="background:#7C3AED">Sala 1 — avaliações + Round 1</div>
-        <div class="dp-half" style="background:#BE185D">Sala 2 — avaliações + Round 1</div>
+        <div class="dp-half" style="background:#7C3AED">Sala 1 — aval. + R1</div>
+        <div class="dp-half" style="background:#BE185D">Sala 2 — aval. + R1</div>
       </div>
 
       <div class="dp" style="left:33.4%;width:13.3%;background:#059669;color:#fff">Round 2</div>
@@ -247,11 +248,14 @@
 
   <!-- Legenda -->
   <div class="legenda">
-    <div class="li"><div class="lc" style="background:#7C3AED"></div>Sala 1 — avaliação</div>
-    <div class="li"><div class="lc" style="background:#BE185D"></div>Sala 2 — avaliação</div>
+    <div class="li"><div class="lc" style="background:#1A304D"></div>Abertura</div>
+    <div class="li"><div class="lc" style="background:#7C3AED"></div>Sala 1 — aval.</div>
+    <div class="li"><div class="lc" style="background:#BE185D"></div>Sala 2 — aval.</div>
     <div class="li"><div class="lc" style="background:#2563EB"></div>Round 1</div>
     <div class="li"><div class="lc" style="background:#059669"></div>Round 2</div>
     <div class="li"><div class="lc" style="background:#D97706"></div>Round 3</div>
+    <div class="li"><div class="lc" style="background:#64748B"></div>Deliberação</div>
+    <div class="li"><div class="lc" style="background:#92400E"></div>Premiação</div>
   </div>
 
   <!-- ── Gantt detalhado 7:30–10:15 (165 min) ─────────────────── -->

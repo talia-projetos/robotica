@@ -209,8 +209,12 @@
       <div class="jh-nome" id="juiz-nome">—</div>
       <div class="jh-cat">Categoria: <span id="juiz-cat">—</span></div>
     </div>
-    <button class="btn btn-outline btn-sm" onclick="sair()"
-      style="border-color:#E2E8F0;color:#64748B">Sair</button>
+    <div style="display:flex;gap:.5rem">
+      <a href="index.html" class="btn btn-outline btn-sm"
+        style="border-color:#E2E8F0;color:#64748B;text-decoration:none">← Início</a>
+      <button class="btn btn-outline btn-sm" onclick="sair()"
+        style="border-color:#E2E8F0;color:#64748B">Sair</button>
+    </div>
   </div>
 
   <!-- Abas -->
@@ -435,7 +439,7 @@
 
   function iniciarChat() {
     carregarChat();
-    chatTimer = setInterval(carregarChat, 5000);
+    chatTimer = setInterval(carregarChat, 3000);
   }
 
   function pararChat() {
@@ -477,11 +481,35 @@
     const input = document.getElementById('chat-texto');
     const texto = input.value.trim();
     if (!texto) return;
+    const btn = document.getElementById('btn-enviar');
+    btn.disabled = true;
+    input.value = '';
+    // Optimistic: mostra a mensagem imediatamente antes da API responder
+    const cont = document.getElementById('chat-msgs');
+    document.getElementById('chat-vazio').style.display = 'none';
+    const catLabel = catSel && catSel !== 'Geral'
+      ? '<span class="chat-msg__cat">' + escH(catSel) + '</span>' : '';
+    cont.insertAdjacentHTML('beforeend',
+      '<div class="chat-msg chat-msg--mine" data-pending="1">'
+      + '<div class="chat-msg__autor">' + escH(Sessao.juiz || 'Eu') + catLabel + '</div>'
+      + '<div class="chat-msg__texto">' + escH(texto) + '</div>'
+      + '</div>');
+    cont.scrollTop = cont.scrollHeight;
     try {
       const r = await API.comentar(Sessao.juiz, Sessao.pin, texto, catSel);
-      if (r.ok) { input.value = ''; chatCount = 0; carregarChat(); }
-      else throw new Error(r.erro);
-    } catch(e) { toast('Erro: ' + e.message, 'err'); }
+      if (r.ok) { chatCount = 0; carregarChat(); }
+      else {
+        document.querySelectorAll('[data-pending]').forEach(function(el){ el.remove(); });
+        input.value = texto;
+        toast('Erro: ' + (r.erro || 'falhou'), 'err');
+      }
+    } catch(e) {
+      document.querySelectorAll('[data-pending]').forEach(function(el){ el.remove(); });
+      input.value = texto;
+      toast('Erro: ' + e.message, 'err');
+    } finally {
+      btn.disabled = false;
+    }
   }
 
   document.getElementById('btn-enviar').addEventListener('click', enviarChat);
