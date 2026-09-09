@@ -8,176 +8,147 @@
   <link rel="stylesheet" href="css/styles.css">
   <style>
     body { background: #F0F4F8; }
+    .wrap { max-width: 1200px; margin: 0 auto; padding: 1.75rem 1.5rem 3rem; }
 
-    .crono-wrap { max-width: 1320px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+    h1 { font-size: 1.45rem; font-weight: 900; color: #0F172A; letter-spacing: -.03em; margin: 0 0 .2rem; }
+    .sub { font-size: .83rem; color: #64748B; margin: 0 0 1.75rem; }
 
-    /* ── Cabeçalho ─────────────────────────────────────────────── */
-    .crono-titulo { font-size: 1.5rem; font-weight: 900; color: #0F172A; letter-spacing: -.03em; margin-bottom: .2rem; }
-    .crono-sub    { font-size: .85rem; color: #64748B; margin-bottom: 1.75rem; }
+    /* ── Visão geral do dia ────────────────────────────────────── */
+    .day-strip { margin-bottom: 1.75rem; }
+    .day-strip__label { font-size: .68rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; color: #94A3B8; margin-bottom: .5rem; }
+    .day-track {
+      position: relative;
+      height: 42px;
+      background: #F1F5F9;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .dp {
+      position: absolute;
+      top: 0; bottom: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .72rem; font-weight: 800;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    /* time ticks below strip */
+    .day-ticks { position: relative; height: 20px; margin-top: 2px; }
+    .day-tick {
+      position: absolute;
+      transform: translateX(-50%);
+      font-size: .68rem; font-weight: 700; color: #64748B;
+    }
 
-    /* ── Legenda ────────────────────────────────────────────────── */
-    .legenda { display: flex; flex-wrap: wrap; gap: .5rem .9rem; margin-bottom: 1.5rem; align-items: center; }
-    .legenda__item { display: flex; align-items: center; gap: .35rem; font-size: .78rem; font-weight: 600; color: #374151; }
-    .legenda__cor  { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+    /* ── Legenda ───────────────────────────────────────────────── */
+    .legenda { display: flex; flex-wrap: wrap; gap: .4rem .85rem; margin-bottom: 1.25rem; align-items: center; }
+    .li { display: flex; align-items: center; gap: .35rem; font-size: .76rem; font-weight: 600; color: #374151; }
+    .lc { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
 
-    /* ── Gantt container ────────────────────────────────────────── */
-    .gantt-outer { overflow-x: auto; border-radius: 14px; background: #fff; border: 1px solid #E2E8F0; box-shadow: 0 2px 16px rgba(15,23,42,.06); }
-    .gantt       { min-width: 1100px; }
+    /* ── Gantt ─────────────────────────────────────────────────── */
+    .gantt-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #E2E8F0;
+      box-shadow: 0 2px 12px rgba(15,23,42,.06);
+      overflow: hidden;
+      overflow-x: auto;
+    }
+    .gantt { min-width: 860px; }
 
-    /* ── Axis header ────────────────────────────────────────────── */
-    .gantt-axis {
+    /* Axis */
+    .g-axis {
       display: flex;
       border-bottom: 2px solid #E2E8F0;
-      position: sticky;
-      top: 0;
       background: #F8FAFC;
-      z-index: 10;
+      position: sticky; top: 0; z-index: 10;
     }
-    .gantt-axis__label {
-      width: 200px;
-      min-width: 200px;
-      padding: .6rem 1rem;
-      font-size: .7rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      color: #94A3B8;
+    .g-axis__lbl {
+      width: 185px; min-width: 185px;
+      padding: .55rem .9rem;
+      font-size: .67rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; color: #94A3B8;
       border-right: 2px solid #E2E8F0;
     }
-    .gantt-axis__track {
-      flex: 1;
-      position: relative;
-      height: 36px;
-    }
-    .gantt-axis__tick {
+    .g-axis__track { flex: 1; position: relative; height: 32px; }
+    .g-tick {
       position: absolute;
-      top: 0;
-      transform: translateX(-50%);
-      font-size: .72rem;
-      font-weight: 700;
+      top: 50%; transform: translate(-50%, -50%);
+      font-size: .7rem; font-weight: 700; color: #475569;
+    }
+    .g-vline {
+      position: absolute; top: 0; bottom: 0; width: 1px; background: #CBD5E1;
+    }
+
+    /* Groups */
+    .g-group-hdr {
+      display: flex;
+      background: #F8FAFC;
+      border-bottom: 1px solid #E2E8F0;
+      border-top: 1px solid #E2E8F0;
+    }
+    .g-group-hdr__lbl {
+      width: 185px; min-width: 185px;
+      padding: .3rem .9rem;
+      font-size: .67rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em;
       color: #64748B;
-      padding: .5rem 0 0;
-      white-space: nowrap;
-    }
-    .gantt-axis__line {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: #CBD5E1;
-    }
-
-    /* ── Section divider ────────────────────────────────────────── */
-    .gantt-section {
-      display: flex;
-      align-items: center;
-      background: #1A304D;
-      color: rgba(255,255,255,.85);
-      font-size: .7rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .07em;
-      padding: .35rem 1rem;
-    }
-
-    /* ── Row ────────────────────────────────────────────────────── */
-    .gantt-row {
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #F1F5F9;
-      min-height: 38px;
-    }
-    .gantt-row:hover { background: #FAFBFC; }
-    .gantt-row--geral { background: #F8FAFC; }
-
-    .gantt-label {
-      width: 200px;
-      min-width: 200px;
-      padding: .45rem 1rem;
       border-right: 2px solid #E2E8F0;
-      font-size: .79rem;
     }
-    .gantt-label__id   { font-weight: 800; color: #0F172A; }
-    .gantt-label__nome { font-size: .7rem; color: #64748B; }
-    .gantt-label--geral { font-size: .78rem; font-weight: 700; color: #374151; }
+    .g-group-hdr__track { flex: 1; position: relative; }
 
-    .gantt-track {
-      flex: 1;
-      position: relative;
-      height: 38px;
+    /* Row */
+    .g-row { display: flex; border-bottom: 1px solid #F1F5F9; }
+    .g-row:last-child { border-bottom: none; }
+    .g-row:hover { background: #FAFBFD; }
+    .g-lbl {
+      width: 185px; min-width: 185px;
+      padding: .55rem .9rem;
+      border-right: 2px solid #E2E8F0;
     }
-    /* hour grid lines */
-    .gantt-track::before,
-    .gantt-track::after { content: ''; position: absolute; top: 0; bottom: 0; width: 1px; background: #EEF2FF; }
-    .gantt-track::before { left: 20%; }  /* 8h */
-    .gantt-track::after  { left: 40%; }  /* 9h */
+    .g-lbl__id   { font-size: .8rem; font-weight: 800; color: #0F172A; }
+    .g-lbl__nome { font-size: .69rem; color: #64748B; line-height: 1.3; }
+    .g-track { flex: 1; position: relative; height: 44px; }
 
-    /* ── Blocos ─────────────────────────────────────────────────── */
-    .gb {
-      position: absolute;
-      top: 5px;
-      height: 28px;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: .63rem;
-      font-weight: 800;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      letter-spacing: .01em;
-      box-shadow: 0 1px 3px rgba(0,0,0,.12);
-      cursor: default;
-    }
-    .gb:hover { z-index: 20; overflow: visible; box-shadow: 0 4px 12px rgba(0,0,0,.18); transform: scaleY(1.08); }
-
-    /* categorias de bloco */
-    .gb-abertura  { background: #1A304D; color: #fff; }
-    .gb-sala1     { background: #7C3AED; color: #fff; }
-    .gb-sala2     { background: #BE185D; color: #fff; }
-    .gb-arena1    { background: #2563EB; color: #fff; }
-    .gb-arena2    { background: #059669; color: #fff; }
-    .gb-arena3    { background: #D97706; color: #fff; }
-    .gb-delib     { background: #64748B; color: #fff; }
-    .gb-premio    { background: #B45309; color: #fff; }
-    .gb-livre     { background: #E2E8F0; color: #94A3B8; }
-
-    /* hour grid extra lines */
-    .g60  { left: 60%; }  /* 10h */
-    .g80  { left: 80%; }  /* 11h */
-    .g100 { left: 100%; }
-
-    .gantt-track .grid-line {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: #EEF2FF;
+    /* Grid lines on track */
+    .g-track::after {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        repeating-linear-gradient(
+          to right,
+          transparent 0,
+          transparent calc(18.18% - 1px),
+          #F1F5F9 calc(18.18% - 1px),
+          #F1F5F9 18.18%
+        );
       pointer-events: none;
     }
 
-    /* ── Tooltip de hover ───────────────────────────────────────── */
-    .gb[title] { cursor: help; }
-
-    /* ── Info card ──────────────────────────────────────────────── */
-    .info-cards {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: .75rem;
-      margin-top: 1.5rem;
+    /* Blocks */
+    .gb {
+      position: absolute;
+      top: 6px; height: 32px;
+      border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; font-weight: 800;
+      white-space: nowrap;
+      box-shadow: 0 1px 3px rgba(0,0,0,.12);
+      cursor: default;
+      transition: box-shadow .15s, transform .15s;
+      z-index: 2;
     }
-    .info-card {
-      background: #fff;
-      border-radius: 12px;
-      border: 1px solid #E2E8F0;
-      padding: .9rem 1rem;
-    }
-    .info-card__label { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #94A3B8; margin-bottom: .4rem; }
-    .info-card__val   { font-size: 1.1rem; font-weight: 900; color: #0F172A; }
-    .info-card__sub   { font-size: .72rem; color: #64748B; margin-top: .1rem; }
+    .gb:hover { box-shadow: 0 4px 14px rgba(0,0,0,.18); transform: scaleY(1.05); z-index: 5; }
+    .gb-s1  { background: #7C3AED; color: #fff; }
+    .gb-s2  { background: #BE185D; color: #fff; }
+    .gb-r1  { background: #2563EB; color: #fff; }
+    .gb-r2  { background: #059669; color: #fff; }
+    .gb-r3  { background: #D97706; color: #fff; }
 
-    @media (max-width: 700px) { .info-cards { grid-template-columns: repeat(2, 1fr); } }
+    /* ── Info cards ────────────────────────────────────────────── */
+    .info-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; margin-top: 1.5rem; }
+    .ic { background: #fff; border-radius: 12px; border: 1px solid #E2E8F0; padding: .85rem 1rem; }
+    .ic__label { font-size: .66rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #94A3B8; margin-bottom: .35rem; }
+    .ic__val   { font-size: 1.05rem; font-weight: 900; color: #0F172A; }
+    .ic__sub   { font-size: .71rem; color: #64748B; margin-top: .1rem; line-height: 1.4; }
+
+    @media (max-width: 700px) { .info-row { grid-template-columns: repeat(2,1fr); } }
   </style>
   <script>window.API_URL='https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';</script>
 </head>
@@ -195,305 +166,267 @@
   <div class="topbar__badge"></div>
 </header>
 
-<div class="crono-wrap">
+<div class="wrap">
 
-  <h1 class="crono-titulo">Cronograma do Evento</h1>
-  <p class="crono-sub">Escola SESI Reitor Miguel Calmon · 4 arenas simultâneas · 2 salas de avaliação</p>
+  <h1>Cronograma do Evento</h1>
+  <p class="sub">Escola SESI Reitor Miguel Calmon · 4 arenas · 2 salas de avaliação · horários por equipe</p>
 
-  <div class="legenda">
-    <div class="legenda__item"><div class="legenda__cor" style="background:#1A304D"></div>Abertura / Encerramento</div>
-    <div class="legenda__item"><div class="legenda__cor" style="background:#7C3AED"></div>Sala 1 — Avaliação</div>
-    <div class="legenda__item"><div class="legenda__cor" style="background:#BE185D"></div>Sala 2 — Avaliação</div>
-    <div class="legenda__item"><div class="legenda__cor" style="background:#2563EB"></div>Arena — Round 1</div>
-    <div class="legenda__item"><div class="legenda__cor" style="background:#059669"></div>Arena — Round 2</div>
-    <div class="legenda__item"><div class="legenda__cor" style="background:#D97706"></div>Arena — Round 3</div>
-    <div class="legenda__item"><div class="legenda__cor" style="background:#64748B"></div>Deliberação</div>
+  <!-- ── Visão geral do dia (7:00–12:00 = 300 min) ─────────────── -->
+  <div class="day-strip">
+    <div class="day-strip__label">Visão geral — 07:00 às 12:00</div>
+    <div class="day-track">
+      <!-- Abertura: 0–10% (7:00-7:30) -->
+      <div class="dp" style="left:0%;width:10%;background:#1A304D;color:#fff">Abertura</div>
+      <!-- Avaliações+R1: 10–33.3% (7:30-8:40) -->
+      <div class="dp" style="left:10%;width:23.3%;background:#4338CA;color:#fff">Avaliações + Arena R1</div>
+      <!-- Arena R2: 33.3–46.7% (8:40-9:20) -->
+      <div class="dp" style="left:33.4%;width:13.3%;background:#059669;color:#fff">Arena R2</div>
+      <!-- Arena R3: 46.7–60% (9:30-10:10) -->
+      <div class="dp" style="left:50%;width:13.3%;background:#D97706;color:#fff">Arena R3</div>
+      <!-- Deliberação: 70–90% (10:30-11:30) -->
+      <div class="dp" style="left:70%;width:20%;background:#64748B;color:#fff">Deliberação</div>
+      <!-- Premiação: 90–100% (11:30-12:00) -->
+      <div class="dp" style="left:90%;width:10%;background:#92400E;color:#fff">Premiação</div>
+    </div>
+    <div class="day-ticks">
+      <span class="day-tick" style="left:0%">07h</span>
+      <span class="day-tick" style="left:10%">07:30</span>
+      <span class="day-tick" style="left:20%">08h</span>
+      <span class="day-tick" style="left:33.3%">08:40</span>
+      <span class="day-tick" style="left:40%">09h</span>
+      <span class="day-tick" style="left:50%">09:30</span>
+      <span class="day-tick" style="left:60%">10h</span>
+      <span class="day-tick" style="left:70%">10:30</span>
+      <span class="day-tick" style="left:80%">11h</span>
+      <span class="day-tick" style="left:90%">11:30</span>
+      <span class="day-tick" style="left:100%">12h</span>
+    </div>
   </div>
 
-  <div class="gantt-outer">
+  <!-- Legenda -->
+  <div class="legenda">
+    <div class="li"><div class="lc" style="background:#7C3AED"></div>Sala 1</div>
+    <div class="li"><div class="lc" style="background:#BE185D"></div>Sala 2</div>
+    <div class="li"><div class="lc" style="background:#2563EB"></div>Arena Round 1</div>
+    <div class="li"><div class="lc" style="background:#059669"></div>Arena Round 2</div>
+    <div class="li"><div class="lc" style="background:#D97706"></div>Arena Round 3</div>
+  </div>
+
+  <!-- ── Gantt detalhado 7:30–10:15 (165 min) ─────────────────── -->
+  <!--
+    Offset = 7h30 = 450 min
+    1 min  = 100/165 %
+    10 min = 6.06 %
+    Eixo:
+      7:30 = 0%   8:00 = 18.18%   8:30 = 36.36%
+      9:00 = 54.55%   9:30 = 72.73%   10:00 = 90.91%
+  -->
+  <div class="gantt-card">
   <div class="gantt">
 
-    <!-- ── Eixo de tempo ──────────────────────────────────────── -->
-    <div class="gantt-axis">
-      <div class="gantt-axis__label">Equipe</div>
-      <div class="gantt-axis__track">
-        <!--  7:00=0%  8:00=20%  9:00=40%  10:00=60%  11:00=80%  12:00=100% -->
-        <div class="gantt-axis__line" style="left:0%"></div>
-        <div class="gantt-axis__line" style="left:20%"></div>
-        <div class="gantt-axis__line" style="left:40%"></div>
-        <div class="gantt-axis__line" style="left:60%"></div>
-        <div class="gantt-axis__line" style="left:80%"></div>
-        <div class="gantt-axis__line" style="left:100%"></div>
-        <div class="gantt-axis__tick" style="left:0%">07:00</div>
-        <div class="gantt-axis__tick" style="left:10%">07:30</div>
-        <div class="gantt-axis__tick" style="left:20%">08:00</div>
-        <div class="gantt-axis__tick" style="left:33.3%">08:40</div>
-        <div class="gantt-axis__tick" style="left:40%">09:00</div>
-        <div class="gantt-axis__tick" style="left:50%">09:30</div>
-        <div class="gantt-axis__tick" style="left:60%">10:00</div>
-        <div class="gantt-axis__tick" style="left:70%">10:30</div>
-        <div class="gantt-axis__tick" style="left:80%">11:00</div>
-        <div class="gantt-axis__tick" style="left:90%">11:30</div>
-        <div class="gantt-axis__tick" style="left:100%">12:00</div>
+    <!-- Axis -->
+    <div class="g-axis">
+      <div class="g-axis__lbl">Equipe</div>
+      <div class="g-axis__track">
+        <div class="g-vline" style="left:0%"></div>
+        <div class="g-vline" style="left:18.18%"></div>
+        <div class="g-vline" style="left:36.36%"></div>
+        <div class="g-vline" style="left:54.55%"></div>
+        <div class="g-vline" style="left:72.73%"></div>
+        <div class="g-vline" style="left:90.91%"></div>
+        <div class="g-vline" style="left:100%"></div>
+        <div class="g-tick" style="left:0%">07:30</div>
+        <div class="g-tick" style="left:18.18%">08:00</div>
+        <div class="g-tick" style="left:36.36%">08:30</div>
+        <div class="g-tick" style="left:54.55%">09:00</div>
+        <div class="g-tick" style="left:72.73%">09:30</div>
+        <div class="g-tick" style="left:90.91%">10:00</div>
       </div>
     </div>
 
-    <!-- ── ABERTURA ──────────────────────────────────────────────── -->
-    <div class="gantt-section">07:00 — Cerimônia de Abertura</div>
-    <div class="gantt-row gantt-row--geral">
-      <div class="gantt-label gantt-label--geral">Todas as equipes</div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-abertura" style="left:.2%;width:9.6%" title="07:00 – 07:30 · Cerimônia de Abertura">Cerimônia de Abertura</div>
+    <!-- Grupo Sala 1 -->
+    <div class="g-group-hdr">
+      <div class="g-group-hdr__lbl">Sala 1 — TUR01 a TUR07</div>
+      <div class="g-group-hdr__track"></div>
+    </div>
+
+    <!-- TUR01: Sala1@7:30(0%), R1@7:40(6.06%), R2@8:40(42.42%), R3@9:30(72.73%) -->
+    <div class="g-row">
+      <div class="g-lbl"><div class="g-lbl__id">TUR01</div><div class="g-lbl__nome">6° A — Cyber Panter</div></div>
+      <div class="g-track">
+        <div class="gb gb-s1"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Sala 1">Sala 1</div>
+        <div class="gb gb-r1"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Arena R1">R1</div>
+        <div class="gb gb-r2"  style="left:42.7%;width:5.7%" title="08:40–08:50 · Arena R2">R2</div>
+        <div class="gb gb-r3"  style="left:73.0%;width:5.7%" title="09:30–09:40 · Arena R3">R3</div>
       </div>
     </div>
 
-    <!-- ── AVALIAÇÕES + ROUND 1 ────────────────────────────────── -->
-    <div class="gantt-section">07:30 — Avaliações em Sala &amp; Arena Round 1 (simultâneos · 4 arenas)</div>
-
-    <!-- TUR01 -->
-    <div class="gantt-row">
-      <div class="gantt-label">
-        <div class="gantt-label__id">TUR01</div>
-        <div class="gantt-label__nome">6° A — Cyber Panter</div>
-      </div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-sala1"  style="left:10%;width:3.2%"  title="07:30–07:40 · Sala 1 — Avaliação">Sala 1</div>
-        <div class="gb gb-arena1" style="left:13.5%;width:3.2%" title="07:40–07:50 · Arena Round 1">R1</div>
-        <div class="gb gb-arena2" style="left:33.5%;width:3.2%" title="08:40–08:50 · Arena Round 2">R2</div>
-        <div class="gb gb-arena3" style="left:50.2%;width:3.2%" title="09:30–09:40 · Arena Round 3">R3</div>
+    <!-- TUR02: R1@7:30(0%), Sala1@7:40(6.06%), R2@8:40(42.42%), R3@9:30(72.73%) -->
+    <div class="g-row">
+      <div class="g-lbl"><div class="g-lbl__id">TUR02</div><div class="g-lbl__nome">6° B — Liga do Choque</div></div>
+      <div class="g-track">
+        <div class="gb gb-r1"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Arena R1">R1</div>
+        <div class="gb gb-s1"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Sala 1">Sala 1</div>
+        <div class="gb gb-r2"  style="left:42.7%;width:5.7%" title="08:40–08:50 · Arena R2">R2</div>
+        <div class="gb gb-r3"  style="left:73.0%;width:5.7%" title="09:30–09:40 · Arena R3">R3</div>
       </div>
     </div>
 
-    <!-- TUR02 -->
-    <div class="gantt-row">
-      <div class="gantt-label">
-        <div class="gantt-label__id">TUR02</div>
-        <div class="gantt-label__nome">6° B — Liga do Choque</div>
-      </div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-arena1" style="left:10%;width:3.2%"  title="07:30–07:40 · Arena Round 1">R1</div>
-        <div class="gb gb-sala1"  style="left:13.5%;width:3.2%" title="07:40–07:50 · Sala 1 — Avaliação">Sala 1</div>
-        <div class="gb gb-arena2" style="left:33.5%;width:3.2%" title="08:40–08:50 · Arena Round 2">R2</div>
-        <div class="gb gb-arena3" style="left:50.2%;width:3.2%" title="09:30–09:40 · Arena Round 3">R3</div>
+    <!-- TUR03: R1@7:30(0%), Sala1@7:50(12.12%), R2@8:40(42.42%), R3@9:30(72.73%) -->
+    <div class="g-row">
+      <div class="g-lbl"><div class="g-lbl__id">TUR03</div><div class="g-lbl__nome">6° C — Alpha Tech</div></div>
+      <div class="g-track">
+        <div class="gb gb-r1"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Arena R1">R1</div>
+        <div class="gb gb-s1"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Sala 1">Sala 1</div>
+        <div class="gb gb-r2"  style="left:42.7%;width:5.7%" title="08:40–08:50 · Arena R2">R2</div>
+        <div class="gb gb-r3"  style="left:73.0%;width:5.7%" title="09:30–09:40 · Arena R3">R3</div>
       </div>
     </div>
 
-    <!-- TUR03 -->
-    <div class="gantt-row">
-      <div class="gantt-label">
-        <div class="gantt-label__id">TUR03</div>
-        <div class="gantt-label__nome">6° C — Alpha Tech</div>
-      </div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-arena1" style="left:10%;width:3.2%"  title="07:30–07:40 · Arena Round 1">R1</div>
-        <div class="gb gb-sala1"  style="left:16.9%;width:3.2%" title="07:50–08:00 · Sala 1 — Avaliação">Sala 1</div>
-        <div class="gb gb-arena2" style="left:33.5%;width:3.2%" title="08:40–08:50 · Arena Round 2">R2</div>
-        <div class="gb gb-arena3" style="left:50.2%;width:3.2%" title="09:30–09:40 · Arena Round 3">R3</div>
+    <!-- TUR04: R1@7:40(6.06%), Sala1@8:00(18.18%), R2@8:40(42.42%), R3@9:30(72.73%) -->
+    <div class="g-row">
+      <div class="g-lbl"><div class="g-lbl__id">TUR04</div><div class="g-lbl__nome">6° D — Pheonics Mecanics</div></div>
+      <div class="g-track">
+        <div class="gb gb-r1"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Arena R1">R1</div>
+        <div class="gb gb-s1"  style="left:18.5%;width:5.7%" title="08:00–08:10 · Sala 1">Sala 1</div>
+        <div class="gb gb-r2"  style="left:42.7%;width:5.7%" title="08:40–08:50 · Arena R2">R2</div>
+        <div class="gb gb-r3"  style="left:73.0%;width:5.7%" title="09:30–09:40 · Arena R3">R3</div>
       </div>
     </div>
 
-    <!-- TUR04 -->
-    <div class="gantt-row">
-      <div class="gantt-label">
-        <div class="gantt-label__id">TUR04</div>
-        <div class="gantt-label__nome">6° D — Pheonics Mecanics</div>
-      </div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-arena1" style="left:13.5%;width:3.2%" title="07:40–07:50 · Arena Round 1">R1</div>
-        <div class="gb gb-sala1"  style="left:20.2%;width:3.2%" title="08:00–08:10 · Sala 1 — Avaliação">Sala 1</div>
-        <div class="gb gb-arena2" style="left:33.5%;width:3.2%" title="08:40–08:50 · Arena Round 2">R2</div>
-        <div class="gb gb-arena3" style="left:50.2%;width:3.2%" title="09:30–09:40 · Arena Round 3">R3</div>
+    <!-- TUR05: R1@7:50(12.12%), Sala1@8:10(24.24%), R2@8:50(48.48%), R3@9:40(78.79%) -->
+    <div class="g-row">
+      <div class="g-lbl"><div class="g-lbl__id">TUR05</div><div class="g-lbl__nome">6° E — TecShark</div></div>
+      <div class="g-track">
+        <div class="gb gb-r1"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Arena R1">R1</div>
+        <div class="gb gb-s1"  style="left:24.5%;width:5.7%" title="08:10–08:20 · Sala 1">Sala 1</div>
+        <div class="gb gb-r2"  style="left:48.8%;width:5.7%" title="08:50–09:00 · Arena R2">R2</div>
+        <div class="gb gb-r3"  style="left:79.1%;width:5.7%" title="09:40–09:50 · Arena R3">R3</div>
       </div>
     </div>
 
-    <!-- TUR05 -->
-    <div class="gantt-row">
-      <div class="gantt-label">
-        <div class="gantt-label__id">TUR05</div>
-        <div class="gantt-label__nome">6° E — TecShark</div>
-      </div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-arena1" style="left:16.9%;width:3.2%" title="07:50–08:00 · Arena Round 1">R1</div>
-        <div class="gb gb-sala1"  style="left:23.5%;width:3.2%" title="08:10–08:20 · Sala 1 — Avaliação">Sala 1</div>
-        <div class="gb gb-arena2" style="left:36.9%;width:3.2%" title="08:50–09:00 · Arena Round 2">R2</div>
-        <div class="gb gb-arena3" style="left:53.5%;width:3.2%" title="09:40–09:50 · Arena Round 3">R3</div>
+    <!-- TUR06: R1@7:50(12.12%), Sala1@8:20(30.30%), R2@8:50(48.48%), R3@9:40(78.79%) -->
+    <div class="g-row">
+      <div class="g-lbl"><div class="g-lbl__id">TUR06</div><div class="g-lbl__nome">7° A — Hoppin Robots</div></div>
+      <div class="g-track">
+        <div class="gb gb-r1"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Arena R1">R1</div>
+        <div class="gb gb-s1"  style="left:30.6%;width:5.7%" title="08:20–08:30 · Sala 1">Sala 1</div>
+        <div class="gb gb-r2"  style="left:48.8%;width:5.7%" title="08:50–09:00 · Arena R2">R2</div>
+        <div class="gb gb-r3"  style="left:79.1%;width:5.7%" title="09:40–09:50 · Arena R3">R3</div>
       </div>
     </div>
 
-    <!-- TUR06 -->
-    <div class="gantt-row">
-      <div class="gantt-label">
-        <div class="gantt-label__id">TUR06</div>
-        <div class="gantt-label__nome">7° A — Hoppin Robots</div>
-      </div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-arena1" style="left:16.9%;width:3.2%" title="07:50–08:00 · Arena Round 1">R1</div>
-        <div class="gb gb-sala1"  style="left:26.8%;width:3.2%" title="08:20–08:30 · Sala 1 — Avaliação">Sala 1</div>
-        <div class="gb gb-arena2" style="left:36.9%;width:3.2%" title="08:50–09:00 · Arena Round 2">R2</div>
-        <div class="gb gb-arena3" style="left:53.5%;width:3.2%" title="09:40–09:50 · Arena Round 3">R3</div>
+    <!-- TUR07: R1@8:00(18.18%), Sala1@8:30(36.36%), R2@8:50(48.48%), R3@9:40(78.79%) -->
+    <div class="g-row">
+      <div class="g-lbl"><div class="g-lbl__id">TUR07</div><div class="g-lbl__nome">7° B — Bivoltx</div></div>
+      <div class="g-track">
+        <div class="gb gb-r1"  style="left:18.5%;width:5.7%" title="08:00–08:10 · Arena R1">R1</div>
+        <div class="gb gb-s1"  style="left:36.7%;width:5.7%" title="08:30–08:40 · Sala 1">Sala 1</div>
+        <div class="gb gb-r2"  style="left:48.8%;width:5.7%" title="08:50–09:00 · Arena R2">R2</div>
+        <div class="gb gb-r3"  style="left:79.1%;width:5.7%" title="09:40–09:50 · Arena R3">R3</div>
       </div>
     </div>
 
-    <!-- TUR07 -->
-    <div class="gantt-row">
-      <div class="gantt-label">
-        <div class="gantt-label__id">TUR07</div>
-        <div class="gantt-label__nome">7° B — Bivoltx</div>
-      </div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-arena1" style="left:20.2%;width:3.2%" title="08:00–08:10 · Arena Round 1">R1</div>
-        <div class="gb gb-sala1"  style="left:30.2%;width:3.2%" title="08:30–08:40 · Sala 1 — Avaliação">Sala 1</div>
-        <div class="gb gb-arena2" style="left:36.9%;width:3.2%" title="08:50–09:00 · Arena Round 2">R2</div>
-        <div class="gb gb-arena3" style="left:53.5%;width:3.2%" title="09:40–09:50 · Arena Round 3">R3</div>
+    <!-- Grupo Sala 2 -->
+    <div class="g-group-hdr">
+      <div class="g-group-hdr__lbl">Sala 2 — TUR08 a TUR13</div>
+      <div class="g-group-hdr__track"></div>
+    </div>
+
+    <!-- TUR08: Sala2@7:30(0%), R1@7:40(6.06%), R2@8:50(48.48%), R3@9:40(78.79%) -->
+    <div class="g-row">
+      <div class="g-lbl"><div class="g-lbl__id">TUR08</div><div class="g-lbl__nome">7° C — Ecoshift</div></div>
+      <div class="g-track">
+        <div class="gb gb-s2"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Sala 2">Sala 2</div>
+        <div class="gb gb-r1"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Arena R1">R1</div>
+        <div class="gb gb-r2"  style="left:48.8%;width:5.7%" title="08:50–09:00 · Arena R2">R2</div>
+        <div class="gb gb-r3"  style="left:79.1%;width:5.7%" title="09:40–09:50 · Arena R3">R3</div>
       </div>
     </div>
 
-    <!-- TUR08 -->
-    <div class="gantt-row">
-      <div class="gantt-label">
-        <div class="gantt-label__id">TUR08</div>
-        <div class="gantt-label__nome">7° C — Ecoshift</div>
-      </div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-sala2"  style="left:10%;width:3.2%"  title="07:30–07:40 · Sala 2 — Avaliação">Sala 2</div>
-        <div class="gb gb-arena1" style="left:13.5%;width:3.2%" title="07:40–07:50 · Arena Round 1">R1</div>
-        <div class="gb gb-arena2" style="left:36.9%;width:3.2%" title="08:50–09:00 · Arena Round 2">R2</div>
-        <div class="gb gb-arena3" style="left:53.5%;width:3.2%" title="09:40–09:50 · Arena Round 3">R3</div>
+    <!-- TUR09: R1@7:30(0%), Sala2@7:40(6.06%), R2@9:00(54.55%), R3@9:50(84.85%) -->
+    <div class="g-row">
+      <div class="g-lbl"><div class="g-lbl__id">TUR09</div><div class="g-lbl__nome">7° D — Pantera Lego Team</div></div>
+      <div class="g-track">
+        <div class="gb gb-r1"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Arena R1">R1</div>
+        <div class="gb gb-s2"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Sala 2">Sala 2</div>
+        <div class="gb gb-r2"  style="left:54.9%;width:5.7%" title="09:00–09:10 · Arena R2">R2</div>
+        <div class="gb gb-r3"  style="left:85.2%;width:5.7%" title="09:50–10:00 · Arena R3">R3</div>
       </div>
     </div>
 
-    <!-- TUR09 -->
-    <div class="gantt-row">
-      <div class="gantt-label">
-        <div class="gantt-label__id">TUR09</div>
-        <div class="gantt-label__nome">7° D — Pantera Lego Team</div>
-      </div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-arena1" style="left:10%;width:3.2%"  title="07:30–07:40 · Arena Round 1">R1</div>
-        <div class="gb gb-sala2"  style="left:13.5%;width:3.2%" title="07:40–07:50 · Sala 2 — Avaliação">Sala 2</div>
-        <div class="gb gb-arena2" style="left:40.2%;width:3.2%" title="09:00–09:10 · Arena Round 2">R2</div>
-        <div class="gb gb-arena3" style="left:56.8%;width:3.2%" title="09:50–10:00 · Arena Round 3">R3</div>
+    <!-- TUR10: R1@7:30(0%), Sala2@7:50(12.12%), R2@9:00(54.55%), R3@9:50(84.85%) -->
+    <div class="g-row">
+      <div class="g-lbl"><div class="g-lbl__id">TUR10</div><div class="g-lbl__nome">7° E — Império das Onças</div></div>
+      <div class="g-track">
+        <div class="gb gb-r1"  style="left:.3%;width:5.7%"   title="07:30–07:40 · Arena R1">R1</div>
+        <div class="gb gb-s2"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Sala 2">Sala 2</div>
+        <div class="gb gb-r2"  style="left:54.9%;width:5.7%" title="09:00–09:10 · Arena R2">R2</div>
+        <div class="gb gb-r3"  style="left:85.2%;width:5.7%" title="09:50–10:00 · Arena R3">R3</div>
       </div>
     </div>
 
-    <!-- TUR10 -->
-    <div class="gantt-row">
-      <div class="gantt-label">
-        <div class="gantt-label__id">TUR10</div>
-        <div class="gantt-label__nome">7° E — Império das Onças</div>
-      </div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-arena1" style="left:10%;width:3.2%"  title="07:30–07:40 · Arena Round 1">R1</div>
-        <div class="gb gb-sala2"  style="left:16.9%;width:3.2%" title="07:50–08:00 · Sala 2 — Avaliação">Sala 2</div>
-        <div class="gb gb-arena2" style="left:40.2%;width:3.2%" title="09:00–09:10 · Arena Round 2">R2</div>
-        <div class="gb gb-arena3" style="left:56.8%;width:3.2%" title="09:50–10:00 · Arena Round 3">R3</div>
+    <!-- TUR11: R1@7:40(6.06%), Sala2@8:00(18.18%), R2@9:00(54.55%), R3@9:50(84.85%) -->
+    <div class="g-row">
+      <div class="g-lbl"><div class="g-lbl__id">TUR11</div><div class="g-lbl__nome">7° F — Poseidon</div></div>
+      <div class="g-track">
+        <div class="gb gb-r1"  style="left:6.4%;width:5.7%"  title="07:40–07:50 · Arena R1">R1</div>
+        <div class="gb gb-s2"  style="left:18.5%;width:5.7%" title="08:00–08:10 · Sala 2">Sala 2</div>
+        <div class="gb gb-r2"  style="left:54.9%;width:5.7%" title="09:00–09:10 · Arena R2">R2</div>
+        <div class="gb gb-r3"  style="left:85.2%;width:5.7%" title="09:50–10:00 · Arena R3">R3</div>
       </div>
     </div>
 
-    <!-- TUR11 -->
-    <div class="gantt-row">
-      <div class="gantt-label">
-        <div class="gantt-label__id">TUR11</div>
-        <div class="gantt-label__nome">7° F — Poseidon</div>
-      </div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-arena1" style="left:13.5%;width:3.2%" title="07:40–07:50 · Arena Round 1">R1</div>
-        <div class="gb gb-sala2"  style="left:20.2%;width:3.2%" title="08:00–08:10 · Sala 2 — Avaliação">Sala 2</div>
-        <div class="gb gb-arena2" style="left:40.2%;width:3.2%" title="09:00–09:10 · Arena Round 2">R2</div>
-        <div class="gb gb-arena3" style="left:56.8%;width:3.2%" title="09:50–10:00 · Arena Round 3">R3</div>
+    <!-- TUR12: R1@7:50(12.12%), Sala2@8:10(24.24%), R2@9:10(60.61%), R3@10:00(90.91%) -->
+    <div class="g-row">
+      <div class="g-lbl"><div class="g-lbl__id">TUR12</div><div class="g-lbl__nome">7° G — Arara Azul</div></div>
+      <div class="g-track">
+        <div class="gb gb-r1"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Arena R1">R1</div>
+        <div class="gb gb-s2"  style="left:24.5%;width:5.7%" title="08:10–08:20 · Sala 2">Sala 2</div>
+        <div class="gb gb-r2"  style="left:60.9%;width:5.7%" title="09:10–09:20 · Arena R2">R2</div>
+        <div class="gb gb-r3"  style="left:91.2%;width:5.7%" title="10:00–10:10 · Arena R3">R3</div>
       </div>
     </div>
 
-    <!-- TUR12 -->
-    <div class="gantt-row">
-      <div class="gantt-label">
-        <div class="gantt-label__id">TUR12</div>
-        <div class="gantt-label__nome">7° G — Arara Azul</div>
-      </div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-arena1" style="left:16.9%;width:3.2%" title="07:50–08:00 · Arena Round 1">R1</div>
-        <div class="gb gb-sala2"  style="left:23.5%;width:3.2%" title="08:10–08:20 · Sala 2 — Avaliação">Sala 2</div>
-        <div class="gb gb-arena2" style="left:43.5%;width:3.2%" title="09:10–09:20 · Arena Round 2">R2</div>
-        <div class="gb gb-arena3" style="left:60.2%;width:3.2%" title="10:00–10:10 · Arena Round 3">R3</div>
-      </div>
-    </div>
-
-    <!-- TUR13 -->
-    <div class="gantt-row">
-      <div class="gantt-label">
-        <div class="gantt-label__id">TUR13</div>
-        <div class="gantt-label__nome">7° H — Nexos</div>
-      </div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-arena1" style="left:16.9%;width:3.2%" title="07:50–08:00 · Arena Round 1">R1</div>
-        <div class="gb gb-sala2"  style="left:26.8%;width:3.2%" title="08:20–08:30 · Sala 2 — Avaliação">Sala 2</div>
-        <div class="gb gb-arena2" style="left:43.5%;width:3.2%" title="09:10–09:20 · Arena Round 2">R2</div>
-        <div class="gb gb-arena3" style="left:60.2%;width:3.2%" title="10:00–10:10 · Arena Round 3">R3</div>
-      </div>
-    </div>
-
-    <!-- ── DELIBERAÇÃO ────────────────────────────────────────────── -->
-    <div class="gantt-section">10:30 — Deliberação dos Juízes</div>
-    <div class="gantt-row gantt-row--geral">
-      <div class="gantt-label gantt-label--geral">Comissão Julgadora</div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-delib" style="left:70.2%;width:19.6%" title="10:30–11:30 · Deliberação dos Juízes">Deliberação dos Juízes (60 min)</div>
-      </div>
-    </div>
-
-    <!-- ── ENCERRAMENTO ────────────────────────────────────────────── -->
-    <div class="gantt-section">11:30 — Cerimônia de Encerramento &amp; Premiação</div>
-    <div class="gantt-row gantt-row--geral">
-      <div class="gantt-label gantt-label--geral">Todas as equipes</div>
-      <div class="gantt-track">
-        <div class="grid-line" style="left:20%"></div><div class="grid-line" style="left:40%"></div><div class="grid-line" style="left:60%"></div><div class="grid-line" style="left:80%"></div>
-        <div class="gb gb-abertura" style="left:90.2%;width:9.5%" title="11:30–12:00 · Encerramento e Premiação">Premiação</div>
+    <!-- TUR13: R1@7:50(12.12%), Sala2@8:20(30.30%), R2@9:10(60.61%), R3@10:00(90.91%) -->
+    <div class="g-row">
+      <div class="g-lbl"><div class="g-lbl__id">TUR13</div><div class="g-lbl__nome">7° H — Nexos</div></div>
+      <div class="g-track">
+        <div class="gb gb-r1"  style="left:12.4%;width:5.7%" title="07:50–08:00 · Arena R1">R1</div>
+        <div class="gb gb-s2"  style="left:30.6%;width:5.7%" title="08:20–08:30 · Sala 2">Sala 2</div>
+        <div class="gb gb-r2"  style="left:60.9%;width:5.7%" title="09:10–09:20 · Arena R2">R2</div>
+        <div class="gb gb-r3"  style="left:91.2%;width:5.7%" title="10:00–10:10 · Arena R3">R3</div>
       </div>
     </div>
 
   </div><!-- /gantt -->
-  </div><!-- /gantt-outer -->
+  </div><!-- /gantt-card -->
 
-  <!-- ── Cards de resumo ───────────────────────────────────────── -->
-  <div class="info-cards">
-    <div class="info-card">
-      <div class="info-card__label">Avaliações em Sala</div>
-      <div class="info-card__val">7:30 – 8:40</div>
-      <div class="info-card__sub">Sala 1 (TUR01–07) · Sala 2 (TUR08–13)<br>10 minutos por equipe</div>
+  <!-- ── Cards resumo ──────────────────────────────────────────── -->
+  <div class="info-row">
+    <div class="ic">
+      <div class="ic__label">Cerimônia de Abertura</div>
+      <div class="ic__val">07:00 – 07:30</div>
+      <div class="ic__sub">Todas as equipes · quadra / auditório</div>
     </div>
-    <div class="info-card">
-      <div class="info-card__label">Arena Round 1</div>
-      <div class="info-card__val">7:30 – 8:10</div>
-      <div class="info-card__sub">Simultâneo com avaliações · 4 arenas<br>Sem conflito de horário por equipe</div>
+    <div class="ic">
+      <div class="ic__label">Avaliações em Sala</div>
+      <div class="ic__val">07:30 – 08:40</div>
+      <div class="ic__sub">Sala 1 (TUR01–07) e Sala 2 (TUR08–13)<br>10 min por equipe · simultâneas</div>
     </div>
-    <div class="info-card">
-      <div class="info-card__label">Arena Rounds 2 e 3</div>
-      <div class="info-card__val">8:40 – 10:10</div>
-      <div class="info-card__sub">Todas as equipes livres · R2: 8:40–9:20<br>R3: 9:30–10:10</div>
+    <div class="ic">
+      <div class="ic__label">Arena — 3 Rounds</div>
+      <div class="ic__val">07:30 – 10:10</div>
+      <div class="ic__sub">R1: 7:30–8:10 (sem conflito com avaliação)<br>R2: 8:40–9:20 · R3: 9:30–10:10</div>
     </div>
-    <div class="info-card">
-      <div class="info-card__label">Deliberação &amp; Premiação</div>
-      <div class="info-card__val">10:30 – 12:00</div>
-      <div class="info-card__sub">Deliberação: 10:30–11:30 (60 min)<br>Encerramento: 11:30–12:00</div>
+    <div class="ic">
+      <div class="ic__label">Deliberação &amp; Premiação</div>
+      <div class="ic__val">10:30 – 12:00</div>
+      <div class="ic__sub">Deliberação: 10:30–11:30 (60 min)<br>Premiação e encerramento: 11:30–12:00</div>
     </div>
   </div>
 
-</div>
+</div><!-- /wrap -->
 
 <div id="toast"></div>
 <script src="js/api.js"></script>

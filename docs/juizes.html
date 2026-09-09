@@ -10,165 +10,152 @@
   <style>
     body { background: #F0F4F8; }
 
-    /* ── Login ───────────────────────────────────────────────────── */
+    /* ── Login ─────────────────────────────────────────────────── */
     .login-outer {
       min-height: calc(100vh - 72px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       padding: 2rem 1rem;
     }
     .login-box {
-      background: #fff;
-      border-radius: 20px;
+      background: #fff; border-radius: 20px;
       box-shadow: 0 8px 40px rgba(15,23,42,.1);
       border: 1px solid #E2E8F0;
-      padding: 2.5rem 2rem;
-      width: 100%;
-      max-width: 400px;
+      padding: 2.5rem 2rem; width: 100%; max-width: 400px;
     }
     .login-icon {
-      width: 52px; height: 52px;
-      background: #EFF6FF;
-      border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 1.25rem;
+      width: 52px; height: 52px; background: #EFF6FF; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem;
     }
     .login-icon svg { width: 26px; height: 26px; stroke: #508fcb; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-    .login-box h2   { font-size: 1.3rem; font-weight: 900; color: #0F172A; letter-spacing: -.03em; margin-bottom: .3rem; }
-    .login-box p    { font-size: .83rem; color: #64748B; margin-bottom: 1.5rem; }
+    .login-box h2 { font-size: 1.3rem; font-weight: 900; color: #0F172A; letter-spacing: -.03em; margin-bottom: .3rem; }
+    .login-box .login-sub { font-size: .83rem; color: #64748B; margin-bottom: 1.5rem; }
     .login-box .field label { font-size: .8rem; font-weight: 700; color: #374151; display: block; margin-bottom: .35rem; }
     .login-box .field input { width: 100%; box-sizing: border-box; }
     .login-box .field { margin-bottom: 1rem; }
     #l-erro { font-size: .82rem; color: #EF4444; margin-bottom: .75rem; display: none; }
 
-    /* ── Painel ──────────────────────────────────────────────────── */
-    .painel-wrap { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+    /* ── Painel ────────────────────────────────────────────────── */
+    .painel-wrap { max-width: 900px; margin: 0 auto; padding: 1.75rem 1.5rem 3rem; }
 
-    /* ── Juiz header ─────────────────────────────────────────────── */
+    /* Juiz header */
     .jh {
       display: flex; align-items: center; gap: 1rem;
-      background: #fff;
-      border: 1px solid #E2E8F0;
-      border-radius: 16px;
-      padding: 1rem 1.25rem;
-      margin-bottom: 2rem;
-      box-shadow: 0 2px 8px rgba(15,23,42,.05);
+      background: #fff; border: 1px solid #E2E8F0;
+      border-radius: 16px; padding: .9rem 1.25rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 6px rgba(15,23,42,.05);
     }
-    .jh-avatar {
-      width: 44px; height: 44px;
+    .jh-av {
+      width: 42px; height: 42px;
       background: linear-gradient(135deg,#508fcb,#2563EB);
-      border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-size: 1.1rem; font-weight: 900;
-      flex-shrink: 0;
+      border-radius: 13px; display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 1.05rem; font-weight: 900; flex-shrink: 0;
     }
-    .jh-info { flex: 1; }
-    .jh-nome { font-size: 1rem; font-weight: 800; color: #0F172A; }
-    .jh-cat  { font-size: .75rem; color: #64748B; }
+    .jh-nome { font-size: .95rem; font-weight: 800; color: #0F172A; }
+    .jh-cat  { font-size: .72rem; color: #64748B; }
     .jh-cat span {
-      display: inline-block;
       background: #EFF6FF; color: #2563EB;
-      font-weight: 700; font-size: .72rem;
-      padding: .2rem .6rem; border-radius: 100px;
-    }
-    .jh-btn { margin-left: auto; }
-
-    /* ── Seção ───────────────────────────────────────────────────── */
-    .sec-label {
-      font-size: .7rem; font-weight: 800; text-transform: uppercase;
-      letter-spacing: .08em; color: #94A3B8;
-      margin-bottom: .75rem;
+      font-weight: 700; font-size: .7rem;
+      padding: .18rem .5rem; border-radius: 100px;
     }
 
-    /* ── Cards de formulário ─────────────────────────────────────── */
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: .75rem;
-      margin-bottom: 2rem;
-    }
-    .form-card {
-      background: #fff;
-      border: 1px solid #E2E8F0;
-      border-radius: 16px;
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: .6rem;
+    /* ── Abas ──────────────────────────────────────────────────── */
+    .tabs {
+      display: flex; gap: .35rem;
+      background: #fff; border: 1px solid #E2E8F0;
+      border-radius: 12px; padding: .35rem;
+      margin-bottom: 1.5rem;
       box-shadow: 0 1px 4px rgba(15,23,42,.04);
-      text-decoration: none;
-      transition: box-shadow .18s, transform .18s;
     }
-    .form-card:hover {
-      box-shadow: 0 6px 24px rgba(15,23,42,.1);
-      transform: translateY(-2px);
+    .tab {
+      flex: 1; padding: .55rem; border-radius: 9px;
+      font-size: .83rem; font-weight: 700; text-align: center;
+      cursor: pointer; border: none; background: transparent;
+      color: #64748B; transition: background .15s, color .15s;
     }
-    .form-card__top {
-      display: flex; align-items: center; gap: .75rem;
-    }
-    .form-card__icon {
-      width: 40px; height: 40px; border-radius: 12px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .form-card__icon svg { width: 20px; height: 20px; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-    .form-card__title { font-size: .93rem; font-weight: 800; color: #0F172A; }
-    .form-card__desc  { font-size: .78rem; color: #64748B; line-height: 1.45; }
-    .form-card__cta   {
-      display: inline-flex; align-items: center; gap: .35rem;
-      font-size: .78rem; font-weight: 700;
-      padding: .45rem .9rem; border-radius: 8px;
-      margin-top: .1rem; align-self: flex-start;
-      text-decoration: none;
-    }
+    .tab.ativo { background: #0F172A; color: #fff; }
+    .tab:not(.ativo):hover { background: #F1F5F9; color: #0F172A; }
 
-    /* ── Rubricas card (destaque) ────────────────────────────────── */
-    .rubrica-banner {
-      background: linear-gradient(135deg, #0F172A 0%, #1A304D 100%);
-      border-radius: 16px;
-      padding: 1.25rem 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
-      text-decoration: none;
+    /* ── Imprimir rubricas (destaque) ─────────────────────────── */
+    .print-banner {
+      display: flex; align-items: center; gap: .9rem;
+      background: linear-gradient(135deg,#0F172A 0%,#1E3A5F 100%);
+      border-radius: 14px; padding: 1rem 1.25rem;
+      text-decoration: none; margin-bottom: 1.5rem;
       transition: box-shadow .18s;
     }
-    .rubrica-banner:hover { box-shadow: 0 8px 28px rgba(15,23,42,.25); }
-    .rubrica-banner__icon {
-      width: 44px; height: 44px;
-      background: rgba(255,255,255,.12);
-      border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
+    .print-banner:hover { box-shadow: 0 6px 24px rgba(15,23,42,.25); }
+    .print-banner__icon {
+      width: 42px; height: 42px; background: rgba(255,255,255,.12);
+      border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .rubrica-banner__icon svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-    .rubrica-banner__body { flex: 1; }
-    .rubrica-banner__title { font-size: .95rem; font-weight: 800; color: #fff; }
-    .rubrica-banner__sub   { font-size: .78rem; color: rgba(255,255,255,.55); }
-    .rubrica-banner__arr   { color: rgba(255,255,255,.4); font-size: 1rem; }
+    .print-banner__icon svg { width: 20px; height: 20px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .print-banner__body { flex: 1; }
+    .print-banner__title { font-size: .92rem; font-weight: 800; color: #fff; }
+    .print-banner__sub   { font-size: .75rem; color: rgba(255,255,255,.55); }
+    .print-banner__pill  {
+      background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.25);
+      color: #fff; font-size: .72rem; font-weight: 700;
+      padding: .3rem .75rem; border-radius: 100px; white-space: nowrap;
+    }
 
-    /* ── Ações pós-avaliação ─────────────────────────────────────── */
-    .acao-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: .75rem;
+    /* ── Cards de formulário ──────────────────────────────────── */
+    .form-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: .75rem; margin-bottom: 1.5rem; }
+    .form-card {
+      background: #fff; border: 1px solid #E2E8F0; border-radius: 14px;
+      padding: 1.1rem; display: flex; flex-direction: column; gap: .55rem;
+      text-decoration: none; transition: box-shadow .18s, transform .18s;
     }
-    .acao-card {
-      background: #fff;
-      border: 1px solid #E2E8F0;
-      border-radius: 16px;
-      padding: 1.25rem;
+    .form-card:hover { box-shadow: 0 6px 20px rgba(15,23,42,.1); transform: translateY(-2px); }
+    .fc-top { display: flex; align-items: center; gap: .65rem; }
+    .fc-icon { width: 38px; height: 38px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .fc-icon svg { width: 18px; height: 18px; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .fc-title { font-size: .9rem; font-weight: 800; color: #0F172A; }
+    .fc-desc  { font-size: .77rem; color: #64748B; line-height: 1.45; }
+    .fc-cta   { font-size: .76rem; font-weight: 700; padding: .4rem .85rem; border-radius: 8px; align-self: flex-start; }
+
+    /* ── Ações pós-avaliação ──────────────────────────────────── */
+    .sec-lbl { font-size: .67rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #94A3B8; margin-bottom: .65rem; }
+    .acao-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: .75rem; }
+    .acao-card { background: #fff; border: 1px solid #E2E8F0; border-radius: 14px; padding: 1.1rem; display: flex; flex-direction: column; gap: .5rem; }
+    .acao-title { font-size: .9rem; font-weight: 800; color: #0F172A; }
+    .acao-desc  { font-size: .77rem; color: #64748B; line-height: 1.45; flex: 1; }
+
+    /* ── Chat ──────────────────────────────────────────────────── */
+    .chat-wrap {
+      background: #fff; border: 1px solid #E2E8F0; border-radius: 14px;
+      display: flex; flex-direction: column;
+      height: 520px; overflow: hidden;
+    }
+    .chat-wrap__msgs {
+      flex: 1; overflow-y: auto; padding: 1rem;
       display: flex; flex-direction: column; gap: .5rem;
-      box-shadow: 0 1px 4px rgba(15,23,42,.04);
     }
-    .acao-card__title { font-size: .93rem; font-weight: 800; color: #0F172A; }
-    .acao-card__desc  { font-size: .78rem; color: #64748B; line-height: 1.45; flex: 1; }
+    .chat-msg { padding: .6rem .85rem; border-radius: 10px; max-width: 85%; }
+    .chat-msg--mine  { background: #EFF6FF; align-self: flex-end; }
+    .chat-msg--other { background: #F8FAFC; border: 1px solid #E2E8F0; align-self: flex-start; }
+    .chat-msg__autor { font-size: .72rem; font-weight: 800; color: #2563EB; margin-bottom: .2rem; }
+    .chat-msg--other .chat-msg__autor { color: #374151; }
+    .chat-msg__cat   { font-size: .65rem; background: #EFF6FF; color: #2563EB; padding: .1rem .4rem; border-radius: 100px; font-weight: 700; margin-left: .35rem; }
+    .chat-msg__texto { font-size: .82rem; color: #1E293B; line-height: 1.45; word-break: break-word; }
+    .chat-msg__hora  { font-size: .65rem; color: #94A3B8; margin-top: .2rem; }
+    .chat-vazio { text-align: center; color: #94A3B8; font-size: .82rem; padding: 2rem; }
+    .chat-footer {
+      border-top: 1px solid #E2E8F0; padding: .75rem 1rem;
+      display: flex; flex-direction: column; gap: .5rem;
+    }
+    .chat-cat-row { display: flex; gap: .4rem; flex-wrap: wrap; }
+    .cat-chip {
+      padding: .22rem .6rem; border-radius: 100px;
+      font-size: .7rem; font-weight: 700;
+      border: 1.5px solid #E2E8F0; background: transparent; color: #64748B;
+      cursor: pointer; transition: all .12s;
+    }
+    .cat-chip.sel { border-color: currentColor; }
+    .chat-input-row { display: flex; gap: .5rem; }
+    .chat-input-row input { flex: 1; }
 
-    @media (max-width: 600px) {
-      .form-grid, .acao-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 600px) { .form-grid, .acao-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -190,14 +177,14 @@
   </div>
 </header>
 
-<!-- ── LOGIN ──────────────────────────────────────────────────────── -->
+<!-- ── LOGIN ─────────────────────────────────────────────────────── -->
 <div id="view-login" class="login-outer">
   <div class="login-box">
     <div class="login-icon">
       <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     </div>
     <h2>Acesso dos Juízes</h2>
-    <p>Entre com seu nome e PIN cadastrados para acessar os formulários de avaliação.</p>
+    <p class="login-sub">Entre com seu nome e PIN para acessar os formulários de avaliação e o chat.</p>
     <div class="field">
       <label>Nome</label>
       <input id="l-nome" type="text" placeholder="Seu nome completo" autocomplete="name">
@@ -211,102 +198,140 @@
   </div>
 </div>
 
-<!-- ── PAINEL ─────────────────────────────────────────────────────── -->
+<!-- ── PAINEL ────────────────────────────────────────────────────── -->
 <div id="view-painel" style="display:none">
 <div class="painel-wrap">
 
-  <!-- Cabeçalho do juiz -->
+  <!-- Header do juiz -->
   <div class="jh">
-    <div class="jh-avatar" id="jh-inicial">J</div>
-    <div class="jh-info">
+    <div class="jh-av" id="jh-ini">J</div>
+    <div style="flex:1">
       <div class="jh-nome" id="juiz-nome">—</div>
       <div class="jh-cat">Categoria: <span id="juiz-cat">—</span></div>
     </div>
-    <div class="jh-btn">
-      <button class="btn btn-outline btn-sm" onclick="sair()"
-        style="border-color:#E2E8F0;color:#64748B">Sair</button>
-    </div>
+    <button class="btn btn-outline btn-sm" onclick="sair()"
+      style="border-color:#E2E8F0;color:#64748B">Sair</button>
   </div>
 
-  <!-- Rubricas -->
-  <a href="rubricas.html" target="_blank" class="rubrica-banner">
-    <div class="rubrica-banner__icon">
-      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-    </div>
-    <div class="rubrica-banner__body">
-      <div class="rubrica-banner__title">Rubricas de Avaliação</div>
-      <div class="rubrica-banner__sub">Critérios detalhados · Projeto, Design, Core Values &amp; Arena · Versão para impressão</div>
-    </div>
-    <div class="rubrica-banner__arr">→</div>
-  </a>
-
-  <!-- Formulários -->
-  <div class="sec-label">Formulários de Avaliação</div>
-  <div class="form-grid">
-
-    <a id="link-desafio" href="#" target="_blank" class="form-card">
-      <div class="form-card__top">
-        <div class="form-card__icon" style="background:#FFF7ED">
-          <svg viewBox="0 0 24 24" stroke="#F2994A"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        </div>
-        <div class="form-card__title">Desafio do Robô</div>
-      </div>
-      <div class="form-card__desc">Missões da Arena: registre pontos e penalidades de cada round.</div>
-      <span class="form-card__cta" style="background:#FFF7ED;color:#D97706">Abrir formulário →</span>
-    </a>
-
-    <a id="link-projeto" href="#" target="_blank" class="form-card">
-      <div class="form-card__top">
-        <div class="form-card__icon" style="background:#F5F0FF">
-          <svg viewBox="0 0 24 24" stroke="#8E5BD9"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-        </div>
-        <div class="form-card__title">Projeto de Inovação</div>
-      </div>
-      <div class="form-card__desc">Problema identificado, solução proposta e impacto da equipe.</div>
-      <span class="form-card__cta" style="background:#F5F0FF;color:#8E5BD9">Abrir formulário →</span>
-    </a>
-
-    <a id="link-design" href="#" target="_blank" class="form-card">
-      <div class="form-card__top">
-        <div class="form-card__icon" style="background:#EFF6FF">
-          <svg viewBox="0 0 24 24" stroke="#2F80ED"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-        </div>
-        <div class="form-card__title">Design do Robô</div>
-      </div>
-      <div class="form-card__desc">Estrutura, mecanismos e estratégia de programação do robô.</div>
-      <span class="form-card__cta" style="background:#EFF6FF;color:#2F80ED">Abrir formulário →</span>
-    </a>
-
-    <a id="link-core" href="#" target="_blank" class="form-card">
-      <div class="form-card__top">
-        <div class="form-card__icon" style="background:#F0FDF4">
-          <svg viewBox="0 0 24 24" stroke="#27AE60"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <div class="form-card__title">Core Values</div>
-      </div>
-      <div class="form-card__desc">Trabalho em equipe, inclusão, diversão e espírito esportivo.</div>
-      <span class="form-card__cta" style="background:#F0FDF4;color:#27AE60">Abrir formulário →</span>
-    </a>
-
+  <!-- Abas -->
+  <div class="tabs">
+    <button class="tab ativo" onclick="irAba('avaliacao',this)">
+      Avaliação
+    </button>
+    <button class="tab" onclick="irAba('chat',this)">
+      Chat dos Juízes
+    </button>
   </div>
 
-  <!-- Deliberação e ranking -->
-  <div class="sec-label">Após as avaliações</div>
-  <div class="acao-grid">
-    <div class="acao-card">
-      <div class="acao-card__title">Sala de Deliberação</div>
-      <div class="acao-card__desc">Compare equipes, registre votos por categoria e converse com os demais juízes em tempo real.</div>
-      <a href="deliberacao.html" class="btn btn-primary btn-sm" style="align-self:flex-start">Ir para Deliberação →</a>
-    </div>
-    <div class="acao-card">
-      <div class="acao-card__title">Ranking Geral</div>
-      <div class="acao-card__desc">Acompanhe a classificação geral e por categoria ao longo do torneio em tempo real.</div>
-      <a href="ranking.html" class="btn btn-outline btn-sm" style="align-self:flex-start">Ver Ranking →</a>
-    </div>
-  </div>
+  <!-- ── ABA: AVALIAÇÃO ──────────────────────────────────────────── -->
+  <div id="aba-avaliacao">
 
-</div>
-</div>
+    <!-- Imprimir rubricas -->
+    <a href="rubricas.html" target="_blank" class="print-banner">
+      <div class="print-banner__icon">
+        <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      </div>
+      <div class="print-banner__body">
+        <div class="print-banner__title">Imprimir Rubricas de Avaliação</div>
+        <div class="print-banner__sub">Projeto · Design · Core Values · Arena — critérios completos para imprimir</div>
+      </div>
+      <div class="print-banner__pill">Imprimir / PDF →</div>
+    </a>
+
+    <!-- Formulários -->
+    <div class="sec-lbl">Formulários de Avaliação</div>
+    <div class="form-grid">
+      <a id="link-desafio" href="#" target="_blank" class="form-card">
+        <div class="fc-top">
+          <div class="fc-icon" style="background:#FFF7ED">
+            <svg viewBox="0 0 24 24" stroke="#F2994A"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div class="fc-title">Desafio do Robô</div>
+        </div>
+        <div class="fc-desc">Missões da Arena: pontos e penalidades de cada round.</div>
+        <span class="fc-cta" style="background:#FFF7ED;color:#D97706">Abrir formulário →</span>
+      </a>
+
+      <a id="link-projeto" href="#" target="_blank" class="form-card">
+        <div class="fc-top">
+          <div class="fc-icon" style="background:#F5F0FF">
+            <svg viewBox="0 0 24 24" stroke="#8E5BD9"><path d="M12 2a10 10 0 1 1 0 20A10 10 0 0 1 12 2z"/><path d="M12 8v4l3 3"/></svg>
+          </div>
+          <div class="fc-title">Projeto de Inovação</div>
+        </div>
+        <div class="fc-desc">Problema identificado, solução proposta e impacto.</div>
+        <span class="fc-cta" style="background:#F5F0FF;color:#8E5BD9">Abrir formulário →</span>
+      </a>
+
+      <a id="link-design" href="#" target="_blank" class="form-card">
+        <div class="fc-top">
+          <div class="fc-icon" style="background:#EFF6FF">
+            <svg viewBox="0 0 24 24" stroke="#2F80ED"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="fc-title">Design do Robô</div>
+        </div>
+        <div class="fc-desc">Estrutura, mecanismos e estratégia de programação.</div>
+        <span class="fc-cta" style="background:#EFF6FF;color:#2F80ED">Abrir formulário →</span>
+      </a>
+
+      <a id="link-core" href="#" target="_blank" class="form-card">
+        <div class="fc-top">
+          <div class="fc-icon" style="background:#F0FDF4">
+            <svg viewBox="0 0 24 24" stroke="#27AE60"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div class="fc-title">Core Values</div>
+        </div>
+        <div class="fc-desc">Trabalho em equipe, inclusão, diversão e espírito.</div>
+        <span class="fc-cta" style="background:#F0FDF4;color:#27AE60">Abrir formulário →</span>
+      </a>
+    </div>
+
+    <!-- Pós-avaliação -->
+    <div class="sec-lbl">Após as avaliações</div>
+    <div class="acao-grid">
+      <div class="acao-card">
+        <div class="acao-title">Sala de Deliberação</div>
+        <div class="acao-desc">Compare equipes, registre votos por categoria e veja ranking em tempo real.</div>
+        <a href="deliberacao.html" class="btn btn-primary btn-sm" style="align-self:flex-start">Ir para Deliberação →</a>
+      </div>
+      <div class="acao-card">
+        <div class="acao-title">Ranking Geral</div>
+        <div class="acao-desc">Classificação geral e por categoria ao longo do torneio.</div>
+        <a href="ranking.html" class="btn btn-outline btn-sm" style="align-self:flex-start">Ver Ranking →</a>
+      </div>
+    </div>
+
+  </div><!-- /aba-avaliacao -->
+
+  <!-- ── ABA: CHAT ───────────────────────────────────────────────── -->
+  <div id="aba-chat" style="display:none">
+
+    <div class="chat-wrap">
+
+      <div class="chat-wrap__msgs" id="chat-msgs">
+        <div class="chat-vazio" id="chat-vazio">Nenhuma mensagem ainda.<br>Seja o primeiro a escrever!</div>
+      </div>
+
+      <div class="chat-footer">
+        <div class="chat-cat-row" id="cat-chips">
+          <span class="cat-chip sel" data-cat="" style="color:#64748B;border-color:#CBD5E1">Geral</span>
+          <span class="cat-chip" data-cat="Arena" style="color:#D97706">Arena</span>
+          <span class="cat-chip" data-cat="Projeto de Inovação" style="color:#8E5BD9">Projeto</span>
+          <span class="cat-chip" data-cat="Design do Robô" style="color:#2F80ED">Design</span>
+          <span class="cat-chip" data-cat="Core Values" style="color:#27AE60">Core</span>
+        </div>
+        <div class="chat-input-row">
+          <input id="chat-texto" type="text" placeholder="Mensagem para os juízes…" maxlength="400" autocomplete="off">
+          <button class="btn btn-primary btn-sm" id="btn-enviar">Enviar</button>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /aba-chat -->
+
+</div><!-- /painel-wrap -->
+</div><!-- /view-painel -->
 
 <div id="toast"></div>
 <script src="js/api.js"></script>
@@ -317,7 +342,6 @@
     design:  'https://forms.gle/fG5bdL1uS2e5dqia9',
     core:    'https://forms.gle/fWaSW9m89ADv7nQ38'
   };
-
   document.getElementById('link-desafio').href = FORMS.desafio;
   document.getElementById('link-projeto').href = FORMS.projeto;
   document.getElementById('link-design').href  = FORMS.design;
@@ -347,23 +371,16 @@
     const btn  = document.getElementById('btn-entrar');
     if (!nome) { err.textContent = 'Informe seu nome.'; err.style.display = 'block'; return; }
     err.style.display = 'none';
-    btn.textContent = 'Verificando…';
-    btn.disabled = true;
+    btn.textContent = 'Verificando…'; btn.disabled = true;
     try {
       const r = await API.verificarJuiz(nome, pin);
-      if (!r.ok) {
-        err.textContent = r.erro || 'Acesso negado.';
-        err.style.display = 'block';
-        return;
-      }
+      if (!r.ok) { err.textContent = r.erro || 'Acesso negado.'; err.style.display = 'block'; return; }
       Sessao.set(r.nome, pin);
       mostrarPainel(r);
     } catch(e) {
-      err.textContent = 'Erro de conexão. Tente novamente.';
-      err.style.display = 'block';
+      err.textContent = 'Erro de conexão. Tente novamente.'; err.style.display = 'block';
     } finally {
-      btn.textContent = 'Entrar';
-      btn.disabled = false;
+      btn.textContent = 'Entrar'; btn.disabled = false;
     }
   }
 
@@ -374,12 +391,12 @@
     document.getElementById('juiz-cat').textContent  = r.categoria || 'Geral';
     document.getElementById('badge-juiz').textContent = r.nome;
     document.getElementById('btn-sair').style.display = '';
-    const ini = (r.nome || 'J').trim()[0].toUpperCase();
-    document.getElementById('jh-inicial').textContent = ini;
+    document.getElementById('jh-ini').textContent = (r.nome || 'J').trim()[0].toUpperCase();
+    iniciarChat();
   }
 
   function sair() {
-    Sessao.clear();
+    Sessao.clear(); pararChat();
     document.getElementById('view-painel').style.display = 'none';
     document.getElementById('view-login').style.display  = '';
     document.getElementById('badge-juiz').textContent = '';
@@ -387,6 +404,84 @@
     document.getElementById('l-nome').value = '';
     document.getElementById('l-pin').value  = '';
   }
+
+  /* ── Abas ──────────────────────────────────────────────────────── */
+  function irAba(nome, btn) {
+    document.getElementById('aba-avaliacao').style.display = nome === 'avaliacao' ? '' : 'none';
+    document.getElementById('aba-chat').style.display      = nome === 'chat'      ? '' : 'none';
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('ativo'); });
+    btn.classList.add('ativo');
+  }
+
+  /* ── Chat ──────────────────────────────────────────────────────── */
+  let chatTimer = null;
+  let chatCount = 0;
+  let catSel = '';
+
+  /* Chips de categoria */
+  document.getElementById('cat-chips').addEventListener('click', function(e) {
+    const chip = e.target.closest('.cat-chip');
+    if (!chip) return;
+    document.querySelectorAll('.cat-chip').forEach(function(c) { c.classList.remove('sel'); });
+    chip.classList.add('sel');
+    catSel = chip.dataset.cat;
+  });
+
+  function iniciarChat() {
+    carregarChat();
+    chatTimer = setInterval(carregarChat, 5000);
+  }
+
+  function pararChat() {
+    if (chatTimer) { clearInterval(chatTimer); chatTimer = null; }
+  }
+
+  async function carregarChat() {
+    try {
+      const r = await API.deliberacao();
+      if (r.ok) renderChat(r.comentarios || []);
+    } catch(_) {}
+  }
+
+  function renderChat(msgs) {
+    if (msgs.length === chatCount) return;
+    chatCount = msgs.length;
+    const meuNome = (Sessao.juiz || '').toLowerCase();
+    const cont = document.getElementById('chat-msgs');
+    const vazio = document.getElementById('chat-vazio');
+    if (!msgs.length) { vazio.style.display = ''; return; }
+    vazio.style.display = 'none';
+    const ancorando = cont.scrollHeight - cont.scrollTop <= cont.clientHeight + 40;
+    cont.innerHTML = msgs.map(function(c) {
+      const mine = (c.Juiz || '').toLowerCase() === meuNome;
+      const cat  = c.Categoria ? '<span class="chat-msg__cat">' + escH(c.Categoria) + '</span>' : '';
+      return '<div class="chat-msg ' + (mine ? 'chat-msg--mine' : 'chat-msg--other') + '">'
+           + '<div class="chat-msg__autor">' + escH(c.Juiz || 'Juiz') + cat + '</div>'
+           + '<div class="chat-msg__texto">' + escH(String(c.Texto || '')) + '</div>'
+           + '</div>';
+    }).join('');
+    if (ancorando) cont.scrollTop = cont.scrollHeight;
+  }
+
+  function escH(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  async function enviarChat() {
+    const input = document.getElementById('chat-texto');
+    const texto = input.value.trim();
+    if (!texto) return;
+    try {
+      const r = await API.comentar(Sessao.juiz, Sessao.pin, texto, catSel);
+      if (r.ok) { input.value = ''; chatCount = 0; carregarChat(); }
+      else throw new Error(r.erro);
+    } catch(e) { toast('Erro: ' + e.message, 'err'); }
+  }
+
+  document.getElementById('btn-enviar').addEventListener('click', enviarChat);
+  document.getElementById('chat-texto').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviarChat(); }
+  });
 </script>
 </body>
 </html>
