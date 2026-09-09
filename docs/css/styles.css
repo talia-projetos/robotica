@@ -3,9 +3,9 @@
    ============================================================ */
 
 :root {
-  --marinho:    #12355B;
-  --azul:       #2F80ED;
-  --azul-lt:    #EBF3FF;
+  --marinho:    #1A3D5C;
+  --azul:       #508fcb;
+  --azul-lt:    #E8F2FA;
   --laranja:    #F2994A;
   --roxo:       #8E5BD9;
   --verde:      #27AE60;
@@ -20,13 +20,13 @@
 
   --brand-roxo: #6040A0;
   --brand-ouro: #E89818;
-  --brand-azul: #2880C8;
+  --brand-azul: #508fcb;
 
   --radius:    12px;
   --radius-lg: 18px;
-  --shadow:    0 2px 16px rgba(18,53,91,.08);
-  --shadow-md: 0 4px 24px rgba(18,53,91,.12);
-  --shadow-lg: 0 8px 40px rgba(18,53,91,.18);
+  --shadow:    0 2px 16px rgba(26,61,92,.08);
+  --shadow-md: 0 4px 24px rgba(26,61,92,.12);
+  --shadow-lg: 0 8px 40px rgba(26,61,92,.18);
   --trans:     .18s ease;
 }
 
@@ -41,7 +41,7 @@ body {
 
 /* ── Topbar ───────────────────────────────────────────────────── */
 .topbar {
-  background: linear-gradient(135deg, #0A1628 0%, #12355B 60%, #1A4470 100%);
+  background: linear-gradient(135deg, #0D1E2E 0%, #1A3D5C 60%, #2460A0 100%);
   color: var(--branco);
   padding: .5rem 1.5rem;
   display: flex;
@@ -195,7 +195,7 @@ tbody td { padding: .7rem 1rem; vertical-align: middle; }
 
 /* ── Hub Hero ─────────────────────────────────────────────────── */
 .hub-hero-bg {
-  background: linear-gradient(135deg, #0A1628 0%, #12355B 50%, #1A4470 100%);
+  background: linear-gradient(135deg, #0D1E2E 0%, #1A3D5C 50%, #2460A0 100%);
   padding: 2.5rem 0 0;
   margin-bottom: 0;
   position: relative;
@@ -206,7 +206,7 @@ tbody td { padding: .7rem 1rem; vertical-align: middle; }
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(47,128,237,.18) 0%, transparent 70%);
+  background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(80,143,203,.22) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -411,7 +411,7 @@ tbody td { padding: .7rem 1rem; vertical-align: middle; }
 .field textarea:focus {
   outline: none;
   border-color: var(--azul);
-  box-shadow: 0 0 0 3px rgba(47,128,237,.12);
+  box-shadow: 0 0 0 3px rgba(80,143,203,.15);
 }
 
 /* ── Rubrica ─────────────────────────────────────────────────── */
@@ -483,8 +483,8 @@ tbody td { padding: .7rem 1rem; vertical-align: middle; }
   letter-spacing: .01em;
 }
 
-.btn-primary  { background: var(--azul); color: #fff; box-shadow: 0 2px 8px rgba(47,128,237,.3); }
-.btn-primary:hover  { background: #1a6ed8; box-shadow: 0 4px 16px rgba(47,128,237,.4); }
+.btn-primary  { background: var(--azul); color: #fff; box-shadow: 0 2px 8px rgba(80,143,203,.3); }
+.btn-primary:hover  { background: #3d7ab8; box-shadow: 0 4px 16px rgba(80,143,203,.4); }
 .btn-success  { background: var(--verde); color: #fff; }
 .btn-success:hover  { background: #1e9150; }
 .btn-danger   { background: var(--coral); color: #fff; }

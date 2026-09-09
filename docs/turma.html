@@ -221,6 +221,16 @@
       padding: 1rem 0;
     }
 
+    /* ── Logo circular da equipe ────────────────────────────── */
+    .eq-logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255,255,255,.35);
+      flex-shrink: 0;
+    }
+
     /* ── Logout bar ──────────────────────────────────────────── */
     .turma-logout {
       display: flex;
@@ -239,7 +249,7 @@
 <body>
 
 <header class="topbar">
-  <a href="index.html" class="topbar__brand"><img src="logo.png" alt="HUB Robótica" style="height:66px;filter:brightness(0) invert(1)"></a>
+  <a href="index.html" class="topbar__brand"><img src="logo.svg" alt="HUB Robótica" style="height:66px"></a>
   <nav class="topbar__nav">
     <a href="index.html">Visão Geral</a>
     <a href="arena.html">Arena</a>
@@ -285,6 +295,7 @@
 
     <!-- Cabeçalho da equipe -->
     <div class="eq-header" id="eq-header">
+      <img id="eq-logo" class="eq-logo" src="" alt="" style="display:none">
       <div>
         <div class="eq-header__id" id="eq-id">—</div>
         <div class="eq-header__nome" id="eq-nome">—</div>
@@ -423,6 +434,22 @@
     document.getElementById('logout-info').textContent =
       'Turma: ' + (eq.nome || eq.id) + (eq.turno ? ' · ' + eq.turno : '');
 
+    const logoFiles = {
+      TUR01:'TUR01.jpg', TUR02:'TUR02.png', TUR03:'TUR03.png',
+      TUR04:'TUR04.jpg', TUR05:'TUR05.png',
+      TUR06:'TUR06.jpg', TUR07:'TUR07.jpg', TUR08:'TUR08.jpg',
+      TUR09:'TUR09.jpg', TUR10:'TUR10.jpg', TUR11:'TUR11.jpg',
+      TUR12:'TUR12.jpg', TUR13:'TUR13.jpg'
+    };
+    const logoEl = document.getElementById('eq-logo');
+    const logoFile = logoFiles[eq.id];
+    if (logoFile) {
+      logoEl.src = 'img/turmas/' + logoFile;
+      logoEl.style.display = '';
+    } else {
+      logoEl.style.display = 'none';
+    }
+
     renderScores(data.scores);
     renderComments(data.comentarios);
 
@@ -495,7 +522,7 @@
         sel.innerHTML = '<option value="">— selecione —</option>' +
           r.equipes.map(e => {
             const nome = nomesMap[e.id] || e.nome || e.id;
-            const label = nome + (e.tutor ? ' — ' + e.tutor : '');
+            const label = nome + (e.tutor ? ' (' + e.tutor + ')' : '');
             return `<option value="${e.id}">${label}</option>`;
           }).join('');
       } else {
