@@ -37,39 +37,73 @@
       padding: 0 2rem;
       position: relative;
     }
+    .hero-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    .hero-text { flex: 1; }
+    .hero-eyebrow {
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #FBBF24;
+      margin-bottom: .55rem;
+    }
     .hub-hero h1 {
-      font-size: 2.1rem;
+      font-size: 2.35rem;
       font-weight: 900;
       color: #fff;
       letter-spacing: -.04em;
       line-height: 1.05;
-      margin: 0 0 .3rem;
+      margin: 0 0 .4rem;
+    }
+    .hero-accent {
+      background: linear-gradient(90deg, #60A5FA, #A78BFA);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
     .hub-hero p {
-      font-size: .88rem;
-      color: rgba(255,255,255,.5);
-      margin: 0 0 1.4rem;
+      font-size: .86rem;
+      color: rgba(255,255,255,.45);
+      margin: 0 0 1.5rem;
     }
     .hero-stats {
       display: flex;
-      gap: .65rem;
+      gap: .55rem;
       flex-wrap: wrap;
     }
     .hero-stat {
-      background: rgba(255,255,255,.09);
-      border: 1px solid rgba(255,255,255,.14);
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
       border-radius: 100px;
-      padding: .28rem .8rem;
-      font-size: .75rem;
+      padding: .3rem .9rem .3rem .6rem;
+      font-size: .76rem;
       font-weight: 700;
-      color: rgba(255,255,255,.75);
-      letter-spacing: .02em;
+      color: rgba(255,255,255,.8);
+    }
+    .hero-stat__dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
     }
     .hero-stat strong {
       color: #fff;
-      font-size: .88rem;
-      margin-right: .25rem;
+      font-size: .9rem;
+      margin-right: .2rem;
     }
+    .hero-badge {
+      width: 120px; height: 120px;
+      flex-shrink: 0;
+      opacity: .85;
+    }
+    @media (max-width: 600px) { .hero-badge { display: none; } }
 
     /* ── Main ─────────────────────────────────────────────────── */
     .hub-main {
@@ -149,7 +183,6 @@
 
     /* card destaque (Arena) */
     .nav-card--destaque {
-      grid-column: span 3;
       background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%);
       border: none;
       color: #fff;
@@ -162,7 +195,6 @@
 
     /* card cronograma */
     .nav-card--cronograma {
-      grid-column: span 3;
       background: linear-gradient(135deg, #1A304D 0%, #244568 100%);
       border: none;
       color: #fff;
@@ -176,13 +208,9 @@
     /* ── Responsive ───────────────────────────────────────────── */
     @media (max-width: 840px) {
       .nav-cards { grid-template-columns: repeat(2, 1fr); }
-      .nav-card--destaque,
-      .nav-card--cronograma { grid-column: span 2; }
     }
     @media (max-width: 540px) {
       .nav-cards { grid-template-columns: 1fr; }
-      .nav-card--destaque,
-      .nav-card--cronograma { grid-column: span 1; }
       .hub-hero h1 { font-size: 1.55rem; }
     }
   </style>
@@ -211,12 +239,39 @@
 <!-- Hero -->
 <div class="hub-hero">
   <div class="hub-hero-inner">
-    <h1>Torneio Interno de Robótica</h1>
-    <p>Escola SESI Reitor Miguel Calmon</p>
-    <div class="hero-stats">
-      <span class="hero-stat"><strong>13</strong> equipes</span>
-      <span class="hero-stat"><strong>3</strong> rounds</span>
-      <span class="hero-stat"><strong>4</strong> categorias</span>
+    <div class="hero-content">
+      <div class="hero-text">
+        <div class="hero-eyebrow">FIRST LEGO League · 2025</div>
+        <h1>Torneio Interno<br><span class="hero-accent">de Robótica</span></h1>
+        <p>Escola SESI Reitor Miguel Calmon</p>
+        <div class="hero-stats">
+          <span class="hero-stat"><span class="hero-stat__dot" style="background:#FBBF24"></span><strong>13</strong> equipes</span>
+          <span class="hero-stat"><span class="hero-stat__dot" style="background:#34D399"></span><strong>3</strong> rounds</span>
+          <span class="hero-stat"><span class="hero-stat__dot" style="background:#60A5FA"></span><strong>4</strong> categorias</span>
+        </div>
+      </div>
+      <div class="hero-badge" aria-hidden="true">
+        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="60" cy="60" r="58" stroke="rgba(255,255,255,.08)" stroke-width="1.5"/>
+          <circle cx="60" cy="60" r="44" stroke="rgba(255,255,255,.06)" stroke-width="1"/>
+          <!-- Robot head -->
+          <rect x="32" y="38" width="56" height="40" rx="8" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
+          <!-- Eyes -->
+          <rect x="42" y="50" width="12" height="10" rx="3" fill="#FBBF24" opacity=".9"/>
+          <rect x="66" y="50" width="12" height="10" rx="3" fill="#FBBF24" opacity=".9"/>
+          <!-- Mouth -->
+          <path d="M46 70 h28" stroke="rgba(255,255,255,.4)" stroke-width="2" stroke-linecap="round"/>
+          <!-- Antenna -->
+          <line x1="60" y1="38" x2="60" y2="26" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
+          <circle cx="60" cy="23" r="3.5" fill="#FBBF24" opacity=".8"/>
+          <!-- Arms -->
+          <rect x="16" y="48" width="16" height="8" rx="4" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+          <rect x="88" y="48" width="16" height="8" rx="4" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+          <!-- Legs -->
+          <rect x="42" y="78" width="12" height="14" rx="4" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+          <rect x="66" y="78" width="12" height="14" rx="4" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.15)" stroke-width="1.5"/>
+        </svg>
+      </div>
     </div>
   </div>
 </div>
@@ -225,14 +280,14 @@
 <div class="hub-main">
   <div class="nav-cards">
 
-    <!-- Arena — destaque full-width -->
+    <!-- Arena -->
     <a href="arena.html" class="nav-card nav-card--destaque">
       <div class="nav-card__icon" style="background:rgba(255,255,255,.12)">
         <svg viewBox="0 0 24 24" stroke="white"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
       </div>
       <div class="nav-card__body">
         <div class="nav-card__title">Arena — Telão</div>
-        <div class="nav-card__desc">Pontuações ao vivo · cronômetro de 2:30 · modo telão e tela cheia</div>
+        <div class="nav-card__desc">Pontuações ao vivo · cronômetro 2:30</div>
       </div>
       <div class="nav-card__arrow">→</div>
     </a>
@@ -240,11 +295,11 @@
     <!-- Ranking -->
     <a href="ranking.html" class="nav-card">
       <div class="nav-card__icon" style="background:#EFF6FF">
-        <svg viewBox="0 0 24 24" stroke="#508fcb"><polyline points="18 20 18 10"/><polyline points="12 20 12 4"/><polyline points="6 20 6 14"/></svg>
+        <svg viewBox="0 0 24 24" stroke="#4C80B2"><polyline points="18 20 18 10"/><polyline points="12 20 12 4"/><polyline points="6 20 6 14"/></svg>
       </div>
       <div class="nav-card__body">
         <div class="nav-card__title">Ranking Geral</div>
-        <div class="nav-card__desc">Classificação por pontuação total e por categoria</div>
+        <div class="nav-card__desc">Classificação por pontuação e categoria</div>
       </div>
       <div class="nav-card__arrow">→</div>
     </a>
@@ -256,7 +311,7 @@
       </div>
       <div class="nav-card__body">
         <div class="nav-card__title">Minha Turma</div>
-        <div class="nav-card__desc">Professor: notas e comentários dos juízes com PIN</div>
+        <div class="nav-card__desc">Professor: notas dos juízes com PIN</div>
       </div>
       <div class="nav-card__arrow">→</div>
     </a>
@@ -268,7 +323,7 @@
       </div>
       <div class="nav-card__body">
         <div class="nav-card__title">Juízes</div>
-        <div class="nav-card__desc">Rubricas, formulários de avaliação e deliberação</div>
+        <div class="nav-card__desc">Rubricas, formulários e deliberação</div>
       </div>
       <div class="nav-card__arrow">→</div>
     </a>
@@ -280,7 +335,7 @@
       </div>
       <div class="nav-card__body">
         <div class="nav-card__title">Coordenação</div>
-        <div class="nav-card__desc">Resultados e comentários de todas as equipes</div>
+        <div class="nav-card__desc">Resultados de todas as equipes</div>
       </div>
       <div class="nav-card__arrow">→</div>
     </a>
@@ -292,7 +347,7 @@
       </div>
       <div class="nav-card__body">
         <div class="nav-card__title">Cronograma do Evento</div>
-        <div class="nav-card__desc">07:00 – 11:30 · avaliações em sala, rounds de arena e cerimônias</div>
+        <div class="nav-card__desc">07:00 – 12:00 · avaliações, rounds e cerimônias</div>
       </div>
       <div class="nav-card__arrow">→</div>
     </a>
