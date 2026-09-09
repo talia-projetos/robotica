@@ -142,6 +142,13 @@
     <div class="cards-juiz">
 
       <div class="card-juiz">
+        <div class="card-juiz__stripe" style="background:linear-gradient(90deg,#F2994A,#F2C94C)"></div>
+        <div class="card-juiz__titulo">Desafio do Robô</div>
+        <div class="card-juiz__desc">Registre a pontuação dos rounds da Arena: missões concluídas e penalidades.</div>
+        <a id="link-desafio" href="#" target="_blank" class="btn btn-primary btn-sm">Abrir Formulário →</a>
+      </div>
+
+      <div class="card-juiz">
         <div class="card-juiz__stripe" style="background:linear-gradient(90deg,#8E5BD9,#B57BEC)"></div>
         <div class="card-juiz__titulo">Projeto de Inovação</div>
         <div class="card-juiz__desc">Avalie o projeto de inovação da equipe: problema identificado, solução proposta e impacto.</div>
@@ -149,7 +156,7 @@
       </div>
 
       <div class="card-juiz">
-        <div class="card-juiz__stripe" style="background:linear-gradient(90deg,#F2994A,#F2C94C)"></div>
+        <div class="card-juiz__stripe" style="background:linear-gradient(90deg,#2F80ED,#56CCF2)"></div>
         <div class="card-juiz__titulo">Design do Robô</div>
         <div class="card-juiz__desc">Avalie o design e a engenharia do robô: estrutura, mecanismos e estratégia de programação.</div>
         <a id="link-design" href="#" target="_blank" class="btn btn-primary btn-sm">Abrir Formulário →</a>
@@ -191,12 +198,14 @@
 <script>
   // ── URLs dos formulários de rubrica (preencha aqui) ──────────────
   const FORMS = {
-    projeto: '#',  // cole aqui o link do Google Form de Projeto de Inovação
-    design:  '#',  // cole aqui o link do Google Form de Design do Robô
-    core:    '#'   // cole aqui o link do Google Form de Core Values
+    desafio: 'https://forms.gle/6zZxqCMxTdndWUh58',
+    projeto: 'https://forms.gle/MpUiT3ALTPMVGNbH6',
+    design:  'https://forms.gle/fG5bdL1uS2e5dqia9',
+    core:    'https://forms.gle/fWaSW9m89ADv7nQ38'
   };
 
   // ── Inicialização ────────────────────────────────────────────────
+  document.getElementById('link-desafio').href = FORMS.desafio;
   document.getElementById('link-projeto').href = FORMS.projeto;
   document.getElementById('link-design').href  = FORMS.design;
   document.getElementById('link-core').href    = FORMS.core;
