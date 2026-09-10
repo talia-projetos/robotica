@@ -83,33 +83,25 @@
     }
 
     /* ── Cards de formulário ──────────────────────────────────── */
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: 150px 150px;
-      gap: .75rem;
-      margin-bottom: 1.5rem;
-    }
+    .form-grid { display: flex; flex-direction: column; gap: .55rem; margin-bottom: 1.5rem; }
     .form-card {
       background: #fff;
       border: 1px solid #E2E8F0;
       border-radius: 14px;
-      padding: 1.1rem 1.2rem;
+      padding: .9rem 1.25rem;
       text-decoration: none;
       transition: box-shadow .18s, transform .18s;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      row-gap: .45rem;
-      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
-    .form-card:hover { box-shadow: 0 6px 20px rgba(15,23,42,.1); transform: translateY(-2px); }
-    .fc-top { display: flex; align-items: center; gap: .65rem; }
-    .fc-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .fc-icon svg { width: 17px; height: 17px; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-    .fc-title { font-size: .88rem; font-weight: 800; color: #0F172A; line-height: 1.2; }
-    .fc-desc  { font-size: .76rem; color: #64748B; line-height: 1.4; align-self: start; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-    .fc-cta   { font-size: .74rem; font-weight: 700; padding: .35rem .8rem; border-radius: 7px; align-self: end; justify-self: start; }
-    @media (max-width: 600px) { .form-grid { grid-template-rows: auto; } }
+    .form-card:hover { box-shadow: 0 4px 16px rgba(15,23,42,.09); transform: translateY(-1px); }
+    .fc-icon { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .fc-icon svg { width: 18px; height: 18px; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .fc-body { flex: 1; min-width: 0; }
+    .fc-title { font-size: .88rem; font-weight: 800; color: #0F172A; }
+    .fc-desc  { font-size: .76rem; color: #64748B; margin-top: .1rem; }
+    .fc-cta   { font-size: .76rem; font-weight: 700; padding: .38rem .9rem; border-radius: 8px; white-space: nowrap; flex-shrink: 0; }
 
     /* ── Ações pós-avaliação ──────────────────────────────────── */
     .sec-lbl { font-size: .67rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #94A3B8; margin-bottom: .65rem; }
@@ -197,46 +189,46 @@
     <div class="sec-lbl">Formulários de Avaliação</div>
     <div class="form-grid">
       <a id="link-desafio" href="#" target="_blank" class="form-card">
-        <div class="fc-top">
-          <div class="fc-icon" style="background:#FFF7ED">
-            <svg viewBox="0 0 24 24" stroke="#F2994A"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          </div>
-          <div class="fc-title">Desafio do Robô</div>
+        <div class="fc-icon" style="background:#FFF7ED">
+          <svg viewBox="0 0 24 24" stroke="#F2994A"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         </div>
-        <div class="fc-desc">Missões da Arena: pontos e penalidades de cada round.</div>
+        <div class="fc-body">
+          <div class="fc-title">Desafio do Robô</div>
+          <div class="fc-desc">Missões da Arena: pontos e penalidades de cada round.</div>
+        </div>
         <span class="fc-cta" style="background:#FFF7ED;color:#D97706">Abrir formulário →</span>
       </a>
 
       <a id="link-projeto" href="#" target="_blank" class="form-card">
-        <div class="fc-top">
-          <div class="fc-icon" style="background:#F5F0FF">
-            <svg viewBox="0 0 24 24" stroke="#8E5BD9"><path d="M12 2a10 10 0 1 1 0 20A10 10 0 0 1 12 2z"/><path d="M12 8v4l3 3"/></svg>
-          </div>
-          <div class="fc-title">Projeto de Inovação</div>
+        <div class="fc-icon" style="background:#F5F0FF">
+          <svg viewBox="0 0 24 24" stroke="#8E5BD9"><path d="M12 2a10 10 0 1 1 0 20A10 10 0 0 1 12 2z"/><path d="M12 8v4l3 3"/></svg>
         </div>
-        <div class="fc-desc">Problema identificado, solução proposta e impacto.</div>
+        <div class="fc-body">
+          <div class="fc-title">Projeto de Inovação</div>
+          <div class="fc-desc">Problema identificado, solução proposta e impacto.</div>
+        </div>
         <span class="fc-cta" style="background:#F5F0FF;color:#8E5BD9">Abrir formulário →</span>
       </a>
 
       <a id="link-design" href="#" target="_blank" class="form-card">
-        <div class="fc-top">
-          <div class="fc-icon" style="background:#EFF6FF">
-            <svg viewBox="0 0 24 24" stroke="#2F80ED"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-          </div>
-          <div class="fc-title">Design do Robô</div>
+        <div class="fc-icon" style="background:#EFF6FF">
+          <svg viewBox="0 0 24 24" stroke="#2F80ED"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
         </div>
-        <div class="fc-desc">Estrutura, mecanismos e estratégia de programação.</div>
+        <div class="fc-body">
+          <div class="fc-title">Design do Robô</div>
+          <div class="fc-desc">Estrutura, mecanismos e estratégia de programação.</div>
+        </div>
         <span class="fc-cta" style="background:#EFF6FF;color:#2F80ED">Abrir formulário →</span>
       </a>
 
       <a id="link-core" href="#" target="_blank" class="form-card">
-        <div class="fc-top">
-          <div class="fc-icon" style="background:#F0FDF4">
-            <svg viewBox="0 0 24 24" stroke="#27AE60"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
-          <div class="fc-title">Core Values</div>
+        <div class="fc-icon" style="background:#F0FDF4">
+          <svg viewBox="0 0 24 24" stroke="#27AE60"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
-        <div class="fc-desc">Trabalho em equipe, inclusão, diversão e espírito.</div>
+        <div class="fc-body">
+          <div class="fc-title">Core Values</div>
+          <div class="fc-desc">Trabalho em equipe, inclusão, diversão e espírito.</div>
+        </div>
         <span class="fc-cta" style="background:#F0FDF4;color:#27AE60">Abrir formulário →</span>
       </a>
     </div>
