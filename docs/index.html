@@ -76,21 +76,38 @@
       z-index: 2;
     }
     .hero-text { width: 40%; max-width: 460px; }
-    .hero-bracket {
-      width: 16px;
-      height: 16px;
-      border-left: 2px solid #50CCC6;
-      border-top: 2px solid #50CCC6;
-      margin-bottom: .75rem;
-    }
     .hero-eyebrow {
-      font-size: .68rem;
-      font-weight: 800;
-      letter-spacing: .13em;
-      text-transform: uppercase;
-      color: #CCB650;
-      margin-bottom: .7rem;
+      margin-bottom: .5rem;
     }
+    /* ── estética de código ─────────────────────────────────── */
+    .hc-comment {
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: .72rem;
+      color: #6A9955;
+      letter-spacing: .02em;
+    }
+    .hc-brace {
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #CCB650;
+      line-height: .9;
+      margin-bottom: .2rem;
+      opacity: .85;
+    }
+    .hc-brace--close {
+      margin-top: .15rem;
+      margin-bottom: .6rem;
+    }
+    .hc-prop {
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: .77rem;
+      margin: 0 0 1.2rem;
+      line-height: 1.5;
+    }
+    .hc-key  { color: #50CCC6; }
+    .hc-op   { color: rgba(255,255,255,.4); }
+    .hc-str  { color: rgba(255,255,255,.55); }
     .hub-hero h1 {
       font-size: 3rem;
       font-weight: 900;
@@ -129,13 +146,6 @@
       letter-spacing: .15em; text-transform: uppercase;
       color: #50CCC6; opacity: .7;
     }
-    /* formas geométricas decorativas */
-    .hero-shapes {
-      position: absolute;
-      top: 0; left: 0;
-      width: 260px; height: 100%;
-      z-index: 3; pointer-events: none;
-    }
     /* imagem full-bleed */
     .hero-bg {
       position: absolute;
@@ -155,14 +165,6 @@
         radial-gradient(ellipse 30% 50% at 18% 95%, rgba(80,204,198,.08) 0%, transparent 55%);
       pointer-events: none;
       z-index: 1;
-    }
-    /* traças de circuito */
-    .hero-circuit {
-      position: absolute;
-      bottom: 0; left: 0;
-      width: 340px; height: 210px;
-      z-index: 2;
-      pointer-events: none;
     }
     /* vertical word overlay */
     .hero-words {
@@ -362,28 +364,16 @@
     <img class="hero-bg" src="img/hero-desktop.png" alt="">
   </picture>
 
-  <!-- traças de circuito decorativas -->
-  <svg class="hero-circuit" viewBox="0 0 320 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <g stroke="rgba(80,204,198,.35)" stroke-width="1.2">
-      <polyline points="20,180 20,120 80,120 80,80 160,80"/>
-      <circle cx="80" cy="120" r="3" fill="rgba(80,204,198,.5)"/>
-      <circle cx="160" cy="80" r="3" fill="rgba(80,204,198,.5)"/>
-      <polyline points="40,180 40,100 120,100 120,50 200,50"/>
-      <circle cx="120" cy="100" r="3" fill="rgba(204,182,80,.45)"/>
-      <circle cx="200" cy="50" r="3" fill="rgba(204,182,80,.45)"/>
-      <polyline points="60,180 60,140 100,140 100,90 180,90 180,60 240,60"/>
-      <circle cx="100" cy="140" r="2.5" fill="rgba(80,143,203,.5)"/>
-    </g>
-  </svg>
-
-
   <div class="hub-hero-inner">
     <div class="hero-content">
       <div class="hero-text">
-        <div class="hero-bracket"></div>
-        <div class="hero-eyebrow">FIRST LEGO League · 2026/2027</div>
+        <div class="hero-eyebrow"><span class="hc-comment">// FIRST LEGO LEAGUE · 2026/2027</span></div>
+        <div class="hc-brace">{</div>
         <h1>Torneio Interno<br><span class="hero-accent">de Robótica</span></h1>
-        <p>Escola SESI Reitor Miguel Calmon</p>
+        <div class="hc-brace hc-brace--close">}</div>
+        <p class="hc-prop">
+          <span class="hc-key">escola</span><span class="hc-op"> = </span><span class="hc-str">"SESI Reitor Miguel Calmon"</span>
+        </p>
         <div class="hero-stats">
           <span class="hero-stat">
             <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
