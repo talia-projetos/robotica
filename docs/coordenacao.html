@@ -150,6 +150,30 @@
     .cat-comments-cell { font-size: .82rem; }
     .cat-bom-line { color: var(--verde); }
     .cat-ref-line { color: var(--laranja); }
+
+    /* ── Badge avaliações ────────────────────────────────────── */
+    .aval-badge { font-size: .65rem; font-weight: 700; padding: .15rem .45rem; border-radius: 100px; }
+    .aval-badge.completo { background: #F0FDF4; color: #16A34A; }
+    .aval-badge.parcial  { background: #FFF7ED; color: #D97706; }
+    .aval-badge.sem      { background: #F1F5F9; color: #94A3B8; }
+
+    /* ── Mobile ──────────────────────────────────────────────── */
+    @media (max-width: 700px) {
+      .coord-toolbar { flex-direction: column; align-items: stretch; gap: .5rem; }
+      .coord-toolbar #filtro-busca { width: 100%; box-sizing: border-box; }
+      .coord-logout { margin-left: 0; justify-content: space-between; }
+      #tab-bar { flex-wrap: nowrap !important; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; gap: 0; }
+      #tab-bar::-webkit-scrollbar { display: none; }
+      .tab-btn { flex-shrink: 0; font-size: .78rem; padding: .45rem .8rem; }
+      .eq-card__header { padding: .7rem .9rem; gap: .6rem; }
+      .eq-score-mini { display: none; }
+      .eq-score-total { border-left: none; padding-left: 0; font-size: 1rem; }
+      .detail-grid { grid-template-columns: repeat(2, 1fr); gap: .5rem; }
+      .comments-cols { grid-template-columns: 1fr; }
+      .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      #view-cat table { min-width: 520px; }
+      #view-cat thead th, #view-cat tbody td { padding: .5rem .65rem; font-size: .8rem; }
+    }
   </style>
 </head>
 <body>
@@ -303,10 +327,17 @@
       return;
     }
 
-    container.innerHTML = equipes.map(function(item, i) {
+    // Ranking dinâmico: ordena pelo total disponível (desc), sem avaliação vai ao final
+    const sorted = equipes.slice().sort(function(a, b) {
+      const ta = a.scores ? Number(a.scores.total || 0) : -1;
+      const tb = b.scores ? Number(b.scores.total || 0) : -1;
+      return tb - ta;
+    });
+
+    container.innerHTML = sorted.map(function(item, i) {
       const eq  = item.equipe;
       const sc  = item.scores;
-      const pos = sc && sc.posGeral ? sc.posGeral : (i + 1);
+      const pos = i + 1;
 
       const miniScores = sc ? SCORE_DEFS.map(function(d) {
         return `<div class="eq-score-mini">
@@ -320,6 +351,11 @@
         : '';
 
       const statusB = sc ? statusPill(sc.status) : '';
+
+      // Badge avaliações recebidas vs total (arena+proj+des+core = 4 juízes possíveis)
+      const avalCount = sc ? [sc.arena20, sc.proj20, sc.des20, sc.core20].filter(function(v){ return Number(v||0) > 0; }).length : 0;
+      const avalClass = avalCount === 4 ? 'completo' : avalCount > 0 ? 'parcial' : 'sem';
+      const avalBadge = `<span class="aval-badge ${avalClass}">${avalCount}/4 aval.</span>`;
 
       // Scores detail
       const detailScores = sc ? SCORE_DEFS.map(function(d) {
@@ -361,6 +397,7 @@
             <div class="eq-card__id">${NOMES_MAP[eq.id] || eq.id}</div>
             <div class="eq-card__nome">${eq.id}${eq.turno ? ' · ' + eq.turno : ''}</div>
           </div>
+          ${avalBadge}
           ${statusB}
           <div class="eq-card__scores">${miniScores}${totalBlock}</div>
           <span class="eq-card__arrow">▼</span>
@@ -395,10 +432,11 @@
     const posField   = catKey === 'projeto' ? 'posProj': catKey === 'design' ? 'posDes': catKey === 'core' ? 'posCore': 'posGeral';
     const jzField    = catKey === 'projeto' ? 'projJuizes': catKey === 'design' ? 'desJuizes': 'coreJuizes';
 
+    // Ranking dinâmico por score da categoria (desc), sem dados vai ao final
     const sorted = dadosEquipes.slice().sort(function(a, b) {
-      const pa = a.scores ? (a.scores[posField] || 9999) : 9999;
-      const pb = b.scores ? (b.scores[posField] || 9999) : 9999;
-      return pa - pb;
+      const sa = a.scores ? Number(a.scores[scoreField] || 0) : -1;
+      const sb = b.scores ? Number(b.scores[scoreField] || 0) : -1;
+      return sb - sa;
     });
 
     tbody.innerHTML = sorted.map(function(item, i) {
