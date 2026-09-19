@@ -71,50 +71,48 @@
       max-width: 1100px;
       width: 100%;
       margin: 0 auto;
-      padding: 3rem 2rem 3.5rem;
+      padding: 2rem 2rem 2.5rem;
       position: relative;
       z-index: 2;
     }
-    .hero-text { width: 40%; max-width: 460px; }
-    .hero-eyebrow {
-      margin-bottom: .5rem;
-    }
+    .hero-text { width: 40%; max-width: 440px; }
+    .hero-eyebrow { margin-bottom: .35rem; }
     /* ── estética de código ─────────────────────────────────── */
     .hc-comment {
       font-family: 'Consolas', 'Courier New', monospace;
-      font-size: .72rem;
+      font-size: .7rem;
       color: #6A9955;
       letter-spacing: .02em;
     }
     .hc-brace {
       font-family: 'Consolas', 'Courier New', monospace;
-      font-size: 2.2rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: #CCB650;
-      line-height: .9;
-      margin-bottom: .2rem;
-      opacity: .85;
+      line-height: 1;
+      margin-bottom: .1rem;
+      opacity: .9;
     }
     .hc-brace--close {
-      margin-top: .15rem;
-      margin-bottom: .6rem;
+      margin-top: .05rem;
+      margin-bottom: .4rem;
     }
     .hc-prop {
       font-family: 'Consolas', 'Courier New', monospace;
-      font-size: .77rem;
-      margin: 0 0 1.2rem;
-      line-height: 1.5;
+      font-size: .74rem;
+      margin: 0 0 .9rem;
+      line-height: 1.4;
     }
     .hc-key  { color: #50CCC6; }
     .hc-op   { color: rgba(255,255,255,.4); }
-    .hc-str  { color: rgba(255,255,255,.55); }
+    .hc-str  { color: rgba(255,255,255,.5); }
     .hub-hero h1 {
-      font-size: 3rem;
+      font-size: 2.6rem;
       font-weight: 900;
       color: #fff;
       letter-spacing: -.04em;
       line-height: 1.03;
-      margin: 0 0 .55rem;
+      margin: 0 0 .3rem;
     }
     .hero-accent {
       background: linear-gradient(90deg, #508FCB, #50CCC6);
@@ -190,16 +188,17 @@
     @media (max-width: 900px)  { .hero-text { width: 55%; } }
     @media (max-width: 600px)  {
       .hub-hero { aspect-ratio: 1448 / 1086; }
+      .hub-hero-inner { padding: 1.5rem 1.25rem; }
       .hero-text { width: 100%; }
-      .hub-hero h1 { font-size: 2.1rem; }
+      .hub-hero h1 { font-size: 1.9rem; }
+      .hc-brace { font-size: 1.2rem; }
       .hero-bg { object-position: center center; }
-      /* fade escuro cobrindo a imagem mobile para legibilidade do texto */
       .hub-hero::before {
         background: linear-gradient(
           to bottom,
-          rgba(9,17,28,.72) 0%,
-          rgba(9,17,28,.55) 50%,
-          rgba(9,17,28,.75) 100%
+          rgba(9,17,28,.75) 0%,
+          rgba(9,17,28,.58) 50%,
+          rgba(9,17,28,.78) 100%
         );
         -webkit-mask-image: none;
         mask-image: none;
