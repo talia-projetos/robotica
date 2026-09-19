@@ -49,7 +49,7 @@
       background: #09111C;
       position: relative;
       overflow: hidden;
-      min-height: 360px;
+      aspect-ratio: 2172 / 724;
       display: flex;
       align-items: center;
     }
@@ -189,12 +189,10 @@
     }
     @media (max-width: 900px)  { .hero-text { width: 55%; } }
     @media (max-width: 600px)  {
-      .hub-hero { min-height: 360px; }
+      .hub-hero { aspect-ratio: 1448 / 1086; }
       .hero-text { width: 100%; }
       .hub-hero h1 { font-size: 2.1rem; }
-      .hero-bg { object-position: center center; opacity: .35; }
-      .hero-circuit { width: 200px; height: 130px; }
-      .hero-script { display: none; }
+      .hero-bg { object-position: center center; }
     }
 
     /* ── Main ─────────────────────────────────────────────────── */
