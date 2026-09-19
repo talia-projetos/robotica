@@ -21,17 +21,15 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 55% 120% at 18% 50%, rgba(80,143,203,.18) 0%, transparent 55%),
-        radial-gradient(ellipse 40% 60% at 12% 80%, rgba(80,204,198,.08) 0%, transparent 50%),
         repeating-linear-gradient(
           -55deg,
           transparent 0,
           transparent 17px,
-          rgba(255,255,255,.045) 17px,
-          rgba(255,255,255,.045) 18px
+          rgba(255,255,255,.03) 17px,
+          rgba(255,255,255,.03) 18px
         );
-      -webkit-mask-image: linear-gradient(to right, black 0%, black 44%, transparent 74%);
-      mask-image: linear-gradient(to right, black 0%, black 44%, transparent 74%);
+      -webkit-mask-image: linear-gradient(to right, black 0%, black 35%, transparent 55%);
+      mask-image: linear-gradient(to right, black 0%, black 35%, transparent 55%);
       pointer-events: none;
     }
     .hub-hero-inner {
@@ -105,11 +103,9 @@
     .hero-bg {
       position: absolute;
       top: 0; right: 0; bottom: 0;
-      width: 70%;
+      width: 78%;
       object-fit: cover;
       object-position: left center;
-      -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,.4) 45%, black 72%);
-      mask-image: linear-gradient(to right, transparent 0%, rgba(0,0,0,.4) 45%, black 72%);
       z-index: 0;
     }
     .hero-tagline {
@@ -122,7 +118,10 @@
       opacity: .75;
     }
     @media (max-width: 860px) { .hero-text { width: 52%; } }
-    @media (max-width: 600px) { .hero-text { width: 100%; } .hero-bg { width: 100%; opacity: .3; } }
+    @media (max-width: 600px) {
+      .hero-text { width: 100%; }
+      .hero-bg { width: 100%; object-position: center center; opacity: .45; }
+    }
     @media (max-width: 540px) { .hub-hero h1 { font-size: 2rem; } }
 
     /* ── Main ─────────────────────────────────────────────────── */
@@ -258,7 +257,10 @@
 
 <!-- Hero -->
 <div class="hub-hero">
-  <img class="hero-bg" src="img/hero-bg.png" alt="">
+  <picture>
+    <source media="(max-width: 600px)" srcset="img/hero-mobile.png">
+    <img class="hero-bg" src="img/hero-desktop.png" alt="">
+  </picture>
   <div class="hub-hero-inner">
     <div class="hero-content">
       <div class="hero-text">
