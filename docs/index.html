@@ -50,9 +50,11 @@
       position: relative;
       overflow: hidden;
       aspect-ratio: 2172 / 724;
-      max-height: 300px;
       display: flex;
       align-items: center;
+    }
+    @media (min-width: 601px) {
+      .hub-hero { max-height: 300px; }
     }
     .hub-hero::before {
       content: '';
