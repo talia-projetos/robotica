@@ -83,7 +83,7 @@
     }
 
     /* ── Cards de formulário ──────────────────────────────────── */
-    .form-grid { display: flex; flex-direction: column; gap: .55rem; margin-bottom: 1.5rem; }
+    .form-grid { display: flex; flex-direction: column; gap: .55rem; margin-bottom: 1.5rem; width: 100%; }
     .form-card {
       background: #fff;
       border: 1px solid #E2E8F0;
@@ -93,7 +93,10 @@
       transition: box-shadow .18s, transform .18s;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 1rem;
+      width: 100%;
+      box-sizing: border-box;
     }
     .form-card:hover { box-shadow: 0 4px 16px rgba(15,23,42,.09); transform: translateY(-1px); }
     .fc-icon { width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -101,7 +104,7 @@
     .fc-body { flex: 1; min-width: 0; }
     .fc-title { font-size: .88rem; font-weight: 800; color: #0F172A; }
     .fc-desc  { font-size: .76rem; color: #64748B; margin-top: .1rem; }
-    .fc-cta   { font-size: .76rem; font-weight: 700; padding: .38rem .9rem; border-radius: 8px; white-space: nowrap; flex-shrink: 0; min-width: 148px; text-align: center; }
+    .fc-cta   { font-size: .76rem; font-weight: 700; padding: .4rem 1.1rem; border-radius: 8px; white-space: nowrap; flex-shrink: 0; width: 156px; text-align: center; box-sizing: border-box; }
 
     /* ── Ações pós-avaliação ──────────────────────────────────── */
     .sec-lbl { font-size: .67rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #94A3B8; margin-bottom: .65rem; }
