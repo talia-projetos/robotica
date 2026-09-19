@@ -44,168 +44,86 @@
       font-weight: 600;
     }
 
-    /* ── Hero ─────────────────────────────────────────────────── */
+    /* ── Hero institucional ────────────────────────────────────── */
     .hub-hero {
-      background: #09111C;
-      position: relative;
-      overflow: hidden;
-      aspect-ratio: 2172 / 724;
-      display: flex;
-      align-items: center;
+      background: linear-gradient(135deg, #070E18 0%, #0E1E30 50%, #132540 100%);
+      position: relative; overflow: hidden;
+      height: 300px; display: flex; align-items: center;
     }
-    @media (min-width: 601px) {
-      .hub-hero { aspect-ratio: unset; height: 300px; }
-    }
+    /* dot grid sutil */
     .hub-hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        -55deg,
-        transparent 0, transparent 17px,
-        rgba(255,255,255,.025) 17px, rgba(255,255,255,.025) 18px
-      );
-      -webkit-mask-image: linear-gradient(to right, black 0%, black 28%, transparent 48%);
-      mask-image: linear-gradient(to right, black 0%, black 28%, transparent 48%);
-      pointer-events: none;
-      z-index: 1;
+      content: ''; position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(80,204,198,.1) 1px, transparent 1px);
+      background-size: 30px 30px; pointer-events: none; z-index: 0;
+    }
+    /* gradiente direito mais escuro para destaque do visual */
+    .hub-hero::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to right, rgba(7,14,24,.55) 0%, transparent 55%);
+      pointer-events: none; z-index: 1;
     }
     .hub-hero-inner {
-      max-width: 1100px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 2rem 2rem 2.5rem;
-      position: relative;
-      z-index: 2;
+      max-width: 1100px; width: 100%;
+      margin: 0 auto; padding: 0 2rem;
+      position: relative; z-index: 2;
+      display: flex; align-items: center; gap: 1rem;
     }
-    .hero-text { width: 40%; max-width: 440px; }
-    .hero-eyebrow { margin-bottom: .35rem; }
-    /* ── estética de código ─────────────────────────────────── */
-    .hc-comment {
-      font-family: 'Consolas', 'Courier New', monospace;
-      font-size: .7rem;
-      color: #6A9955;
-      letter-spacing: .02em;
+    /* ── Texto esquerdo ─────────────────────────────────────── */
+    .hero-text { flex: 1; }
+    .hero-eyebrow {
+      display: flex; align-items: center; gap: .6rem;
+      font-size: .65rem; font-weight: 800;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: #CCB650; margin-bottom: .7rem;
     }
-    .hc-brace {
-      font-family: 'Consolas', 'Courier New', monospace;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: #CCB650;
-      line-height: 1;
-      margin-bottom: .1rem;
-      opacity: .9;
+    .hero-eyebrow-line {
+      display: inline-block; width: 22px; height: 1.5px;
+      background: #CCB650; flex-shrink: 0;
     }
-    .hc-brace--close {
-      margin-top: .05rem;
-      margin-bottom: .4rem;
-    }
-    .hc-prop {
-      font-family: 'Consolas', 'Courier New', monospace;
-      font-size: .74rem;
-      margin: 0 0 .9rem;
-      line-height: 1.4;
-    }
-    .hc-key  { color: #50CCC6; }
-    .hc-op   { color: rgba(255,255,255,.4); }
-    .hc-str  { color: rgba(255,255,255,.5); }
     .hub-hero h1 {
-      font-size: 2.6rem;
-      font-weight: 900;
-      color: #fff;
-      letter-spacing: -.04em;
-      line-height: 1.03;
-      margin: 0 0 .3rem;
+      font-size: 2.5rem; font-weight: 900; color: #fff;
+      letter-spacing: -.04em; line-height: 1.05; margin: 0 0 .25rem;
     }
     .hero-accent {
       background: linear-gradient(90deg, #508FCB, #50CCC6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    .hub-hero p {
-      font-size: .88rem;
-      color: rgba(255,255,255,.48);
-      margin: 0 0 1.5rem;
+    .hero-school {
+      font-size: .78rem; color: rgba(255,255,255,.42);
+      letter-spacing: .01em; margin: 0 0 1rem;
     }
-    .hero-stats { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .hero-divider {
+      width: 36px; height: 2px; border-radius: 2px;
+      background: linear-gradient(90deg, #50CCC6, #508FCB);
+      margin-bottom: .85rem;
+    }
+    .hero-stats { display: flex; gap: .4rem; flex-wrap: wrap; }
     .hero-stat {
-      display: flex; align-items: center; gap: .4rem;
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.11);
+      display: flex; align-items: center; gap: .35rem;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
       border-radius: 100px;
-      padding: .28rem .85rem .28rem .55rem;
-      font-size: .74rem; font-weight: 700;
-      color: rgba(255,255,255,.75);
+      padding: .25rem .75rem .25rem .5rem;
+      font-size: .72rem; font-weight: 700;
+      color: rgba(255,255,255,.7);
     }
-    .hero-stat svg { width:14px; height:14px; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-    .hero-stat strong { color: #fff; font-size: .88rem; margin-right: .15rem; }
-    .hero-tagline-row { display:flex; align-items:center; margin-top:1.2rem; }
-    .hero-tagline-line { display:inline-block; width:28px; height:2px; background:#50CCC6; margin-right:.6rem; vertical-align:middle; flex-shrink:0; }
-    .hero-tagline {
-      font-size: .6rem; font-weight: 800;
-      letter-spacing: .15em; text-transform: uppercase;
-      color: #50CCC6; opacity: .7;
+    .hero-stat svg { width:13px; height:13px; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .hero-stat strong { color:#fff; font-size:.85rem; margin-right:.1rem; }
+    /* ── Visual geométrico direito ──────────────────────────── */
+    .hero-visual {
+      width: 320px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: .85;
     }
-    /* imagem full-bleed */
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      object-position: right center;
-      z-index: 0;
-    }
-    /* glow de acento esquerdo */
-    .hub-hero::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 45% 90% at 5% 60%, rgba(80,143,203,.13) 0%, transparent 60%),
-        radial-gradient(ellipse 30% 50% at 18% 95%, rgba(80,204,198,.08) 0%, transparent 55%);
-      pointer-events: none;
-      z-index: 1;
-    }
-    /* vertical word overlay */
-    .hero-words {
-      position: absolute;
-      top: 50%; transform: translateY(-50%);
-      left: 42%;
-      display: flex; flex-direction: column; gap: .3rem;
-      z-index: 3; pointer-events: none;
-    }
-    .hero-words span {
-      font-size: .6rem; font-weight: 800;
-      text-transform: uppercase; letter-spacing: .12em;
-      color: rgba(255,255,255,.25);
-    }
-    /* cursive text */
-    .hero-script {
-      position: absolute; bottom: 2rem; left: 46%;
-      font-family: Georgia, serif; font-style: italic;
-      font-size: 1.15rem; color: rgba(255,255,255,.22);
-      line-height: 1.4; z-index: 3; pointer-events: none;
-      transform: rotate(-4deg);
-    }
-    @media (max-width: 900px)  { .hero-text { width: 55%; } }
-    @media (max-width: 600px)  {
-      .hub-hero { aspect-ratio: 1448 / 1086; }
-      .hub-hero-inner { padding: 1.5rem 1.25rem; }
-      .hero-text { width: 100%; }
-      .hub-hero h1 { font-size: 1.9rem; }
-      .hc-brace { font-size: 1.2rem; }
-      .hero-bg { object-position: center center; }
-      .hub-hero::before {
-        background: linear-gradient(
-          to bottom,
-          rgba(9,17,28,.75) 0%,
-          rgba(9,17,28,.58) 50%,
-          rgba(9,17,28,.78) 100%
-        );
-        -webkit-mask-image: none;
-        mask-image: none;
-      }
+    .hero-visual svg { width: 320px; height: 260px; }
+    /* ── Mobile ─────────────────────────────────────────────── */
+    @media (max-width: 900px) { .hero-visual { width: 220px; } .hero-visual svg { width:220px; } }
+    @media (max-width: 600px) {
+      .hub-hero { height: auto; padding: 1.75rem 0; }
+      .hub-hero-inner { flex-direction: column; padding: 0 1.25rem; gap: 1.25rem; }
+      .hub-hero h1 { font-size: 2rem; }
+      .hero-visual { width: 100%; } .hero-visual svg { width:100%; height:160px; }
     }
 
     /* ── Main ─────────────────────────────────────────────────── */
@@ -372,39 +290,71 @@
   </div>
 </header>
 
-<!-- Hero -->
+<!-- Hero institucional -->
 <div class="hub-hero">
-  <picture>
-    <source media="(max-width: 600px)" srcset="img/hero-mobile.png">
-    <img class="hero-bg" src="img/hero-desktop.png" alt="">
-  </picture>
-
   <div class="hub-hero-inner">
-    <div class="hero-content">
-      <div class="hero-text">
-        <div class="hero-eyebrow"><span class="hc-comment">// FIRST LEGO LEAGUE · 2026/2027</span></div>
-        <div class="hc-brace">{</div>
-        <h1>Torneio Interno<br><span class="hero-accent">de Robótica</span></h1>
-        <div class="hc-brace hc-brace--close">}</div>
-        <p class="hc-prop">
-          <span class="hc-key">escola</span><span class="hc-op"> = </span><span class="hc-str">"SESI Reitor Miguel Calmon"</span>
-        </p>
-        <div class="hero-stats">
-          <span class="hero-stat">
-            <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <strong>13</strong> equipes
-          </span>
-          <span class="hero-stat">
-            <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-            <strong>3</strong> rounds
-          </span>
-          <span class="hero-stat">
-            <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><polyline points="8 21 16 21"/><line x1="12" y1="17" x2="12" y2="21"/><path d="M7 4H17l-1 7a5 5 0 0 1-8 0L7 4z"/><path d="M7 4H2v1a6 6 0 0 0 6 6"/><path d="M17 4h5v1a6 6 0 0 1-6 6"/></svg>
-            <strong>4</strong> categorias
-          </span>
-        </div>
+
+    <!-- Texto esquerdo -->
+    <div class="hero-text">
+      <div class="hero-eyebrow">
+        <span class="hero-eyebrow-line"></span>
+        First Lego League &middot; 2026/2027
+      </div>
+      <h1>Torneio Interno<br><span class="hero-accent">de Rob&oacute;tica</span></h1>
+      <p class="hero-school">Escola SESI Reitor Miguel Calmon</p>
+      <div class="hero-divider"></div>
+      <div class="hero-stats">
+        <span class="hero-stat">
+          <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          <strong>13</strong> equipes
+        </span>
+        <span class="hero-stat">
+          <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          <strong>3</strong> rounds
+        </span>
+        <span class="hero-stat">
+          <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><polyline points="8 21 16 21"/><line x1="12" y1="17" x2="12" y2="21"/><path d="M7 4H17l-1 7a5 5 0 0 1-8 0L7 4z"/><path d="M7 4H2v1a6 6 0 0 0 6 6"/><path d="M17 4h5v1a6 6 0 0 1-6 6"/></svg>
+          <strong>4</strong> categorias
+        </span>
       </div>
     </div>
+
+    <!-- Visual geométrico direito -->
+    <div class="hero-visual" aria-hidden="true">
+      <svg viewBox="0 0 320 260" fill="none">
+        <!-- anéis concêntricos -->
+        <circle cx="160" cy="130" r="115" stroke="rgba(80,204,198,.08)" stroke-width="1"/>
+        <circle cx="160" cy="130" r="88"  stroke="rgba(80,143,203,.14)" stroke-width="1"/>
+        <circle cx="160" cy="130" r="60"  stroke="rgba(80,204,198,.22)" stroke-width="1" stroke-dasharray="8 5"/>
+        <circle cx="160" cy="130" r="34"  stroke="rgba(255,255,255,.18)" stroke-width="1"/>
+        <!-- hexágono central -->
+        <polygon points="160,100 189,117 189,151 160,168 131,151 131,117"
+          stroke="#50CCC6" stroke-width="1.4" fill="rgba(80,204,198,.06)" opacity=".65"/>
+        <!-- linhas radiais (6) -->
+        <line x1="160" y1="96"  x2="160" y2="70"  stroke="rgba(80,204,198,.35)" stroke-width="1"/>
+        <line x1="160" y1="164" x2="160" y2="190" stroke="rgba(80,204,198,.35)" stroke-width="1"/>
+        <line x1="192" y1="113" x2="213" y2="101" stroke="rgba(80,143,203,.3)" stroke-width="1"/>
+        <line x1="128" y1="147" x2="107" y2="159" stroke="rgba(80,143,203,.3)" stroke-width="1"/>
+        <line x1="192" y1="147" x2="213" y2="159" stroke="rgba(80,143,203,.25)" stroke-width="1"/>
+        <line x1="128" y1="113" x2="107" y2="101" stroke="rgba(80,143,203,.25)" stroke-width="1"/>
+        <!-- dots de acento -->
+        <circle cx="160" cy="15"  r="3"   fill="#50CCC6" opacity=".7"/>
+        <circle cx="270" cy="72"  r="2.5" fill="#CCB650" opacity=".65"/>
+        <circle cx="270" cy="188" r="2"   fill="#508FCB" opacity=".55"/>
+        <circle cx="50"  cy="72"  r="2"   fill="#50CCC6" opacity=".45"/>
+        <!-- brackets de canto -->
+        <polyline points="288,12 308,12 308,32" stroke="rgba(255,255,255,.2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <polyline points="32,248 12,248 12,228" stroke="rgba(80,204,198,.3)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- ponto central -->
+        <circle cx="160" cy="130" r="5"  fill="#50CCC6" opacity=".85"/>
+        <circle cx="160" cy="130" r="10" stroke="#50CCC6" stroke-width="1" fill="none" opacity=".4"/>
+        <!-- linhas de graduação no anel externo -->
+        <line x1="160" y1="13" x2="160" y2="22" stroke="rgba(255,255,255,.25)" stroke-width="1.5"/>
+        <line x1="258" y1="42" x2="254" y2="50" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
+        <line x1="62"  y1="42" x2="66"  y2="50" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
+      </svg>
+    </div>
+
   </div>
 </div>
 
