@@ -322,7 +322,11 @@
     .badge-year { margin-left: auto; color: rgba(255,255,255,.4); }
 
     /* ── Footer ───────────────────────────────────────────────── */
-    .hub-footer { background:#F8FAFC; border-top:1px solid #E2E8F0; padding:.9rem 2rem; }
+    .hub-footer {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
+      background:#F8FAFC; border-top:1px solid #E2E8F0; padding:.7rem 2rem;
+    }
+    .hub-main { padding-bottom: 3rem; }
     .hub-footer__inner { max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
     .hub-footer__left { display:flex; align-items:center; gap:.5rem; }
     .footer-dash { color:#CBD5E1; font-weight:300; }
