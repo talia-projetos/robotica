@@ -110,6 +110,23 @@ body {
   font-size: .8rem;
 }
 
+.btn-entrar {
+  background: #508FCB;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: .45rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  cursor: pointer;
+  font-size: .85rem;
+  font-weight: 600;
+  font-family: inherit;
+  transition: background .15s;
+}
+.btn-entrar:hover { background: #3d7ab8; }
+
 /* ── Container ────────────────────────────────────────────────── */
 .container {
   max-width: 1100px;
