@@ -93,6 +93,13 @@
       font-size: .78rem; color: rgba(255,255,255,.42);
       letter-spacing: .01em; margin: 0 0 1rem;
     }
+    .hc-comment { font-family:'Consolas','Courier New',monospace; font-size:.7rem; color:#6A9955; letter-spacing:.02em; }
+    .hc-brace { font-family:'Consolas','Courier New',monospace; font-size:1.5rem; font-weight:700; color:#CCB650; line-height:1; margin-bottom:.1rem; opacity:.9; }
+    .hc-brace--close { margin-top:.05rem; margin-bottom:.4rem; }
+    .hc-prop { font-family:'Consolas','Courier New',monospace; font-size:.74rem; margin:0 0 .9rem; line-height:1.4; }
+    .hc-key { color:#50CCC6; }
+    .hc-op  { color:rgba(255,255,255,.4); }
+    .hc-str { color:rgba(255,255,255,.5); }
     .hero-divider {
       width: 36px; height: 2px; border-radius: 2px;
       background: linear-gradient(90deg, #50CCC6, #508FCB);
@@ -116,14 +123,14 @@
       display: flex; align-items: center; justify-content: center;
       opacity: .85;
     }
-    .hero-visual svg { width: 320px; height: 260px; }
+    .hero-logo-wm { width: 280px; opacity: .09; filter: brightness(10); display:block; }
     /* ── Mobile ─────────────────────────────────────────────── */
-    @media (max-width: 900px) { .hero-visual { width: 220px; } .hero-visual svg { width:220px; } }
+    @media (max-width: 900px) { .hero-visual { width: 220px; } .hero-logo-wm { width:220px; } }
     @media (max-width: 600px) {
       .hub-hero { height: auto; padding: 1.75rem 0; }
       .hub-hero-inner { flex-direction: column; padding: 0 1.25rem; gap: 1.25rem; }
       .hub-hero h1 { font-size: 2rem; }
-      .hero-visual { width: 100%; } .hero-visual svg { width:100%; height:160px; }
+      .hero-visual { width: 100%; } .hero-logo-wm { width:100%; max-width:260px; }
     }
 
     /* ── Main ─────────────────────────────────────────────────── */
@@ -296,12 +303,11 @@
 
     <!-- Texto esquerdo -->
     <div class="hero-text">
-      <div class="hero-eyebrow">
-        <span class="hero-eyebrow-line"></span>
-        First Lego League &middot; 2026/2027
-      </div>
+      <div class="hero-eyebrow"><span class="hc-comment">// FIRST LEGO LEAGUE · 2026/2027</span></div>
+      <div class="hc-brace">{</div>
       <h1>Torneio Interno<br><span class="hero-accent">de Rob&oacute;tica</span></h1>
-      <p class="hero-school">Escola SESI Reitor Miguel Calmon</p>
+      <div class="hc-brace hc-brace--close">}</div>
+      <p class="hc-prop"><span class="hc-key">escola</span><span class="hc-op"> = </span><span class="hc-str">"SESI Reitor Miguel Calmon"</span></p>
       <div class="hero-divider"></div>
       <div class="hero-stats">
         <span class="hero-stat">
@@ -319,40 +325,9 @@
       </div>
     </div>
 
-    <!-- Visual geométrico direito -->
+    <!-- Marca d'água do logotipo -->
     <div class="hero-visual" aria-hidden="true">
-      <svg viewBox="0 0 320 260" fill="none">
-        <!-- anéis concêntricos -->
-        <circle cx="160" cy="130" r="115" stroke="rgba(80,204,198,.08)" stroke-width="1"/>
-        <circle cx="160" cy="130" r="88"  stroke="rgba(80,143,203,.14)" stroke-width="1"/>
-        <circle cx="160" cy="130" r="60"  stroke="rgba(80,204,198,.22)" stroke-width="1" stroke-dasharray="8 5"/>
-        <circle cx="160" cy="130" r="34"  stroke="rgba(255,255,255,.18)" stroke-width="1"/>
-        <!-- hexágono central -->
-        <polygon points="160,100 189,117 189,151 160,168 131,151 131,117"
-          stroke="#50CCC6" stroke-width="1.4" fill="rgba(80,204,198,.06)" opacity=".65"/>
-        <!-- linhas radiais (6) -->
-        <line x1="160" y1="96"  x2="160" y2="70"  stroke="rgba(80,204,198,.35)" stroke-width="1"/>
-        <line x1="160" y1="164" x2="160" y2="190" stroke="rgba(80,204,198,.35)" stroke-width="1"/>
-        <line x1="192" y1="113" x2="213" y2="101" stroke="rgba(80,143,203,.3)" stroke-width="1"/>
-        <line x1="128" y1="147" x2="107" y2="159" stroke="rgba(80,143,203,.3)" stroke-width="1"/>
-        <line x1="192" y1="147" x2="213" y2="159" stroke="rgba(80,143,203,.25)" stroke-width="1"/>
-        <line x1="128" y1="113" x2="107" y2="101" stroke="rgba(80,143,203,.25)" stroke-width="1"/>
-        <!-- dots de acento -->
-        <circle cx="160" cy="15"  r="3"   fill="#50CCC6" opacity=".7"/>
-        <circle cx="270" cy="72"  r="2.5" fill="#CCB650" opacity=".65"/>
-        <circle cx="270" cy="188" r="2"   fill="#508FCB" opacity=".55"/>
-        <circle cx="50"  cy="72"  r="2"   fill="#50CCC6" opacity=".45"/>
-        <!-- brackets de canto -->
-        <polyline points="288,12 308,12 308,32" stroke="rgba(255,255,255,.2)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-        <polyline points="32,248 12,248 12,228" stroke="rgba(80,204,198,.3)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-        <!-- ponto central -->
-        <circle cx="160" cy="130" r="5"  fill="#50CCC6" opacity=".85"/>
-        <circle cx="160" cy="130" r="10" stroke="#50CCC6" stroke-width="1" fill="none" opacity=".4"/>
-        <!-- linhas de graduação no anel externo -->
-        <line x1="160" y1="13" x2="160" y2="22" stroke="rgba(255,255,255,.25)" stroke-width="1.5"/>
-        <line x1="258" y1="42" x2="254" y2="50" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
-        <line x1="62"  y1="42" x2="66"  y2="50" stroke="rgba(255,255,255,.18)" stroke-width="1"/>
-      </svg>
+      <img src="logo.svg" alt="" class="hero-logo-wm">
     </div>
 
   </div>
