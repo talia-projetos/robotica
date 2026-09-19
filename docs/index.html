@@ -9,6 +9,41 @@
   <style>
     body { background: #F0F4F8; }
 
+    /* ── Topbar overrides ─────────────────────────────────────── */
+    .topbar__nav .ativo {
+      background: #508FCB;
+      color: #fff;
+      border-radius: 8px;
+      padding: .38rem 1.1rem;
+    }
+    .btn-tema {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      color: rgba(255,255,255,.7);
+      padding: .3rem .5rem;
+      line-height: 1;
+    }
+    .topbar-divider {
+      color: rgba(255,255,255,.3);
+      font-weight: 300;
+      margin: 0 .2rem;
+    }
+    .btn-entrar {
+      background: #508FCB;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: .45rem 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      cursor: pointer;
+      font-size: .85rem;
+      font-weight: 600;
+    }
+
     /* ── Hero ─────────────────────────────────────────────────── */
     .hub-hero {
       background: #09111C;
@@ -41,6 +76,13 @@
       z-index: 2;
     }
     .hero-text { width: 40%; max-width: 460px; }
+    .hero-bracket {
+      width: 16px;
+      height: 16px;
+      border-left: 2px solid #50CCC6;
+      border-top: 2px solid #50CCC6;
+      margin-bottom: .75rem;
+    }
     .hero-eyebrow {
       font-size: .68rem;
       font-weight: 800;
@@ -78,10 +120,11 @@
       font-size: .74rem; font-weight: 700;
       color: rgba(255,255,255,.75);
     }
-    .hero-stat__dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .hero-stat svg { width:14px; height:14px; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
     .hero-stat strong { color: #fff; font-size: .88rem; margin-right: .15rem; }
+    .hero-tagline-row { display:flex; align-items:center; margin-top:1.2rem; }
+    .hero-tagline-line { display:inline-block; width:28px; height:2px; background:#50CCC6; margin-right:.6rem; vertical-align:middle; flex-shrink:0; }
     .hero-tagline {
-      margin-top: 1.2rem;
       font-size: .6rem; font-weight: 800;
       letter-spacing: .15em; text-transform: uppercase;
       color: #50CCC6; opacity: .7;
@@ -114,6 +157,27 @@
       z-index: 2;
       pointer-events: none;
     }
+    /* vertical word overlay */
+    .hero-words {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      left: 42%;
+      display: flex; flex-direction: column; gap: .3rem;
+      z-index: 3; pointer-events: none;
+    }
+    .hero-words span {
+      font-size: .6rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .12em;
+      color: rgba(255,255,255,.25);
+    }
+    /* cursive text */
+    .hero-script {
+      position: absolute; bottom: 2rem; left: 46%;
+      font-family: Georgia, serif; font-style: italic;
+      font-size: 1.15rem; color: rgba(255,255,255,.22);
+      line-height: 1.4; z-index: 3; pointer-events: none;
+      transform: rotate(-4deg);
+    }
     @media (max-width: 900px)  { .hero-text { width: 55%; } }
     @media (max-width: 600px)  {
       .hub-hero { min-height: 360px; }
@@ -121,6 +185,7 @@
       .hub-hero h1 { font-size: 2.1rem; }
       .hero-bg { object-position: center center; opacity: .35; }
       .hero-circuit { width: 200px; height: 130px; }
+      .hero-script { display: none; }
     }
 
     /* ── Main ─────────────────────────────────────────────────── */
@@ -140,11 +205,11 @@
     .nav-card {
       background: #fff;
       border-radius: 18px;
-      padding: 1.5rem;
+      padding: 1.25rem 1.5rem;
       text-decoration: none;
       color: inherit;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       gap: 1rem;
       border: 1px solid #E2E8F0;
       box-shadow: 0 1px 4px rgba(15,23,42,.05);
@@ -157,9 +222,9 @@
       transform: translateY(-2px);
     }
     .nav-card__icon {
-      width: 46px;
-      height: 46px;
-      border-radius: 14px;
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -186,42 +251,69 @@
       color: #64748B;
       line-height: 1.45;
     }
-    .nav-card__arrow {
-      position: absolute;
-      bottom: 1rem;
-      right: 1rem;
-      font-size: .9rem;
-      color: #CBD5E1;
-      transition: color .18s, transform .18s;
+    /* chevron */
+    .nav-card__chevron {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: #F1F5F9;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background .18s;
     }
-    .nav-card:hover .nav-card__arrow {
-      color: var(--azul);
-      transform: translateX(3px);
-    }
+    .nav-card__chevron svg { width: 14px; height: 14px; color: #64748B; }
+    .nav-card:hover .nav-card__chevron { background: #508FCB; }
+    .nav-card:hover .nav-card__chevron svg { color: #fff; }
 
     /* card destaque (Arena) */
     .nav-card--destaque {
       background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%);
       border: none;
       color: #fff;
-      align-items: center;
     }
     .nav-card--destaque .nav-card__title { color: #fff; font-size: 1.05rem; }
     .nav-card--destaque .nav-card__desc  { color: rgba(255,255,255,.6); }
-    .nav-card--destaque .nav-card__arrow { color: rgba(255,255,255,.3); }
-    .nav-card--destaque:hover .nav-card__arrow { color: #fff; }
 
     /* card cronograma */
     .nav-card--cronograma {
       background: linear-gradient(135deg, #1A304D 0%, #244568 100%);
       border: none;
       color: #fff;
-      align-items: center;
     }
     .nav-card--cronograma .nav-card__title { color: #fff; }
     .nav-card--cronograma .nav-card__desc  { color: rgba(255,255,255,.6); }
-    .nav-card--cronograma .nav-card__arrow { color: rgba(255,255,255,.3); }
-    .nav-card--cronograma:hover .nav-card__arrow { color: #fff; }
+
+    /* chevron destaque/cronograma */
+    .nav-card--destaque .nav-card__chevron,
+    .nav-card--cronograma .nav-card__chevron { background: rgba(255,255,255,.12); }
+    .nav-card--destaque:hover .nav-card__chevron,
+    .nav-card--cronograma:hover .nav-card__chevron { background: rgba(255,255,255,.25); }
+    .nav-card--destaque .nav-card__chevron svg,
+    .nav-card--cronograma .nav-card__chevron svg { color: #fff; }
+
+    /* badge on Arena card */
+    .nav-card__badge {
+      display: flex; align-items: center; gap: .4rem;
+      margin-top: .35rem;
+      font-size: .65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em;
+      color: rgba(255,255,255,.55);
+    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #50CCC6; flex-shrink: 0; }
+    .badge-year { margin-left: auto; color: rgba(255,255,255,.4); }
+
+    /* ── Footer ───────────────────────────────────────────────── */
+    .hub-footer { background:#F8FAFC; border-top:1px solid #E2E8F0; padding:.9rem 2rem; }
+    .hub-footer__inner { max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+    .hub-footer__left { display:flex; align-items:center; gap:.5rem; }
+    .footer-dash { color:#CBD5E1; font-weight:300; }
+    .footer-brand { font-size:.72rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#1A3A52; }
+    .footer-sub { font-size:.68rem; color:#94A3B8; text-transform:uppercase; letter-spacing:.07em; }
+    .hub-footer__center { font-size:.77rem; color:#64748B; font-style:italic; text-align:center; }
+    .hub-footer__right { display:flex; align-items:center; gap:.5rem; font-size:.68rem; color:#94A3B8; text-transform:uppercase; letter-spacing:.07em; }
+    @media (max-width:700px) {
+      .hub-footer__inner { flex-direction:column; gap:.4rem; text-align:center; }
+      .hub-footer__left, .hub-footer__right { display:none; }
+    }
 
     /* ── Responsive ───────────────────────────────────────────── */
     @media (max-width: 840px) {
@@ -249,8 +341,12 @@
   </nav>
   <div class="topbar__badge">
     <span id="badge-nome" class="text-sm"></span>
-    <button class="btn btn-outline btn-sm" id="btn-sessao"
-      style="border-color:rgba(255,255,255,.3);color:#fff">Entrar</button>
+    <button id="btn-tema" class="btn-tema">&#9728;</button>
+    <span class="topbar-divider">|</span>
+    <button id="btn-sessao" class="btn-entrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Entrar
+    </button>
   </div>
 </header>
 
@@ -275,18 +371,42 @@
     </g>
   </svg>
 
+  <!-- vertical word overlay -->
+  <div class="hero-words">
+    <span>Tecnologia</span>
+    <span>Pessoas</span>
+    <span>Criatividade</span>
+    <span>Impacto</span>
+  </div>
+
+  <!-- cursive text -->
+  <div class="hero-script">Salvador<br>inspira grandes<br>ideias</div>
+
   <div class="hub-hero-inner">
     <div class="hero-content">
       <div class="hero-text">
+        <div class="hero-bracket"></div>
         <div class="hero-eyebrow">FIRST LEGO League · 2026/2027</div>
         <h1>Torneio Interno<br><span class="hero-accent">de Robótica</span></h1>
         <p>Escola SESI Reitor Miguel Calmon</p>
         <div class="hero-stats">
-          <span class="hero-stat"><span class="hero-stat__dot" style="background:#CCB650"></span><strong>13</strong> equipes</span>
-          <span class="hero-stat"><span class="hero-stat__dot" style="background:#50CCC6"></span><strong>3</strong> rounds</span>
-          <span class="hero-stat"><span class="hero-stat__dot" style="background:#508FCB"></span><strong>4</strong> categorias</span>
+          <span class="hero-stat">
+            <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <strong>13</strong> equipes
+          </span>
+          <span class="hero-stat">
+            <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            <strong>3</strong> rounds
+          </span>
+          <span class="hero-stat">
+            <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><polyline points="8 21 16 21"/><line x1="12" y1="17" x2="12" y2="21"/><path d="M7 4H17l-1 7a5 5 0 0 1-8 0L7 4z"/><path d="M7 4H2v1a6 6 0 0 0 6 6"/><path d="M17 4h5v1a6 6 0 0 1-6 6"/></svg>
+            <strong>4</strong> categorias
+          </span>
         </div>
-        <div class="hero-tagline">Ideias de hoje, soluções para amanhã</div>
+        <div class="hero-tagline-row">
+          <span class="hero-tagline-line"></span>
+          <span class="hero-tagline">Ideias de hoje, soluções para amanhã</span>
+        </div>
       </div>
     </div>
   </div>
@@ -304,8 +424,14 @@
       <div class="nav-card__body">
         <div class="nav-card__title">Arena — Telão</div>
         <div class="nav-card__desc">Pontuações ao vivo · cronômetro 2:30</div>
+        <div class="nav-card__badge">
+          <span class="badge-dot"></span> Evento em andamento
+          <span class="badge-year">FLL 2026/2027</span>
+        </div>
       </div>
-      <div class="nav-card__arrow">→</div>
+      <div class="nav-card__chevron">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
     </a>
 
     <!-- Ranking -->
@@ -317,7 +443,9 @@
         <div class="nav-card__title">Ranking Geral</div>
         <div class="nav-card__desc">Classificação por pontuação e categoria</div>
       </div>
-      <div class="nav-card__arrow">→</div>
+      <div class="nav-card__chevron">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
     </a>
 
     <!-- Minha Turma -->
@@ -329,7 +457,9 @@
         <div class="nav-card__title">Minha Turma</div>
         <div class="nav-card__desc">Professor: notas dos juízes com PIN</div>
       </div>
-      <div class="nav-card__arrow">→</div>
+      <div class="nav-card__chevron">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
     </a>
 
     <!-- Juízes -->
@@ -341,7 +471,9 @@
         <div class="nav-card__title">Juízes</div>
         <div class="nav-card__desc">Rubricas, formulários e deliberação</div>
       </div>
-      <div class="nav-card__arrow">→</div>
+      <div class="nav-card__chevron">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
     </a>
 
     <!-- Coordenação -->
@@ -353,7 +485,9 @@
         <div class="nav-card__title">Coordenação</div>
         <div class="nav-card__desc">Resultados de todas as equipes</div>
       </div>
-      <div class="nav-card__arrow">→</div>
+      <div class="nav-card__chevron">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
     </a>
 
     <!-- Cronograma — full-width -->
@@ -365,7 +499,9 @@
         <div class="nav-card__title">Cronograma do Evento</div>
         <div class="nav-card__desc">07:00 – 12:00 · avaliações, rounds e cerimônias</div>
       </div>
-      <div class="nav-card__arrow">→</div>
+      <div class="nav-card__chevron">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
     </a>
 
   </div>
@@ -384,5 +520,22 @@
     else location.href = 'deliberacao.html';
   });
 </script>
+
+<footer class="hub-footer">
+  <div class="hub-footer__inner">
+    <div class="hub-footer__left">
+      <span class="footer-dash">—</span>
+      <span class="footer-brand">SESI</span>
+      <span class="footer-sub">Educação que transforma</span>
+    </div>
+    <div class="hub-footer__center">
+      "Construindo hoje os solucionadores de amanhã."
+    </div>
+    <div class="hub-footer__right">
+      <span>Salvador · Bahia · Brasil</span>
+      <span class="footer-dash">—</span>
+    </div>
+  </div>
+</footer>
 </body>
 </html>
