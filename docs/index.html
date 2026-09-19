@@ -193,6 +193,17 @@
       .hero-text { width: 100%; }
       .hub-hero h1 { font-size: 2.1rem; }
       .hero-bg { object-position: center center; }
+      /* fade escuro cobrindo a imagem mobile para legibilidade do texto */
+      .hub-hero::before {
+        background: linear-gradient(
+          to bottom,
+          rgba(9,17,28,.72) 0%,
+          rgba(9,17,28,.55) 50%,
+          rgba(9,17,28,.75) 100%
+        );
+        -webkit-mask-image: none;
+        mask-image: none;
+      }
     }
 
     /* ── Main ─────────────────────────────────────────────────── */
