@@ -7,15 +7,8 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/styles.css?v=3">
   <style>
-    body { background: #F0F4F8; }
+    body { background: var(--fundo); }
 
-    /* ── Topbar overrides ─────────────────────────────────────── */
-    .topbar__nav .ativo {
-      background: #508FCB;
-      color: #fff;
-      border-radius: 8px;
-      padding: .38rem 1.1rem;
-    }
     .btn-tema {
       background: none;
       border: none;
@@ -32,7 +25,7 @@
     }
     /* ── Hero institucional ────────────────────────────────────── */
     .hub-hero {
-      background: linear-gradient(135deg, #070E18 0%, #0E1E30 50%, #132540 100%);
+      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 50%, var(--navy-700) 100%);
       position: relative; overflow: hidden;
       height: 300px; display: flex; align-items: center;
     }
@@ -80,7 +73,7 @@
       letter-spacing: .01em; margin: 0 0 1rem;
     }
     .hc-comment { font-family:'Consolas','Courier New',monospace; font-size:.7rem; color:#6A9955; letter-spacing:.02em; }
-    .hc-brace { font-family:'Consolas','Courier New',monospace; font-size:1.5rem; font-weight:700; color:#CCB650; line-height:1; margin-bottom:.1rem; opacity:.9; }
+    .hc-brace { font-family:'Consolas','Courier New',monospace; font-size:1.25rem; font-weight:600; color:#CCB650; line-height:1; margin-bottom:.1rem; opacity:.55; }
     .hc-brace--close { margin-top:.05rem; margin-bottom:.4rem; }
     .hc-prop { font-family:'Consolas','Courier New',monospace; font-size:.74rem; margin:0 0 .9rem; line-height:1.4; }
     .hc-key { color:#50CCC6; }
@@ -111,7 +104,7 @@
     }
     .hero-logo-wm {
       width: 840px; flex-shrink: 0;
-      opacity: .1; filter: brightness(10);
+      opacity: .07; filter: brightness(10);
       display: block; margin-left: -24px;
     }
     /* ── Tablet ──────────────────────────────────────────────── */
@@ -145,22 +138,22 @@
     }
 
     .nav-card {
-      background: #fff;
-      border-radius: 18px;
+      background: var(--surface);
+      border-radius: 16px;
       padding: 1.25rem 1.5rem;
       text-decoration: none;
       color: inherit;
       display: flex;
       align-items: center;
       gap: 1rem;
-      border: 1px solid #E2E8F0;
-      box-shadow: 0 1px 4px rgba(15,23,42,.05);
-      transition: box-shadow .18s ease, transform .18s ease;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 1px 3px rgba(15,23,42,.04);
+      transition: box-shadow .2s ease, transform .2s ease;
       position: relative;
       overflow: hidden;
     }
     .nav-card:hover {
-      box-shadow: 0 8px 32px rgba(15,23,42,.13);
+      box-shadow: 0 6px 20px rgba(15,23,42,.09);
       transform: translateY(-2px);
     }
     .nav-card__icon {
@@ -182,29 +175,30 @@
     }
     .nav-card__body { flex: 1; min-width: 0; }
     .nav-card__title {
-      font-size: .96rem;
-      font-weight: 800;
-      color: #0F172A;
+      font-size: .94rem;
+      font-weight: 700;
+      color: var(--text-primary);
       margin-bottom: .25rem;
       letter-spacing: -.01em;
     }
     .nav-card__desc {
       font-size: .79rem;
-      color: #64748B;
+      color: var(--text-secondary);
       line-height: 1.45;
     }
     /* chevron */
     .nav-card__chevron {
-      width: 32px; height: 32px;
+      width: 28px; height: 28px;
       border-radius: 50%;
-      background: #F1F5F9;
+      background: transparent;
+      border: 1px solid var(--border-subtle);
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      transition: background .18s;
+      transition: background .2s, border-color .2s;
     }
-    .nav-card__chevron svg { width: 14px; height: 14px; color: #64748B; }
-    .nav-card:hover .nav-card__chevron { background: #508FCB; }
-    .nav-card:hover .nav-card__chevron svg { color: #fff; }
+    .nav-card__chevron svg { width: 13px; height: 13px; color: #94A3B8; }
+    .nav-card:hover .nav-card__chevron { background: var(--azul-lt); border-color: transparent; }
+    .nav-card:hover .nav-card__chevron svg { color: var(--azul); }
 
     /* card destaque (Arena) */
     .nav-card--destaque {
@@ -215,22 +209,10 @@
     .nav-card--destaque .nav-card__title { color: #fff; font-size: 1.05rem; }
     .nav-card--destaque .nav-card__desc  { color: rgba(255,255,255,.6); }
 
-    /* card cronograma */
-    .nav-card--cronograma {
-      background: linear-gradient(135deg, #1A304D 0%, #244568 100%);
-      border: none;
-      color: #fff;
-    }
-    .nav-card--cronograma .nav-card__title { color: #fff; }
-    .nav-card--cronograma .nav-card__desc  { color: rgba(255,255,255,.6); }
-
-    /* chevron destaque/cronograma */
-    .nav-card--destaque .nav-card__chevron,
-    .nav-card--cronograma .nav-card__chevron { background: rgba(255,255,255,.12); }
-    .nav-card--destaque:hover .nav-card__chevron,
-    .nav-card--cronograma:hover .nav-card__chevron { background: rgba(255,255,255,.25); }
-    .nav-card--destaque .nav-card__chevron svg,
-    .nav-card--cronograma .nav-card__chevron svg { color: #fff; }
+    /* chevron destaque */
+    .nav-card--destaque .nav-card__chevron { background: rgba(255,255,255,.12); border: none; }
+    .nav-card--destaque:hover .nav-card__chevron { background: rgba(255,255,255,.22); }
+    .nav-card--destaque .nav-card__chevron svg { color: #fff; }
 
     /* badge on Arena card */
     .nav-card__badge {
@@ -246,7 +228,7 @@
     /* ── Footer ───────────────────────────────────────────────── */
     .hub-footer {
       position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
-      background:#F8FAFC; border-top:1px solid #E2E8F0; padding:.7rem 2rem;
+      background: var(--surface-subtle); border-top: 1px solid var(--border-subtle); padding: .7rem 2rem;
     }
     .hub-main { padding-bottom: 3rem; }
     .hub-footer__inner { max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
@@ -352,7 +334,7 @@
 
     <!-- Ranking -->
     <a href="ranking.html" class="nav-card">
-      <div class="nav-card__icon" style="background:#EFF6FF">
+      <div class="nav-card__icon" style="background:#EBF1F9">
         <svg viewBox="0 0 24 24" stroke="#4C80B2"><polyline points="18 20 18 10"/><polyline points="12 20 12 4"/><polyline points="6 20 6 14"/></svg>
       </div>
       <div class="nav-card__body">
@@ -366,7 +348,7 @@
 
     <!-- Minha Turma -->
     <a href="turma.html" class="nav-card">
-      <div class="nav-card__icon" style="background:#F0FDF4">
+      <div class="nav-card__icon" style="background:#EDF7F1">
         <svg viewBox="0 0 24 24" stroke="#27AE60"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
       </div>
       <div class="nav-card__body">
@@ -380,7 +362,7 @@
 
     <!-- Juízes -->
     <a href="juizes.html" class="nav-card">
-      <div class="nav-card__icon" style="background:#FFF7ED">
+      <div class="nav-card__icon" style="background:#FAF2E8">
         <svg viewBox="0 0 24 24" stroke="#F2994A"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
       <div class="nav-card__body">
@@ -394,7 +376,7 @@
 
     <!-- Coordenação -->
     <a href="coordenacao.html" class="nav-card">
-      <div class="nav-card__icon" style="background:#F5F0FF">
+      <div class="nav-card__icon" style="background:#EEE9FA">
         <svg viewBox="0 0 24 24" stroke="#8E5BD9"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
       </div>
       <div class="nav-card__body">
@@ -408,8 +390,8 @@
 
     <!-- Cronograma — full-width -->
     <a href="cronograma.html" class="nav-card nav-card--cronograma">
-      <div class="nav-card__icon" style="background:rgba(255,255,255,.12)">
-        <svg viewBox="0 0 24 24" stroke="white"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="8" y2="18"/></svg>
+      <div class="nav-card__icon" style="background:#EEF2F7">
+        <svg viewBox="0 0 24 24" stroke="#1A3A52"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="8" y2="18"/></svg>
       </div>
       <div class="nav-card__body">
         <div class="nav-card__title">Cronograma do Evento</div>
