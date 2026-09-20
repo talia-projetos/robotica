@@ -617,15 +617,18 @@
       { key:'Comunicação',        campos:['proj20','des20'],color:'#F2994A' }
     ];
 
-    // Médias por competência
+    // Média de um campo entre todas as equipes com dados
     function avg(campo) {
-      var vals = equipes.map(function(e){ return e.scores ? Number(e.scores[campo]||0) : 0; });
-      return vals.length ? vals.reduce(function(a,b){return a+b;},0) / vals.length : 0;
+      var com = equipes.filter(function(e){ return e.scores; });
+      if (!com.length) return 0;
+      return com.reduce(function(a,e){ return a + Number(e.scores[campo]||0); }, 0) / com.length;
     }
 
     // ── KPI tiles ─────────────────────────────────────────────
     var steamAvgs = STEAM.map(function(c){ return Object.assign({},c,{avg:avg(c.key)}); });
-    var idxPct = steamAvgs.reduce(function(a,c){return a+c.avg;},0) / (4*20) * 100;
+    // Índice STEAM = média do total (0–100 pts, 5 categorias × 20)
+    var idxPct = avg('total');
+    var nTotal = equipes.filter(function(e){ return e.scores; }).length;
 
     document.getElementById('steam-kpis').innerHTML =
       steamAvgs.map(function(c){
@@ -639,8 +642,8 @@
       }).join('')
       +'<div class="steam-kpi steam-kpi--idx">'
       +'<div class="steam-kpi__label" style="color:#8A6A00">Índice STEAM</div>'
-      +'<div class="steam-kpi__val" style="color:#8A6A00">'+idxPct.toFixed(0)+'<span class="steam-kpi__unit">%</span></div>'
-      +'<div class="steam-kpi__sub">Desempenho global</div>'
+      +'<div class="steam-kpi__val" style="color:#8A6A00">'+idxPct.toFixed(1)+'<span class="steam-kpi__unit">/100</span></div>'
+      +'<div class="steam-kpi__sub">Média total · '+nTotal+' equipes avaliadas</div>'
       +'<div class="steam-bar__track"><div class="steam-bar__fill" style="width:'+idxPct+'%;background:#C9A227"></div></div>'
       +'</div>';
 
