@@ -157,6 +157,47 @@
     .aval-badge.parcial  { background: #FFF7ED; color: #D97706; }
     .aval-badge.sem      { background: #F1F5F9; color: #94A3B8; }
 
+    /* ── Indicadores Educacionais STEAM ─────────────────────── */
+    .steam-kpis { display: grid; grid-template-columns: repeat(5,1fr); gap: .75rem; margin-bottom: 1.25rem; }
+    .steam-kpi { background: var(--branco); border: 1.5px solid var(--cinza); border-radius: 12px; padding: .9rem 1.1rem; }
+    .steam-kpi--idx { border-color: #C9A227; background: #FFFBEE; }
+    .steam-kpi__label { font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .3rem; }
+    .steam-kpi__val { font-size: 1.45rem; font-weight: 900; color: var(--marinho); letter-spacing: -.03em; line-height: 1.05; }
+    .steam-kpi__unit { font-size: .72rem; font-weight: 600; color: var(--texto-sm); margin-left: .05rem; }
+    .steam-kpi__sub { font-size: .64rem; color: var(--texto-sm); margin: .2rem 0 .55rem; }
+    .steam-bar__track { height: 5px; border-radius: 3px; background: var(--fundo); overflow: hidden; }
+    .steam-bar__fill  { height: 100%; border-radius: 3px; transition: width .5s ease; }
+    .steam-matrix-wrap { background: var(--branco); border: 1.5px solid var(--cinza); border-radius: 12px; overflow: hidden; margin-bottom: 1.25rem; }
+    .steam-matrix-title { font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; color: var(--marinho); padding: .85rem 1.1rem .6rem; border-bottom: 1.5px solid var(--cinza); display:flex; align-items:center; justify-content:space-between; }
+    .steam-matrix-desc { font-size:.65rem; font-weight:500; text-transform:none; letter-spacing:0; color:var(--texto-sm); }
+    .steam-mhdr, .steam-mrow { display: grid; grid-template-columns: 108px 1fr 1fr 1fr 1fr 64px; padding: .38rem 1rem; align-items: center; }
+    .steam-mhdr { background: var(--fundo); border-bottom: 1px solid var(--cinza); }
+    .steam-col-head { font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+    .steam-mrow { border-bottom: 1px solid #F1F5F9; transition: background .1s; }
+    .steam-mrow:last-child { border-bottom: none; }
+    .steam-mrow:hover { background: #F8FBFF; }
+    .steam-row__id-main { font-size: .78rem; font-weight: 800; color: var(--marinho); }
+    .steam-row__id-sub  { font-size: .61rem; color: var(--texto-sm); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .steam-cell { padding: 0 .35rem; }
+    .steam-cell__track { height: 6px; border-radius: 3px; background: var(--fundo); overflow: hidden; margin-bottom: .15rem; }
+    .steam-cell__fill  { height: 100%; border-radius: 3px; }
+    .steam-cell__val   { font-size: .63rem; font-weight: 700; }
+    .steam-lower { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .steam-panel { background: var(--branco); border: 1.5px solid var(--cinza); border-radius: 12px; padding: 1rem 1.25rem; }
+    .steam-section-title { font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; color: var(--marinho); }
+    .steam-panel-sub { font-size: .68rem; color: var(--texto-sm); margin: .15rem 0 .9rem; }
+    .bloom-row { display: flex; align-items: center; gap: .7rem; margin-bottom: .45rem; }
+    .bloom-label { font-size: .72rem; font-weight: 600; color: var(--texto); min-width: 110px; }
+    .bloom-track { flex: 1; height: 8px; border-radius: 4px; background: var(--fundo); overflow: hidden; }
+    .bloom-fill  { height: 100%; border-radius: 4px; transition: width .5s ease; }
+    .bloom-count { font-size: .75rem; font-weight: 800; min-width: 36px; text-align: right; }
+    .bloom-note  { font-size: .62rem; color: var(--texto-sm); margin-top: .85rem; font-style: italic; }
+    @media (max-width: 700px) {
+      .steam-kpis { grid-template-columns: repeat(2,1fr); }
+      .steam-lower { grid-template-columns: 1fr; }
+      .steam-mhdr, .steam-mrow { grid-template-columns: 80px 1fr 1fr 1fr 1fr 48px; padding: .35rem .6rem; }
+    }
+
     /* ── Mobile ──────────────────────────────────────────────── */
     @media (max-width: 700px) {
       .coord-toolbar { flex-direction: column; align-items: stretch; gap: .5rem; }
@@ -225,6 +266,7 @@
         <button class="tab-btn" onclick="mudarTab('projeto')">Projeto</button>
         <button class="tab-btn" onclick="mudarTab('design')">Design</button>
         <button class="tab-btn" onclick="mudarTab('core')">Core Values</button>
+        <button class="tab-btn" onclick="mudarTab('indicadores')" style="color:#7157C7">Indicadores STEAM</button>
       </div>
       <input id="filtro-busca" type="search" placeholder="Buscar equipe…" oninput="filtrar()" style="min-width:160px">
       <div class="coord-logout">
@@ -245,6 +287,23 @@
           <thead id="cat-thead"></thead>
           <tbody id="cat-tbody"></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- Vista: Indicadores Educacionais STEAM -->
+    <div id="view-indicadores" class="hidden">
+      <div class="steam-kpis" id="steam-kpis"></div>
+      <div class="steam-matrix-wrap">
+        <div class="steam-matrix-title">
+          Competências por Equipe
+          <span class="steam-matrix-desc">Mapeamento FLL → STEAM · barra = % do máximo (20 pts)</span>
+        </div>
+        <div class="steam-mhdr" id="steam-mhdr"></div>
+        <div id="steam-mbody"></div>
+      </div>
+      <div class="steam-lower">
+        <div class="steam-panel" id="bloom-panel"></div>
+        <div class="steam-panel" id="cs4-panel"></div>
       </div>
     </div>
 
@@ -295,14 +354,15 @@
   // ── Tabs ──────────────────────────────────────────────────────
   function mudarTab(tab) {
     tabAtual = tab;
+    var prefixes = { todas:'todas', projeto:'proj', design:'des', core:'core', indicadores:'indic' };
     document.querySelectorAll('.tab-btn').forEach(function(b) {
-      b.classList.toggle('ativo', b.textContent.trim().toLowerCase().startsWith(
-        tab === 'todas' ? 'todas' : tab === 'projeto' ? 'proj' : tab === 'design' ? 'des' : 'core'
-      ));
+      b.classList.toggle('ativo', b.textContent.trim().toLowerCase().startsWith(prefixes[tab] || tab));
     });
     document.getElementById('view-todas').classList.toggle('hidden', tab !== 'todas');
-    document.getElementById('view-cat').classList.toggle('hidden', tab === 'todas');
-    if (tab !== 'todas') renderCat(tab);
+    document.getElementById('view-cat').classList.toggle('hidden', tab !== 'projeto' && tab !== 'design' && tab !== 'core');
+    document.getElementById('view-indicadores').classList.toggle('hidden', tab !== 'indicadores');
+    if (tab === 'projeto' || tab === 'design' || tab === 'core') renderCat(tab);
+    if (tab === 'indicadores') renderIndicadores();
   }
 
   // ── Filtro ─────────────────────────────────────────────────────
@@ -536,6 +596,147 @@
   }
 
   tentarResumir();
+
+  // ── Indicadores Educacionais STEAM ─────────────────────────────
+  function renderIndicadores() {
+    var equipes = dadosEquipes;
+
+    // Mapeamento FLL → STEAM
+    var STEAM = [
+      { key:'proj20',  label:'Ciência e Inovação', abbr:'Ciência',   desc:'Projeto de Inovação', color:'#8E5BD9', bg:'#F5F0FF' },
+      { key:'arena20', label:'Tecnologia',          abbr:'Tecnol.',   desc:'Missões do Robô',     color:'#2F80ED', bg:'#EFF6FF' },
+      { key:'des20',   label:'Engenharia',           abbr:'Engenh.',  desc:'Design do Robô',      color:'#F2994A', bg:'#FFF7EE' },
+      { key:'core20',  label:'Colaboração',          abbr:'Colab.',   desc:'Core Values',          color:'#27AE60', bg:'#F0FBF4' }
+    ];
+
+    // 4Cs do século XXI
+    var CS4 = [
+      { key:'Criatividade',       campos:['proj20'],        color:'#8E5BD9' },
+      { key:'Pensamento Crítico', campos:['arena20'],       color:'#2F80ED' },
+      { key:'Colaboração',        campos:['core20'],        color:'#27AE60' },
+      { key:'Comunicação',        campos:['proj20','des20'],color:'#F2994A' }
+    ];
+
+    // Médias por competência
+    function avg(campo) {
+      var vals = equipes.map(function(e){ return e.scores ? Number(e.scores[campo]||0) : 0; });
+      return vals.length ? vals.reduce(function(a,b){return a+b;},0) / vals.length : 0;
+    }
+
+    // ── KPI tiles ─────────────────────────────────────────────
+    var steamAvgs = STEAM.map(function(c){ return Object.assign({},c,{avg:avg(c.key)}); });
+    var idxPct = steamAvgs.reduce(function(a,c){return a+c.avg;},0) / (4*20) * 100;
+
+    document.getElementById('steam-kpis').innerHTML =
+      steamAvgs.map(function(c){
+        var pct = (c.avg/20)*100;
+        return '<div class="steam-kpi">'
+          +'<div class="steam-kpi__label" style="color:'+c.color+'">'+c.label+'</div>'
+          +'<div class="steam-kpi__val">'+c.avg.toFixed(1)+'<span class="steam-kpi__unit">/20</span></div>'
+          +'<div class="steam-kpi__sub">'+c.desc+'</div>'
+          +'<div class="steam-bar__track"><div class="steam-bar__fill" style="width:'+pct+'%;background:'+c.color+'"></div></div>'
+          +'</div>';
+      }).join('')
+      +'<div class="steam-kpi steam-kpi--idx">'
+      +'<div class="steam-kpi__label" style="color:#8A6A00">Índice STEAM</div>'
+      +'<div class="steam-kpi__val" style="color:#8A6A00">'+idxPct.toFixed(0)+'<span class="steam-kpi__unit">%</span></div>'
+      +'<div class="steam-kpi__sub">Desempenho global</div>'
+      +'<div class="steam-bar__track"><div class="steam-bar__fill" style="width:'+idxPct+'%;background:#C9A227"></div></div>'
+      +'</div>';
+
+    // ── Cabeçalho da matriz ────────────────────────────────────
+    document.getElementById('steam-mhdr').innerHTML =
+      '<div class="steam-col-head" style="color:var(--texto-sm)">Equipe</div>'
+      +STEAM.map(function(c){
+        return '<div class="steam-col-head" style="color:'+c.color+'">'+c.abbr+'</div>';
+      }).join('')
+      +'<div class="steam-col-head" style="color:#8A6A00">Total</div>';
+
+    // ── Linhas da matriz (ordenadas por total desc) ────────────
+    var sorted = equipes.slice().sort(function(a,b){
+      return (b.scores?Number(b.scores.total||0):-1) - (a.scores?Number(a.scores.total||0):-1);
+    });
+
+    document.getElementById('steam-mbody').innerHTML = sorted.map(function(item){
+      var sc   = item.scores;
+      var nome = NOMES_MAP[item.equipe.id] || item.equipe.id;
+      var apelido = nome.indexOf('·') > -1 ? nome.split('·')[1].trim() : '';
+      var cells = STEAM.map(function(cat){
+        var val = sc ? Number(sc[cat.key]||0) : 0;
+        var pct = (val/20)*100;
+        return '<div class="steam-cell" title="'+cat.label+': '+val.toFixed(1)+'/20">'
+          +'<div class="steam-cell__track"><div class="steam-cell__fill" style="width:'+pct+'%;background:'+cat.color+'"></div></div>'
+          +'<div class="steam-cell__val" style="color:'+cat.color+'">'+(val>0?val.toFixed(1):'—')+'</div>'
+          +'</div>';
+      }).join('');
+      var total = sc ? Number(sc.total||0) : 0;
+      var tpct  = Math.min(100, total);
+      return '<div class="steam-mrow">'
+        +'<div><div class="steam-row__id-main">'+item.equipe.id+'</div><div class="steam-row__id-sub">'+apelido+'</div></div>'
+        +cells
+        +'<div class="steam-cell" title="Total: '+total.toFixed(1)+' pts">'
+        +'<div class="steam-cell__track"><div class="steam-cell__fill" style="width:'+tpct+'%;background:#C9A227"></div></div>'
+        +'<div class="steam-cell__val" style="color:#8A6A00;font-weight:800">'+(total>0?total.toFixed(1):'—')+'</div>'
+        +'</div></div>';
+    }).join('');
+
+    // ── Taxonomia de Bloom ─────────────────────────────────────
+    var BLOOM = [
+      { label:'Criar',       min:80, color:'#8E5BD9' },
+      { label:'Avaliar',     min:60, color:'#2F80ED' },
+      { label:'Analisar',    min:40, color:'#27AE60' },
+      { label:'Aplicar',     min:20, color:'#F2994A' },
+      { label:'Compreender', min:0,  color:'#94A3B8' }
+    ];
+    var bloomCounts = BLOOM.map(function(l){ return Object.assign({},l,{n:0}); });
+    var comDados = equipes.filter(function(e){ return e.scores; });
+    comDados.forEach(function(e){
+      var t = Number(e.scores.total||0);
+      for(var i=0;i<BLOOM.length;i++){
+        if(t>=BLOOM[i].min){ bloomCounts[i].n++; break; }
+      }
+    });
+    var total = comDados.length || 1;
+
+    document.getElementById('bloom-panel').innerHTML =
+      '<div class="steam-section-title">Taxonomia de Bloom</div>'
+      +'<div class="steam-panel-sub">Nível cognitivo predominante por equipe</div>'
+      +bloomCounts.map(function(l){
+        var pct = (l.n/total)*100;
+        return '<div class="bloom-row">'
+          +'<div class="bloom-label">'+l.label+'</div>'
+          +'<div class="bloom-track"><div class="bloom-fill" style="width:'+pct+'%;background:'+l.color+'"></div></div>'
+          +'<div class="bloom-count" style="color:'+l.color+'">'+l.n+' eq.</div>'
+          +'</div>';
+      }).join('')
+      +'<div class="bloom-note">Baseado na pontuação total (0–100 pts). '
+      +'Escala: Compreender &lt;20 · Aplicar 20–40 · Analisar 40–60 · Avaliar 60–80 · Criar &gt;80</div>';
+
+    // ── 4Cs do Século XXI ──────────────────────────────────────
+    var cs4Data = CS4.map(function(skill){
+      var vals = equipes.map(function(e){
+        if(!e.scores) return 0;
+        var s = skill.campos.reduce(function(a,k){return a+Number(e.scores[k]||0);},0);
+        return s/skill.campos.length;
+      });
+      var a = vals.reduce(function(a,b){return a+b;},0)/(vals.length||1);
+      return Object.assign({},skill,{avg:a});
+    });
+
+    document.getElementById('cs4-panel').innerHTML =
+      '<div class="steam-section-title">Competências do Século XXI</div>'
+      +'<div class="steam-panel-sub">Média das equipes por habilidade (4Cs) · BNCC comp. 1, 2, 4 e 5</div>'
+      +cs4Data.map(function(c){
+        var pct = (c.avg/20)*100;
+        return '<div class="bloom-row">'
+          +'<div class="bloom-label">'+c.key+'</div>'
+          +'<div class="bloom-track"><div class="bloom-fill" style="width:'+pct+'%;background:'+c.color+'"></div></div>'
+          +'<div class="bloom-count" style="color:'+c.color+'">'+c.avg.toFixed(1)+'</div>'
+          +'</div>';
+      }).join('')
+      +'<div class="bloom-note">Criatividade → Projeto · Pensamento Crítico → Arena · '
+      +'Colaboração → Core Values · Comunicação → média Projeto + Design</div>';
+  }
 </script>
 </body>
 </html>
