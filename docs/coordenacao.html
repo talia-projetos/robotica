@@ -158,7 +158,7 @@
     .aval-badge.sem      { background: #F1F5F9; color: #94A3B8; }
 
     /* ── Indicadores Educacionais STEAM ─────────────────────── */
-    .steam-kpis { display: grid; grid-template-columns: repeat(5,1fr); gap: .75rem; margin-bottom: 1.25rem; }
+    .steam-kpis { display: grid; grid-template-columns: repeat(6,1fr); gap: .75rem; margin-bottom: 1.25rem; }
     .steam-kpi { background: var(--branco); border: 1.5px solid var(--cinza); border-radius: 12px; padding: .9rem 1.1rem; }
     .steam-kpi--idx { border-color: #C9A227; background: #FFFBEE; }
     .steam-kpi__label { font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .3rem; }
@@ -170,7 +170,7 @@
     .steam-matrix-wrap { background: var(--branco); border: 1.5px solid var(--cinza); border-radius: 12px; overflow: hidden; margin-bottom: 1.25rem; }
     .steam-matrix-title { font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; color: var(--marinho); padding: .85rem 1.1rem .6rem; border-bottom: 1.5px solid var(--cinza); display:flex; align-items:center; justify-content:space-between; }
     .steam-matrix-desc { font-size:.65rem; font-weight:500; text-transform:none; letter-spacing:0; color:var(--texto-sm); }
-    .steam-mhdr, .steam-mrow { display: grid; grid-template-columns: 108px 1fr 1fr 1fr 1fr 64px; padding: .38rem 1rem; align-items: center; }
+    .steam-mhdr, .steam-mrow { display: grid; grid-template-columns: 108px 1fr 1fr 1fr 1fr 1fr 64px; padding: .38rem 1rem; align-items: center; }
     .steam-mhdr { background: var(--fundo); border-bottom: 1px solid var(--cinza); }
     .steam-col-head { font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
     .steam-mrow { border-bottom: 1px solid #F1F5F9; transition: background .1s; }
@@ -192,10 +192,13 @@
     .bloom-fill  { height: 100%; border-radius: 4px; transition: width .5s ease; }
     .bloom-count { font-size: .75rem; font-weight: 800; min-width: 36px; text-align: right; }
     .bloom-note  { font-size: .62rem; color: var(--texto-sm); margin-top: .85rem; font-style: italic; }
+    @media (max-width: 900px) {
+      .steam-kpis { grid-template-columns: repeat(3,1fr); }
+    }
     @media (max-width: 700px) {
       .steam-kpis { grid-template-columns: repeat(2,1fr); }
       .steam-lower { grid-template-columns: 1fr; }
-      .steam-mhdr, .steam-mrow { grid-template-columns: 80px 1fr 1fr 1fr 1fr 48px; padding: .35rem .6rem; }
+      .steam-mhdr, .steam-mrow { grid-template-columns: 78px 1fr 1fr 1fr 1fr 1fr 44px; padding: .3rem .5rem; }
     }
 
     /* ── Mobile ──────────────────────────────────────────────── */
@@ -603,18 +606,20 @@
 
     // Mapeamento FLL → STEAM
     var STEAM = [
-      { key:'proj20',  label:'Ciência e Inovação', abbr:'Ciência',   desc:'Projeto de Inovação', color:'#8E5BD9', bg:'#F5F0FF' },
-      { key:'arena20', label:'Tecnologia',          abbr:'Tecnol.',   desc:'Missões do Robô',     color:'#2F80ED', bg:'#EFF6FF' },
-      { key:'des20',   label:'Engenharia',           abbr:'Engenh.',  desc:'Design do Robô',      color:'#F2994A', bg:'#FFF7EE' },
-      { key:'core20',  label:'Colaboração',          abbr:'Colab.',   desc:'Core Values',          color:'#27AE60', bg:'#F0FBF4' }
+      { key:'proj20',  label:'Ciência e Inovação', abbr:'Ciência',    desc:'Projeto de Inovação',              color:'#8E5BD9' },
+      { key:'arena20', label:'Tecnologia',          abbr:'Tecnol.',    desc:'Missões do Robô',                  color:'#2F80ED' },
+      { key:'des20',   label:'Engenharia',           abbr:'Engenh.',   desc:'Design do Robô',                   color:'#F2994A' },
+      { key:'core20',  label:'Colaboração',          abbr:'Colab.',    desc:'Core Values',                      color:'#27AE60' },
+      { key:'tamp20',  label:'Sustentabilidade',     abbr:'Sustent.',  desc:'Tampinhas · Educação Ambiental',   color:'#0D9488' }
     ];
 
-    // 4Cs do século XXI
+    // 4Cs do século XXI + Responsabilidade Socioambiental
     var CS4 = [
-      { key:'Criatividade',       campos:['proj20'],        color:'#8E5BD9' },
-      { key:'Pensamento Crítico', campos:['arena20'],       color:'#2F80ED' },
-      { key:'Colaboração',        campos:['core20'],        color:'#27AE60' },
-      { key:'Comunicação',        campos:['proj20','des20'],color:'#F2994A' }
+      { key:'Criatividade',             campos:['proj20'],         color:'#8E5BD9' },
+      { key:'Pensamento Crítico',       campos:['arena20'],        color:'#2F80ED' },
+      { key:'Colaboração',              campos:['core20'],         color:'#27AE60' },
+      { key:'Comunicação',              campos:['proj20','des20'], color:'#F2994A' },
+      { key:'Resp. Socioambiental',     campos:['tamp20'],         color:'#0D9488' }
     ];
 
     // Média de um campo entre todas as equipes com dados
@@ -738,7 +743,7 @@
           +'</div>';
       }).join('')
       +'<div class="bloom-note">Criatividade → Projeto · Pensamento Crítico → Arena · '
-      +'Colaboração → Core Values · Comunicação → média Projeto + Design</div>';
+      +'Colaboração → Core Values · Comunicação → Projeto + Design · Resp. Socioambiental → Tampinhas</div>';
   }
 </script>
 </body>
