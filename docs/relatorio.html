@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ficha Individual — HUB Robótica</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>window.API_URL='https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';</script>
+  <style>
+    /* ── Base ──────────────────────────────────────────────── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #F4F7FB;
+      color: #1F2A3A;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* ── Toolbar (somente tela) ────────────────────────────── */
+    .toolbar {
+      background: #19324D;
+      padding: .75rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .toolbar a {
+      color: rgba(255,255,255,.65);
+      text-decoration: none;
+      font-size: .8rem;
+      font-weight: 600;
+    }
+    .toolbar a:hover { color: #fff; }
+    .toolbar__sep { color: rgba(255,255,255,.25); }
+    .toolbar__title {
+      font-size: .85rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: .02em;
+    }
+    .toolbar__right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+    }
+    .tb-select {
+      padding: .4rem .8rem;
+      border-radius: 8px;
+      border: 1.5px solid rgba(255,255,255,.2);
+      background: rgba(255,255,255,.08);
+      color: #fff;
+      font-size: .83rem;
+      font-family: inherit;
+      cursor: pointer;
+      min-width: 220px;
+    }
+    .tb-select option { background: #19324D; }
+    .tb-btn {
+      padding: .42rem 1rem;
+      border-radius: 8px;
+      border: none;
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .tb-btn--print { background: #50CCC6; color: #0D3D3A; }
+    .tb-btn--print:hover { background: #38b5af; }
+    .tb-btn--outline { background: rgba(255,255,255,.1); color: #fff; border: 1.5px solid rgba(255,255,255,.2); }
+
+    /* ── Login ─────────────────────────────────────────────── */
+    .login-wrap {
+      max-width: 400px;
+      margin: 4rem auto;
+      background: #fff;
+      border-radius: 14px;
+      padding: 2rem;
+      box-shadow: 0 4px 24px rgba(25,50,77,.1);
+      border: 1.5px solid #DDE5EE;
+    }
+    .login-wrap h2 { font-size: 1.15rem; font-weight: 800; color: #19324D; margin-bottom: .25rem; }
+    .login-wrap p  { font-size: .85rem; color: #66758A; margin-bottom: 1.25rem; }
+    .field { margin-bottom: .85rem; }
+    .field label { display: block; font-size: .78rem; font-weight: 700; color: #1F2A3A; margin-bottom: .3rem; }
+    .field input {
+      width: 100%; padding: .5rem .75rem;
+      border: 1.5px solid #DDE5EE; border-radius: 8px;
+      font-family: inherit; font-size: .875rem;
+    }
+    .btn-login {
+      width: 100%; padding: .6rem;
+      background: #19324D; color: #fff;
+      border: none; border-radius: 8px;
+      font-size: .9rem; font-weight: 700; font-family: inherit;
+      cursor: pointer; margin-top: .5rem;
+    }
+    .btn-login:hover { background: #0F1E2E; }
+    .login-err { font-size: .82rem; color: #DC2626; margin-top: .5rem; display: none; }
+    .spinner-sm { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Área do relatório ─────────────────────────────────── */
+    .report-area { max-width: 760px; margin: 1.5rem auto 3rem; padding: 0 1rem; }
+
+    /* ── FICHA INDIVIDUAL ──────────────────────────────────── */
+    .ficha {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 24px rgba(25,50,77,.09);
+      overflow: hidden;
+    }
+
+    /* Cabeçalho com logo */
+    .ficha-header {
+      background: #19324D;
+      padding: 1.1rem 1.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .ficha-header img {
+      height: 52px;
+      flex-shrink: 0;
+    }
+    .ficha-header-text { flex: 1; }
+    .ficha-header-doc {
+      font-size: .58rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.5);
+      margin-bottom: .2rem;
+    }
+    .ficha-header-title {
+      font-size: .95rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -.01em;
+    }
+    .ficha-header-sub {
+      font-size: .7rem;
+      color: rgba(255,255,255,.5);
+      margin-top: .2rem;
+    }
+    .ficha-header-right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .ficha-header-right .fll-badge {
+      font-size: .6rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #CCB650;
+      border: 1px solid rgba(204,182,80,.4);
+      border-radius: 100px;
+      padding: .2rem .55rem;
+      display: inline-block;
+    }
+    .ficha-header-right .fll-year {
+      font-size: .62rem;
+      color: rgba(255,255,255,.4);
+      margin-top: .3rem;
+    }
+
+    /* Identidade da equipe */
+    .ficha-equipe {
+      padding: 1.1rem 1.75rem;
+      border-bottom: 1px solid #EEF2F7;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .eq-numero {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #DDE5EE;
+      letter-spacing: -.05em;
+      line-height: 1;
+      min-width: 56px;
+    }
+    .eq-id {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #19324D;
+      letter-spacing: -.02em;
+    }
+    .eq-nome {
+      font-size: .82rem;
+      color: #66758A;
+      margin-top: .1rem;
+    }
+    .eq-turno {
+      margin-left: auto;
+      text-align: right;
+    }
+    .eq-turno-label { font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #66758A; }
+    .eq-turno-val   { font-size: .9rem; font-weight: 800; color: #19324D; }
+    .eq-total-block {
+      text-align: right;
+      border-left: 1.5px solid #EEF2F7;
+      padding-left: 1.25rem;
+    }
+    .eq-total-label { font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: #66758A; }
+    .eq-total-val   { font-size: 1.6rem; font-weight: 900; color: #19324D; letter-spacing: -.04em; line-height: 1.1; }
+    .eq-total-max   { font-size: .72rem; color: #66758A; }
+
+    /* Seção genérica */
+    .ficha-section {
+      padding: 1rem 1.75rem;
+      border-bottom: 1px solid #EEF2F7;
+    }
+    .ficha-section:last-child { border-bottom: none; }
+    .section-label {
+      font-size: .6rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #66758A;
+      margin-bottom: .75rem;
+    }
+
+    /* Scores por categoria */
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: .65rem;
+    }
+    .score-item { }
+    .score-cat {
+      font-size: .6rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: .25rem;
+    }
+    .score-bar-track {
+      height: 8px;
+      border-radius: 4px;
+      background: #EEF2F7;
+      overflow: hidden;
+      margin-bottom: .25rem;
+    }
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 4px;
+    }
+    .score-val {
+      font-size: .82rem;
+      font-weight: 800;
+      color: #1F2A3A;
+    }
+    .score-max { font-size: .68rem; color: #66758A; font-weight: 500; }
+
+    /* Bloom */
+    .bloom-block {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .bloom-badge {
+      padding: .35rem .85rem;
+      border-radius: 8px;
+      font-size: .75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: #fff;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .bloom-steps {
+      display: flex;
+      gap: 3px;
+      margin-bottom: .5rem;
+      flex-wrap: wrap;
+    }
+    .bloom-step {
+      font-size: .58rem;
+      font-weight: 700;
+      padding: .18rem .45rem;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .bloom-step--ativo { color: #fff; }
+    .bloom-step--inativo { background: #EEF2F7; color: #94A3B8; }
+    .bloom-desc {
+      font-size: .78rem;
+      color: #66758A;
+      line-height: 1.5;
+    }
+
+    /* STEAM */
+    .steam-row-r {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: .5rem;
+    }
+    .steam-row-r:last-child { margin-bottom: 0; }
+    .steam-letter {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .68rem;
+      font-weight: 900;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .steam-name {
+      font-size: .75rem;
+      font-weight: 600;
+      color: #1F2A3A;
+      min-width: 145px;
+    }
+    .steam-name-sub { font-size: .62rem; color: #66758A; font-weight: 500; }
+    .steam-track-r {
+      flex: 1;
+      height: 7px;
+      border-radius: 4px;
+      background: #EEF2F7;
+      overflow: hidden;
+    }
+    .steam-fill-r { height: 100%; border-radius: 4px; }
+    .steam-score {
+      font-size: .78rem;
+      font-weight: 800;
+      min-width: 36px;
+      text-align: right;
+    }
+
+    /* Comentários */
+    .comentarios-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .75rem;
+    }
+    .comentario-bloco {
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #EEF2F7;
+    }
+    .comentario-cat {
+      font-size: .62rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      padding: .35rem .65rem;
+      color: #fff;
+    }
+    .comentario-item {
+      padding: .5rem .65rem;
+      border-top: 1px solid #EEF2F7;
+    }
+    .comentario-tag {
+      font-size: .58rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: .15rem;
+    }
+    .comentario-text {
+      font-size: .76rem;
+      color: #1F2A3A;
+      line-height: 1.45;
+    }
+    .sem-comentario { font-size: .75rem; color: #94A3B8; font-style: italic; padding: .65rem; }
+
+    /* Recomendações pedagógicas */
+    .rec-item {
+      display: flex;
+      gap: .75rem;
+      margin-bottom: .65rem;
+      padding-bottom: .65rem;
+      border-bottom: 1px solid #F4F7FB;
+    }
+    .rec-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .rec-pill {
+      font-size: .58rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      padding: .2rem .5rem;
+      border-radius: 100px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      height: fit-content;
+      margin-top: .1rem;
+    }
+    .rec-pill--destaque  { background: #F0FDF4; color: #16A34A; }
+    .rec-pill--desenvolver { background: #FFF7ED; color: #B45309; }
+    .rec-pill--atencao   { background: #FFF1F2; color: #BE123C; }
+    .rec-body { flex: 1; }
+    .rec-cat  { font-size: .67rem; font-weight: 800; color: #1F2A3A; margin-bottom: .15rem; }
+    .rec-text { font-size: .78rem; color: #66758A; line-height: 1.5; }
+
+    /* Rodapé */
+    .ficha-footer {
+      padding: .75rem 1.75rem;
+      background: #F8FAFD;
+      border-top: 1.5px solid #EEF2F7;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: .65rem;
+      color: #94A3B8;
+    }
+
+    /* Placeholder sem dados */
+    .sem-dados {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      color: #94A3B8;
+      font-size: .875rem;
+    }
+    .sem-dados strong { display: block; font-size: 1rem; color: #66758A; margin-bottom: .35rem; }
+
+    /* ── Print ─────────────────────────────────────────────── */
+    @media print {
+      @page { size: A4 portrait; margin: 1cm 1.5cm; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body { background: #fff; font-size: 12px; }
+      .toolbar { display: none !important; }
+      .report-area { max-width: 100%; margin: 0; padding: 0; }
+      .ficha { border-radius: 0; box-shadow: none; border: 1px solid #DDE5EE; }
+      .ficha-header { padding: .9rem 1.4rem; }
+      .ficha-header img { height: 44px; }
+      .ficha-section { padding: .75rem 1.4rem; }
+      .ficha-equipe  { padding: .85rem 1.4rem; }
+      .ficha-footer  { padding: .5rem 1.4rem; }
+      .score-grid { grid-template-columns: repeat(5,1fr); gap: .5rem; }
+      .comentarios-grid { grid-template-columns: 1fr 1fr; gap: .5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ───────────────────────────────────────────────── -->
+<div id="view-login">
+  <div class="login-wrap">
+    <h2>Relatório Individual</h2>
+    <p>Acesso restrito à coordenação. Use suas credenciais para gerar a ficha pedagógica.</p>
+    <div class="field">
+      <label>Nome</label>
+      <input id="l-nome" type="text" placeholder="Seu nome" autocomplete="name">
+    </div>
+    <div class="field">
+      <label>PIN</label>
+      <input id="l-pin" type="password" placeholder="PIN" autocomplete="current-password">
+    </div>
+    <div class="login-err" id="login-err"></div>
+    <button class="btn-login" id="btn-login">Acessar</button>
+  </div>
+</div>
+
+<!-- ── PAINEL ───────────────────────────────────────────────── -->
+<div id="view-painel" style="display:none">
+  <div class="toolbar">
+    <a href="index.html">Visão Geral</a>
+    <span class="toolbar__sep">/</span>
+    <a href="coordenacao.html">Coordenação</a>
+    <span class="toolbar__sep">/</span>
+    <span class="toolbar__title">Ficha Individual</span>
+    <div class="toolbar__right">
+      <select class="tb-select" id="sel-equipe">
+        <option value="">— Selecione a equipe —</option>
+      </select>
+      <button class="tb-btn tb-btn--print" onclick="window.print()">Imprimir / PDF</button>
+      <button class="tb-btn tb-btn--outline" id="btn-sair">Sair</button>
+    </div>
+  </div>
+
+  <div class="report-area">
+    <div id="ficha-container">
+      <div class="sem-dados">
+        <strong>Selecione uma equipe</strong>
+        Escolha a turma no menu acima para gerar a ficha pedagógica.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+  var SK_NOME = 'coord_nome';
+  var SK_PIN  = 'coord_pin';
+  var dadosEquipes = [];
+  var coordNome = '';
+
+  var NOMES_MAP = {
+    TUR01:'6° A · Cyber Panter',       TUR02:'6° B · Liga do Choque',
+    TUR03:'6° C · Alpha Tech',         TUR04:'6° D · Pheonics Mecanics',
+    TUR05:'6° E · TecShark',           TUR06:'7° A · Hoppin Robots',
+    TUR07:'7° B · Bivoltx',            TUR08:'7° C · Ecoshift',
+    TUR09:'7° D · Pantera Lego Team',  TUR10:'7° E · Império das Onças',
+    TUR11:'7° F · Poseidon',           TUR12:'7° G · Arara Azul',
+    TUR13:'7° H · Nexos'
+  };
+
+  var CAT_COLORS = {
+    projeto: '#8E5BD9', design: '#F2994A', core: '#27AE60'
+  };
+  var CAT_LABELS = {
+    projeto: 'Projeto de Inovação', design: 'Design do Robô', core: 'Core Values'
+  };
+
+  var SCORE_CATS = [
+    { key:'proj20',  label:'Projeto',   abbr:'Proj.',    color:'#8E5BD9' },
+    { key:'arena20', label:'Arena',     abbr:'Arena',    color:'#2F80ED' },
+    { key:'des20',   label:'Design',    abbr:'Design',   color:'#F2994A' },
+    { key:'core20',  label:'Core',      abbr:'Core',     color:'#27AE60' },
+    { key:'tamp20',  label:'Tampinhas', abbr:'Sustent.', color:'#0D9488' }
+  ];
+
+  var STEAM_CATS = [
+    { letter:'S', key:'proj20',  label:'Ciência e Inovação',   sub:'Projeto de Inovação',             color:'#8E5BD9' },
+    { letter:'T', key:'arena20', label:'Tecnologia',            sub:'Missões do Robô',                 color:'#2F80ED' },
+    { letter:'E', key:'des20',   label:'Engenharia',            sub:'Design do Robô',                  color:'#F2994A' },
+    { letter:'A', key:'core20',  label:'Aprendizagem Colabor.', sub:'Core Values · trabalho em equipe', color:'#27AE60' },
+    { letter:'M', key:'tamp20',  label:'Meio Ambiente',         sub:'Tampinhas · Educação Ambiental',  color:'#0D9488' }
+  ];
+
+  var BLOOM_LEVELS = [
+    { nivel:'Criar',       min:80, color:'#8E5BD9', desc:'A equipe demonstra pensamento original, sintetiza conhecimentos de forma autônoma e propõe soluções criativas para problemas reais.' },
+    { nivel:'Avaliar',     min:60, color:'#2F80ED', desc:'A equipe é capaz de julgar, comparar alternativas e tomar decisões fundamentadas com base em critérios estabelecidos.' },
+    { nivel:'Analisar',    min:40, color:'#27AE60', desc:'A equipe decompõe problemas complexos, identifica padrões e relaciona conceitos de diferentes áreas do conhecimento.' },
+    { nivel:'Aplicar',     min:20, color:'#F2994A', desc:'A equipe utiliza conhecimentos em situações práticas e executa procedimentos com autonomia crescente.' },
+    { nivel:'Compreender', min:0,  color:'#94A3B8', desc:'Fase inicial de construção do conhecimento. A equipe necessita de mais tempo e prática para internalizar os conceitos centrais.' }
+  ];
+
+  // ── Lógica de recomendações ─────────────────────────────────
+  function gerarRecomendacoes(sc) {
+    if (!sc) return [];
+    var recs = [];
+    var defs = [
+      {
+        cat: 'Projeto de Inovação', campo: 'proj20',
+        destaque:   'Projeto com alto grau de fundamentação científica e originalidade. A equipe demonstrou rigor no processo de pesquisa e propôs uma solução com impacto real.',
+        desenvolver:'Boa ideia central. Para avançar: aprofundar pesquisa com fontes primárias, entrevistar especialistas e detalhar o impacto mensurável da solução proposta.',
+        atencao:    'Fortalecer as etapas do método científico: definição do problema, revisão bibliográfica, prototipagem e validação da solução com evidências.'
+      },
+      {
+        cat: 'Arena — Missões do Robô', campo: 'arena20',
+        destaque:   'Excelente domínio técnico nas missões. A equipe demonstrou programação eficiente, estratégia clara e execução confiante durante as rodadas.',
+        desenvolver:'Bom desempenho. Para evoluir: aprofundar estratégias de otimização de tempo, refinar a sequência de missões e aumentar a consistência entre as rodadas.',
+        atencao:    'Ampliar sessões de programação e simulação de missões. Foco em depuração (debugging), pensamento algorítmico e repetição sistemática de testes.'
+      },
+      {
+        cat: 'Design do Robô', campo: 'des20',
+        destaque:   'Projeto de engenharia bem elaborado, com estrutura robusta, programação modular e processo de iteração bem documentado.',
+        desenvolver:'Boa concepção do robô. Aprofundar o ciclo de design iterativo: registrar cada versão, justificar as escolhas de peças e testar de forma sistemática.',
+        atencao:    'Trabalhar o processo de engenharia: planejar antes de construir, documentar tentativas e aprender com as falhas de forma estruturada e reflexiva.'
+      },
+      {
+        cat: 'Core Values', campo: 'core20',
+        destaque:   'Excelente espírito de equipe e fair play. A equipe demonstrou comunicação saudável, inclusão de todos os membros e respeito durante toda a competição.',
+        desenvolver:'Boa dinâmica de grupo. Para fortalecer: trabalhar distribuição equitativa de papéis, escuta ativa e comunicação eficaz sob pressão.',
+        atencao:    'Investir em dinâmicas de colaboração, comunicação não-violenta e liderança compartilhada. O trabalho em equipe é competência central e avaliada na FLL.'
+      },
+      {
+        cat: 'Sustentabilidade — Tampinhas', campo: 'tamp20',
+        destaque:   'Engajamento exemplar na ação de tampinhas. A equipe demonstrou consciência socioambiental e capacidade de mobilização da comunidade escolar.',
+        desenvolver:'Boa participação. Potencializar o engajamento: envolver famílias, outros alunos e parceiros comunitários na coleta e na conscientização ambiental.',
+        atencao:    'Ampliar a sensibilização sobre educação ambiental. Explorar a conexão entre reciclagem, impacto social, cidadania e os valores do projeto FLL.'
+      }
+    ];
+
+    defs.forEach(function(d) {
+      var val = Number(sc[d.campo] || 0);
+      var tipo, texto;
+      if (val >= 16)      { tipo = 'destaque';    texto = d.destaque;    }
+      else if (val >= 10) { tipo = 'desenvolver'; texto = d.desenvolver; }
+      else                { tipo = 'atencao';     texto = d.atencao;     }
+      recs.push({ cat: d.cat, tipo: tipo, texto: texto, val: val });
+    });
+    return recs;
+  }
+
+  function nivelBloom(total) {
+    for (var i = 0; i < BLOOM_LEVELS.length; i++) {
+      if (total >= BLOOM_LEVELS[i].min) return BLOOM_LEVELS[i];
+    }
+    return BLOOM_LEVELS[BLOOM_LEVELS.length - 1];
+  }
+
+  // ── Renderiza a ficha ───────────────────────────────────────
+  function renderFicha(item) {
+    var eq   = item.equipe;
+    var sc   = item.scores;
+    var nome = NOMES_MAP[eq.id] || eq.id;
+    var turno = eq.turno || '—';
+    var total = sc ? Number(sc.total || 0) : 0;
+    var agora = new Date().toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
+
+    // ── Cabeçalho ──────────────────────────────────────────
+    var header = '<div class="ficha-header">'
+      +'<img src="logo.svg" alt="HUB Robótica">'
+      +'<div class="ficha-header-text">'
+      +'<div class="ficha-header-doc">Ficha de Avaliação Pedagógica</div>'
+      +'<div class="ficha-header-title">Torneios Internos de Robótica</div>'
+      +'<div class="ficha-header-sub">Escola SESI Reitor Miguel Calmon · Salvador, BA</div>'
+      +'</div>'
+      +'<div class="ficha-header-right">'
+      +'<div class="fll-badge">First Lego League</div>'
+      +'<div class="fll-year">2026 / 2027</div>'
+      +'</div>'
+      +'</div>';
+
+    // ── Identidade ─────────────────────────────────────────
+    var numStr = eq.id.replace('TUR','');
+    var partes = nome.split('·');
+    var turmaStr = partes[0] ? partes[0].trim() : '';
+    var apelido  = partes[1] ? partes[1].trim() : '';
+
+    var identidade = '<div class="ficha-equipe">'
+      +'<div class="eq-numero">#'+numStr+'</div>'
+      +'<div>'
+      +'<div class="eq-id">'+eq.id+'</div>'
+      +'<div class="eq-nome">'+turmaStr+' &middot; '+apelido+'</div>'
+      +'</div>'
+      +'<div class="eq-turno">'
+      +'<div class="eq-turno-label">Turno</div>'
+      +'<div class="eq-turno-val">'+turno+'</div>'
+      +'</div>'
+      +'<div class="eq-total-block">'
+      +'<div class="eq-total-label">Pontuação Total</div>'
+      +'<div class="eq-total-val">'+(sc ? total.toFixed(1) : '—')+'</div>'
+      +'<div class="eq-total-max">de 100 pontos</div>'
+      +'</div>'
+      +'</div>';
+
+    // ── Scores por categoria ───────────────────────────────
+    var scoresHtml = SCORE_CATS.map(function(cat) {
+      var val = sc ? Number(sc[cat.key] || 0) : 0;
+      var pct = (val / 20) * 100;
+      return '<div class="score-item">'
+        +'<div class="score-cat" style="color:'+cat.color+'">'+cat.label+'</div>'
+        +'<div class="score-bar-track"><div class="score-bar-fill" style="width:'+pct+'%;background:'+cat.color+'"></div></div>'
+        +'<span class="score-val">'+(sc ? val.toFixed(1) : '—')+'</span>'
+        +'<span class="score-max"> /20</span>'
+        +'</div>';
+    }).join('');
+
+    var secScores = '<div class="ficha-section">'
+      +'<div class="section-label">Desempenho por Categoria</div>'
+      +'<div class="score-grid">'+scoresHtml+'</div>'
+      +'</div>';
+
+    // ── Bloom ──────────────────────────────────────────────
+    var bloom = nivelBloom(total);
+    var stepsHtml = BLOOM_LEVELS.slice().reverse().map(function(l) {
+      var ativo = total >= l.min;
+      return ativo
+        ? '<span class="bloom-step bloom-step--ativo" style="background:'+l.color+'">'+l.nivel+'</span>'
+        : '<span class="bloom-step bloom-step--inativo">'+l.nivel+'</span>';
+    }).join('');
+
+    var secBloom = '<div class="ficha-section">'
+      +'<div class="section-label">Nível Cognitivo — Taxonomia de Bloom</div>'
+      +'<div class="bloom-block">'
+      +'<div>'
+      +'<div class="bloom-steps">'+stepsHtml+'</div>'
+      +'<div class="bloom-desc">'+bloom.desc+'</div>'
+      +'</div>'
+      +'</div>'
+      +'</div>';
+
+    // ── STEAM ──────────────────────────────────────────────
+    var steamHtml = STEAM_CATS.map(function(cat) {
+      var val = sc ? Number(sc[cat.key] || 0) : 0;
+      var pct = (val / 20) * 100;
+      return '<div class="steam-row-r">'
+        +'<div class="steam-letter" style="background:'+cat.color+'">'+cat.letter+'</div>'
+        +'<div class="steam-name">'+cat.label+'<div class="steam-name-sub">'+cat.sub+'</div></div>'
+        +'<div class="steam-track-r"><div class="steam-fill-r" style="width:'+pct+'%;background:'+cat.color+'"></div></div>'
+        +'<div class="steam-score" style="color:'+cat.color+'">'+(sc && val > 0 ? val.toFixed(1) : '—')+'<span style="font-size:.65rem;font-weight:500;color:#94A3B8"> /20</span></div>'
+        +'</div>';
+    }).join('');
+
+    var secSteam = '<div class="ficha-section">'
+      +'<div class="section-label">Competências STEAM</div>'
+      +steamHtml
+      +'</div>';
+
+    // ── Comentários dos juízes ─────────────────────────────
+    var comsHtml = ['projeto','design','core'].map(function(catKey) {
+      var cor    = CAT_COLORS[catKey];
+      var label  = CAT_LABELS[catKey];
+      var lista  = (item.comentarios && item.comentarios[catKey]) || [];
+      var itens  = lista.filter(function(c){ return c.bomTrabalho || c.reflitam; });
+      if (!itens.length) {
+        return '<div class="comentario-bloco">'
+          +'<div class="comentario-cat" style="background:'+cor+'">'+label+'</div>'
+          +'<div class="sem-comentario">Sem comentários registrados.</div>'
+          +'</div>';
+      }
+      var html = '<div class="comentario-bloco"><div class="comentario-cat" style="background:'+cor+'">'+label+'</div>';
+      itens.forEach(function(c) {
+        if (c.bomTrabalho) html += '<div class="comentario-item"><div class="comentario-tag" style="color:#16A34A">Bom trabalho</div><div class="comentario-text">'+c.bomTrabalho+'</div></div>';
+        if (c.reflitam)    html += '<div class="comentario-item"><div class="comentario-tag" style="color:#B45309">Reflitam sobre...</div><div class="comentario-text">'+c.reflitam+'</div></div>';
+      });
+      html += '</div>';
+      return html;
+    }).join('');
+
+    var secComs = sc ? '<div class="ficha-section">'
+      +'<div class="section-label">Comentários dos Juízes</div>'
+      +'<div class="comentarios-grid">'+comsHtml+'</div>'
+      +'</div>' : '';
+
+    // ── Recomendações pedagógicas ──────────────────────────
+    var recs = gerarRecomendacoes(sc);
+    var recsHtml = recs.length ? recs.map(function(r) {
+      var pillLabel = r.tipo === 'destaque' ? 'Destaque' : r.tipo === 'desenvolver' ? 'Desenvolver' : 'Atenção';
+      return '<div class="rec-item">'
+        +'<div class="rec-pill rec-pill--'+r.tipo+'">'+pillLabel+'</div>'
+        +'<div class="rec-body"><div class="rec-cat">'+r.cat+'</div><div class="rec-text">'+r.texto+'</div></div>'
+        +'</div>';
+    }).join('')
+    : '<div class="sem-comentario">Sem dados de avaliação para gerar recomendações.</div>';
+
+    var secRecs = '<div class="ficha-section">'
+      +'<div class="section-label">Recomendações Pedagógicas</div>'
+      +recsHtml
+      +'</div>';
+
+    // ── Rodapé ─────────────────────────────────────────────
+    var footer = '<div class="ficha-footer">'
+      +'<span>HUB Torneios Internos de Robótica · SESI Reitor Miguel Calmon</span>'
+      +'<span>Gerado em '+agora+' por '+coordNome+'</span>'
+      +'</div>';
+
+    document.getElementById('ficha-container').innerHTML =
+      '<div class="ficha">'+header+identidade+secScores+secBloom+secSteam+secComs+secRecs+footer+'</div>';
+  }
+
+  // ── Auth & carregamento ─────────────────────────────────────
+  document.getElementById('l-pin').addEventListener('keydown', function(e){
+    if (e.key === 'Enter') document.getElementById('btn-login').click();
+  });
+
+  document.getElementById('btn-login').addEventListener('click', async function(){
+    var nome = document.getElementById('l-nome').value.trim();
+    var pin  = document.getElementById('l-pin').value.trim();
+    var err  = document.getElementById('login-err');
+    err.style.display = 'none';
+    if (!nome) { err.textContent = 'Preencha o nome.'; err.style.display = ''; return; }
+    this.disabled = true;
+    this.innerHTML = 'Acessando <span class="spinner-sm"></span>';
+    try {
+      var r = await API.verificarJuiz(nome, pin);
+      if (!r.ok) { err.textContent = r.erro || 'Credenciais inválidas.'; err.style.display = ''; return; }
+      if (!r.coordenador) { err.textContent = 'Acesso restrito à coordenação.'; err.style.display = ''; return; }
+      localStorage.setItem(SK_NOME, nome);
+      localStorage.setItem(SK_PIN, pin);
+      await entrar(nome, pin);
+    } catch(e) {
+      err.textContent = 'Erro: ' + e.message; err.style.display = '';
+    } finally {
+      this.disabled = false; this.textContent = 'Acessar';
+    }
+  });
+
+  async function entrar(nome, pin) {
+    try {
+      var r = await API.todasTurmas(nome, pin);
+      if (!r.ok) { sair(); return; }
+      dadosEquipes = r.equipes || [];
+      coordNome = nome;
+      document.getElementById('view-login').style.display = 'none';
+      document.getElementById('view-painel').style.display = '';
+      var sel = document.getElementById('sel-equipe');
+      dadosEquipes.forEach(function(item){
+        var opt = document.createElement('option');
+        opt.value = item.equipe.id;
+        opt.textContent = item.equipe.id + ' — ' + (NOMES_MAP[item.equipe.id] || item.equipe.id);
+        sel.appendChild(opt);
+      });
+    } catch(e) { console.error(e); }
+  }
+
+  document.getElementById('sel-equipe').addEventListener('change', function(){
+    var id = this.value;
+    if (!id) {
+      document.getElementById('ficha-container').innerHTML =
+        '<div class="sem-dados"><strong>Selecione uma equipe</strong>Escolha a turma no menu acima para gerar a ficha pedagógica.</div>';
+      return;
+    }
+    var item = dadosEquipes.find(function(e){ return e.equipe.id === id; });
+    if (item) renderFicha(item);
+  });
+
+  document.getElementById('btn-sair').addEventListener('click', function(){
+    localStorage.removeItem(SK_NOME); localStorage.removeItem(SK_PIN);
+    document.getElementById('view-painel').style.display = 'none';
+    document.getElementById('view-login').style.display = '';
+  });
+
+  // Auto-login
+  (async function(){
+    var nome = localStorage.getItem(SK_NOME);
+    var pin  = localStorage.getItem(SK_PIN);
+    if (!nome) return;
+    document.getElementById('l-nome').value = nome;
+    await entrar(nome, pin || '');
+  })();
+</script>
+</body>
+</html>
