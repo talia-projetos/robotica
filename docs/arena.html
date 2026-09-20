@@ -155,13 +155,20 @@
       font-variant-numeric: tabular-nums;
       min-width: 4.5ch;
       text-align: center;
+      transition: color .3s;
     }
-    .crono-display.acabou {
-      color: #EB5757;
-      animation: pisca .6s infinite alternate;
-    }
-    @keyframes pisca { from { opacity:1 } to { opacity:.25 } }
+    .crono-display.urgente { color: #F2994A; }
+    .crono-display.acabou  { color: #EB5757; animation: pisca .5s infinite alternate; }
+    @keyframes pisca { from { opacity:1 } to { opacity:.2 } }
     .crono-btns { display: flex; gap: .5rem; }
+    .crono-round {
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ar-muted);
+      min-width: 70px;
+    }
     body.grande .crono-display { font-size: 5rem; }
 
     /* ── Sem dados ───────────────────────────────────────────── */
@@ -202,10 +209,16 @@
   </div>
 
   <div class="cronometro">
+    <div class="crono-round" id="crono-round">Round —</div>
     <div class="crono-display" id="crono-display">2:30</div>
     <div class="crono-btns">
       <button class="btn btn-primary" id="btn-crono-toggle" onclick="cronoToggle()">▶ Iniciar</button>
       <button class="btn btn-outline" onclick="cronoReset()" style="border-color:var(--ar-border);color:var(--ar-text)">↺ Reset</button>
+      <select id="sel-round" onchange="trocarRound(this.value)" style="background:var(--ar-surface);color:var(--ar-text);border:1px solid var(--ar-border);border-radius:8px;padding:.4rem .75rem;font-family:inherit;font-size:.83rem;cursor:pointer">
+        <option value="R1">Round 1</option>
+        <option value="R2">Round 2</option>
+        <option value="R3">Round 3</option>
+      </select>
     </div>
   </div>
 
@@ -310,14 +323,35 @@
 
   // ── Cronômetro ────────────────────────────────────────────────────
   let cronoSeg = 150, cronoRodando = false, cronoTimer = null;
+  let roundAtual = 'R1';
+  const audioCtx = typeof AudioContext !== 'undefined' ? new AudioContext() : null;
+
+  function beep(freq, dur, vol) {
+    if (!audioCtx) return;
+    const osc  = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    osc.start(); osc.stop(audioCtx.currentTime + dur);
+  }
 
   function cronoAtualizar() {
     const el = document.getElementById('crono-display');
     el.textContent = Math.floor(cronoSeg / 60) + ':' + String(cronoSeg % 60).padStart(2, '0');
-    el.classList.toggle('acabou', cronoSeg === 0);
+    el.classList.toggle('urgente', cronoSeg > 0 && cronoSeg <= 30);
+    el.classList.toggle('acabou',  cronoSeg === 0);
+  }
+
+  function trocarRound(val) {
+    roundAtual = val;
+    document.getElementById('crono-round').textContent = 'Round ' + val.replace('R','');
+    cronoReset();
   }
 
   function cronoToggle() {
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     if (cronoSeg === 0) { cronoReset(); return; }
     cronoRodando = !cronoRodando;
     document.getElementById('btn-crono-toggle').textContent = cronoRodando ? '⏸ Pausar' : '▶ Continuar';
@@ -325,10 +359,13 @@
       cronoTimer = setInterval(function() {
         if (cronoSeg > 0) cronoSeg--;
         cronoAtualizar();
+        if (cronoSeg === 30) beep(880, .12, .4);
+        if (cronoSeg === 10) beep(1046, .12, .5);
         if (cronoSeg === 0) {
           clearInterval(cronoTimer);
           cronoRodando = false;
           document.getElementById('btn-crono-toggle').textContent = '↺ Reiniciar';
+          beep(523, .08, .6); setTimeout(()=>beep(523, .08, .6), 150); setTimeout(()=>beep(784, .35, .7), 300);
         }
       }, 1000);
     } else {
@@ -342,7 +379,11 @@
     cronoSeg = 150;
     cronoAtualizar();
     document.getElementById('btn-crono-toggle').textContent = '▶ Iniciar';
+    document.getElementById('crono-round').textContent = 'Round ' + roundAtual.replace('R','');
   }
+
+  // inicializa label do round
+  document.getElementById('crono-round').textContent = 'Round 1';
 </script>
 </body>
 </html>

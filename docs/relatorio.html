@@ -799,8 +799,7 @@
 
   document.getElementById('btn-sair').addEventListener('click', function(){
     localStorage.removeItem(SK_NOME); localStorage.removeItem(SK_PIN);
-    document.getElementById('view-painel').style.display = 'none';
-    document.getElementById('view-login').style.display = '';
+    window.location.href = 'index.html';
   });
 
   // Auto-login
