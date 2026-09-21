@@ -3,165 +3,198 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cronograma — HUB Circuito</title>
+  <title>HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/styles.css?v=5">
   <style>
-    /* ── Base ─────────────────────────────────────────────────── */
-    body { background: #F4F7FB; }
-    .wrap { max-width: 1280px; margin: 0 auto; padding: 2rem 1.75rem 4rem; }
+    body { background: #F0F4F8; }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 1.75rem 1.75rem 5rem; }
 
-    /* ── Cabeçalho da página ─────────────────────────────────── */
+    /* ── Cabeçalho ───────────────────────────────────────────── */
     .page-hd { margin-bottom: 1.5rem; }
     .page-hd h1 {
-      font-size: 1.35rem; font-weight: 800; color: #1F2A3A;
-      letter-spacing: -.03em; margin: 0 0 .2rem;
+      font-size: 1.35rem; font-weight: 800; color: #0F1F33;
+      letter-spacing: -.03em; margin: 0 0 .25rem;
     }
-    .page-hd .sub {
-      font-size: .82rem; color: #66758A; margin: 0; font-weight: 400;
+    .page-meta {
+      font-size: .78rem; color: #64748B; margin: 0;
     }
 
-    /* ── Visão geral ─────────────────────────────────────────── */
-    .overview {
-      background: #fff; border-radius: 12px;
-      border: 1px solid #DDE5EE;
-      box-shadow: 0 1px 6px rgba(25,50,77,.05);
-      padding: .9rem 1.25rem 1rem;
-      margin-bottom: .85rem;
+    /* ── Timeline macro ──────────────────────────────────────── */
+    .timeline-macro {
+      background: #fff;
+      border: 1px solid #E2EBF4;
+      border-radius: 12px;
+      padding: 1rem 1.25rem 1.1rem;
+      margin-bottom: 1rem;
     }
-    .overview__title {
-      font-size: .6rem; font-weight: 800; letter-spacing: .12em;
-      text-transform: uppercase; color: #66758A; margin-bottom: .6rem;
+    .tl-label {
+      font-size: .62rem; font-weight: 800; letter-spacing: .1em;
+      text-transform: uppercase; color: #94A3B8; margin-bottom: .75rem;
     }
-    .ov-track {
-      position: relative; height: 44px; border-radius: 7px;
-      overflow: hidden; background: #F4F7FB;
+    .tl-bar {
+      position: relative; height: 36px; border-radius: 7px;
+      overflow: hidden; background: #F1F5F9;
+      display: flex;
     }
-    .ov-block {
-      position: absolute; top: 0; bottom: 0;
+    .tl-seg {
       display: flex; align-items: center; justify-content: center;
-      font-size: .65rem; font-weight: 700; color: #fff;
-      border-right: 2px solid rgba(255,255,255,.28);
-      overflow: hidden; white-space: nowrap;
-      letter-spacing: .01em;
+      font-size: .62rem; font-weight: 700; color: #fff;
+      white-space: nowrap; overflow: hidden;
+      border-right: 2px solid rgba(255,255,255,.25);
+      flex-shrink: 0;
     }
-    .ov-block:last-child { border-right: none; }
-    .ov-split { flex-direction: column; padding: 0; }
-    .ov-half {
-      flex: 1; width: 100%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: .6rem; font-weight: 700; color: #fff; overflow: hidden;
-      white-space: nowrap; letter-spacing: .01em;
+    .tl-seg:last-child { border-right: none; }
+    .tl-ticks {
+      display: flex; position: relative; height: 18px; margin-top: .3rem;
     }
-    .ov-ticks {
-      display: flex; position: relative; height: 18px; margin-top: .35rem;
-    }
-    .ov-tick {
+    .tl-tick {
       position: absolute; transform: translateX(-50%);
-      font-size: .6rem; font-weight: 600; color: #66758A;
+      font-size: .6rem; font-weight: 600; color: #94A3B8;
     }
 
-    /* ── Legenda ─────────────────────────────────────────────── */
-    .legenda {
-      display: flex; flex-wrap: wrap; align-items: center;
-      gap: .25rem .75rem; padding: .55rem 1.1rem;
-      background: #fff; border-radius: 10px;
-      border: 1px solid #DDE5EE;
-      margin-bottom: 1.1rem;
-    }
-    .legenda__sep {
-      width: 1px; height: 14px; background: #DDE5EE; margin: 0 .2rem;
-    }
-    .li { display: flex; align-items: center; gap: .3rem; font-size: .71rem; font-weight: 500; color: #1F2A3A; }
-    .lc { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+    /* Cores da timeline macro */
+    .tl-abertura  { background: #475569; }
+    .tl-aval      { background: #6366F1; }
+    .tl-r2        { background: #3B82F6; }
+    .tl-r3        { background: #0369A1; }
+    .tl-delib     { background: #64748B; }
+    .tl-premio    { background: #B45309; }
 
-    /* ── Gantt card ──────────────────────────────────────────── */
+    /* ── Toolbar de filtros ──────────────────────────────────── */
+    .crono-toolbar {
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+      padding: .65rem 1rem;
+      background: #fff;
+      border: 1px solid #E2EBF4;
+      border-radius: 10px;
+    }
+    .toolbar-label {
+      font-size: .68rem; font-weight: 700; color: #94A3B8;
+      text-transform: uppercase; letter-spacing: .08em;
+      margin-right: .2rem;
+    }
+    .filter-sala {
+      padding: .28rem .75rem;
+      border-radius: 100px;
+      border: 1px solid #E2EBF4;
+      background: #F8FAFC;
+      font-family: inherit;
+      font-size: .76rem;
+      font-weight: 600;
+      color: #64748B;
+      cursor: pointer;
+      transition: background .12s, color .12s, border-color .12s;
+    }
+    .filter-sala:hover   { background: #EFF6FF; border-color: #BFDBFE; color: #2563EB; }
+    .filter-sala.active  { background: #EFF6FF; border-color: #93C5FD; color: #1D4ED8; }
+
+    .toolbar-sep { width: 1px; height: 20px; background: #E2EBF4; margin: 0 .15rem; }
+
+    .search-wrap { display: flex; align-items: center; gap: .4rem; }
+    .search-wrap svg { color: #94A3B8; flex-shrink: 0; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    #search-equipe {
+      border: none; outline: none;
+      font-family: inherit; font-size: .8rem; color: #0F1F33;
+      background: transparent; width: 160px;
+    }
+    #search-equipe::placeholder { color: #A8B5C5; }
+
+    /* ── Gantt ───────────────────────────────────────────────── */
     .gantt-card {
-      background: #fff; border-radius: 14px;
-      border: 1px solid #DDE5EE;
-      box-shadow: 0 2px 20px rgba(25,50,77,.07);
-      overflow: hidden; overflow-x: auto;
+      background: #fff;
+      border: 1px solid #E2EBF4;
+      border-radius: 14px;
+      overflow: hidden;
+      overflow-x: auto;
     }
-    .gantt { min-width: 900px; }
-    :root { --lbl: 200px; }
+    .gantt { min-width: 860px; }
+    :root { --lbl: 196px; }
 
-    /* ── Cabeçalho de períodos ───────────────────────────────── */
-    .g-periods { display: flex; border-bottom: 1px solid rgba(255,255,255,.12); }
-    .g-periods__lbl {
-      width: var(--lbl); min-width: var(--lbl); flex-shrink: 0;
-      background: #19324D; padding: .6rem 1rem;
-      font-size: .58rem; font-weight: 800; text-transform: uppercase;
-      letter-spacing: .1em; color: rgba(255,255,255,.4);
-      display: flex; align-items: center;
-      border-right: 1px solid rgba(255,255,255,.08);
+    /* Eixo de tempo — sticky top */
+    .g-axis {
+      display: flex;
+      border-bottom: 1.5px solid #E2EBF4;
+      background: #F8FAFC;
+      position: sticky; top: 0; z-index: 20;
     }
-    .g-periods__track { flex: 1; display: flex; }
-    .g-period {
-      display: flex; align-items: center; justify-content: center;
-      text-align: center; padding: .55rem .5rem;
-      font-size: .61rem; font-weight: 800; text-transform: uppercase;
-      letter-spacing: .05em; color: rgba(255,255,255,.92); line-height: 1.4;
-      border-right: 1px solid rgba(255,255,255,.18);
-    }
-    .g-period:last-child { border-right: none; }
-    .gp-aval { background: rgba(113,87,199,.95); }
-    .gp-r2   { background: rgba(22,138,120,.95); }
-    .gp-r3   { background: rgba(210,122,22,.95); }
-
-    /* ── Eixo de tempo ───────────────────────────────────────── */
-    .g-axis { display: flex; border-bottom: 2px solid #DDE5EE; background: #F8FAFD; }
     .g-axis__lbl {
       width: var(--lbl); min-width: var(--lbl); flex-shrink: 0;
-      padding: .38rem 1rem;
-      font-size: .58rem; font-weight: 700; color: #66758A;
+      padding: .5rem 1rem;
+      font-size: .6rem; font-weight: 700; color: #94A3B8;
       text-transform: uppercase; letter-spacing: .07em;
-      border-right: 2px solid #DDE5EE;
+      border-right: 1.5px solid #E2EBF4;
       display: flex; align-items: center;
+      background: #F8FAFC;
     }
-    .g-axis__track { flex: 1; position: relative; height: 26px; }
+    .g-axis__track { flex: 1; position: relative; height: 30px; }
     .g-tick {
       position: absolute; top: 50%;
       transform: translate(-50%, -50%);
-      font-size: .62rem; font-weight: 600; color: #66758A;
+      font-size: .62rem; font-weight: 600; color: #94A3B8;
     }
     .g-vline {
-      position: absolute; top: 0; bottom: 0; width: 1px; background: #DDE5EE;
+      position: absolute; top: 0; bottom: 0;
+      width: 1px; background: #E8F0F8;
     }
 
-    /* ── Cabeçalho de seção ──────────────────────────────────── */
+    /* Separadores de fase — linha discreta com label */
     .g-phase {
-      display: flex; align-items: center; gap: .6rem;
-      padding: .38rem 1rem;
-      font-size: .61rem; font-weight: 800;
-      text-transform: uppercase; letter-spacing: .08em; color: #fff;
+      display: flex; align-items: center; gap: .55rem;
+      padding: .45rem 1rem;
+      background: #F8FAFD;
+      border-bottom: 1px solid #EEF3F9;
+      font-size: .63rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em;
+      color: #64748B;
     }
-    .g-phase__dot {
-      width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0;
-      background: rgba(255,255,255,.5);
+    .g-phase__bar {
+      width: 3px; height: 14px; border-radius: 2px; flex-shrink: 0;
     }
+    .g-phase--sala1 .g-phase__bar { background: #6366F1; }
+    .g-phase--sala2 .g-phase__bar { background: #8B5CF6; }
     .g-phase__range {
-      margin-left: auto; font-weight: 500; opacity: .65;
-      font-size: .6rem; text-transform: none; letter-spacing: .02em;
+      margin-left: auto; font-weight: 500;
+      color: #94A3B8; font-size: .6rem;
+      text-transform: none; letter-spacing: .02em;
     }
-    .gphase-s1 { background: #3D2E7A; }
-    .gphase-s2 { background: #6E2238; }
 
-    /* ── Linhas de dados ─────────────────────────────────────── */
-    .g-row { display: flex; border-bottom: 1px solid #EEF2F7; transition: background .1s; }
+    /* Linhas de equipe */
+    .g-row {
+      display: flex;
+      border-bottom: 1px solid #EEF3F9;
+      transition: background .1s;
+    }
     .g-row:last-child { border-bottom: none; }
-    .g-row:nth-child(even) { background: #FAFBFD; }
-    .g-row:hover { background: #EEF4FF; }
+    .g-row:hover { background: #F5F9FF; }
+
+    /* Coluna de label — sticky left */
     .g-lbl {
       width: var(--lbl); min-width: var(--lbl); flex-shrink: 0;
-      padding: .52rem 1rem;
-      border-right: 2px solid #EEF2F7;
+      padding: .6rem 1rem;
+      border-right: 1.5px solid #EEF3F9;
       display: flex; flex-direction: column; justify-content: center;
+      position: sticky; left: 0;
+      background: #fff;
+      z-index: 10;
+      transition: background .1s;
     }
-    .g-lbl__id   { font-size: .76rem; font-weight: 800; color: #19324D; letter-spacing: .01em; }
-    .g-lbl__nome { font-size: .64rem; color: #66758A; line-height: 1.3; margin-top: .04rem; font-weight: 500; }
-    .g-track { flex: 1; position: relative; height: 40px; }
+    .g-row:hover .g-lbl { background: #F5F9FF; }
+    .g-lbl__id   { font-size: .82rem; font-weight: 800; color: #0F1F33; letter-spacing: .01em; }
+    .g-lbl__nome { font-size: .68rem; color: #64748B; line-height: 1.35; margin-top: .08rem; font-weight: 500; }
 
-    /* Grade temporal */
+    /* Track de tempo */
+    .g-track {
+      flex: 1;
+      position: relative;
+      height: 52px; /* Option B: faixas mais altas */
+    }
+
+    /* Grade de fundo */
     .g-track::after {
       content: '';
       position: absolute; inset: 0;
@@ -169,8 +202,8 @@
         to right,
         transparent 0,
         transparent calc(14.28% - 1px),
-        #EEF2F7 calc(14.28% - 1px),
-        #EEF2F7 14.28%
+        #EEF3F9 calc(14.28% - 1px),
+        #EEF3F9 14.28%
       );
       pointer-events: none;
     }
@@ -179,67 +212,74 @@
       content: '';
       position: absolute; inset: 0;
       background:
-        linear-gradient(to right, transparent calc(33.33% - 1px), #DDE5EE calc(33.33% - 1px), #DDE5EE 33.33%, transparent 33.33%),
-        linear-gradient(to right, transparent calc(66.67% - 1px), #DDE5EE calc(66.67% - 1px), #DDE5EE 66.67%, transparent 66.67%);
+        linear-gradient(to right, transparent calc(33.33% - 1px), #D8E6F4 calc(33.33% - 1px), #D8E6F4 33.33%, transparent 33.33%),
+        linear-gradient(to right, transparent calc(66.67% - 1px), #D8E6F4 calc(66.67% - 1px), #D8E6F4 66.67%, transparent 66.67%);
       pointer-events: none; z-index: 1;
     }
 
-    /* Blocos de atividade */
+    /* Blocos de atividade — Option B: faixas altas */
     .gb {
       position: absolute;
-      top: 7px; height: 26px;
+      top: 8px; height: 36px;
       border-radius: 6px;
       display: flex; align-items: center; justify-content: center;
-      font-size: .63rem; font-weight: 700; color: #fff;
+      font-size: .64rem; font-weight: 700; color: #fff;
       white-space: nowrap; letter-spacing: .01em;
-      box-shadow: 0 1px 3px rgba(0,0,0,.1);
       cursor: default;
-      transition: box-shadow .15s, transform .1s;
+      transition: opacity .15s, transform .1s;
       z-index: 2;
+      box-shadow: none;
     }
-    .gb:hover { box-shadow: 0 4px 14px rgba(0,0,0,.22); transform: scaleY(1.12); z-index: 5; }
-    .gb-s1 { background: #7157C7; }
-    .gb-s2 { background: #A94368; }
-    .gb-r1 { background: #3977C9; }
-    .gb-r2 { background: #168A78; }
-    .gb-r3 { background: #D27A16; }
+    .gb:hover { opacity: .88; transform: scaleY(1.06); z-index: 5; }
 
-    /* ── Cards de resumo ─────────────────────────────────────── */
-    .info-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; margin-top: 1.25rem; }
-    .ic {
-      background: #fff; border-radius: 12px;
-      border: 1px solid #DDE5EE;
-      padding: .9rem 1.1rem;
-      box-shadow: 0 1px 4px rgba(25,50,77,.04);
+    /* Paleta de rounds — família azul */
+    .gb-s1 { background: #6366F1; }   /* Avaliação Sala 1 — indigo */
+    .gb-s2 { background: #8B5CF6; }   /* Avaliação Sala 2 — violet */
+    .gb-r1 { background: #3B82F6; }   /* Round 1 — blue */
+    .gb-r2 { background: #0284C7; }   /* Round 2 — sky */
+    .gb-r3 { background: #0369A1; }   /* Round 3 — dark sky */
+
+    /* ── Cards de resumo (simplificados) ────────────────────── */
+    .info-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .65rem;
+      margin-top: 1rem;
     }
-    .ic__label { font-size: .58rem; font-weight: 800; text-transform: uppercase; letter-spacing: .09em; color: #66758A; margin-bottom: .35rem; }
-    .ic__val   { font-size: 1rem; font-weight: 900; color: #1F2A3A; letter-spacing: -.02em; }
-    .ic__sub   { font-size: .67rem; color: #66758A; margin-top: .2rem; line-height: 1.45; font-weight: 400; }
+    .ic {
+      background: #fff;
+      border-radius: 10px;
+      border: 1px solid #E2EBF4;
+      padding: .85rem 1rem;
+    }
+    .ic__label {
+      font-size: .6rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: .09em; color: #94A3B8; margin-bottom: .3rem;
+    }
+    .ic__val   { font-size: .95rem; font-weight: 800; color: #0F1F33; letter-spacing: -.02em; }
+    .ic__sub   { font-size: .67rem; color: #64748B; margin-top: .2rem; line-height: 1.45; }
 
     /* ── Impressão ───────────────────────────────────────────── */
     @media print {
       @page { size: A4 landscape; margin: .7cm 1cm; }
       * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       body { background: #fff; }
-      .topbar { display: none !important; }
+      .topbar, .crono-toolbar { display: none !important; }
       .wrap { max-width: 100%; padding: 0; }
-      .page-hd h1 { font-size: .95rem; margin-bottom: .1rem; }
-      .page-hd .sub { font-size: .72rem; margin-bottom: .6rem; }
-      .overview { margin-bottom: .55rem; padding: .55rem .9rem .65rem; box-shadow: none; border-color: #DDE5EE; }
-      .legenda { margin-bottom: .6rem; padding: .35rem .9rem; box-shadow: none; }
-      .gantt-card { box-shadow: none; overflow: visible; border-radius: 8px; }
+      .gantt-card { overflow: visible; border-radius: 8px; }
       .gantt { min-width: 0; width: 100%; }
-      .gb { box-shadow: none; font-size: .57rem; }
-      .gb:hover { transform: none; }
-      .g-row:hover { background: transparent; }
-      .g-track { height: 30px; }
-      .gb { top: 4px; height: 22px; }
-      .info-row { margin-top: .65rem; gap: .5rem; }
-      .ic { padding: .55rem .8rem; border-radius: 7px; }
-      .ic__val { font-size: .88rem; }
-      .ic__sub { font-size: .62rem; }
+      .gb { font-size: .57rem; }
+      .g-track { height: 38px; }
+      .gb { top: 5px; height: 28px; }
+      .info-row { margin-top: .5rem; gap: .4rem; }
+      .g-axis { position: static; }
+      .g-lbl  { position: static; }
     }
-    @media (max-width: 700px) { .info-row { grid-template-columns: repeat(2, 1fr); } }
+
+    @media (max-width: 700px) {
+      .info-row { grid-template-columns: repeat(2, 1fr); }
+      :root { --lbl: 140px; }
+    }
   </style>
   <script>window.API_URL='https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';</script>
 </head>
@@ -268,69 +308,55 @@
 </nav>
 
 <main class="app-main">
-
 <div class="wrap">
 
+  <!-- Nível 1: Cabeçalho + timeline macro -->
   <div class="page-hd">
-    <h1>Cronograma do Evento</h1>
-    <p class="sub">2 arenas &middot; 2 salas de avalia&#xE7;&#xE3;o &middot; hor&#xE1;rios por equipe</p>
+    <h1>Cronograma</h1>
+    <p class="page-meta">07:00 &agrave;s 12:00 &middot; 2 arenas &middot; 2 salas de avalia&ccedil;&atilde;o &middot; 13 equipes</p>
   </div>
 
-  <!-- Visão geral -->
-  <div class="overview">
-    <div class="overview__title">Vis&#xE3;o Geral &middot; 07:00 &#xE0;s 12:00</div>
-    <div class="ov-track">
-      <div class="ov-block" style="left:0%;width:10%;background:#19324D">Abertura</div>
-      <div class="ov-block ov-split" style="left:10%;width:23.33%">
-        <div class="ov-half" style="background:#7157C7">Sala 1 &mdash; Aval. + R1</div>
-        <div class="ov-half" style="background:#A94368">Sala 2 &mdash; Aval. + R1</div>
-      </div>
-      <div class="ov-block" style="left:33.33%;width:23.33%;background:#168A78">Round 2</div>
-      <div class="ov-block" style="left:56.67%;width:23.33%;background:#D27A16">Round 3</div>
-      <div class="ov-block" style="left:80%;width:10%;background:#65768D">Delibera&#xE7;&#xE3;o</div>
-      <div class="ov-block" style="left:90%;width:10%;background:#96501E">Premia&#xE7;&#xE3;o</div>
+  <div class="timeline-macro">
+    <div class="tl-label">Vis&atilde;o geral do evento</div>
+    <div class="tl-bar">
+      <div class="tl-seg tl-abertura"  style="width:10%">Abertura</div>
+      <div class="tl-seg tl-aval"      style="width:23.33%">Aval. + Round 1</div>
+      <div class="tl-seg tl-r2"        style="width:23.33%">Round 2</div>
+      <div class="tl-seg tl-r3"        style="width:23.34%">Round 3</div>
+      <div class="tl-seg tl-delib"     style="width:10%">Delibera&ccedil;&atilde;o</div>
+      <div class="tl-seg tl-premio"    style="width:10%">Premia&ccedil;&atilde;o</div>
     </div>
-    <div class="ov-ticks">
-      <span class="ov-tick" style="left:0%">07:00</span>
-      <span class="ov-tick" style="left:10%">07:30</span>
-      <span class="ov-tick" style="left:33.33%">08:40</span>
-      <span class="ov-tick" style="left:56.67%">09:50</span>
-      <span class="ov-tick" style="left:80%">11:00</span>
-      <span class="ov-tick" style="left:90%">11:30</span>
-      <span class="ov-tick" style="left:100%">12:00</span>
+    <div class="tl-ticks">
+      <span class="tl-tick" style="left:0%">07:00</span>
+      <span class="tl-tick" style="left:10%">07:30</span>
+      <span class="tl-tick" style="left:33.33%">08:40</span>
+      <span class="tl-tick" style="left:56.67%">09:50</span>
+      <span class="tl-tick" style="left:80%">11:00</span>
+      <span class="tl-tick" style="left:90%">11:30</span>
+      <span class="tl-tick" style="left:100%">12:00</span>
     </div>
   </div>
 
-  <!-- Legenda -->
-  <div class="legenda">
-    <div class="li"><div class="lc" style="background:#7157C7"></div> Avalia&#xE7;&#xE3;o Sala 1</div>
-    <div class="li"><div class="lc" style="background:#A94368"></div> Avalia&#xE7;&#xE3;o Sala 2</div>
-    <div class="legenda__sep"></div>
-    <div class="li"><div class="lc" style="background:#3977C9"></div> Round 1</div>
-    <div class="li"><div class="lc" style="background:#168A78"></div> Round 2</div>
-    <div class="li"><div class="lc" style="background:#D27A16"></div> Round 3</div>
-    <div class="legenda__sep"></div>
-    <div class="li"><div class="lc" style="background:#65768D"></div> Delibera&#xE7;&#xE3;o</div>
-    <div class="li"><div class="lc" style="background:#96501E"></div> Premia&#xE7;&#xE3;o</div>
+  <!-- Nível 2: Controles -->
+  <div class="crono-toolbar">
+    <span class="toolbar-label">Sala</span>
+    <button class="filter-sala active" data-sala="all" type="button">Todas</button>
+    <button class="filter-sala" data-sala="sala1" type="button">Sala 1</button>
+    <button class="filter-sala" data-sala="sala2" type="button">Sala 2</button>
+    <div class="toolbar-sep"></div>
+    <div class="search-wrap">
+      <svg width="14" height="14" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="search-equipe" type="text" placeholder="Buscar equipe&hellip;" autocomplete="off">
+    </div>
   </div>
 
-  <!-- Gantt 07:30–11:00 = 210 min | 4.76% = 10 min -->
+  <!-- Nível 3: Agenda detalhada -->
   <div class="gantt-card">
   <div class="gantt">
 
-    <!-- Cabeçalho de períodos -->
-    <div class="g-periods">
-      <div class="g-periods__lbl">Equipe</div>
-      <div class="g-periods__track">
-        <div class="g-period gp-aval" style="width:33.33%">Aval. + Round 1&ensp;&middot;&ensp;07:30 &ndash; 08:40</div>
-        <div class="g-period gp-r2"   style="width:33.33%">Round 2&ensp;&middot;&ensp;08:40 &ndash; 09:50</div>
-        <div class="g-period gp-r3"   style="width:33.34%">Round 3&ensp;&middot;&ensp;09:50 &ndash; 11:00</div>
-      </div>
-    </div>
-
-    <!-- Eixo de tempo -->
+    <!-- Eixo de tempo (sticky top) -->
     <div class="g-axis">
-      <div class="g-axis__lbl">Hor&#xE1;rio</div>
+      <div class="g-axis__lbl">Equipe</div>
       <div class="g-axis__track">
         <div class="g-vline" style="left:0%"></div>
         <div class="g-vline" style="left:14.29%"></div>
@@ -353,147 +379,147 @@
       </div>
     </div>
 
-    <!-- SALA 1 -->
-    <div class="g-phase gphase-s1">
-      <div class="g-phase__dot"></div>
-      Sala 1 &mdash; TUR01 a TUR07
-      <span class="g-phase__range">Avalia&#xE7;&#xE3;o paralela ao Round 1</span>
+    <!-- Sala 1 -->
+    <div class="g-phase g-phase--sala1" data-sala="sala1">
+      <div class="g-phase__bar"></div>
+      Sala 1 &middot; TUR01 a TUR07
+      <span class="g-phase__range">Avalia&ccedil;&atilde;o paralela ao Round 1</span>
     </div>
 
-    <div class="g-row">
+    <div class="g-row" data-sala="sala1" data-equipe="tur01 6 a cyber panter">
       <div class="g-lbl"><div class="g-lbl__id">TUR01</div><div class="g-lbl__nome">6&deg; A &middot; Cyber Panter</div></div>
       <div class="g-track">
-        <div class="gb gb-s1" style="left:0.0%;width:4.76%" title="07:30&ndash;07:40 &middot; Sala 1">Sala 1</div>
-        <div class="gb gb-r1" style="left:4.76%;width:4.76%" title="07:40&ndash;07:50 &middot; Round 1">R1</div>
-        <div class="gb gb-r2" style="left:33.33%;width:4.76%" title="08:40&ndash;08:50 &middot; Round 2">R2</div>
-        <div class="gb gb-r3" style="left:66.67%;width:4.76%" title="09:50&ndash;10:00 &middot; Round 3">R3</div>
+        <div class="gb gb-s1" style="left:0.0%;width:4.76%" title="07:30–07:40 · Sala 1">Sala 1</div>
+        <div class="gb gb-r1" style="left:4.76%;width:4.76%" title="07:40–07:50 · Round 1">R1</div>
+        <div class="gb gb-r2" style="left:33.33%;width:4.76%" title="08:40–08:50 · Round 2">R2</div>
+        <div class="gb gb-r3" style="left:66.67%;width:4.76%" title="09:50–10:00 · Round 3">R3</div>
       </div>
     </div>
 
-    <div class="g-row">
+    <div class="g-row" data-sala="sala1" data-equipe="tur02 6 b liga do choque">
       <div class="g-lbl"><div class="g-lbl__id">TUR02</div><div class="g-lbl__nome">6&deg; B &middot; Liga do Choque</div></div>
       <div class="g-track">
-        <div class="gb gb-s1" style="left:4.76%;width:4.76%" title="07:40&ndash;07:50 &middot; Sala 1">Sala 1</div>
-        <div class="gb gb-r1" style="left:0.0%;width:4.76%" title="07:30&ndash;07:40 &middot; Round 1">R1</div>
-        <div class="gb gb-r2" style="left:33.33%;width:4.76%" title="08:40&ndash;08:50 &middot; Round 2">R2</div>
-        <div class="gb gb-r3" style="left:71.43%;width:4.76%" title="10:00&ndash;10:10 &middot; Round 3">R3</div>
+        <div class="gb gb-s1" style="left:4.76%;width:4.76%" title="07:40–07:50 · Sala 1">Sala 1</div>
+        <div class="gb gb-r1" style="left:0.0%;width:4.76%" title="07:30–07:40 · Round 1">R1</div>
+        <div class="gb gb-r2" style="left:33.33%;width:4.76%" title="08:40–08:50 · Round 2">R2</div>
+        <div class="gb gb-r3" style="left:71.43%;width:4.76%" title="10:00–10:10 · Round 3">R3</div>
       </div>
     </div>
 
-    <div class="g-row">
+    <div class="g-row" data-sala="sala1" data-equipe="tur03 6 c alpha tech">
       <div class="g-lbl"><div class="g-lbl__id">TUR03</div><div class="g-lbl__nome">6&deg; C &middot; Alpha Tech</div></div>
       <div class="g-track">
-        <div class="gb gb-s1" style="left:9.52%;width:4.76%" title="07:50&ndash;08:00 &middot; Sala 1">Sala 1</div>
-        <div class="gb gb-r1" style="left:14.29%;width:4.76%" title="08:00&ndash;08:10 &middot; Round 1">R1</div>
-        <div class="gb gb-r2" style="left:38.1%;width:4.76%" title="08:50&ndash;09:00 &middot; Round 2">R2</div>
-        <div class="gb gb-r3" style="left:71.43%;width:4.76%" title="10:00&ndash;10:10 &middot; Round 3">R3</div>
+        <div class="gb gb-s1" style="left:9.52%;width:4.76%" title="07:50–08:00 · Sala 1">Sala 1</div>
+        <div class="gb gb-r1" style="left:14.29%;width:4.76%" title="08:00–08:10 · Round 1">R1</div>
+        <div class="gb gb-r2" style="left:38.1%;width:4.76%" title="08:50–09:00 · Round 2">R2</div>
+        <div class="gb gb-r3" style="left:71.43%;width:4.76%" title="10:00–10:10 · Round 3">R3</div>
       </div>
     </div>
 
-    <div class="g-row">
+    <div class="g-row" data-sala="sala1" data-equipe="tur04 6 d pheonics mecanics">
       <div class="g-lbl"><div class="g-lbl__id">TUR04</div><div class="g-lbl__nome">6&deg; D &middot; Pheonics Mecanics</div></div>
       <div class="g-track">
-        <div class="gb gb-s1" style="left:14.29%;width:4.76%" title="08:00&ndash;08:10 &middot; Sala 1">Sala 1</div>
-        <div class="gb gb-r1" style="left:9.52%;width:4.76%" title="07:50&ndash;08:00 &middot; Round 1">R1</div>
-        <div class="gb gb-r2" style="left:38.1%;width:4.76%" title="08:50&ndash;09:00 &middot; Round 2">R2</div>
-        <div class="gb gb-r3" style="left:66.67%;width:4.76%" title="09:50&ndash;10:00 &middot; Round 3">R3</div>
+        <div class="gb gb-s1" style="left:14.29%;width:4.76%" title="08:00–08:10 · Sala 1">Sala 1</div>
+        <div class="gb gb-r1" style="left:9.52%;width:4.76%" title="07:50–08:00 · Round 1">R1</div>
+        <div class="gb gb-r2" style="left:38.1%;width:4.76%" title="08:50–09:00 · Round 2">R2</div>
+        <div class="gb gb-r3" style="left:66.67%;width:4.76%" title="09:50–10:00 · Round 3">R3</div>
       </div>
     </div>
 
-    <div class="g-row">
+    <div class="g-row" data-sala="sala1" data-equipe="tur05 6 e tecshark">
       <div class="g-lbl"><div class="g-lbl__id">TUR05</div><div class="g-lbl__nome">6&deg; E &middot; TecShark</div></div>
       <div class="g-track">
-        <div class="gb gb-s1" style="left:19.05%;width:4.76%" title="08:10&ndash;08:20 &middot; Sala 1">Sala 1</div>
-        <div class="gb gb-r1" style="left:23.81%;width:4.76%" title="08:20&ndash;08:30 &middot; Round 1">R1</div>
-        <div class="gb gb-r2" style="left:42.86%;width:4.76%" title="09:00&ndash;09:10 &middot; Round 2">R2</div>
-        <div class="gb gb-r3" style="left:80.95%;width:4.76%" title="10:20&ndash;10:30 &middot; Round 3">R3</div>
+        <div class="gb gb-s1" style="left:19.05%;width:4.76%" title="08:10–08:20 · Sala 1">Sala 1</div>
+        <div class="gb gb-r1" style="left:23.81%;width:4.76%" title="08:20–08:30 · Round 1">R1</div>
+        <div class="gb gb-r2" style="left:42.86%;width:4.76%" title="09:00–09:10 · Round 2">R2</div>
+        <div class="gb gb-r3" style="left:80.95%;width:4.76%" title="10:20–10:30 · Round 3">R3</div>
       </div>
     </div>
 
-    <div class="g-row">
+    <div class="g-row" data-sala="sala1" data-equipe="tur06 7 a hoppin robots">
       <div class="g-lbl"><div class="g-lbl__id">TUR06</div><div class="g-lbl__nome">7&deg; A &middot; Hoppin Robots</div></div>
       <div class="g-track">
-        <div class="gb gb-s1" style="left:23.81%;width:4.76%" title="08:20&ndash;08:30 &middot; Sala 1">Sala 1</div>
-        <div class="gb gb-r1" style="left:19.05%;width:4.76%" title="08:10&ndash;08:20 &middot; Round 1">R1</div>
-        <div class="gb gb-r2" style="left:42.86%;width:4.76%" title="09:00&ndash;09:10 &middot; Round 2">R2</div>
-        <div class="gb gb-r3" style="left:80.95%;width:4.76%" title="10:20&ndash;10:30 &middot; Round 3">R3</div>
+        <div class="gb gb-s1" style="left:23.81%;width:4.76%" title="08:20–08:30 · Sala 1">Sala 1</div>
+        <div class="gb gb-r1" style="left:19.05%;width:4.76%" title="08:10–08:20 · Round 1">R1</div>
+        <div class="gb gb-r2" style="left:42.86%;width:4.76%" title="09:00–09:10 · Round 2">R2</div>
+        <div class="gb gb-r3" style="left:80.95%;width:4.76%" title="10:20–10:30 · Round 3">R3</div>
       </div>
     </div>
 
-    <div class="g-row">
+    <div class="g-row" data-sala="sala1" data-equipe="tur07 7 b bivoltx">
       <div class="g-lbl"><div class="g-lbl__id">TUR07</div><div class="g-lbl__nome">7&deg; B &middot; Bivoltx</div></div>
       <div class="g-track">
-        <div class="gb gb-s1" style="left:28.57%;width:4.76%" title="08:30&ndash;08:40 &middot; Sala 1">Sala 1</div>
-        <div class="gb gb-r1" style="left:23.81%;width:4.76%" title="08:20&ndash;08:30 &middot; Round 1">R1</div>
-        <div class="gb gb-r2" style="left:47.62%;width:4.76%" title="09:10&ndash;09:20 &middot; Round 2">R2</div>
-        <div class="gb gb-r3" style="left:76.19%;width:4.76%" title="10:10&ndash;10:20 &middot; Round 3">R3</div>
+        <div class="gb gb-s1" style="left:28.57%;width:4.76%" title="08:30–08:40 · Sala 1">Sala 1</div>
+        <div class="gb gb-r1" style="left:23.81%;width:4.76%" title="08:20–08:30 · Round 1">R1</div>
+        <div class="gb gb-r2" style="left:47.62%;width:4.76%" title="09:10–09:20 · Round 2">R2</div>
+        <div class="gb gb-r3" style="left:76.19%;width:4.76%" title="10:10–10:20 · Round 3">R3</div>
       </div>
     </div>
 
-    <!-- SALA 2 -->
-    <div class="g-phase gphase-s2">
-      <div class="g-phase__dot"></div>
-      Sala 2 &mdash; TUR08 a TUR13
-      <span class="g-phase__range">Avalia&#xE7;&#xE3;o paralela ao Round 1</span>
+    <!-- Sala 2 -->
+    <div class="g-phase g-phase--sala2" data-sala="sala2">
+      <div class="g-phase__bar"></div>
+      Sala 2 &middot; TUR08 a TUR13
+      <span class="g-phase__range">Avalia&ccedil;&atilde;o paralela ao Round 1</span>
     </div>
 
-    <div class="g-row">
+    <div class="g-row" data-sala="sala2" data-equipe="tur08 7 c ecoshift">
       <div class="g-lbl"><div class="g-lbl__id">TUR08</div><div class="g-lbl__nome">7&deg; C &middot; Ecoshift</div></div>
       <div class="g-track">
-        <div class="gb gb-s2" style="left:0.0%;width:4.76%" title="07:30&ndash;07:40 &middot; Sala 2">Sala 2</div>
-        <div class="gb gb-r1" style="left:4.76%;width:4.76%" title="07:40&ndash;07:50 &middot; Round 1">R1</div>
-        <div class="gb gb-r2" style="left:47.62%;width:4.76%" title="09:10&ndash;09:20 &middot; Round 2">R2</div>
-        <div class="gb gb-r3" style="left:76.19%;width:4.76%" title="10:10&ndash;10:20 &middot; Round 3">R3</div>
+        <div class="gb gb-s2" style="left:0.0%;width:4.76%" title="07:30–07:40 · Sala 2">Sala 2</div>
+        <div class="gb gb-r1" style="left:4.76%;width:4.76%" title="07:40–07:50 · Round 1">R1</div>
+        <div class="gb gb-r2" style="left:47.62%;width:4.76%" title="09:10–09:20 · Round 2">R2</div>
+        <div class="gb gb-r3" style="left:76.19%;width:4.76%" title="10:10–10:20 · Round 3">R3</div>
       </div>
     </div>
 
-    <div class="g-row">
+    <div class="g-row" data-sala="sala2" data-equipe="tur09 7 d pantera lego team">
       <div class="g-lbl"><div class="g-lbl__id">TUR09</div><div class="g-lbl__nome">7&deg; D &middot; Pantera Lego Team</div></div>
       <div class="g-track">
-        <div class="gb gb-s2" style="left:4.76%;width:4.76%" title="07:40&ndash;07:50 &middot; Sala 2">Sala 2</div>
-        <div class="gb gb-r1" style="left:0.0%;width:4.76%" title="07:30&ndash;07:40 &middot; Round 1">R1</div>
-        <div class="gb gb-r2" style="left:52.38%;width:4.76%" title="09:20&ndash;09:30 &middot; Round 2">R2</div>
-        <div class="gb gb-r3" style="left:85.71%;width:4.76%" title="10:30&ndash;10:40 &middot; Round 3">R3</div>
+        <div class="gb gb-s2" style="left:4.76%;width:4.76%" title="07:40–07:50 · Sala 2">Sala 2</div>
+        <div class="gb gb-r1" style="left:0.0%;width:4.76%" title="07:30–07:40 · Round 1">R1</div>
+        <div class="gb gb-r2" style="left:52.38%;width:4.76%" title="09:20–09:30 · Round 2">R2</div>
+        <div class="gb gb-r3" style="left:85.71%;width:4.76%" title="10:30–10:40 · Round 3">R3</div>
       </div>
     </div>
 
-    <div class="g-row">
+    <div class="g-row" data-sala="sala2" data-equipe="tur10 7 e imperio das oncas">
       <div class="g-lbl"><div class="g-lbl__id">TUR10</div><div class="g-lbl__nome">7&deg; E &middot; Imp&eacute;rio das On&ccedil;as</div></div>
       <div class="g-track">
-        <div class="gb gb-s2" style="left:9.52%;width:4.76%" title="07:50&ndash;08:00 &middot; Sala 2">Sala 2</div>
-        <div class="gb gb-r1" style="left:14.29%;width:4.76%" title="08:00&ndash;08:10 &middot; Round 1">R1</div>
-        <div class="gb gb-r2" style="left:52.38%;width:4.76%" title="09:20&ndash;09:30 &middot; Round 2">R2</div>
-        <div class="gb gb-r3" style="left:85.71%;width:4.76%" title="10:30&ndash;10:40 &middot; Round 3">R3</div>
+        <div class="gb gb-s2" style="left:9.52%;width:4.76%" title="07:50–08:00 · Sala 2">Sala 2</div>
+        <div class="gb gb-r1" style="left:14.29%;width:4.76%" title="08:00–08:10 · Round 1">R1</div>
+        <div class="gb gb-r2" style="left:52.38%;width:4.76%" title="09:20–09:30 · Round 2">R2</div>
+        <div class="gb gb-r3" style="left:85.71%;width:4.76%" title="10:30–10:40 · Round 3">R3</div>
       </div>
     </div>
 
-    <div class="g-row">
+    <div class="g-row" data-sala="sala2" data-equipe="tur11 7 f poseidon">
       <div class="g-lbl"><div class="g-lbl__id">TUR11</div><div class="g-lbl__nome">7&deg; F &middot; Poseidon</div></div>
       <div class="g-track">
-        <div class="gb gb-s2" style="left:14.29%;width:4.76%" title="08:00&ndash;08:10 &middot; Sala 2">Sala 2</div>
-        <div class="gb gb-r1" style="left:9.52%;width:4.76%" title="07:50&ndash;08:00 &middot; Round 1">R1</div>
-        <div class="gb gb-r2" style="left:57.14%;width:4.76%" title="09:30&ndash;09:40 &middot; Round 2">R2</div>
-        <div class="gb gb-r3" style="left:90.48%;width:4.76%" title="10:40&ndash;10:50 &middot; Round 3">R3</div>
+        <div class="gb gb-s2" style="left:14.29%;width:4.76%" title="08:00–08:10 · Sala 2">Sala 2</div>
+        <div class="gb gb-r1" style="left:9.52%;width:4.76%" title="07:50–08:00 · Round 1">R1</div>
+        <div class="gb gb-r2" style="left:57.14%;width:4.76%" title="09:30–09:40 · Round 2">R2</div>
+        <div class="gb gb-r3" style="left:90.48%;width:4.76%" title="10:40–10:50 · Round 3">R3</div>
       </div>
     </div>
 
-    <div class="g-row">
+    <div class="g-row" data-sala="sala2" data-equipe="tur12 7 g arara azul">
       <div class="g-lbl"><div class="g-lbl__id">TUR12</div><div class="g-lbl__nome">7&deg; G &middot; Arara Azul</div></div>
       <div class="g-track">
-        <div class="gb gb-s2" style="left:19.05%;width:4.76%" title="08:10&ndash;08:20 &middot; Sala 2">Sala 2</div>
-        <div class="gb gb-r1" style="left:28.57%;width:4.76%" title="08:30&ndash;08:40 &middot; Round 1">R1</div>
-        <div class="gb gb-r2" style="left:57.14%;width:4.76%" title="09:30&ndash;09:40 &middot; Round 2">R2</div>
-        <div class="gb gb-r3" style="left:90.48%;width:4.76%" title="10:40&ndash;10:50 &middot; Round 3">R3</div>
+        <div class="gb gb-s2" style="left:19.05%;width:4.76%" title="08:10–08:20 · Sala 2">Sala 2</div>
+        <div class="gb gb-r1" style="left:28.57%;width:4.76%" title="08:30–08:40 · Round 1">R1</div>
+        <div class="gb gb-r2" style="left:57.14%;width:4.76%" title="09:30–09:40 · Round 2">R2</div>
+        <div class="gb gb-r3" style="left:90.48%;width:4.76%" title="10:40–10:50 · Round 3">R3</div>
       </div>
     </div>
 
-    <div class="g-row">
+    <div class="g-row" data-sala="sala2" data-equipe="tur13 7 h nexos">
       <div class="g-lbl"><div class="g-lbl__id">TUR13</div><div class="g-lbl__nome">7&deg; H &middot; Nexos</div></div>
       <div class="g-track">
-        <div class="gb gb-s2" style="left:23.81%;width:4.76%" title="08:20&ndash;08:30 &middot; Sala 2">Sala 2</div>
-        <div class="gb gb-r1" style="left:19.05%;width:4.76%" title="08:10&ndash;08:20 &middot; Round 1">R1</div>
-        <div class="gb gb-r2" style="left:61.9%;width:4.76%" title="09:40&ndash;09:50 &middot; Round 2">R2</div>
-        <div class="gb gb-r3" style="left:95.24%;width:4.76%" title="10:50&ndash;11:00 &middot; Round 3">R3</div>
+        <div class="gb gb-s2" style="left:23.81%;width:4.76%" title="08:20–08:30 · Sala 2">Sala 2</div>
+        <div class="gb gb-r1" style="left:19.05%;width:4.76%" title="08:10–08:20 · Round 1">R1</div>
+        <div class="gb gb-r2" style="left:61.9%;width:4.76%" title="09:40–09:50 · Round 2">R2</div>
+        <div class="gb gb-r3" style="left:95.24%;width:4.76%" title="10:50–11:00 · Round 3">R3</div>
       </div>
     </div>
 
@@ -505,32 +531,66 @@
     <div class="ic">
       <div class="ic__label">Abertura</div>
       <div class="ic__val">07:00 &ndash; 07:30</div>
-      <div class="ic__sub">Todas as equipes &middot; quadra / audit&#xF3;rio</div>
+      <div class="ic__sub">Todas as equipes &middot; audit&oacute;rio</div>
     </div>
     <div class="ic">
-      <div class="ic__label">Avalia&#xE7;&#xF5;es + Round 1</div>
+      <div class="ic__label">Avalia&ccedil;&otilde;es + Round 1</div>
       <div class="ic__val">07:30 &ndash; 08:40</div>
-      <div class="ic__sub">Sala 1 (TUR01&ndash;07) e Sala 2 (TUR08&ndash;13)<br>em paralelo com Round 1 na arena</div>
+      <div class="ic__sub">Sala 1 (TUR01–07) e Sala 2 (TUR08–13) em paralelo com a arena</div>
     </div>
     <div class="ic">
-      <div class="ic__label">2 Arenas &mdash; 3 Rounds</div>
+      <div class="ic__label">Rounds &middot; 3 no total</div>
       <div class="ic__val">07:30 &ndash; 11:00</div>
-      <div class="ic__sub">R1: 7:30&ndash;8:40 &middot; R2: 8:40&ndash;9:50 &middot; R3: 9:50&ndash;11:00<br>M&#xE1;x 2 equipes simult&#xE2;neas &middot; slots de 10 min</div>
+      <div class="ic__sub">R1: 7:30–8:40 &middot; R2: 8:40–9:50 &middot; R3: 9:50–11:00 &middot; slots de 10 min</div>
     </div>
     <div class="ic">
-      <div class="ic__label">Delibera&#xE7;&#xE3;o &amp; Premia&#xE7;&#xE3;o</div>
+      <div class="ic__label">Delibera&ccedil;&atilde;o &amp; Premia&ccedil;&atilde;o</div>
       <div class="ic__val">11:00 &ndash; 12:00</div>
-      <div class="ic__sub">Delibera&#xE7;&#xE3;o: 11:00&ndash;11:30<br>Premia&#xE7;&#xE3;o e encerramento: 11:30&ndash;12:00</div>
+      <div class="ic__sub">Delibera&ccedil;&atilde;o: 11:00–11:30 &middot; Premia&ccedil;&atilde;o: 11:30–12:00</div>
     </div>
   </div>
 
 </div><!-- /wrap -->
-
 </main>
 </div><!-- /app-body -->
 
 <div id="toast"></div>
 <script src="js/api.js"></script>
 <script src="js/sidebar-roles.js"></script>
+<script>
+  /* ── Filtro por sala ─────────────────────────────────────── */
+  document.querySelectorAll('.filter-sala').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.filter-sala').forEach(function (b) { b.classList.remove('active'); });
+      this.classList.add('active');
+      var sala = this.dataset.sala;
+      document.querySelectorAll('.g-row[data-sala], .g-phase[data-sala]').forEach(function (el) {
+        el.style.display = (sala === 'all' || el.dataset.sala === sala) ? '' : 'none';
+      });
+      filtrarBusca(); /* reaplica busca sobre o subconjunto visível */
+    });
+  });
+
+  /* ── Busca por equipe ────────────────────────────────────── */
+  function filtrarBusca() {
+    var q = document.getElementById('search-equipe').value.toLowerCase().trim();
+    var salaAtiva = document.querySelector('.filter-sala.active').dataset.sala;
+    document.querySelectorAll('.g-row').forEach(function (row) {
+      var salaOk = salaAtiva === 'all' || row.dataset.sala === salaAtiva;
+      var buscaOk = !q || (row.dataset.equipe || '').toLowerCase().includes(q);
+      row.style.display = (salaOk && buscaOk) ? '' : 'none';
+    });
+    /* mostra/oculta separadores quando todas as linhas da sala somem */
+    ['sala1', 'sala2'].forEach(function (s) {
+      var phase = document.querySelector('.g-phase[data-sala="' + s + '"]');
+      if (!phase) return;
+      var alguma = Array.from(document.querySelectorAll('.g-row[data-sala="' + s + '"]'))
+                       .some(function (r) { return r.style.display !== 'none'; });
+      phase.style.display = alguma ? '' : 'none';
+    });
+  }
+
+  document.getElementById('search-equipe').addEventListener('input', filtrarBusca);
+</script>
 </body>
 </html>

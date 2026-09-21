@@ -710,8 +710,67 @@ tbody td { padding: .7rem 1rem; vertical-align: middle; }
   top: 76px;
   height: calc(100vh - 76px);
   overflow-y: auto;
+  overflow-x: hidden;
   border-right: 1px solid rgba(255,255,255,.05);
+  transition: width .2s cubic-bezier(.4,0,.2,1), min-width .2s cubic-bezier(.4,0,.2,1);
 }
+
+/* ── Sidebar recolhida ──────────────────────────────────────────── */
+.app-body.sidebar-collapsed .app-sidebar {
+  width: 52px;
+  min-width: 52px;
+}
+.app-body.sidebar-collapsed .sidebar-item {
+  padding: .5rem;
+  justify-content: center;
+  gap: 0;
+  font-size: 0;
+  margin: .05rem .2rem;
+}
+.app-body.sidebar-collapsed .sidebar-item svg {
+  width: 19px;
+  height: 19px;
+}
+.app-body.sidebar-collapsed .sidebar-sep {
+  margin: .4rem .3rem;
+}
+/* Tooltip nativo ao recolher */
+.app-body.sidebar-collapsed .sidebar-item[title] {
+  position: relative;
+}
+/* Toggle button */
+.sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: .55rem;
+  margin: auto .4rem .35rem;
+  padding: .4rem .55rem;
+  border-radius: 7px;
+  border: none;
+  background: none;
+  color: rgba(255,255,255,.28);
+  cursor: pointer;
+  font-size: .7rem;
+  font-family: inherit;
+  font-weight: 500;
+  letter-spacing: .01em;
+  white-space: nowrap;
+  width: calc(100% - .8rem);
+  transition: color .14s, background .14s;
+}
+.sidebar-toggle svg {
+  flex-shrink: 0;
+  transition: transform .2s;
+}
+.sidebar-toggle:hover { background: rgba(255,255,255,.06); color: rgba(255,255,255,.6); }
+.app-body.sidebar-collapsed .sidebar-toggle {
+  margin: auto .2rem .35rem;
+  padding: .4rem;
+  justify-content: center;
+}
+.app-body.sidebar-collapsed .sidebar-toggle svg { transform: rotate(180deg); }
+.app-body.sidebar-collapsed .sidebar-toggle-label { display: none; }
 
 .sidebar-item {
   display: flex;

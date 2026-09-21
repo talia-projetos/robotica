@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Entrar — HUB Circuito</title>
+  <title>HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -229,21 +229,20 @@
 
     /* ── Botão principal ─────────────────────────────────────── */
     .btn-login {
-      width: 100%;
-      padding: .72rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+      padding: .62rem 2rem;
       background: #508FCB;
       color: #fff;
       border: none;
       border-radius: 8px;
       font-family: inherit;
-      font-size: .92rem;
+      font-size: .9rem;
       font-weight: 700;
       cursor: pointer;
       transition: background .2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: .45rem;
       margin-bottom: 0;
     }
     .btn-login:hover:not(:disabled) { background: #3d7db8; }

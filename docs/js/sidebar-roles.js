@@ -164,39 +164,105 @@
     wrap.querySelector('#av-sair').addEventListener('click', sair);
   }
 
+  /* ── Mapa de equipes (professor) ────────────────────── */
+  var NOMES_TURMA = {
+    TUR01:'6° A - Cyber Panter',    TUR02:'6° B - Liga do Choque',
+    TUR03:'6° C - Alpha Tech',      TUR04:'6° D - Pheonics Mecanics',
+    TUR05:'6° E - TecShark',        TUR06:'7° A - Hoppin Robots',
+    TUR07:'7° B - Bivoltx',         TUR08:'7° C - Ecoshift',
+    TUR09:'7° D - Pantera Lego Team', TUR10:'7° E - Império das Onças',
+    TUR11:'7° F - Poseidon',        TUR12:'7° G - Arara Azul',
+    TUR13:'7° H - Nexos'
+  };
+
+  /* ── Toggle da sidebar ───────────────────────────────── */
+  function addSidebarToggle() {
+    var sidebar = document.querySelector('.app-sidebar');
+    if (!sidebar) return;
+    var appBody = document.querySelector('.app-body');
+    if (!appBody) return;
+
+    /* Restaura estado salvo */
+    if (localStorage.getItem('sb-collapsed') === '1') {
+      appBody.classList.add('sidebar-collapsed');
+    }
+
+    /* Adiciona title para tooltip nativo em modo recolhido */
+    sidebar.querySelectorAll('.sidebar-item').forEach(function (el) {
+      var text = el.textContent.trim();
+      if (text && !el.getAttribute('title')) el.setAttribute('title', text);
+    });
+
+    /* Botão toggle */
+    var btn = document.createElement('button');
+    btn.className = 'sidebar-toggle';
+    btn.setAttribute('type', 'button');
+    btn.setAttribute('title', 'Recolher menu');
+    btn.innerHTML =
+      '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<polyline points="15 18 9 12 15 6"/>' +
+      '</svg>' +
+      '<span class="sidebar-toggle-label">Recolher</span>';
+    sidebar.appendChild(btn);
+
+    btn.addEventListener('click', function () {
+      var collapsed = appBody.classList.toggle('sidebar-collapsed');
+      localStorage.setItem('sb-collapsed', collapsed ? '1' : '0');
+    });
+  }
+
   /* ── Greeting personalizado na home ─────────────────── */
   function buildGreeting() {
     var hero = document.querySelector('.hub-hero');
     if (!hero) return;
 
-    var name, cta, ctaHref;
+    var h1      = hero.querySelector('h1');
+    var eyebrow = hero.querySelector('.hero-eyebrow');
+    var statsEl = hero.querySelector('.hero-stats');
+    var cta, ctaHref;
+
     if (isCoord) {
-      name    = localStorage.getItem('coord_nome') || 'Coordenador';
-      cta     = 'Ver situação das equipes';
-      ctaHref = 'coordenacao.html';
+      var coordNome = localStorage.getItem('coord_nome') || 'Coordenador';
+      if (h1) h1.innerHTML = 'Olá, <span class="hero-accent">' + coordNome + '!</span>';
+      if (eyebrow) eyebrow.textContent = 'Bem-vindo ao HUB Circuito.';
+      cta = 'Ver situação das equipes'; ctaHref = 'coordenacao.html';
+
     } else if (isJuiz) {
-      name    = localStorage.getItem('hub_juiz') || 'Juiz';
-      cta     = 'Ir para avaliações';
-      ctaHref = 'juizes.html';
+      var juizNome = localStorage.getItem('hub_juiz') || 'Juiz';
+      if (h1) h1.innerHTML = 'Olá, <span class="hero-accent">' + juizNome + '!</span>';
+      if (eyebrow) eyebrow.textContent = 'Bem-vindo ao HUB Circuito.';
+      cta = 'Ir para avaliações'; ctaHref = 'juizes.html';
+
     } else if (isTurma) {
-      name    = localStorage.getItem('turma_id') || 'Turma';
-      cta     = 'Ver resultados da minha turma';
-      ctaHref = 'turma.html';
+      var turmaId  = localStorage.getItem('turma_id') || '';
+      var raw      = NOMES_TURMA[turmaId] || turmaId;
+      var partes   = raw.split(' - ');
+      var nomeEq   = partes.length > 1 ? partes[1].trim() : raw;
+      var serie    = partes.length > 1 ? partes[0].trim() : '';
+
+      /* Greeting: nome da equipe, não o código */
+      if (h1) h1.innerHTML = '<span class="hero-accent">' + nomeEq + '</span>';
+      if (eyebrow) eyebrow.textContent = 'Minha Turma';
+
+      /* Subtítulo com série e ID */
+      var dateEl = hero.querySelector('.hero-date');
+      if (dateEl && (serie || turmaId)) {
+        var meta = document.createElement('div');
+        meta.style.cssText = 'font-size:.75rem;color:#94A3B8;margin-bottom:.6rem;font-weight:500';
+        meta.textContent = [serie, turmaId].filter(Boolean).join(' · ');
+        dateEl.insertAdjacentElement('afterbegin', meta);
+      }
+
+      /* Adapta acessos rápidos para professor */
+      adaptarAcessosProfessor();
+
+      cta = 'Ver desempenho da turma'; ctaHref = 'turma.html';
+
     } else {
       return;
     }
 
-    var last = name.trim().slice(-1).toLowerCase();
-    var bv   = (last === 'a') ? 'Bem-vinda' : 'Bem-vindo';
-
-    var h1 = hero.querySelector('h1');
-    if (h1) h1.innerHTML = 'Olá, <span class="hero-accent">' + name + '!</span>';
-
-    var eyebrow = hero.querySelector('.hero-eyebrow');
-    if (eyebrow) eyebrow.textContent = bv + ' ao HUB Circuito.';
-
-    var statsEl = hero.querySelector('.hero-stats');
-    if (statsEl) {
+    if (statsEl && cta) {
       var link = document.createElement('a');
       link.href = ctaHref;
       link.className = 'hero-cta-btn';
@@ -205,13 +271,36 @@
     }
   }
 
+  /* ── Acessos rápidos: versão professor ───────────────── */
+  function adaptarAcessosProfessor() {
+    var grid = document.querySelector('.acessos-grid');
+    if (!grid) return;
+    /* Substitui os 4 cards genéricos por 3 relevantes ao professor */
+    grid.style.gridTemplateColumns = 'repeat(3,1fr)';
+    grid.innerHTML =
+      '<a href="turma.html" class="acesso acesso--turma">' +
+        '<div class="acesso__icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>' +
+        '<div class="acesso__body"><div class="acesso__name">Minha Turma</div><div class="acesso__desc">Pontuação e feedback</div></div>' +
+      '</a>' +
+      '<a href="cronograma.html" class="acesso acesso--arena">' +
+        '<div class="acesso__icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg></div>' +
+        '<div class="acesso__body"><div class="acesso__name">Cronograma</div><div class="acesso__desc">Horários da equipe</div></div>' +
+      '</a>' +
+      '<a href="ranking.html" class="acesso acesso--coord">' +
+        '<div class="acesso__icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>' +
+        '<div class="acesso__body"><div class="acesso__name">Classificação</div><div class="acesso__desc">Ranking geral</div></div>' +
+      '</a>';
+  }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
       buildAvatar();
       buildGreeting();
+      addSidebarToggle();
     });
   } else {
     buildAvatar();
     buildGreeting();
+    addSidebarToggle();
   }
 })();
