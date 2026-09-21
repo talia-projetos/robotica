@@ -771,6 +771,57 @@ body.modo-telao .app-sidebar,
 body.modo-telao .topbar__event,
 :fullscreen .app-sidebar { display: none !important; }
 
+/* ── Topbar avatar ────────────────────────────────────────────── */
+.topbar-avatar {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+}
+.topbar-avatar__circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .72rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  letter-spacing: 0;
+}
+.topbar-avatar__name {
+  font-size: .72rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.9);
+  line-height: 1.2;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.topbar-avatar__role {
+  font-size: .6rem;
+  color: rgba(255,255,255,.4);
+  line-height: 1;
+}
+
+/* ── Hero CTA personalizado ───────────────────────────────────── */
+.hero-cta-btn {
+  display: inline-block;
+  margin-top: .75rem;
+  padding: .5rem 1.1rem;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: 8px;
+  color: #fff;
+  font-size: .8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background .15s;
+}
+.hero-cta-btn:hover { background: rgba(255,255,255,.2); }
+
 @media (max-width: 700px) {
   .app-sidebar { display: none; }
   .topbar__event { display: none; }
