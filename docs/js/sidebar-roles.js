@@ -137,10 +137,12 @@
     if (target) target.replaceWith(wrap);
     else badge.prepend(wrap);
 
-    /* Esconde btn-sessao legado */
+    /* Limpa spans de nome legados que ficaram visíveis */
     setTimeout(function () {
       var old = badge.querySelector('#btn-sessao, #btn-sair');
       if (old) old.style.display = 'none';
+      var nm = badge.querySelector('#badge-nome');
+      if (nm) nm.textContent = '';
     }, 50);
 
     /* Toggle dropdown */
