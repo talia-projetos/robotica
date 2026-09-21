@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — HUB Circuito</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ── Painel esquerdo (escuro) ────────────────────────────── */
+    .login-left {
+      width: 42%;
+      background: linear-gradient(155deg, #06090F 0%, #0A1628 45%, #0D2040 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(80,143,203,.07) 1px, transparent 1px);
+      background-size: 26px 26px;
+      pointer-events: none;
+    }
+    .login-left::after {
+      content: '';
+      position: absolute;
+      bottom: -120px;
+      right: -80px;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(80,143,203,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .left-brand {
+      position: relative;
+      z-index: 1;
+    }
+    .left-brand img {
+      height: 80px;
+      width: auto;
+      display: block;
+      margin-bottom: 1rem;
+    }
+    .left-descriptor {
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+    }
+
+    .left-body {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    .left-quote {
+      color: #fff;
+    }
+    .left-quote__main {
+      font-size: 1.45rem;
+      font-weight: 700;
+      line-height: 1.35;
+      margin-bottom: .75rem;
+      color: rgba(255,255,255,.92);
+    }
+    .left-quote__sub {
+      font-size: .82rem;
+      color: rgba(255,255,255,.38);
+      line-height: 1.6;
+    }
+
+    .left-footer {
+      position: relative;
+      z-index: 1;
+      font-size: .65rem;
+      color: rgba(255,255,255,.22);
+      letter-spacing: .05em;
+    }
+
+    /* ── Painel direito (branco) ─────────────────────────────── */
+    .login-right {
+      flex: 1;
+      background: #F8FAFC;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-card__welcome {
+      font-size: .78rem;
+      font-weight: 600;
+      color: #508FCB;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: .35rem;
+    }
+    .login-card__title {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #06090F;
+      letter-spacing: -.04em;
+      margin-bottom: .25rem;
+    }
+    .login-card__sub {
+      font-size: .875rem;
+      color: #64748B;
+      margin-bottom: 2rem;
+    }
+
+    .field { margin-bottom: 1rem; }
+    .field label {
+      display: block;
+      font-size: .72rem;
+      font-weight: 700;
+      color: #374151;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: .35rem;
+    }
+    .field input {
+      width: 100%;
+      padding: .65rem .9rem;
+      border: 1.5px solid #E2E8F0;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: .9rem;
+      color: #0F172A;
+      background: #fff;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .field input:focus {
+      border-color: #508FCB;
+      box-shadow: 0 0 0 3px rgba(80,143,203,.12);
+    }
+    .field input::placeholder { color: #9CA3AF; }
+
+    .login-hint {
+      font-size: .75rem;
+      color: #94A3B8;
+      margin: -.25rem 0 1rem;
+      line-height: 1.4;
+    }
+
+    .login-erro {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      border-radius: 8px;
+      padding: .55rem .8rem;
+      font-size: .82rem;
+      color: #DC2626;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: .75rem;
+      background: #508FCB;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .15s, opacity .15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+    }
+    .btn-login:hover:not(:disabled) { background: #3a7ab8; }
+    .btn-login:disabled { opacity: .6; cursor: default; }
+
+    .btn-login .spinner-sm {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+    .btn-login.loading .spinner-sm { display: block; }
+    .btn-login.loading .btn-text { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .login-roles {
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid #E2E8F0;
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+    .login-role-chip {
+      font-size: .68rem;
+      color: #94A3B8;
+      background: #F1F5F9;
+      border-radius: 100px;
+      padding: .25rem .65rem;
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+    }
+    .login-role-chip svg { flex-shrink: 0; }
+
+    /* ── Responsivo ──────────────────────────────────────────── */
+    @media (max-width: 680px) {
+      body { flex-direction: column; }
+      .login-left {
+        width: 100%;
+        padding: 2rem;
+        min-height: 220px;
+        justify-content: flex-start;
+        gap: 1rem;
+      }
+      .left-body { display: none; }
+      .login-right { padding: 2rem 1.25rem; }
+    }
+  </style>
+  <script>
+    window.API_URL = 'https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';
+  </script>
+</head>
+<body>
+
+<!-- ── Painel esquerdo ───────────────────────────────────────── -->
+<div class="login-left">
+  <div class="left-brand">
+    <img src="logo.svg" alt="HUB Circuito">
+    <div class="left-descriptor">Plataforma de Rob&oacute;tica Educacional</div>
+  </div>
+
+  <div class="left-body">
+    <div class="left-quote">
+      <div class="left-quote__main">Mais que competi&ccedil;&otilde;es.<br>Experi&ecirc;ncias que<br>transformam.</div>
+      <div class="left-quote__sub">Rob&oacute;tica. Educa&ccedil;&atilde;o. Futuro.</div>
+    </div>
+  </div>
+
+  <div class="left-footer">HUB Circuito &middot; SESI Escola Reitor Miguel Calmon</div>
+</div>
+
+<!-- ── Painel direito ────────────────────────────────────────── -->
+<div class="login-right">
+  <div class="login-card">
+    <div class="login-card__welcome">Bem-vindo ao</div>
+    <div class="login-card__title">HUB Circuito</div>
+    <div class="login-card__sub">Acesse seu ambiente</div>
+
+    <div class="field">
+      <label>Identificação</label>
+      <input id="f-id" type="text" placeholder="Nome, ID da equipe ou turma" autocomplete="username" autofocus>
+    </div>
+    <p class="login-hint">Juízes e coordenação: seu nome &middot; Professores: ID da turma (ex: TUR01)</p>
+
+    <div class="field">
+      <label>PIN</label>
+      <input id="f-pin" type="password" placeholder="PIN de acesso" autocomplete="current-password">
+    </div>
+
+    <div class="login-erro" id="login-erro"></div>
+
+    <button class="btn-login" id="btn-entrar">
+      <div class="spinner-sm"></div>
+      <span class="btn-text">Entrar</span>
+    </button>
+
+    <div class="login-roles">
+      <span class="login-role-chip">
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5"/></svg>
+        Coordenação
+      </span>
+      <span class="login-role-chip">
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3.5" y="2.5" width="9" height="11.5" rx="1.5"/><path d="M5.5 7.5h5M5.5 10.5h3"/></svg>
+        Juízes
+      </span>
+      <span class="login-role-chip">
+        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5.5" cy="5" r="2.5"/><path d="M1.5 13.5c0-2.5 2-4 4-4"/><circle cx="11" cy="5.5" r="2"/></svg>
+        Professores
+      </span>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script>
+  /* Se já está logado, redireciona direto */
+  (function () {
+    if (localStorage.getItem('coord_nome') && localStorage.getItem('coord_pin')) { location.replace('index.html'); return; }
+    if (localStorage.getItem('hub_juiz')   && localStorage.getItem('hub_pin'))   { location.replace('juizes.html'); return; }
+    if (localStorage.getItem('turma_id')   && localStorage.getItem('turma_pin')) { location.replace('turma.html'); return; }
+  })();
+
+  var btn  = document.getElementById('btn-entrar');
+  var erro = document.getElementById('login-erro');
+
+  function setLoading(on) {
+    btn.disabled = on;
+    btn.classList.toggle('loading', on);
+  }
+  function showErro(msg) {
+    erro.textContent = msg;
+    erro.style.display = '';
+  }
+  function hideErro() { erro.style.display = 'none'; }
+
+  async function tentarLogin() {
+    var id  = document.getElementById('f-id').value.trim();
+    var pin = document.getElementById('f-pin').value.trim();
+    hideErro();
+
+    if (!id || !pin) { showErro('Preencha identificação e PIN.'); return; }
+
+    setLoading(true);
+    try {
+      /* Tenta juiz / coordenação primeiro */
+      try {
+        var r = await API.verificarJuiz(id, pin);
+        if (r.ok) {
+          if (r.coordenador) {
+            CoordAuth.set(id, pin);
+            location.replace('index.html');
+          } else {
+            Sessao.set(id, pin);
+            location.replace('juizes.html');
+          }
+          return;
+        }
+      } catch (_) {}
+
+      /* Tenta turma */
+      try {
+        var t = await API.turma(id.toUpperCase(), pin);
+        if (t.ok) {
+          localStorage.setItem('turma_id',  id.toUpperCase());
+          localStorage.setItem('turma_pin', pin);
+          location.replace('turma.html');
+          return;
+        }
+      } catch (_) {}
+
+      showErro('Identificação ou PIN incorretos.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  btn.addEventListener('click', tentarLogin);
+
+  document.getElementById('f-pin').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') tentarLogin();
+  });
+  document.getElementById('f-id').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') document.getElementById('f-pin').focus();
+  });
+</script>
+</body>
+</html>

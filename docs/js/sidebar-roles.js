@@ -36,10 +36,13 @@
     hide('ranking.html');
     /* cronograma fica para todos */
   } else {
-    /* público: sem área restrita */
-    hide('juizes.html');
-    hide('coordenacao.html');
-    hide('turma.html');
+    /* sem login: redireciona para login (exceto se já estiver lá) */
+    if (location.pathname.indexOf('login.html') === -1) {
+      location.replace('login.html');
+      return;
+    }
+    var sb = document.querySelector('.app-sidebar');
+    if (sb) sb.style.display = 'none';
   }
 
   /* ── Avatar no topbar ────────────────────────────────── */
