@@ -42,19 +42,30 @@
     .turma-logout {
       display: flex;
       align-items: center;
-      gap: .75rem;
+      justify-content: flex-end;
       margin-bottom: 1rem;
     }
 
-    .turma-logout__info {
-      font-size: .78rem;
-      color: var(--texto-sm);
-      margin-right: auto;
+    #btn-sair {
+      background: none;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: .75rem;
+      font-weight: 500;
+      padding: .3rem .8rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background .15s, color .15s;
+    }
+
+    #btn-sair:hover {
+      background: var(--surface-subtle);
+      color: var(--text-primary);
     }
 
     /* ── Banner da equipe ───────────────────────────────────────── */
     .eq-header {
-      background: var(--marinho);
+      background: #2C4F72;
       border-radius: 16px;
       padding: 1.5rem 1.75rem;
       color: #fff;
@@ -147,38 +158,38 @@
     .rank-badge {
       display: inline-flex;
       align-items: center;
-      gap: .5rem;
-      background: #F8FAFC;
-      border: 1px solid #E8EDF3;
-      border-radius: 10px;
-      padding: .45rem .9rem;
+      gap: .35rem;
+      background: #F4F7FA;
+      border: none;
+      border-radius: 6px;
+      padding: .28rem .65rem .28rem .55rem;
     }
 
     .rank-badge__pos {
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 700;
       color: #0F172A;
       line-height: 1;
     }
 
     .rank-badge__label {
-      font-size: .72rem;
+      font-size: .7rem;
       color: #64748B;
       font-weight: 500;
     }
 
     .rank-badge--geral {
       background: #0F172A;
-      border-color: #0F172A;
+      padding: .35rem .8rem;
     }
 
     .rank-badge--geral .rank-badge__pos {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: #F2C94C;
     }
 
     .rank-badge--geral .rank-badge__label {
-      color: rgba(255,255,255,.65);
+      color: rgba(255,255,255,.6);
     }
 
     /* ── Score cards ────────────────────────────────────────────── */
@@ -487,8 +498,8 @@
   <div id="view-resultados" class="hidden">
 
     <div class="turma-logout">
-      <div class="turma-logout__info" id="logout-info"></div>
-      <button class="btn btn-outline btn-sm" id="btn-sair">Sair</button>
+      <div id="logout-info" style="display:none"></div>
+      <button id="btn-sair">Sair</button>
     </div>
 
     <!-- Banner da equipe -->
@@ -511,7 +522,7 @@
 
     <!-- Comentários -->
     <div class="comments-section" id="comments-section">
-      <h3>Comentários dos Juízes</h3>
+      <h3>Feedback dos Juízes</h3>
       <div id="accordions"></div>
     </div>
 
@@ -674,16 +685,21 @@
     document.getElementById('view-resultados').classList.remove('hidden');
 
     var eq = data.equipe || {};
-    var nomeExibido = nomesMap[eq.id] || eq.nome || eq.id;
+    var raw        = nomesMap[eq.id] || eq.nome || eq.id;
+    var partes     = raw.split(' - ');
+    var nomeExibido = partes.length > 1 ? partes[1].trim() : raw;
+    var turmaSigla  = partes.length > 1 ? partes[0].trim() : '';
+
+    var metaPartes = [];
+    if (turmaSigla) metaPartes.push(turmaSigla);
+    if (eq.turno)   metaPartes.push(eq.turno);
+    if (eq.id)      metaPartes.push(eq.id);
 
     document.getElementById('eq-id').textContent   = nomeExibido;
-    document.getElementById('eq-nome').textContent = eq.id || '—';
+    document.getElementById('eq-nome').textContent = metaPartes.join(' · ');
     document.getElementById('eq-status').innerHTML = data.scores ? statusPill(data.scores.status) : '';
     document.getElementById('badge-turma').textContent = eq.id || '';
-
-    // logout-info: mostra apenas código + turno (evita repetir nome)
-    document.getElementById('logout-info').textContent =
-      (eq.id || '') + (eq.turno ? ' · ' + eq.turno : '');
+    document.getElementById('logout-info').textContent = '';
 
     // Busca posição no ranking
     document.getElementById('ranking-row').style.display = 'none';
@@ -808,8 +824,11 @@
       if (r.ok && r.equipes && r.equipes.length) {
         sel.innerHTML = '<option value="">— selecione —</option>' +
           r.equipes.map(function(e) {
-            var nome  = nomesMap[e.id] || e.nome || e.id;
-            var label = nome + (e.tutor ? ' (' + e.tutor + ')' : '');
+            var rawN  = nomesMap[e.id] || e.nome || e.id;
+            var psN   = rawN.split(' - ');
+            var nome  = psN.length > 1 ? psN[1].trim() : rawN;
+            var tSig  = psN.length > 1 ? psN[0].trim() : '';
+            var label = (tSig ? tSig + ' · ' : '') + nome + (e.tutor ? ' (' + e.tutor + ')' : '');
             return '<option value="' + e.id + '">' + label + '</option>';
           }).join('');
       } else {
