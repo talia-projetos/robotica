@@ -7,346 +7,295 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/styles.css?v=5">
   <style>
-    body { background: var(--fundo); }
+    body { background: #F0F4F8; }
 
-    /* ── Hero ──────────────────────────────────────────────────── */
+    /* ── Hero ────────────────────────────────────────────────── */
     .hub-hero {
-      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 55%, #0E2540 100%);
-      position: relative; overflow: hidden;
-      padding: 2.5rem 0 2rem;
-    }
-    .hub-hero::before {
-      content: ''; position: absolute; inset: 0;
-      background-image: radial-gradient(rgba(80,204,198,.08) 1px, transparent 1px);
-      background-size: 28px 28px; pointer-events: none;
+      background: #fff;
+      border-bottom: 1px solid #E2EBF4;
+      padding: 2rem 0 1.75rem;
     }
     .hub-hero-inner {
-      max-width: 1100px; width: 100%;
-      margin: 0 auto; padding: 0 2rem;
-      position: relative; z-index: 1;
-      display: flex; align-items: center; gap: 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
     }
     .hero-text { flex: 1; }
+
+    /* eyebrow: sidebar-roles.js sobrescreve o textContent */
     .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: .5rem;
-      font-size: .65rem; font-weight: 800;
-      letter-spacing: .14em; text-transform: uppercase;
-      color: rgba(80,204,198,.85);
-      background: rgba(80,204,198,.08);
-      border: 1px solid rgba(80,204,198,.18);
-      border-radius: 100px;
-      padding: .3rem .75rem;
-      margin-bottom: 1rem;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #508FCB;
+      margin-bottom: .5rem;
     }
+
+    /* h1: sidebar-roles.js injeta "Olá, [nome]!" */
     .hub-hero h1 {
-      font-size: 2.25rem; font-weight: 900; color: #fff;
-      letter-spacing: -.04em; line-height: 1.06; margin: 0 0 .6rem;
+      font-size: 2rem;
+      font-weight: 900;
+      color: #0F1F33;
+      letter-spacing: -.04em;
+      line-height: 1.1;
+      margin: 0 0 .45rem;
     }
     .hero-accent {
-      background: linear-gradient(90deg, #508FCB, #50CCC6);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: #508FCB;
     }
-    .hero-school {
-      font-size: .8rem; color: rgba(255,255,255,.38);
-      letter-spacing: .01em; margin: 0 0 1.25rem;
+
+    .hero-date {
+      font-size: .78rem;
+      color: #7A8FA6;
+      margin-bottom: .9rem;
     }
+
+    /* div vazio usado pelo sidebar-roles.js para injetar CTA */
     .hero-stats { display: flex; gap: .5rem; flex-wrap: wrap; }
-    .hero-stat {
-      display: flex; align-items: center; gap: .35rem;
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.1);
-      border-radius: 100px;
-      padding: .3rem .85rem .3rem .6rem;
-      font-size: .73rem; font-weight: 600;
-      color: rgba(255,255,255,.65);
+
+    /* ── Card do torneio (lado direito do hero) ─────────────── */
+    .hero-event-card {
+      flex-shrink: 0;
+      width: 240px;
+      background: #F7FAFF;
+      border: 1px solid #D8E8F8;
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
     }
-    .hero-stat svg { width:14px; height:14px; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; opacity:.8; }
-    .hero-stat strong { color:#fff; font-size:.88rem; margin-right:.05rem; }
-    .hero-visual {
-      width: 300px; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: flex-start;
-      overflow: hidden;
+    .hero-event-label {
+      font-size: .65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: #508FCB;
+      margin-bottom: .5rem;
     }
-    .hero-logo-wm {
-      width: 700px; opacity: .05; filter: brightness(10);
-      display: block; margin-left: -20px;
+    .hero-event-name {
+      font-size: .9rem;
+      font-weight: 800;
+      color: #0F1F33;
+      line-height: 1.3;
+      margin-bottom: .3rem;
+    }
+    .hero-event-org {
+      font-size: .75rem;
+      color: #64748B;
+      margin-bottom: .9rem;
+    }
+    .hero-event-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      font-size: .75rem;
+      font-weight: 700;
+      color: #508FCB;
+      text-decoration: none;
+    }
+    .hero-event-link:hover { text-decoration: underline; }
+    .hero-event-link svg {
+      width: 13px; height: 13px;
+      fill: none; stroke: currentColor;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
     }
 
-    @media (max-width: 900px) { .hero-visual { width: 220px; } .hero-logo-wm { width: 520px; } }
-    @media (max-width: 600px) {
-      .hub-hero { padding: 1.75rem 0 1.5rem; }
-      .hub-hero-inner { flex-direction: column; gap: 0; padding: 0 1.25rem; }
-      .hub-hero h1 { font-size: 1.75rem; }
-      .hero-visual { display: none; }
-    }
-
-    /* ── Main ──────────────────────────────────────────────────── */
+    /* ── Main layout ─────────────────────────────────────────── */
     .hub-main {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 2rem 2rem 3.5rem;
-    }
-
-    /* ── Dashboard grid ────────────────────────────────────────── */
-    .hub-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-    }
-
-    /* ── Tiles base ────────────────────────────────────────────── */
-    .tile {
-      border-radius: 20px;
-      padding: 1.625rem 1.75rem;
-      text-decoration: none;
-      color: inherit;
+      padding: 1.75rem 2rem 5rem;
       display: flex;
       flex-direction: column;
-      min-height: 164px;
-      position: relative;
-      overflow: hidden;
-      border: 1px solid transparent;
-      transition: transform .2s ease, box-shadow .25s ease;
+      gap: 1.75rem;
     }
-    .tile:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(15,23,42,.11); }
 
-    .tile__icon-wrap {
-      width: 52px; height: 52px;
+    /* ── Seção genérica ──────────────────────────────────────── */
+    .home-section {}
+    .home-section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: .85rem;
+    }
+    .home-section-title {
+      font-size: .7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: #64748B;
+    }
+    .home-section-link {
+      font-size: .75rem;
+      font-weight: 600;
+      color: #508FCB;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: .25rem;
+    }
+    .home-section-link svg {
+      width: 12px; height: 12px;
+      fill: none; stroke: currentColor;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+    .home-section-link:hover { text-decoration: underline; }
+
+    /* ── Acessos rápidos ─────────────────────────────────────── */
+    .acessos-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .85rem;
+    }
+    .acesso {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: 1rem 1.25rem;
       border-radius: 14px;
+      text-decoration: none;
+      border: 1px solid transparent;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .acesso:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(15,23,42,.09);
+    }
+    .acesso__icon {
+      width: 42px; height: 42px;
+      border-radius: 11px;
       display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      margin-bottom: 1.1rem;
     }
-    .tile__icon-wrap svg {
-      width: 24px; height: 24px;
+    .acesso__icon svg {
+      width: 20px; height: 20px;
       fill: none; stroke-width: 1.8;
       stroke-linecap: round; stroke-linejoin: round;
     }
-    .tile__label {
-      font-size: .63rem; font-weight: 800;
-      letter-spacing: .1em; text-transform: uppercase;
-      color: var(--text-secondary);
-      margin-bottom: .3rem;
+    .acesso__body { min-width: 0; }
+    .acesso__name {
+      font-size: .85rem;
+      font-weight: 800;
+      color: #0F1F33;
+      white-space: nowrap;
+      margin-bottom: .1rem;
     }
-    .tile__title {
-      font-size: 1.05rem; font-weight: 800;
-      color: var(--text-primary);
-      letter-spacing: -.02em;
-      line-height: 1.2;
-      margin-bottom: .35rem;
+    .acesso__desc {
+      font-size: .7rem;
+      color: #7A8FA6;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
-    .tile__desc {
-      font-size: .79rem;
-      color: var(--text-secondary);
-      line-height: 1.45;
-      flex: 1;
+
+    /* cores por seção */
+    .acesso--arena   { background: #EFF6FF; border-color: #BFDBFE; }
+    .acesso--arena   .acesso__icon { background: #DBEAFE; }
+    .acesso--arena   .acesso__icon svg { stroke: #2563EB; }
+
+    .acesso--turma   { background: #F0FDF4; border-color: #BBF7D0; }
+    .acesso--turma   .acesso__icon { background: #D1FAE5; }
+    .acesso--turma   .acesso__icon svg { stroke: #16A34A; }
+
+    .acesso--juizes  { background: #FFF7ED; border-color: #FED7AA; }
+    .acesso--juizes  .acesso__icon { background: #FEE0BB; }
+    .acesso--juizes  .acesso__icon svg { stroke: #C7641A; }
+
+    .acesso--coord   { background: #F5F3FF; border-color: #DDD6FE; }
+    .acesso--coord   .acesso__icon { background: #EDE9FE; }
+    .acesso--coord   .acesso__icon svg { stroke: #7C3AED; }
+
+    /* ── Próximas atividades ─────────────────────────────────── */
+    .atividades-list {
+      background: #fff;
+      border: 1px solid #E2EBF4;
+      border-radius: 14px;
+      overflow: hidden;
     }
-    .tile__footer {
-      margin-top: 1.25rem;
+    .atividade {
       display: flex;
       align-items: center;
-      gap: .35rem;
-      font-size: .7rem;
-      font-weight: 700;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-    }
-    .tile__footer svg {
-      width: 13px; height: 13px;
-      fill: none; stroke-width: 2.2;
-      stroke-linecap: round; stroke-linejoin: round;
-      flex-shrink: 0;
-    }
-
-    /* ── Arena: featured full-width ────────────────────────────── */
-    .tile--arena {
-      grid-column: 1 / -1;
-      background: linear-gradient(135deg, #0F172A 0%, #0E2B52 60%, #0A2240 100%);
-      border-color: rgba(255,255,255,.06);
-      flex-direction: row;
-      align-items: center;
-      min-height: 118px;
-      padding: 1.5rem 2rem;
-      gap: 1.75rem;
-    }
-    .tile--arena::after {
-      content: '';
-      position: absolute; inset: 0;
-      background-image: radial-gradient(rgba(80,204,198,.06) 1px, transparent 1px);
-      background-size: 24px 24px;
-      pointer-events: none;
-    }
-    .tile--arena .tile__icon-wrap {
-      background: rgba(255,255,255,.1);
-      width: 60px; height: 60px;
-      border-radius: 16px;
-      margin-bottom: 0;
-      flex-shrink: 0;
-      position: relative; z-index: 1;
-    }
-    .tile--arena .tile__icon-wrap svg { width: 28px; height: 28px; stroke: #fff; }
-    .tile--arena-body {
-      flex: 1;
-      position: relative; z-index: 1;
-    }
-    .tile--arena .tile__label { color: rgba(80,204,198,.7); }
-    .tile--arena .tile__title { font-size: 1.65rem; color: #fff; margin-bottom: .2rem; }
-    .tile--arena .tile__desc  { color: rgba(255,255,255,.5); font-size: .82rem; }
-    .arena-live {
-      position: relative; z-index: 1;
-      display: flex; align-items: center; gap: .55rem;
-      font-size: .68rem; font-weight: 700;
-      letter-spacing: .1em; text-transform: uppercase;
-      color: rgba(255,255,255,.55);
-      flex-shrink: 0;
-    }
-    .arena-live-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #50CCC6;
-      box-shadow: 0 0 0 0 rgba(80,204,198,.4);
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
-    @keyframes pulse-dot {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(80,204,198,.4); }
-      50%       { box-shadow: 0 0 0 6px rgba(80,204,198,0); }
-    }
-
-    /* ── Ranking: azul ──────────────────────────────────────────── */
-    .tile--ranking {
-      background: #F4F9FF;
-      border-color: #D8E8FF;
-    }
-    .tile--ranking .tile__icon-wrap { background: #D0E7FF; }
-    .tile--ranking .tile__icon-wrap svg { stroke: #3B7DD8; }
-    .tile--ranking .tile__footer { color: #3B7DD8; }
-    .tile--ranking .tile__footer svg { stroke: #3B7DD8; }
-
-    /* ── Minha Turma: verde ─────────────────────────────────────── */
-    .tile--turma {
-      background: #F3FBF6;
-      border-color: #C8EDD9;
-    }
-    .tile--turma .tile__icon-wrap { background: #C8EDD9; }
-    .tile--turma .tile__icon-wrap svg { stroke: #1E9452; }
-    .tile--turma .tile__footer { color: #1E9452; }
-    .tile--turma .tile__footer svg { stroke: #1E9452; }
-
-    /* ── Juízes: laranja ────────────────────────────────────────── */
-    .tile--juizes {
-      background: #FFF8F2;
-      border-color: #F5E0C8;
-    }
-    .tile--juizes .tile__icon-wrap { background: #FAE5C2; }
-    .tile--juizes .tile__icon-wrap svg { stroke: #C7641A; }
-    .tile--juizes .tile__footer { color: #C7641A; }
-    .tile--juizes .tile__footer svg { stroke: #C7641A; }
-
-    /* ── Coordenação: roxo ──────────────────────────────────────── */
-    .tile--coord {
-      background: #F7F4FF;
-      border-color: #DDD4FA;
-    }
-    .tile--coord .tile__icon-wrap { background: #E0D4FB; }
-    .tile--coord .tile__icon-wrap svg { stroke: #7341CC; }
-    .tile--coord .tile__footer { color: #7341CC; }
-    .tile--coord .tile__footer svg { stroke: #7341CC; }
-
-    /* ── Cronograma: strip full-width ───────────────────────────── */
-    .tile--crono {
-      grid-column: 1 / -1;
-      background: var(--surface);
-      border-color: var(--border-subtle);
-      flex-direction: row;
-      align-items: center;
-      min-height: auto;
-      padding: 1.25rem 1.75rem;
       gap: 1.25rem;
+      padding: .9rem 1.25rem;
+      border-bottom: 1px solid #F1F5F9;
     }
-    .tile--crono .tile__icon-wrap {
-      background: #F1F4F8;
-      width: 46px; height: 46px;
-      margin-bottom: 0; flex-shrink: 0;
+    .atividade:last-child { border-bottom: none; }
+    .ativ-time {
+      font-size: .78rem;
+      font-weight: 700;
+      color: #508FCB;
+      width: 3rem;
+      flex-shrink: 0;
+      font-variant-numeric: tabular-nums;
     }
-    .tile--crono .tile__icon-wrap svg { stroke: #566777; width: 20px; height: 20px; }
-    .tile--crono-body { flex: 1; min-width: 0; }
-    .tile--crono .tile__title { font-size: .95rem; margin-bottom: .15rem; }
-    .tile--crono .tile__desc { font-size: .77rem; }
-    .tile--crono .tile__footer {
-      margin-top: 0; flex-shrink: 0;
-      color: var(--text-secondary);
+    .ativ-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #E2EBF4;
+      flex-shrink: 0;
     }
-    .tile--crono .tile__footer svg { stroke: var(--text-secondary); }
+    .ativ-nome {
+      font-size: .84rem;
+      font-weight: 600;
+      color: #0F1F33;
+    }
+    .ativ-local {
+      font-size: .72rem;
+      color: #7A8FA6;
+    }
 
-    /* ── Responsive ─────────────────────────────────────────────── */
+    /* ── hero-cta-btn (injetado pelo sidebar-roles.js) ───────── */
+    .hero-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      font-size: .8rem;
+      font-weight: 700;
+      color: #508FCB;
+      text-decoration: none;
+      padding: .35rem .85rem;
+      border: 1.5px solid #BFDBFE;
+      border-radius: 8px;
+      background: #EFF6FF;
+      margin-top: .1rem;
+    }
+    .hero-cta-btn:hover { background: #DBEAFE; }
+
+    /* ── Responsivo ──────────────────────────────────────────── */
     @media (max-width: 900px) {
-      .hub-grid { grid-template-columns: repeat(2, 1fr); }
-      .tile--arena { flex-direction: column; align-items: flex-start; min-height: auto; }
-      .arena-live { margin-top: .75rem; }
+      .acessos-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero-event-card { width: 200px; }
     }
-    @media (max-width: 560px) {
-      .hub-grid { grid-template-columns: 1fr; }
-      .hub-main { padding: 1rem 1rem 3.5rem; }
-      .tile { min-height: auto; }
-      .tile--arena { padding: 1.5rem; }
-      .tile--crono { flex-direction: column; align-items: flex-start; gap: .75rem; }
-      .tile--crono .tile__footer { margin-top: .25rem; }
+    @media (max-width: 640px) {
+      .hub-hero-inner { flex-direction: column; gap: 1.25rem; }
+      .hero-event-card { width: 100%; }
+      .acessos-grid { grid-template-columns: repeat(2, 1fr); }
+      .hub-main { padding: 1.25rem 1rem 5rem; }
+      .hub-hero { padding: 1.5rem 0; }
+    }
+    @media (max-width: 400px) {
+      .acessos-grid { grid-template-columns: 1fr; }
     }
 
-    /* ── Footer ─────────────────────────────────────────────────── */
+    /* ── Footer ──────────────────────────────────────────────── */
     .hub-footer {
       position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
-      background: var(--surface-subtle); border-top: 1px solid var(--border-subtle);
-      padding: .65rem 2rem;
+      background: #fff; border-top: 1px solid #E2EBF4;
+      padding: .6rem 2rem;
     }
     .hub-footer__inner {
       max-width: 1100px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      display: flex; align-items: center; justify-content: space-between;
     }
-    .hub-footer__left { display: flex; align-items: center; gap: .5rem; }
-    .footer-dash { color: #CBD5E1; font-weight: 300; }
-    .footer-brand { font-size: .7rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1A3A52; }
-    .footer-sub { font-size: .67rem; color: #94A3B8; text-transform: uppercase; letter-spacing: .07em; }
-    .hub-footer__center { font-size: .75rem; color: #64748B; font-style: italic; text-align: center; }
-    .hub-footer__right { display: flex; align-items: center; gap: .5rem; font-size: .67rem; color: #94A3B8; text-transform: uppercase; letter-spacing: .07em; }
+    .footer-brand { font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1A3A52; }
+    .footer-sub { font-size: .65rem; color: #94A3B8; text-transform: uppercase; letter-spacing: .07em; }
+    .hub-footer__center { font-size: .72rem; color: #64748B; font-style: italic; }
+    .hub-footer__right { font-size: .65rem; color: #94A3B8; }
     @media (max-width: 700px) {
-      .hub-footer__inner { flex-direction: column; gap: .3rem; text-align: center; }
+      .hub-footer__inner { justify-content: center; }
       .hub-footer__left, .hub-footer__right { display: none; }
     }
-
-    /* ── Bloco de continuidade por perfil ──────────────────────── */
-    .continuar-bar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: .6rem 2rem;
-    }
-    .continuar-bar__inner {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    }
-    .continuar-bar__left {
-      display: flex; align-items: center; gap: .5rem;
-      font-size: .8rem; color: var(--text-secondary);
-    }
-    .continuar-bar__nome { font-weight: 700; color: var(--text-primary); }
-    .continuar-bar__cta {
-      font-size: .78rem; font-weight: 700;
-      color: var(--azul); text-decoration: none;
-      padding: .28rem .8rem;
-      border: 1px solid var(--azul-lt);
-      border-radius: 8px; background: var(--azul-lt);
-      white-space: nowrap; flex-shrink: 0;
-    }
-    .continuar-bar__cta:hover { background: #c8dff0; }
-
-    /* ── Topbar: btn tema ───────────────────────────────────────── */
-    .btn-tema {
-      background: none; border: none; cursor: pointer;
-      font-size: 1rem; color: rgba(255,255,255,.7);
-      padding: .3rem .5rem; line-height: 1;
-    }
-    .topbar-divider { color: rgba(255,255,255,.3); font-weight: 300; margin: 0 .2rem; }
   </style>
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';
@@ -388,125 +337,130 @@
 <div class="hub-hero">
   <div class="hub-hero-inner">
     <div class="hero-text">
-      <div class="hero-eyebrow">FIRST LEGO League · 2026/2027</div>
-      <h1>Torneio Interno<br><span class="hero-accent">de Rob&oacute;tica</span></h1>
-      <div class="hero-stats">
-        <span class="hero-stat">
-          <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          <strong>13</strong> equipes
-        </span>
-        <span class="hero-stat">
-          <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-          <strong>3</strong> rounds
-        </span>
-        <span class="hero-stat">
-          <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><polyline points="8 21 16 21"/><line x1="12" y1="17" x2="12" y2="21"/><path d="M7 4H17l-1 7a5 5 0 0 1-8 0L7 4z"/><path d="M7 4H2v1a6 6 0 0 0 6 6"/><path d="M17 4h5v1a6 6 0 0 1-6 6"/></svg>
-          <strong>4</strong> categorias
-        </span>
-        <span class="hero-stat">
-          <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <strong>2:30</strong> por round
-        </span>
-      </div>
+      <div class="hero-eyebrow">Bem-vindo ao HUB Circuito</div>
+      <h1>Ol&aacute;!</h1>
+      <div class="hero-date" id="hero-date"></div>
+      <div class="hero-stats"></div>
     </div>
-    <div class="hero-visual" aria-hidden="true">
-      <img src="logo.svg" alt="" class="hero-logo-wm">
+    <div class="hero-event-card">
+      <div class="hero-event-label">Torneio atual</div>
+      <div class="hero-event-name">Torneio Interno de Rob&oacute;tica</div>
+      <div class="hero-event-org">Escola SESI Reitor Miguel Calmon</div>
+      <a href="cronograma.html" class="hero-event-link">
+        Ver detalhes
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
     </div>
   </div>
 </div>
 
-<!-- Dashboard -->
+<!-- Conteúdo principal -->
 <div class="hub-main">
-  <div class="hub-grid">
 
-    <!-- Arena: destaque full-width -->
-    <a href="arena.html" class="tile tile--arena">
-      <div class="tile__icon-wrap">
-        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      </div>
-      <div class="tile--arena-body">
-        <div class="tile__title">Arena</div>
-        <div class="tile__desc">Telão &middot; controle de pontuação &middot; cronômetro 2:30</div>
-      </div>
-      <div class="arena-live">
-        <div class="arena-live-dot"></div>
-        Ao vivo
-      </div>
-    </a>
+  <!-- Acessos rápidos -->
+  <section class="home-section">
+    <div class="home-section-header">
+      <div class="home-section-title">Acessos r&aacute;pidos</div>
+    </div>
+    <div class="acessos-grid">
 
-    <!-- Ranking -->
-    <a href="ranking.html" class="tile tile--ranking">
-      <div class="tile__icon-wrap">
-        <svg viewBox="0 0 24 24"><polyline points="18 20 18 10"/><polyline points="12 20 12 4"/><polyline points="6 20 6 14"/></svg>
-      </div>
-      <div class="tile__label">Classificação</div>
-      <div class="tile__title">Ranking Geral</div>
-      <div class="tile__desc">Posição por pontuação e categoria STEAM</div>
-      <div class="tile__footer">
-        Ver ranking
+      <a href="arena.html" class="acesso acesso--arena">
+        <div class="acesso__icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="acesso__body">
+          <div class="acesso__name">Arena</div>
+          <div class="acesso__desc">Controle e trilha</div>
+        </div>
+      </a>
+
+      <a href="turma.html" class="acesso acesso--turma">
+        <div class="acesso__icon">
+          <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+        </div>
+        <div class="acesso__body">
+          <div class="acesso__name">Minha Turma</div>
+          <div class="acesso__desc">Acompanhar equipe</div>
+        </div>
+      </a>
+
+      <a href="juizes.html" class="acesso acesso--juizes">
+        <div class="acesso__icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="acesso__body">
+          <div class="acesso__name">Ju&iacute;zes</div>
+          <div class="acesso__desc">Avalia&ccedil;&otilde;es</div>
+        </div>
+      </a>
+
+      <a href="coordenacao.html" class="acesso acesso--coord">
+        <div class="acesso__icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <div class="acesso__body">
+          <div class="acesso__name">Coordena&ccedil;&atilde;o</div>
+          <div class="acesso__desc">Gest&atilde;o do torneio</div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- Próximas atividades -->
+  <section class="home-section">
+    <div class="home-section-header">
+      <div class="home-section-title">Pr&oacute;ximas atividades</div>
+      <a href="cronograma.html" class="home-section-link">
+        Ver cronograma
         <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </div>
+    <div class="atividades-list">
+      <div class="atividade">
+        <div class="ativ-time">07:30</div>
+        <div class="ativ-dot"></div>
+        <div>
+          <div class="ativ-nome">Credenciamento</div>
+          <div class="ativ-local">Entrada principal</div>
+        </div>
       </div>
-    </a>
+      <div class="atividade">
+        <div class="ativ-time">08:00</div>
+        <div class="ativ-dot"></div>
+        <div>
+          <div class="ativ-nome">Abertura oficial</div>
+          <div class="ativ-local">Audit&oacute;rio</div>
+        </div>
+      </div>
+      <div class="atividade">
+        <div class="ativ-time">09:00</div>
+        <div class="ativ-dot"></div>
+        <div>
+          <div class="ativ-nome">Rounds de rob&oacute;tica</div>
+          <div class="ativ-local">Arena Principal &middot; Rounds 1&ndash;3</div>
+        </div>
+      </div>
+      <div class="atividade">
+        <div class="ativ-time">10:30</div>
+        <div class="ativ-dot"></div>
+        <div>
+          <div class="ativ-nome">Projeto de Inova&ccedil;&atilde;o</div>
+          <div class="ativ-local">Apresenta&ccedil;&otilde;es &middot; Sala 1</div>
+        </div>
+      </div>
+      <div class="atividade">
+        <div class="ativ-time">14:00</div>
+        <div class="ativ-dot"></div>
+        <div>
+          <div class="ativ-nome">Cerim&ocirc;nia de encerramento</div>
+          <div class="ativ-local">Audit&oacute;rio &middot; Premia&ccedil;&atilde;o</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Minha Turma -->
-    <a href="turma.html" class="tile tile--turma">
-      <div class="tile__icon-wrap">
-        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      </div>
-      <div class="tile__label">Área do professor</div>
-      <div class="tile__title">Minha Turma</div>
-      <div class="tile__desc">Notas dos juízes e avaliação da equipe</div>
-      <div class="tile__footer">
-        Acessar
-        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
-    </a>
-
-    <!-- Juízes -->
-    <a href="juizes.html" class="tile tile--juizes">
-      <div class="tile__icon-wrap">
-        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-      </div>
-      <div class="tile__label">Avaliação</div>
-      <div class="tile__title">Juízes</div>
-      <div class="tile__desc">Rubricas, formulários e deliberação</div>
-      <div class="tile__footer">
-        Acessar
-        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
-    </a>
-
-    <!-- Coordenação -->
-    <a href="coordenacao.html" class="tile tile--coord">
-      <div class="tile__icon-wrap">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-      </div>
-      <div class="tile__label">Gestão</div>
-      <div class="tile__title">Coordenação</div>
-      <div class="tile__desc">Resultados consolidados de todas as equipes</div>
-      <div class="tile__footer">
-        Acessar
-        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
-    </a>
-
-    <!-- Cronograma: strip -->
-    <a href="cronograma.html" class="tile tile--crono">
-      <div class="tile__icon-wrap">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      </div>
-      <div class="tile--crono-body">
-        <div class="tile__title">Cronograma do Evento</div>
-        <div class="tile__desc">07:00 &ndash; 12:00 &middot; avaliações, rounds e cerimônias</div>
-      </div>
-      <div class="tile__footer">
-        Ver programação
-        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-      </div>
-    </a>
-
-  </div>
-</div>
+</div><!-- /hub-main -->
 
 </main>
 </div><!-- /app-body -->
@@ -515,50 +469,35 @@
 <script src="js/api.js"></script>
 <script src="js/sidebar-roles.js"></script>
 <script>
-  const btnSessao = document.getElementById('btn-sessao');
+  /* Data em português */
+  (function () {
+    var el = document.getElementById('hero-date');
+    if (!el) return;
+    var dias  = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+    var meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+    var d     = new Date();
+    el.textContent = dias[d.getDay()] + ' · ' + d.getDate() + ' de ' + meses[d.getMonth()] + ' de ' + d.getFullYear();
+  })();
+
+  /* Topbar badge */
+  var btnSessao = document.getElementById('btn-sessao');
   if (CoordAuth.logado()) {
     document.getElementById('badge-nome').textContent = CoordAuth.nome;
     btnSessao.textContent = 'Sair';
   }
-  btnSessao.addEventListener('click', () => {
+  btnSessao.addEventListener('click', function () {
     if (CoordAuth.logado()) { CoordAuth.clear(); location.reload(); }
-    else location.href = 'deliberacao.html';
+    else location.href = 'login.html';
   });
-
-  // Bloco de continuidade por perfil
-  (function() {
-    var turmaId   = localStorage.getItem('turma_id');
-    var juizNome  = localStorage.getItem('hub_juiz');
-    var coordNome = localStorage.getItem('coord_nome');
-    var perfil    = null;
-    if (turmaId)   perfil = { nome: turmaId,   href: 'turma.html',      cta: 'Continuar em Minha Turma' };
-    else if (coordNome) perfil = { nome: coordNome, href: 'coordenacao.html', cta: 'Ver situação das equipes' };
-    else if (juizNome)  perfil = { nome: juizNome,  href: 'juizes.html',      cta: 'Ver formulários de avaliação' };
-    if (!perfil) return;
-    var bar = document.createElement('div');
-    bar.className = 'continuar-bar';
-    bar.innerHTML = '<div class="continuar-bar__inner">'
-      + '<div class="continuar-bar__left">Bem-vindo de volta&nbsp;&middot;&nbsp;<span class="continuar-bar__nome">' + perfil.nome + '</span></div>'
-      + '<a href="' + perfil.href + '" class="continuar-bar__cta">' + perfil.cta + '</a>'
-      + '</div>';
-    document.querySelector('.hub-hero').insertAdjacentElement('afterend', bar);
-  })();
 </script>
 
 <footer class="hub-footer">
   <div class="hub-footer__inner">
     <div class="hub-footer__left">
-      <span class="footer-dash">&mdash;</span>
-      <span class="footer-brand">SESI</span>
-      <span class="footer-sub">Educação que transforma</span>
+      <span class="footer-brand">SESI</span>&ensp;<span class="footer-sub">Educa&ccedil;&atilde;o que transforma</span>
     </div>
-    <div class="hub-footer__center">
-      <span>Salvador &middot; Bahia &middot; Brasil</span>
-    </div>
-    <div class="hub-footer__right">
-      <span class="footer-dash">&mdash;</span>
-      <span class="footer-sub">desenvolvido por <a href="https://talia-projetos.github.io/portfolio/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;opacity:.8">Talia Oliveira</a></span>
-    </div>
+    <div class="hub-footer__center">Salvador &middot; Bahia &middot; Brasil</div>
+    <div class="hub-footer__right">desenvolvido por <a href="https://talia-projetos.github.io/portfolio/" target="_blank" rel="noopener" style="color:inherit;text-underline-offset:3px">Talia Oliveira</a></div>
   </div>
 </footer>
 </body>
