@@ -218,6 +218,20 @@
       #view-cat table { min-width: 520px; }
       #view-cat thead th, #view-cat tbody td { padding: .5rem .65rem; font-size: .8rem; }
     }
+
+    /* ── Sumário de pendências ───────────────────────────────────── */
+    .coord-summary { display: flex; gap: .6rem; margin-bottom: 1.25rem; flex-wrap: wrap; align-items: center; }
+    .summary-chip {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .78rem; font-weight: 500;
+      padding: .3rem .75rem; border-radius: 8px;
+      background: #F4F7FA; color: #64748B;
+    }
+    .summary-chip--alert { background: #FFF7ED; color: #854D0E; }
+    .summary-chip--ok    { background: #F0FDF4; color: #166534; }
+    .summary-chip__dot   { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .tab-btn--steam { color: #7157C7; }
+    .tab-btn--steam.ativo { border-bottom-color: #7157C7; color: #7157C7; }
   </style>
 </head>
 <body>
@@ -242,7 +256,7 @@
   <!-- ── LOGIN ─────────────────────────────────────────────────── -->
   <div id="view-login" class="login-wrap">
     <div class="login-card">
-      <h2>Acesso — Coordenação</h2>
+      <h2>Acesso à Coordenação</h2>
       <p>Entre com suas credenciais de coordenação para visualizar os resultados de todas as turmas.</p>
       <div class="field">
         <label>Nome</label>
@@ -269,18 +283,18 @@
         <button class="tab-btn" onclick="mudarTab('projeto')">Projeto</button>
         <button class="tab-btn" onclick="mudarTab('design')">Design</button>
         <button class="tab-btn" onclick="mudarTab('core')">Core Values</button>
-        <button class="tab-btn" onclick="mudarTab('indicadores')" style="color:#7157C7">Indicadores STEAM</button>
+        <button class="tab-btn tab-btn--steam" onclick="mudarTab('indicadores')">Indicadores STEAM</button>
       </div>
       <input id="filtro-busca" type="search" placeholder="Buscar equipe…" oninput="filtrar()" style="min-width:160px">
       <div class="coord-logout">
         <a href="relatorio.html" class="btn btn-sm" style="background:#50CCC6;color:#0D3D3A;font-weight:700;border:none;text-decoration:none;padding:.35rem .85rem;border-radius:8px;font-size:.8rem">Fichas PDF</a>
-        <span id="logout-info"></span>
         <button class="btn btn-outline btn-sm" id="btn-sair">Sair</button>
       </div>
     </div>
 
     <!-- Vista: todas as turmas com accordion -->
     <div id="view-todas">
+      <div class="coord-summary" id="coord-summary"></div>
       <div class="eq-cards" id="lista-cards"></div>
     </div>
 
@@ -468,11 +482,44 @@
         </div>
         <div class="eq-card__body">
           <div class="detail-grid">${detailScores}</div>
-          <div class="comments-title">Comentários dos Juízes</div>
+          <div class="comments-title">Feedback dos Juízes</div>
           <div class="comments-cols">${comsHtml}</div>
         </div>
       </div>`;
     }).join('');
+  }
+
+  // ── Sumário de pendências ──────────────────────────────────────
+  function renderSummary() {
+    var el = document.getElementById('coord-summary');
+    if (!el) return;
+    function avalCount(item) {
+      var sc = item.scores;
+      return sc ? [sc.arena20, sc.proj20, sc.des20, sc.core20]
+        .filter(function(v){ return Number(v||0) > 0; }).length : 0;
+    }
+    var sem      = dadosEquipes.filter(function(i){ return avalCount(i) === 0; }).length;
+    var parcial  = dadosEquipes.filter(function(i){ var c = avalCount(i); return c > 0 && c < 4; }).length;
+    var completas = dadosEquipes.length - sem - parcial;
+
+    el.innerHTML =
+      '<span class="summary-chip"><strong style="color:#0F172A;margin-right:.1rem">'
+        + dadosEquipes.length + '</strong> equipes</span>'
+      + (sem > 0
+        ? '<span class="summary-chip summary-chip--alert">'
+          + '<span class="summary-chip__dot" style="background:#D97706"></span>'
+          + '<strong style="margin-right:.1rem">' + sem + '</strong> aguardando avaliação</span>'
+        : '')
+      + (parcial > 0
+        ? '<span class="summary-chip">'
+          + '<span class="summary-chip__dot" style="background:#3B7DD8"></span>'
+          + '<strong style="margin-right:.1rem">' + parcial + '</strong> em andamento</span>'
+        : '')
+      + (completas > 0
+        ? '<span class="summary-chip summary-chip--ok">'
+          + '<span class="summary-chip__dot" style="background:#16A34A"></span>'
+          + '<strong style="margin-right:.1rem">' + completas + '</strong> completas</span>'
+        : '');
   }
 
   // ── Render por categoria ────────────────────────────────────────
@@ -582,8 +629,8 @@
       document.getElementById('view-login').classList.add('hidden');
       document.getElementById('view-coord').classList.remove('hidden');
       document.getElementById('badge-coord').textContent = nome;
-      document.getElementById('logout-info').textContent = nome;
       renderTodas(dadosEquipes);
+      renderSummary();
     } catch(e) {
       toast('Erro: ' + e.message, 'err');
     } finally {

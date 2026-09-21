@@ -118,6 +118,14 @@
       flex-shrink: 0;
     }
 
+    .arena-update.erro::before     { background: #EB5757; }
+    .arena-update.carregando::before { background: #F2994A; }
+
+    /* Ocultar timestamp no Telão — público não precisa de metadado técnico */
+    body.modo-telao .arena-update,
+    :fullscreen .arena-update,
+    :-webkit-full-screen .arena-update { display: none !important; }
+
     /* ── Cronômetro ─────────────────────────────────────────────── */
     .cronometro {
       display: grid;
@@ -446,7 +454,7 @@
   </div>
 
   <div class="cronometro">
-    <div class="crono-round" id="crono-round">Round —</div>
+    <div class="crono-round" id="crono-round">Round 1</div>
     <div class="crono-display" id="crono-display">2:30</div>
     <div class="crono-btns">
       <button class="btn btn-primary" id="btn-crono-toggle" onclick="cronoToggle()">▶ Iniciar</button>
@@ -561,15 +569,34 @@
     }).join('');
   }
 
+  let ultimaSync = null;
+  let relTimer   = null;
+
+  function atualizarSync() {
+    var el = document.getElementById('arena-update');
+    if (!ultimaSync) return;
+    el.classList.remove('erro', 'carregando');
+    var seg = Math.round((Date.now() - ultimaSync) / 1000);
+    if (seg < 5)  el.textContent = 'Sincronizado agora';
+    else if (seg < 60) el.textContent = 'há ' + seg + ' s';
+    else          el.textContent = 'há ' + Math.round(seg / 60) + ' min';
+  }
+
   async function carregar() {
+    var upEl = document.getElementById('arena-update');
+    upEl.classList.add('carregando');
     document.getElementById('spinner').style.display = '';
     try {
       const r = await API.arena();
       if (!r.ok) throw new Error(r.erro || 'Erro');
       renderArena(r);
-      document.getElementById('arena-update').textContent =
-        'Atualizado ' + new Date().toLocaleTimeString('pt-BR');
+      ultimaSync = Date.now();
+      atualizarSync();
+      if (!relTimer) relTimer = setInterval(atualizarSync, 5000);
     } catch (e) {
+      upEl.classList.remove('carregando');
+      upEl.classList.add('erro');
+      upEl.textContent = 'Falha na sincronização';
       toast('Erro ao carregar: ' + e.message, 'err');
     } finally {
       document.getElementById('spinner').style.display = 'none';
@@ -633,6 +660,7 @@
   }
 
   function cronoReset() {
+    if (cronoRodando && !confirm('Resetar o cronômetro em execução?')) return;
     clearInterval(cronoTimer);
     cronoRodando = false;
     cronoSeg = 150;

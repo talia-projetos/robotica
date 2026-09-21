@@ -315,6 +315,31 @@
       .hub-footer__left, .hub-footer__right { display: none; }
     }
 
+    /* ── Bloco de continuidade por perfil ──────────────────────── */
+    .continuar-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: .6rem 2rem;
+    }
+    .continuar-bar__inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .continuar-bar__left {
+      display: flex; align-items: center; gap: .5rem;
+      font-size: .8rem; color: var(--text-secondary);
+    }
+    .continuar-bar__nome { font-weight: 700; color: var(--text-primary); }
+    .continuar-bar__cta {
+      font-size: .78rem; font-weight: 700;
+      color: var(--azul); text-decoration: none;
+      padding: .28rem .8rem;
+      border: 1px solid var(--azul-lt);
+      border-radius: 8px; background: var(--azul-lt);
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .continuar-bar__cta:hover { background: #c8dff0; }
+
     /* ── Topbar: btn tema ───────────────────────────────────────── */
     .btn-tema {
       background: none; border: none; cursor: pointer;
@@ -483,6 +508,25 @@
     if (CoordAuth.logado()) { CoordAuth.clear(); location.reload(); }
     else location.href = 'deliberacao.html';
   });
+
+  // Bloco de continuidade por perfil
+  (function() {
+    var turmaId   = localStorage.getItem('turma_id');
+    var juizNome  = localStorage.getItem('hub_juiz');
+    var coordNome = localStorage.getItem('coord_nome');
+    var perfil    = null;
+    if (turmaId)   perfil = { nome: turmaId,   href: 'turma.html',      cta: 'Continuar em Minha Turma' };
+    else if (coordNome) perfil = { nome: coordNome, href: 'coordenacao.html', cta: 'Ver situação das equipes' };
+    else if (juizNome)  perfil = { nome: juizNome,  href: 'juizes.html',      cta: 'Ver formulários de avaliação' };
+    if (!perfil) return;
+    var bar = document.createElement('div');
+    bar.className = 'continuar-bar';
+    bar.innerHTML = '<div class="continuar-bar__inner">'
+      + '<div class="continuar-bar__left">Bem-vindo de volta&nbsp;&middot;&nbsp;<span class="continuar-bar__nome">' + perfil.nome + '</span></div>'
+      + '<a href="' + perfil.href + '" class="continuar-bar__cta">' + perfil.cta + '</a>'
+      + '</div>';
+    document.querySelector('.hub-hero').insertAdjacentElement('afterend', bar);
+  })();
 </script>
 
 <footer class="hub-footer">

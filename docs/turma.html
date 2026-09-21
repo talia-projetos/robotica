@@ -246,6 +246,11 @@
       opacity: .75;
     }
 
+    .score-card__val--pending {
+      color: var(--texto-sm);
+      font-size: 1.35rem;
+    }
+
     .score-card__bar {
       height: 5px;
       border-radius: 3px;
@@ -612,12 +617,13 @@
       var val  = Number(scores[c.campo] || 0);
       var pct  = Math.min(100, (val / c.max) * 100);
       var sub  = c.sub(scores);
+      var semAvaliacao = !sub;
       var maxLine = sub
         ? '<div class="score-card__max">de ' + c.max + ' pts &middot; ' + sub + '</div>'
         : '<div class="score-card__max score-card__waiting">Aguardando avaliação</div>';
       return '<div class="score-card" style="border-top:2px solid ' + c.color + '">'
         + '<div class="score-card__label">' + c.label + '</div>'
-        + '<div class="score-card__val">' + fmt(val) + '</div>'
+        + '<div class="score-card__val' + (semAvaliacao ? ' score-card__val--pending' : '') + '">' + fmt(val) + '</div>'
         + maxLine
         + '<div class="score-card__bar-track" style="margin-top:.625rem"><div class="score-card__bar-fill" style="width:' + pct + '%;background:' + c.color + '"></div></div>'
         + '</div>';
@@ -730,7 +736,7 @@
       document.getElementById('ranking-badges').innerHTML =
         '<span class="rank-badge rank-badge--geral">'
         + '<strong class="rank-badge__pos">' + posGeral + 'º</strong>'
-        + '<span class="rank-badge__label">Geral</span>'
+        + '<span class="rank-badge__label">Geral &middot; ' + all.length + ' eq.</span>'
         + '</span>' + catBadges;
 
       document.getElementById('ranking-row').style.display = '';
