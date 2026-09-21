@@ -659,6 +659,7 @@
     const pin  = localStorage.getItem(SK_PIN);
     if (!nome) return;
     document.getElementById('l-nome').value = nome;
+    document.getElementById('view-login').classList.add('hidden'); // sessão já existe, não exibe formulário
     await entrar(nome, pin || '');
   }
 

@@ -865,11 +865,15 @@
     var id  = localStorage.getItem(STORAGE_KEY_ID);
     var pin = localStorage.getItem(STORAGE_KEY_PIN);
     if (!id) return;
+    document.getElementById('view-login').classList.add('hidden'); // sessão já existe
     document.getElementById('spinner').style.display = '';
     try {
       var r = await API.turma(id, pin || '');
       if (r.ok) mostrarResultados(r);
-    } catch(_) {}
+      else document.getElementById('view-login').classList.remove('hidden'); // credencial inválida
+    } catch(_) {
+      document.getElementById('view-login').classList.remove('hidden'); // erro de rede
+    }
     finally { document.getElementById('spinner').style.display = 'none'; }
   }
 
