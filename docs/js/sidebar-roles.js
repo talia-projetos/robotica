@@ -146,22 +146,9 @@
         '</button>' +
       '</div>';
 
-    /* Substitui qualquer badge/botão existente */
-    var target = badge.querySelector('.btn-entrar') ||
-                 badge.querySelector('#badge-nome')  ||
-                 badge.querySelector('#badge-juiz')  ||
-                 badge.querySelector('#badge-coord') ||
-                 badge.querySelector('#badge-turma');
-    if (target) target.replaceWith(wrap);
-    else badge.prepend(wrap);
-
-    /* Limpa spans de nome legados que ficaram visíveis */
-    setTimeout(function () {
-      var old = badge.querySelector('#btn-sessao, #btn-sair');
-      if (old) old.style.display = 'none';
-      var nm = badge.querySelector('#badge-nome');
-      if (nm) nm.textContent = '';
-    }, 50);
+    /* Limpa o badge inteiro e insere só o avatar — sem sobras legadas */
+    badge.innerHTML = '';
+    badge.appendChild(wrap);
 
     /* Toggle dropdown */
     var btn = wrap.querySelector('.av-btn');
