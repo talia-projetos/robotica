@@ -3,265 +3,444 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event HUB</title>
+  <title>Minha Turma — Event HUB</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/styles.css?v=3">
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';
   </script>
   <style>
-    /* ── Login ───────────────────────────────────────────────── */
+    /* ── Login ──────────────────────────────────────────────────── */
     .login-wrap {
       max-width: 420px;
       margin: 3rem auto;
     }
+
     .login-card {
       background: var(--branco);
-      border-radius: var(--radius);
-      padding: 2rem;
-      box-shadow: 0 4px 24px rgba(18,53,91,.10);
-      border: 1.5px solid var(--cinza);
+      border-radius: 16px;
+      padding: 2rem 2.25rem;
+      box-shadow: 0 2px 12px rgba(15,23,42,.08);
+      border: 1px solid var(--cinza);
     }
+
     .login-card h2 {
-      font-size: 1.25rem;
-      font-weight: 800;
+      font-size: 1.2rem;
+      font-weight: 700;
       color: var(--marinho);
       margin-bottom: .25rem;
     }
+
     .login-card p {
       font-size: .875rem;
       color: var(--texto-sm);
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
     }
 
-    /* ── Cabeçalho da equipe ─────────────────────────────────── */
+    /* ── Logout bar ─────────────────────────────────────────────── */
+    .turma-logout {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1rem;
+    }
+
+    .turma-logout__info {
+      font-size: .78rem;
+      color: var(--texto-sm);
+      margin-right: auto;
+    }
+
+    /* ── Banner da equipe ───────────────────────────────────────── */
     .eq-header {
       background: var(--marinho);
-      border-radius: var(--radius);
-      padding: 1.25rem 1.5rem;
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
       color: #fff;
       margin-bottom: 1.5rem;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 1.25rem;
       flex-wrap: wrap;
     }
-    .eq-header__id {
-      font-size: 1.75rem;
-      font-weight: 800;
-      letter-spacing: -1px;
-      line-height: 1;
-    }
-    .eq-header__nome {
-      font-size: 1rem;
-      opacity: .8;
-    }
-    .eq-header__status {
-      margin-left: auto;
+
+    .eq-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,.25);
+      flex-shrink: 0;
     }
 
-    /* ── Score cards ─────────────────────────────────────────── */
+    .eq-header__info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .eq-header__id {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -.3px;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .eq-header__nome {
+      font-size: .8rem;
+      font-weight: 500;
+      opacity: .5;
+      margin-top: .2rem;
+      letter-spacing: .04em;
+    }
+
+    .eq-header__status {
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+
+    /* ── Status pill ────────────────────────────────────────────── */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      font-size: .72rem;
+      font-weight: 600;
+      padding: .3rem .8rem;
+      border-radius: 6px;
+      letter-spacing: .03em;
+      white-space: nowrap;
+    }
+
+    .status-pendente {
+      background: rgba(254,249,195,.7);
+      color: #854D0E;
+      border: 1px solid rgba(202,138,4,.2);
+    }
+
+    .status-completo {
+      background: rgba(240,253,244,.9);
+      color: #166534;
+      border: 1px solid rgba(34,197,94,.2);
+    }
+
+    .status-sem {
+      background: rgba(248,250,252,.9);
+      color: #64748B;
+      border: 1px solid #E2E8F0;
+    }
+
+    /* ── Indicadores de ranking ─────────────────────────────────── */
+    #ranking-row {
+      margin-bottom: 1.5rem;
+    }
+
+    #ranking-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: #F8FAFC;
+      border: 1px solid #E8EDF3;
+      border-radius: 10px;
+      padding: .45rem .9rem;
+    }
+
+    .rank-badge__pos {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #0F172A;
+      line-height: 1;
+    }
+
+    .rank-badge__label {
+      font-size: .72rem;
+      color: #64748B;
+      font-weight: 500;
+    }
+
+    .rank-badge--geral {
+      background: #0F172A;
+      border-color: #0F172A;
+    }
+
+    .rank-badge--geral .rank-badge__pos {
+      font-size: 1.2rem;
+      color: #F2C94C;
+    }
+
+    .rank-badge--geral .rank-badge__label {
+      color: rgba(255,255,255,.65);
+    }
+
+    /* ── Score cards ────────────────────────────────────────────── */
     .scores-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      display: flex;
+      flex-direction: column;
       gap: 1rem;
       margin-bottom: 2rem;
     }
+
+    .scores-cats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+      gap: 1rem;
+    }
+
     .score-card {
       background: var(--branco);
-      border-radius: var(--radius);
-      border: 1.5px solid var(--cinza);
+      border-radius: 14px;
+      border: 1px solid var(--cinza);
       padding: 1rem 1.25rem;
-      box-shadow: 0 2px 8px rgba(18,53,91,.06);
+      box-shadow: 0 1px 4px rgba(15,23,42,.04);
+      display: flex;
+      flex-direction: column;
+      transition: box-shadow .2s;
     }
+
     .score-card__label {
-      font-size: .72rem;
+      font-size: .68rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: .06em;
+      letter-spacing: .07em;
       color: var(--texto-sm);
       margin-bottom: .5rem;
     }
+
     .score-card__val {
-      font-size: 1.9rem;
-      font-weight: 800;
+      font-size: 1.85rem;
+      font-weight: 700;
       color: var(--marinho);
       line-height: 1;
+      font-variant-numeric: tabular-nums;
     }
+
     .score-card__max {
-      font-size: .75rem;
+      font-size: .72rem;
       color: var(--texto-sm);
-      margin-top: .15rem;
+      margin-top: .2rem;
     }
+
+    .score-card__waiting {
+      color: var(--texto-sm);
+      font-style: italic;
+      opacity: .75;
+    }
+
     .score-card__bar {
-      height: 6px;
+      height: 5px;
       border-radius: 3px;
       background: var(--cinza);
-      margin-top: .75rem;
+      margin-top: auto;
+      padding-top: .75rem;
+      overflow: visible;
+    }
+
+    .score-card__bar-track {
+      height: 5px;
+      background: var(--cinza);
+      border-radius: 3px;
       overflow: hidden;
     }
+
     .score-card__bar-fill {
       height: 100%;
       border-radius: 3px;
       transition: width .6s ease;
     }
+
+    /* Card total */
     .score-card.total-card {
-      border-color: var(--brand-ouro);
-      box-shadow: 0 2px 14px rgba(232,152,24,.18);
+      border-color: rgba(183,121,31,.22);
+      padding: 1.25rem 1.75rem;
+      background: linear-gradient(135deg, #FFFDF5 0%, #fff 60%);
     }
+
+    .score-card.total-card .score-card__label {
+      margin-bottom: .35rem;
+    }
+
+    .total-main {
+      display: flex;
+      align-items: baseline;
+      gap: .75rem;
+      margin-bottom: .625rem;
+    }
+
     .score-card.total-card .score-card__val {
+      font-size: 2.25rem;
       color: #B7791F;
     }
 
-    /* ── Comentários ─────────────────────────────────────────── */
+    .score-card.total-card .score-card__max {
+      margin-top: 0;
+      font-size: .8rem;
+    }
+
+    .score-card.total-card .score-card__bar-track {
+      height: 7px;
+      border-radius: 4px;
+    }
+
+    .score-card.total-card .score-card__bar-fill {
+      height: 7px;
+      border-radius: 4px;
+    }
+
+    /* ── Comentários dos Juízes ─────────────────────────────────── */
     .comments-section {
-      margin-top: 2rem;
+      margin-top: 2.5rem;
     }
+
     .comments-section h3 {
-      font-size: 1rem;
-      font-weight: 800;
+      font-size: 1.05rem;
+      font-weight: 700;
       color: var(--marinho);
-      margin-bottom: 1rem;
-      text-transform: uppercase;
-      letter-spacing: .05em;
+      margin-bottom: 1.25rem;
+      letter-spacing: -.2px;
     }
+
     .cat-accordion {
-      border: 1.5px solid var(--cinza);
-      border-radius: var(--radius);
+      border: 1px solid var(--cinza);
+      border-radius: 12px;
       overflow: hidden;
-      margin-bottom: .75rem;
+      margin-bottom: .625rem;
+      transition: box-shadow .15s;
     }
+
+    .cat-accordion:hover {
+      box-shadow: 0 2px 8px rgba(15,23,42,.06);
+    }
+
     .cat-accordion__header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
       padding: .875rem 1.25rem;
       background: var(--fundo);
       cursor: pointer;
-      font-weight: 700;
-      font-size: .9rem;
+      font-weight: 600;
+      font-size: .875rem;
       color: var(--marinho);
       user-select: none;
       border: none;
       width: 100%;
       text-align: left;
+      gap: 0;
+      transition: background .15s;
     }
-    .cat-accordion__header:hover { background: var(--cinza); }
+
+    .cat-accordion__header:hover { background: #EEF2F7; }
+
     .cat-accordion__dot {
-      width: 10px; height: 10px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       flex-shrink: 0;
-      margin-right: .5rem;
+      margin-right: .6rem;
     }
+
     .cat-accordion__count {
-      font-size: .75rem;
-      font-weight: 600;
+      font-size: .72rem;
+      font-weight: 500;
       color: var(--texto-sm);
       margin-left: auto;
       margin-right: .75rem;
     }
+
     .cat-accordion__arrow {
-      font-size: .75rem;
       color: var(--texto-sm);
-      transition: transform .2s;
+      display: flex;
+      align-items: center;
+      transition: transform .2s ease;
+      flex-shrink: 0;
     }
+
     .cat-accordion.open .cat-accordion__arrow { transform: rotate(180deg); }
+
     .cat-accordion__body {
       display: none;
-      padding: 1rem 1.25rem;
+      padding: 1.25rem 1.25rem;
       background: var(--branco);
       border-top: 1px solid var(--cinza);
     }
+
     .cat-accordion.open .cat-accordion__body { display: block; }
 
+    /* ── Itens de comentário ────────────────────────────────────── */
     .comment-item {
       padding: .875rem 0;
       border-bottom: 1px solid var(--cinza);
     }
+
     .comment-item:last-child { border-bottom: none; }
+
     .comment-item__juiz {
-      font-size: .72rem;
-      font-weight: 700;
+      font-size: .68rem;
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: .05em;
+      letter-spacing: .07em;
       color: var(--texto-sm);
-      margin-bottom: .5rem;
+      margin-bottom: .6rem;
     }
+
     .comment-bom {
-      background: #F0FBF4;
-      border-left: 3px solid var(--verde);
-      border-radius: 0 6px 6px 0;
-      padding: .5rem .75rem;
+      background: #F6FDF8;
+      border-left: 2px solid var(--verde);
+      border-radius: 0 8px 8px 0;
+      padding: .625rem 1rem;
       margin-bottom: .5rem;
     }
+
     .comment-ref {
-      background: #FFF7EE;
-      border-left: 3px solid var(--laranja);
-      border-radius: 0 6px 6px 0;
-      padding: .5rem .75rem;
+      background: #FFFBF5;
+      border-left: 2px solid var(--laranja);
+      border-radius: 0 8px 8px 0;
+      padding: .625rem 1rem;
     }
+
     .comment-tag {
-      font-size: .7rem;
+      font-size: .65rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: .05em;
-      margin-bottom: .2rem;
+      letter-spacing: .07em;
+      margin-bottom: .25rem;
     }
-    .comment-tag.bom  { color: var(--verde); }
-    .comment-tag.ref  { color: var(--laranja); }
+
+    .comment-tag.bom { color: var(--verde); }
+    .comment-tag.ref { color: var(--laranja); }
+
     .comment-text {
       font-size: .875rem;
       color: var(--texto);
-      line-height: 1.5;
+      line-height: 1.6;
     }
+
     .no-comments {
       color: var(--texto-sm);
       font-size: .875rem;
       text-align: center;
-      padding: 1rem 0;
+      padding: 1.25rem 0;
     }
 
-    /* ── Logo circular da equipe ────────────────────────────── */
-    .rank-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: .3rem;
-      background: #F8FAFC;
-      border: 1px solid #E2E8F0;
-      border-radius: 8px;
-      padding: .3rem .7rem;
-      font-size: .78rem;
-      color: #334155;
-    }
-    .rank-badge strong { font-size: .92rem; color: #0F172A; }
-    .rank-badge--geral {
-      background: #0F172A;
-      border-color: #0F172A;
-      color: rgba(255,255,255,.8);
-    }
-    .rank-badge--geral strong { color: #F2C94C; font-size: 1rem; }
-
-    .eq-logo {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid rgba(255,255,255,.35);
-      flex-shrink: 0;
+    /* ── Responsividade local ───────────────────────────────────── */
+    @media (max-width: 640px) {
+      .eq-header { padding: 1.25rem; gap: 1rem; }
+      .eq-header__id { font-size: 1.2rem; }
+      .eq-logo { width: 52px; height: 52px; }
+      .scores-cats-grid { grid-template-columns: repeat(2, 1fr); }
+      #ranking-badges { gap: .375rem; }
     }
 
-    /* ── Logout bar ──────────────────────────────────────────── */
-    .turma-logout {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      gap: .5rem;
-    }
-    .turma-logout__info {
-      font-size: .85rem;
-      color: var(--texto-sm);
+    @media (max-width: 420px) {
+      .scores-cats-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -312,19 +491,19 @@
       <button class="btn btn-outline btn-sm" id="btn-sair">Sair</button>
     </div>
 
-    <!-- Cabeçalho da equipe -->
+    <!-- Banner da equipe -->
     <div class="eq-header" id="eq-header">
       <img id="eq-logo" class="eq-logo" src="" alt="" style="display:none">
-      <div>
+      <div class="eq-header__info">
         <div class="eq-header__id" id="eq-id">—</div>
         <div class="eq-header__nome" id="eq-nome">—</div>
       </div>
       <div class="eq-header__status" id="eq-status"></div>
     </div>
 
-    <!-- Posição no ranking -->
-    <div id="ranking-row" style="display:none;margin-bottom:1rem">
-      <div id="ranking-badges" style="display:flex;flex-wrap:wrap;gap:.5rem"></div>
+    <!-- Indicadores de classificação -->
+    <div id="ranking-row" style="display:none">
+      <div id="ranking-badges"></div>
     </div>
 
     <!-- Score cards -->
@@ -347,24 +526,56 @@
   const STORAGE_KEY_PIN = 'turma_pin';
 
   const CAT_COLORS = {
-    'Projeto de Inovação': { color: '#8E5BD9', bar: '#8E5BD9' },
-    'Design do Robô':      { color: '#F2994A', bar: '#F2994A' },
-    'Core Values':         { color: '#27AE60', bar: '#27AE60' }
+    'Projeto de Inovação': { color: '#8E5BD9' },
+    'Design do Robô':      { color: '#F2994A' },
+    'Core Values':         { color: '#27AE60' }
   };
 
   const SCORE_CARDS = [
-    { label: 'Arena',          campo: 'arena20',  max: 20, color: '#2F80ED', sub: e => e.arenaRounds + ' rounds' },
-    { label: 'Projeto',        campo: 'proj20',   max: 20, color: '#8E5BD9', sub: e => e.projJuizes + ' juízes' },
-    { label: 'Design do Robô', campo: 'des20',    max: 20, color: '#F2994A', sub: e => e.desJuizes + ' juízes' },
-    { label: 'Core Values',    campo: 'core20',   max: 20, color: '#27AE60', sub: e => e.coreJuizes + ' juízes' },
-    { label: 'Tampinhas',      campo: 'tamp20',   max: 20, color: '#EB5757', sub: e => e.tampKg.toFixed(2) + ' kg' }
+    {
+      label: 'Arena', campo: 'arena20', max: 20, color: '#2F80ED',
+      sub: function(e) {
+        var n = parseInt(e.arenaRounds) || 0;
+        return n > 0 ? n + (n === 1 ? ' round' : ' rounds') : null;
+      }
+    },
+    {
+      label: 'Projeto de Inovação', campo: 'proj20', max: 20, color: '#8E5BD9',
+      sub: function(e) {
+        var n = parseInt(e.projJuizes) || 0;
+        return n > 0 ? n + (n === 1 ? ' juiz' : ' juízes') : null;
+      }
+    },
+    {
+      label: 'Design do Robô', campo: 'des20', max: 20, color: '#F2994A',
+      sub: function(e) {
+        var n = parseInt(e.desJuizes) || 0;
+        return n > 0 ? n + (n === 1 ? ' juiz' : ' juízes') : null;
+      }
+    },
+    {
+      label: 'Core Values', campo: 'core20', max: 20, color: '#27AE60',
+      sub: function(e) {
+        var n = parseInt(e.coreJuizes) || 0;
+        return n > 0 ? n + (n === 1 ? ' juiz' : ' juízes') : null;
+      }
+    },
+    {
+      label: 'Tampinhas', campo: 'tamp20', max: 20, color: '#0D9488',
+      sub: function(e) {
+        var kg = parseFloat(e.tampKg) || 0;
+        return kg > 0 ? kg.toFixed(2) + ' kg' : null;
+      }
+    }
   ];
+
+  var CHEVRON_SVG = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
 
   function fmt(v) { return Number(v || 0).toFixed(2); }
 
   function statusPill(s) {
-    const cls = s === 'Completo' ? 'completo' : s === 'Pendente' ? 'pendente' : 'sem';
-    return `<span class="status-pill status-${cls}">${s || 'Sem dados'}</span>`;
+    var cls = s === 'Completo' ? 'completo' : s === 'Pendente' ? 'pendente' : 'sem';
+    return '<span class="status-pill status-' + cls + '">' + (s || 'Sem dados') + '</span>';
   }
 
   function renderScores(scores) {
@@ -374,69 +585,81 @@
       return;
     }
 
-    const cards = SCORE_CARDS.map(c => {
-      const val  = Number(scores[c.campo] || 0);
-      const pct  = Math.min(100, (val / c.max) * 100);
-      const sub  = c.sub(scores);
-      return `<div class="score-card">
-        <div class="score-card__label">${c.label}</div>
-        <div class="score-card__val">${fmt(val)}</div>
-        <div class="score-card__max">de ${c.max} pts · ${sub}</div>
-        <div class="score-card__bar"><div class="score-card__bar-fill" style="width:${pct}%;background:${c.color}"></div></div>
-      </div>`;
+    var total    = Number(scores.total || 0);
+    var totalPct = Math.min(100, (total / 100) * 100);
+
+    var totalCard = '<div class="score-card total-card">'
+      + '<div class="score-card__label">Total Geral</div>'
+      + '<div class="total-main">'
+      + '<span class="score-card__val">' + fmt(total) + '</span>'
+      + '<span class="score-card__max">de 100 pts</span>'
+      + '</div>'
+      + '<div class="score-card__bar-track"><div class="score-card__bar-fill" style="width:' + totalPct + '%;background:var(--brand-ouro)"></div></div>'
+      + '</div>';
+
+    var cats = SCORE_CARDS.map(function(c) {
+      var val  = Number(scores[c.campo] || 0);
+      var pct  = Math.min(100, (val / c.max) * 100);
+      var sub  = c.sub(scores);
+      var maxLine = sub
+        ? '<div class="score-card__max">de ' + c.max + ' pts &middot; ' + sub + '</div>'
+        : '<div class="score-card__max score-card__waiting">Aguardando avaliação</div>';
+      return '<div class="score-card" style="border-top:2px solid ' + c.color + '">'
+        + '<div class="score-card__label">' + c.label + '</div>'
+        + '<div class="score-card__val">' + fmt(val) + '</div>'
+        + maxLine
+        + '<div class="score-card__bar-track" style="margin-top:.625rem"><div class="score-card__bar-fill" style="width:' + pct + '%;background:' + c.color + '"></div></div>'
+        + '</div>';
     });
 
-    const total = Number(scores.total || 0);
-    const totalPct = Math.min(100, (total / 100) * 100);
-    cards.push(`<div class="score-card total-card">
-      <div class="score-card__label">Total</div>
-      <div class="score-card__val">${fmt(total)}</div>
-      <div class="score-card__max">de 100 pts</div>
-      <div class="score-card__bar"><div class="score-card__bar-fill" style="width:${totalPct}%;background:var(--brand-ouro)"></div></div>
-    </div>`);
-
-    document.getElementById('scores-grid').innerHTML = cards.join('');
+    document.getElementById('scores-grid').innerHTML =
+      totalCard + '<div class="scores-cats-grid">' + cats.join('') + '</div>';
   }
 
   function renderComments(comentarios) {
-    const cats = [
+    var cats = [
       { key: 'Projeto de Inovação', label: 'Projeto de Inovação' },
       { key: 'Design do Robô',      label: 'Design do Robô' },
       { key: 'Core Values',         label: 'Core Values' }
     ];
 
-    const html = cats.map(cat => {
-      const lista = (comentarios && comentarios[cat.key]) || [];
-      const c = CAT_COLORS[cat.key] || { color: '#2F80ED' };
-      const count = lista.length;
+    var html = cats.map(function(cat) {
+      var lista = (comentarios && comentarios[cat.key]) || [];
+      var c     = CAT_COLORS[cat.key] || { color: '#2F80ED' };
+      var count = lista.length;
+      var countText = count === 0
+        ? 'Nenhum comentário'
+        : count + ' comentário' + (count !== 1 ? 's' : '');
 
-      const items = count === 0
-        ? '<p class="no-comments">Nenhum comentário disponível ainda.</p>'
-        : lista.map(item => {
-            const partes = [];
-            if (item.bomTrabalho) partes.push(`
-              <div class="comment-bom">
-                <div class="comment-tag bom">Bom trabalho!</div>
-                <div class="comment-text">${item.bomTrabalho}</div>
-              </div>`);
-            if (item.reflitam) partes.push(`
-              <div class="comment-ref">
-                <div class="comment-tag ref">Reflitam sobre...</div>
-                <div class="comment-text">${item.reflitam}</div>
-              </div>`);
-            const juizLine = item.juiz ? `<div class="comment-item__juiz">Juiz: ${item.juiz}</div>` : '';
-            return `<div class="comment-item">${juizLine}${partes.join('')}</div>`;
+      var items = count === 0
+        ? '<p class="no-comments">Nenhum comentário recebido ainda.</p>'
+        : lista.map(function(item) {
+            var partes = [];
+            if (item.bomTrabalho) partes.push(
+              '<div class="comment-bom">'
+              + '<div class="comment-tag bom">Bom trabalho!</div>'
+              + '<div class="comment-text">' + item.bomTrabalho + '</div>'
+              + '</div>');
+            if (item.reflitam) partes.push(
+              '<div class="comment-ref">'
+              + '<div class="comment-tag ref">Reflitam sobre...</div>'
+              + '<div class="comment-text">' + item.reflitam + '</div>'
+              + '</div>');
+            var juizLine = item.juiz
+              ? '<div class="comment-item__juiz">Juiz: ' + item.juiz + '</div>'
+              : '';
+            return '<div class="comment-item">' + juizLine + partes.join('') + '</div>';
           }).join('');
 
-      return `<div class="cat-accordion" id="acc-${cat.key.replace(/\s/g,'_')}">
-        <button class="cat-accordion__header" onclick="toggleAcc(this)">
-          <span class="cat-accordion__dot" style="background:${c.color}"></span>
-          ${cat.label}
-          <span class="cat-accordion__count">${count} comentário${count !== 1 ? 's' : ''}</span>
-          <span class="cat-accordion__arrow">▼</span>
-        </button>
-        <div class="cat-accordion__body">${items}</div>
-      </div>`;
+      return '<div class="cat-accordion" id="acc-' + cat.key.replace(/\s/g, '_') + '">'
+        + '<button class="cat-accordion__header" onclick="toggleAcc(this)">'
+        + '<span class="cat-accordion__dot" style="background:' + c.color + '"></span>'
+        + cat.label
+        + '<span class="cat-accordion__count">' + countText + '</span>'
+        + '<span class="cat-accordion__arrow">' + CHEVRON_SVG + '</span>'
+        + '</button>'
+        + '<div class="cat-accordion__body">' + items + '</div>'
+        + '</div>';
     }).join('');
 
     document.getElementById('accordions').innerHTML = html;
@@ -450,48 +673,63 @@
     document.getElementById('view-login').classList.add('hidden');
     document.getElementById('view-resultados').classList.remove('hidden');
 
-    const eq = data.equipe || {};
-    const nomeExibido = nomesMap[eq.id] || eq.nome || eq.id;
+    var eq = data.equipe || {};
+    var nomeExibido = nomesMap[eq.id] || eq.nome || eq.id;
+
     document.getElementById('eq-id').textContent   = nomeExibido;
     document.getElementById('eq-nome').textContent = eq.id || '—';
     document.getElementById('eq-status').innerHTML = data.scores ? statusPill(data.scores.status) : '';
     document.getElementById('badge-turma').textContent = eq.id || '';
+
+    // logout-info: mostra apenas código + turno (evita repetir nome)
     document.getElementById('logout-info').textContent =
-      nomeExibido + (eq.turno ? ' · ' + eq.turno : '');
+      (eq.id || '') + (eq.turno ? ' · ' + eq.turno : '');
 
     // Busca posição no ranking
     document.getElementById('ranking-row').style.display = 'none';
     API.ranking().then(function(r) {
       if (!r.ok || !r.equipes || !r.equipes.length) return;
-      const all = r.equipes;
-      const posGeral = all.findIndex(function(e) { return e.id === eq.id; }) + 1;
+      var all = r.equipes;
+      var posGeral = all.findIndex(function(e) { return e.id === eq.id; }) + 1;
       if (!posGeral) return;
-      const cats = [
+
+      var cats = [
         { campo: 'arena20', label: 'Arena',   cor: '#2F80ED' },
         { campo: 'proj20',  label: 'Projeto',  cor: '#8E5BD9' },
         { campo: 'des20',   label: 'Design',   cor: '#F2994A' },
-        { campo: 'core20',  label: 'Core',     cor: '#27AE60' },
+        { campo: 'core20',  label: 'Core',     cor: '#27AE60' }
       ];
-      const catBadges = cats.map(function(cat) {
-        const sorted = all.slice().sort(function(a,b){ return (b[cat.campo]||0)-(a[cat.campo]||0); });
-        const pos = sorted.findIndex(function(e){ return e.id === eq.id; }) + 1;
-        return '<span class="rank-badge" style="border-left:3px solid '+cat.cor+'">'
-          + '<strong>#'+pos+'</strong> '+cat.label+'</span>';
+
+      var catBadges = cats.map(function(cat) {
+        var sorted = all.slice().sort(function(a, b) {
+          return (b[cat.campo] || 0) - (a[cat.campo] || 0);
+        });
+        var pos = sorted.findIndex(function(e) { return e.id === eq.id; }) + 1;
+        return '<span class="rank-badge" style="border-left:3px solid ' + cat.cor + '">'
+          + '<strong class="rank-badge__pos">' + pos + 'º</strong>'
+          + '<span class="rank-badge__label">' + cat.label + '</span>'
+          + '</span>';
       }).join('');
+
       document.getElementById('ranking-badges').innerHTML =
-        '<span class="rank-badge rank-badge--geral"><strong>#'+posGeral+'</strong> Geral</span>' + catBadges;
+        '<span class="rank-badge rank-badge--geral">'
+        + '<strong class="rank-badge__pos">' + posGeral + 'º</strong>'
+        + '<span class="rank-badge__label">Geral</span>'
+        + '</span>' + catBadges;
+
       document.getElementById('ranking-row').style.display = '';
     }).catch(function() {});
 
-    const logoFiles = {
+    var logoFiles = {
       TUR01:'TUR01.jpg', TUR02:'TUR02.png', TUR03:'TUR03.png',
       TUR04:'TUR04.jpg', TUR05:'TUR05.png',
       TUR06:'TUR06.jpg', TUR07:'TUR07.jpg', TUR08:'TUR08.jpg',
       TUR09:'TUR09.jpg', TUR10:'TUR10.jpg', TUR11:'TUR11.jpg',
       TUR12:'TUR12.jpg', TUR13:'TUR13.jpg'
     };
-    const logoEl = document.getElementById('eq-logo');
-    const logoFile = logoFiles[eq.id];
+
+    var logoEl   = document.getElementById('eq-logo');
+    var logoFile = logoFiles[eq.id];
     if (logoFile) {
       logoEl.src = 'img/turmas/' + logoFile;
       logoEl.style.display = '';
@@ -502,9 +740,9 @@
     renderScores(data.scores);
     renderComments(data.comentarios);
 
-    // auto-expand first category with comments
+    // Auto-abre accordion com comentários
     document.querySelectorAll('.cat-accordion').forEach(function(el) {
-      const count = parseInt(el.querySelector('.cat-accordion__count').textContent) || 0;
+      var count = parseInt(el.querySelector('.cat-accordion__count').textContent) || 0;
       if (count > 0) el.classList.add('open');
     });
   }
@@ -525,9 +763,9 @@
   });
 
   document.getElementById('btn-acessar').addEventListener('click', async function() {
-    const id  = document.getElementById('l-equipe').value.trim().toUpperCase();
-    const pin = document.getElementById('l-pin').value.trim();
-    const erroEl = document.getElementById('login-erro');
+    var id    = document.getElementById('l-equipe').value.trim().toUpperCase();
+    var pin   = document.getElementById('l-pin').value.trim();
+    var erroEl = document.getElementById('login-erro');
     erroEl.style.display = 'none';
 
     if (!id) { erroEl.textContent = 'Selecione a equipe.'; erroEl.style.display = ''; return; }
@@ -535,7 +773,7 @@
     document.getElementById('spinner').style.display = '';
     this.disabled = true;
     try {
-      const r = await API.turma(id, pin);
+      var r = await API.turma(id, pin);
       if (!r.ok) {
         erroEl.textContent = r.erro || 'Erro ao autenticar.';
         erroEl.style.display = '';
@@ -553,7 +791,7 @@
     }
   });
 
-  const nomesMap = {
+  var nomesMap = {
     TUR01:'6° A - Cyber Panter', TUR02:'6° B - Liga do Choque',
     TUR03:'6° C - Alpha Tech',   TUR04:'6° D - Pheonics Mecanics',
     TUR05:'6° E - TecShark',     TUR06:'7° A - Hoppin Robots',
@@ -565,14 +803,14 @@
 
   async function carregarEquipes() {
     try {
-      const r = await API.equipes();
-      const sel = document.getElementById('l-equipe');
+      var r = await API.equipes();
+      var sel = document.getElementById('l-equipe');
       if (r.ok && r.equipes && r.equipes.length) {
         sel.innerHTML = '<option value="">— selecione —</option>' +
-          r.equipes.map(e => {
-            const nome = nomesMap[e.id] || e.nome || e.id;
-            const label = nome + (e.tutor ? ' (' + e.tutor + ')' : '');
-            return `<option value="${e.id}">${label}</option>`;
+          r.equipes.map(function(e) {
+            var nome  = nomesMap[e.id] || e.nome || e.id;
+            var label = nome + (e.tutor ? ' (' + e.tutor + ')' : '');
+            return '<option value="' + e.id + '">' + label + '</option>';
           }).join('');
       } else {
         sel.innerHTML = '<option value="">— nenhuma equipe cadastrada —</option>';
@@ -583,12 +821,12 @@
   }
 
   async function tentarResumir() {
-    const id  = localStorage.getItem(STORAGE_KEY_ID);
-    const pin = localStorage.getItem(STORAGE_KEY_PIN);
+    var id  = localStorage.getItem(STORAGE_KEY_ID);
+    var pin = localStorage.getItem(STORAGE_KEY_PIN);
     if (!id) return;
     document.getElementById('spinner').style.display = '';
     try {
-      const r = await API.turma(id, pin || '');
+      var r = await API.turma(id, pin || '');
       if (r.ok) mostrarResultados(r);
     } catch(_) {}
     finally { document.getElementById('spinner').style.display = 'none'; }

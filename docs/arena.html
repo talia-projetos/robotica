@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Event HUB</title>
+  <title>Desafio do Robô — Event HUB</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/styles.css?v=3">
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';
   </script>
   <style>
-    /* ── Modo telão (padrão) ──────────────────────────────────── */
+    /* ── Variáveis locais da Arena ─────────────────────────────── */
     :root {
-      --ar-bg:        #0A1628;
-      --ar-bg2:       #0D1F38;
-      --ar-surface:   #0F2444;
-      --ar-border:    #1E3A5F;
-      --ar-text:      #E8F0FE;
-      --ar-muted:     rgba(232,240,254,.45);
-      --ar-gold:      #F2C94C;
-      --ar-gold-bg:   rgba(242,201,76,.14);
-      --ar-head:      #12355B;
+      --ar-bg:      #0A1628;
+      --ar-bg2:     #0D1F38;
+      --ar-surface: #0F2444;
+      --ar-border:  #1E3A5F;
+      --ar-text:    #E8F0FE;
+      --ar-muted:   rgba(232,240,254,.45);
+      --ar-gold:    #F2C94C;
+      --ar-gold-bg: rgba(242,201,76,.14);
+      --ar-head:    #12355B;
     }
 
     body {
@@ -40,86 +40,230 @@
       --ar-head:    #12355B;
     }
 
-    /* ── Topbar override ─────────────────────────────────────── */
     body.claro .topbar { background: var(--marinho); }
 
-    /* ── Header da página ────────────────────────────────────── */
+    /* ── Container: largura expandida — local a esta página ─────── */
+    .container { max-width: 1280px; }
+
+    /* ── Cabeçalho da página ────────────────────────────────────── */
     .arena-header {
       display: flex;
       align-items: center;
       gap: 1rem;
-      margin: 1.5rem 0 1rem;
+      margin: 1.5rem 0 1.25rem;
       flex-wrap: wrap;
     }
+
     .arena-titulo {
-      font-size: 1.6rem;
-      font-weight: 800;
+      font-size: 1.65rem;
+      font-weight: 700;
       color: var(--ar-text);
-      letter-spacing: -.5px;
+      letter-spacing: -.4px;
+      line-height: 1.2;
     }
+
+    /* ── Controles utilitários (Grande / Claro / Tela cheia) ─────── */
     .arena-controles {
       margin-left: auto;
       display: flex;
+      gap: .2rem;
+      align-items: center;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--ar-border);
+      border-radius: 10px;
+      padding: .3rem .4rem;
+    }
+
+    body.claro .arena-controles {
+      background: rgba(0,0,0,.03);
+    }
+
+    .arena-controles .btn-outline {
+      border: none;
+      background: transparent;
+      color: var(--ar-muted);
+      font-size: .78rem;
+      font-weight: 600;
+      padding: .3rem .65rem;
+      border-radius: 7px;
+      transition: background .15s, color .15s;
+    }
+
+    .arena-controles .btn-outline:hover {
+      background: rgba(255,255,255,.09);
+      color: var(--ar-text);
+      border: none;
+    }
+
+    body.claro .arena-controles .btn-outline:hover {
+      background: rgba(0,0,0,.07);
+    }
+
+    /* ── Indicador de sincronização ─────────────────────────────── */
+    .arena-update {
+      font-size: .78rem;
+      color: var(--ar-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+    }
+
+    .arena-update:not(:empty)::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #50CCC6;
+      flex-shrink: 0;
+    }
+
+    /* ── Cronômetro ─────────────────────────────────────────────── */
+    .cronometro {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      grid-template-areas: "round display btns";
+      align-items: center;
+      gap: 0 1.75rem;
+      background: var(--ar-surface);
+      border: 1px solid var(--ar-border);
+      border-radius: var(--radius);
+      padding: 1rem 1.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .crono-round {
+      grid-area: round;
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--ar-muted);
+      white-space: nowrap;
+    }
+
+    .crono-display {
+      grid-area: display;
+      text-align: center;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: var(--ar-gold);
+      letter-spacing: .05em;
+      font-variant-numeric: tabular-nums;
+      min-width: 4.5ch;
+      transition: color .3s;
+    }
+
+    .crono-display.urgente { color: #F2994A; }
+    .crono-display.acabou  { color: #EB5757; animation: pisca .5s infinite alternate; }
+    @keyframes pisca { from { opacity:1 } to { opacity:.2 } }
+
+    .crono-btns {
+      grid-area: btns;
+      display: flex;
       gap: .5rem;
       align-items: center;
+      justify-content: flex-end;
     }
-    .arena-controles .btn-outline {
+
+    /* Reset — substitui inline style, usando ID local */
+    #btn-crono-reset {
       border-color: var(--ar-border);
-      color: var(--ar-text);
-    }
-    .arena-controles .btn-outline:hover {
-      border-color: var(--azul);
-      color: var(--azul);
-    }
-    .arena-update {
-      font-size: .8rem;
       color: var(--ar-muted);
     }
 
-    /* ── Tabela ──────────────────────────────────────────────── */
-    .arena-wrap { overflow-x: auto; border-radius: var(--radius); }
+    #btn-crono-reset:hover {
+      border-color: var(--ar-text);
+      color: var(--ar-text);
+      background: transparent;
+    }
+
+    /* Select de round — substitui inline style */
+    #sel-round {
+      background: var(--ar-bg2);
+      color: var(--ar-text);
+      border: 1px solid var(--ar-border);
+      border-radius: 8px;
+      padding: .4rem .75rem;
+      font-family: inherit;
+      font-size: .83rem;
+      cursor: pointer;
+      outline: none;
+      transition: border-color .15s;
+    }
+
+    #sel-round:hover,
+    #sel-round:focus { border-color: var(--azul); }
+
+    /* ── Tabela / Ranking ───────────────────────────────────────── */
+    .arena-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+    }
 
     .arena-table {
       width: 100%;
       border-collapse: collapse;
+      font-variant-numeric: tabular-nums;
     }
 
     .arena-table thead th {
       background: var(--ar-head);
-      color: #fff;
-      padding: .9rem 1.25rem;
-      font-size: 1rem;
+      color: rgba(255,255,255,.8);
+      padding: .85rem 1.25rem;
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
       text-align: center;
       white-space: nowrap;
       border-bottom: 2px solid var(--ar-border);
     }
+
     .arena-table thead th.th-equipe { text-align: left; }
 
     .arena-table tbody tr {
       border-bottom: 1px solid var(--ar-border);
       transition: background .15s;
     }
+
     .arena-table tbody tr:nth-child(odd)  { background: var(--ar-bg);  }
     .arena-table tbody tr:nth-child(even) { background: var(--ar-bg2); }
     .arena-table tbody tr:hover           { background: var(--ar-surface); }
     .arena-table tbody tr:last-child      { border-bottom: none; }
 
     .arena-table td {
-      padding: .875rem 1.25rem;
+      padding: .95rem 1.25rem;
       text-align: center;
       font-size: 1.15rem;
       color: var(--ar-text);
+      font-variant-numeric: tabular-nums;
     }
-    .arena-table td.td-equipe { text-align: left; }
-    .arena-table td.td-equipe strong { font-size: 1.15rem; }
-    .arena-table td.td-equipe .text-sm { color: var(--ar-muted); font-size: .82rem; }
 
-    .arena-table td.td-melhor-round {
-      background: var(--ar-gold-bg);
-      color: var(--ar-gold);
+    .arena-table td.td-equipe { text-align: left; }
+
+    .arena-table td.td-equipe strong {
+      font-size: 1.15rem;
       font-weight: 700;
     }
 
+    .arena-table td.td-equipe .text-sm {
+      color: var(--ar-muted);
+      font-size: .78rem;
+      font-variant-numeric: normal;
+    }
+
+    /* Melhor round: fundo quase imperceptível + cor dourada */
+    .arena-table td.td-melhor-round {
+      background: rgba(242,201,76,.04);
+      color: var(--ar-gold);
+      font-weight: 700;
+    }
+    body.claro .arena-table td.td-melhor-round {
+      background: rgba(183,121,31,.06);
+    }
+
+    /* Coluna Melhor */
     .arena-table td.td-melhor {
       font-size: 1.35rem;
       font-weight: 800;
@@ -128,55 +272,148 @@
 
     .arena-table td.td-vazio { color: var(--ar-muted); }
 
-    /* ── Modo grande (telão) — escala via body.grande ─────────── */
-    body.grande .arena-table thead th { font-size: 1.15rem; padding: 1.1rem 1.5rem; }
-    body.grande .arena-table td       { font-size: 1.35rem; padding: 1rem 1.5rem; }
-    body.grande .arena-table td.td-equipe strong { font-size: 1.4rem; }
-    body.grande .arena-table td.td-melhor        { font-size: 1.6rem; }
-
-    /* ── Cronômetro ──────────────────────────────────────────── */
-    .cronometro {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-      background: var(--ar-surface);
-      border: 1px solid var(--ar-border);
-      border-radius: var(--radius);
-      padding: .875rem 2rem;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-    .crono-display {
-      font-size: 3.2rem;
-      font-weight: 900;
-      color: var(--ar-gold);
-      letter-spacing: .05em;
-      font-variant-numeric: tabular-nums;
-      min-width: 4.5ch;
-      text-align: center;
-      transition: color .3s;
-    }
-    .crono-display.urgente { color: #F2994A; }
-    .crono-display.acabou  { color: #EB5757; animation: pisca .5s infinite alternate; }
-    @keyframes pisca { from { opacity:1 } to { opacity:.2 } }
-    .crono-btns { display: flex; gap: .5rem; }
-    .crono-round {
-      font-size: .72rem;
-      font-weight: 800;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--ar-muted);
-      min-width: 70px;
-    }
-    body.grande .crono-display { font-size: 5rem; }
-
-    /* ── Sem dados ───────────────────────────────────────────── */
+    /* ── Estado sem dados ───────────────────────────────────────── */
     .arena-vazio {
       text-align: center;
       padding: 4rem 1rem;
       color: var(--ar-muted);
       font-size: 1.1rem;
+    }
+
+    /* ── Modo grande ────────────────────────────────────────────── */
+    body.grande .arena-table thead th       { font-size: 1rem;   padding: 1rem 1.5rem; }
+    body.grande .arena-table td             { font-size: 1.35rem; padding: 1rem 1.5rem; }
+    body.grande .arena-table td.td-equipe strong { font-size: 1.4rem; }
+    body.grande .arena-table td.td-melhor   { font-size: 1.6rem; }
+    body.grande .crono-display              { font-size: 5rem; }
+
+    /* ── Modo Telão — fullscreen ────────────────────────────────── */
+
+    /* Ocultar administrativo: class JS + :fullscreen nativo (dupla garantia) */
+    body.modo-telao .topbar,
+    :fullscreen .topbar,
+    :-webkit-full-screen .topbar          { display: none !important; }
+
+    body.modo-telao .arena-controles,
+    :fullscreen .arena-controles,
+    :-webkit-full-screen .arena-controles { display: none !important; }
+
+    body.modo-telao .crono-btns,
+    :fullscreen .crono-btns,
+    :-webkit-full-screen .crono-btns      { display: none !important; }
+
+    /* Container: largura total, mínimo de margem */
+    body.modo-telao .container {
+      max-width: none;
+      width: 100%;
+      padding: clamp(20px, 2.5vh, 40px) clamp(32px, 4vw, 80px);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-rows: auto auto;
+      grid-template-areas:
+        "header crono"
+        "table  table";
+      align-content: start;
+      align-items: center;
+      gap: clamp(.75rem, 1.5vh, 1.5rem) 2.5rem;
+    }
+
+    body.modo-telao .arena-header {
+      grid-area: header;
+      margin: 0;
+      align-self: center;
+    }
+
+    /* Cronômetro: compacto, coluna à direita */
+    body.modo-telao .cronometro {
+      grid-area: crono;
+      align-self: center;
+      background: transparent;
+      border: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: .05rem;
+    }
+
+    body.modo-telao .arena-wrap { grid-area: table; }
+
+    /* Tipografia do Telão */
+    body.modo-telao .arena-titulo {
+      font-size: clamp(1.4rem, 2.2vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -.3px;
+    }
+
+    body.modo-telao .crono-round {
+      font-size: clamp(.7rem, 1vw, .95rem);
+      letter-spacing: .14em;
+      text-align: right;
+    }
+
+    body.modo-telao .crono-display {
+      font-size: clamp(4.5rem, 6vw, 7rem);
+      line-height: .95;
+      text-align: right;
+      min-width: unset;
+    }
+
+    /* Tabela no Telão — protagonista da tela */
+    body.modo-telao .arena-table thead th {
+      font-size: clamp(1rem, 1.25vw, 1.4rem);
+      padding: 1rem 1.5rem;
+    }
+
+    body.modo-telao .arena-table td {
+      font-size: clamp(1.25rem, 1.6vw, 1.8rem);
+      padding: clamp(14px, 1.5vh, 22px) 1.5rem;
+    }
+
+    body.modo-telao .arena-table td.td-equipe strong {
+      font-size: clamp(1.35rem, 1.7vw, 2rem);
+    }
+
+    body.modo-telao .arena-table td.td-equipe .text-sm {
+      font-size: clamp(.72rem, .85vw, .9rem);
+    }
+
+    body.modo-telao .arena-table td.td-melhor {
+      font-size: clamp(1.5rem, 2vw, 2.2rem);
+    }
+
+    /* body.grande não deve duplicar escala no telão:
+       como body.modo-telao vem depois no cascade e tem
+       mesma especificidade, sobrepõe body.grande. */
+
+    /* ── Responsividade local ───────────────────────────────────── */
+    @media (max-width: 860px) {
+      .cronometro {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+        grid-template-areas:
+          "round display"
+          "btns  btns";
+        gap: .75rem 1rem;
+        padding: .875rem 1.25rem;
+      }
+      .crono-display { text-align: right; }
+    }
+
+    @media (max-width: 580px) {
+      .cronometro {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "display"
+          "round"
+          "btns";
+      }
+      .crono-display { text-align: center; font-size: 2.8rem; }
+      .crono-round   { text-align: center; }
+      .crono-btns    { justify-content: center; flex-wrap: wrap; }
+      .arena-controles { margin-left: 0; }
+      .arena-titulo  { font-size: 1.35rem; }
     }
   </style>
 </head>
@@ -200,7 +437,7 @@
 <div class="container">
 
   <div class="arena-header">
-    <span class="arena-titulo">Arena — Resultados por Round</span>
+    <span class="arena-titulo">Desafio do Robô</span>
     <div class="arena-controles">
       <button class="btn btn-outline btn-sm" id="btn-tamanho" onclick="alternarTamanho()">Grande</button>
       <button class="btn btn-outline btn-sm" id="btn-tema"    onclick="alternarTema()">Claro</button>
@@ -213,8 +450,8 @@
     <div class="crono-display" id="crono-display">2:30</div>
     <div class="crono-btns">
       <button class="btn btn-primary" id="btn-crono-toggle" onclick="cronoToggle()">▶ Iniciar</button>
-      <button class="btn btn-outline" onclick="cronoReset()" style="border-color:var(--ar-border);color:var(--ar-text)">↺ Reset</button>
-      <select id="sel-round" onchange="trocarRound(this.value)" style="background:var(--ar-surface);color:var(--ar-text);border:1px solid var(--ar-border);border-radius:8px;padding:.4rem .75rem;font-family:inherit;font-size:.83rem;cursor:pointer">
+      <button class="btn btn-outline" id="btn-crono-reset"  onclick="cronoReset()">↺ Reset</button>
+      <select id="sel-round" onchange="trocarRound(this.value)">
         <option value="R1">Round 1</option>
         <option value="R2">Round 2</option>
         <option value="R3">Round 3</option>
@@ -253,18 +490,37 @@
     else document.exitFullscreen();
   }
 
+  function aplicarModoTelao(ativo) {
+    document.body.classList.toggle('modo-telao', ativo);
+    // Manipulação direta garante ocultação independente de especificidade CSS
+    var ocultar = ativo ? 'none' : '';
+    var topbar    = document.querySelector('.topbar');
+    var controles = document.querySelector('.arena-controles');
+    var cronoBtns = document.querySelector('.crono-btns');
+    if (topbar)    topbar.style.display    = ocultar;
+    if (controles) controles.style.display = ocultar;
+    if (cronoBtns) cronoBtns.style.display = ocultar;
+  }
+
+  document.addEventListener('fullscreenchange', function () {
+    aplicarModoTelao(!!(document.fullscreenElement || document.webkitFullscreenElement));
+  });
+  document.addEventListener('webkitfullscreenchange', function () {
+    aplicarModoTelao(!!(document.fullscreenElement || document.webkitFullscreenElement));
+  });
+
   const nomesMap = {
-    TUR01:'6° A - Cyber Panter', TUR02:'6° B - Liga do Choque',
-    TUR03:'6° C - Alpha Tech',   TUR04:'6° D - Pheonics Mecanics',
-    TUR05:'6° E - TecShark',     TUR06:'7° A - Hoppin Robots',
-    TUR07:'7° B - Bivoltx',      TUR08:'7° C - Ecoshift',
-    TUR09:'7° D - Pantera Lego Team', TUR10:'7° E - Império das Onças',
-    TUR11:'7° F - Poseidon',     TUR12:'7° G - Arara Azul',
+    TUR01:'6° A - Cyber Panter',      TUR02:'6° B - Liga do Choque',
+    TUR03:'6° C - Alpha Tech',         TUR04:'6° D - Pheonics Mecanics',
+    TUR05:'6° E - TecShark',           TUR06:'7° A - Hoppin Robots',
+    TUR07:'7° B - Bivoltx',            TUR08:'7° C - Ecoshift',
+    TUR09:'7° D - Pantera Lego Team',  TUR10:'7° E - Império das Onças',
+    TUR11:'7° F - Poseidon',           TUR12:'7° G - Arara Azul',
     TUR13:'7° H - Nexos'
   };
 
   function renderArena(data) {
-    const equipes     = data.equipes    || [];
+    const equipes     = data.equipes     || [];
     const roundsOrdem = data.roundsOrdem || [];
     const head = document.getElementById('arena-head');
     const body = document.getElementById('arena-body');
@@ -279,7 +535,7 @@
       <th style="width:52px">Pos.</th>
       <th class="th-equipe">Equipe</th>
       ${roundsOrdem.map(r => `<th>${r}</th>`).join('')}
-      <th>★ Melhor</th>
+      <th>Melhor</th>
     </tr>`;
 
     body.innerHTML = equipes.map(function(e, i) {
@@ -296,7 +552,8 @@
       return `<tr>
         <td><span class="pos-badge ${posCls}">${pos}</span></td>
         <td class="td-equipe">
-          <strong>${nomesMap[e.id] || e.nome || e.id}</strong><br><span class="text-sm">${e.id}</span>
+          <strong>${nomesMap[e.id] || e.nome || e.id}</strong><br>
+          <span class="text-sm">${e.id}</span>
         </td>
         ${cells}
         <td class="td-melhor">${e.melhor}</td>
@@ -346,7 +603,7 @@
 
   function trocarRound(val) {
     roundAtual = val;
-    document.getElementById('crono-round').textContent = 'Round ' + val.replace('R','');
+    document.getElementById('crono-round').textContent = 'Round ' + val.replace('R', '');
     cronoReset();
   }
 
@@ -356,7 +613,7 @@
     cronoRodando = !cronoRodando;
     document.getElementById('btn-crono-toggle').textContent = cronoRodando ? '⏸ Pausar' : '▶ Continuar';
     if (cronoRodando) {
-      cronoTimer = setInterval(function() {
+      cronoTimer = setInterval(function () {
         if (cronoSeg > 0) cronoSeg--;
         cronoAtualizar();
         if (cronoSeg === 30) beep(880, .12, .4);
@@ -365,7 +622,9 @@
           clearInterval(cronoTimer);
           cronoRodando = false;
           document.getElementById('btn-crono-toggle').textContent = '↺ Reiniciar';
-          beep(523, .08, .6); setTimeout(()=>beep(523, .08, .6), 150); setTimeout(()=>beep(784, .35, .7), 300);
+          beep(523, .08, .6);
+          setTimeout(() => beep(523, .08, .6), 150);
+          setTimeout(() => beep(784, .35, .7), 300);
         }
       }, 1000);
     } else {
@@ -379,10 +638,9 @@
     cronoSeg = 150;
     cronoAtualizar();
     document.getElementById('btn-crono-toggle').textContent = '▶ Iniciar';
-    document.getElementById('crono-round').textContent = 'Round ' + roundAtual.replace('R','');
+    document.getElementById('crono-round').textContent = 'Round ' + roundAtual.replace('R', '');
   }
 
-  // inicializa label do round
   document.getElementById('crono-round').textContent = 'Round 1';
 </script>
 </body>
