@@ -497,16 +497,7 @@
     el.textContent = dias[d.getDay()] + ' · ' + d.getDate() + ' de ' + meses[d.getMonth()] + ' de ' + d.getFullYear();
   })();
 
-  /* Topbar badge */
-  var btnSessao = document.getElementById('btn-sessao');
-  if (CoordAuth.logado()) {
-    document.getElementById('badge-nome').textContent = CoordAuth.nome;
-    btnSessao.textContent = 'Sair';
-  }
-  btnSessao.addEventListener('click', function () {
-    if (CoordAuth.logado()) { CoordAuth.clear(); location.reload(); }
-    else location.href = 'login.html';
-  });
+  /* Auth gerenciado inteiramente pelo sidebar-roles.js */
 </script>
 
 <footer class="hub-footer">

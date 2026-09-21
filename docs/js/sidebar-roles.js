@@ -60,6 +60,23 @@
     after.insertAdjacentElement('afterend', a);
   }
 
+  /* Injeta link Documentos na sidebar (para professor) */
+  function addDocumentos() {
+    var sidebar = document.querySelector('.app-sidebar');
+    if (!sidebar || sidebar.querySelector('a[href="documentos.html"]')) return;
+    var afterEl = sidebar.querySelector('a[href="cronograma.html"]');
+    if (!afterEl) return;
+    var a = document.createElement('a');
+    a.href = 'documentos.html';
+    a.className = 'sidebar-item' + (location.href.indexOf('documentos') !== -1 ? ' ativo' : '');
+    a.innerHTML =
+      '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+        '<rect x="3" y="1.5" width="10" height="13" rx="1.5"/>' +
+        '<path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3"/>' +
+      '</svg> Documentos';
+    afterEl.insertAdjacentElement('afterend', a);
+  }
+
   if (isCoord) {
     addDelib();
   } else if (isJuiz) {
@@ -72,6 +89,7 @@
     hide('juizes.html');
     hide('coordenacao.html');
     hide('ranking.html');
+    addDocumentos();
   } else {
     if (location.pathname.indexOf('login.html') === -1) {
       location.replace('login.html');
