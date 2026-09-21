@@ -9,59 +9,38 @@
   <style>
     body { background: var(--fundo); }
 
-    .btn-tema {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-      color: rgba(255,255,255,.7);
-      padding: .3rem .5rem;
-      line-height: 1;
-    }
-    .topbar-divider {
-      color: rgba(255,255,255,.3);
-      font-weight: 300;
-      margin: 0 .2rem;
-    }
-    /* ── Hero institucional ────────────────────────────────────── */
+    /* ── Hero ──────────────────────────────────────────────────── */
     .hub-hero {
-      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 50%, var(--navy-700) 100%);
+      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 55%, #0E2540 100%);
       position: relative; overflow: hidden;
-      height: 300px; display: flex; align-items: center;
+      padding: 2.5rem 0 2rem;
     }
-    /* dot grid sutil */
     .hub-hero::before {
       content: ''; position: absolute; inset: 0;
-      background-image: radial-gradient(rgba(80,204,198,.1) 1px, transparent 1px);
-      background-size: 30px 30px; pointer-events: none; z-index: 0;
-    }
-    /* gradiente direito mais escuro para destaque do visual */
-    .hub-hero::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(to right, rgba(7,14,24,.55) 0%, transparent 55%);
-      pointer-events: none; z-index: 1;
+      background-image: radial-gradient(rgba(80,204,198,.08) 1px, transparent 1px);
+      background-size: 28px 28px; pointer-events: none;
     }
     .hub-hero-inner {
       max-width: 1100px; width: 100%;
       margin: 0 auto; padding: 0 2rem;
-      position: relative; z-index: 2;
-      display: flex; align-items: center; gap: 1rem;
+      position: relative; z-index: 1;
+      display: flex; align-items: center; gap: 2rem;
     }
-    /* ── Texto esquerdo ─────────────────────────────────────── */
     .hero-text { flex: 1; }
     .hero-eyebrow {
-      display: flex; align-items: center; gap: .6rem;
+      display: inline-flex; align-items: center; gap: .5rem;
       font-size: .65rem; font-weight: 800;
       letter-spacing: .14em; text-transform: uppercase;
-      color: #CCB650; margin-bottom: .7rem;
-    }
-    .hero-eyebrow-line {
-      display: inline-block; width: 22px; height: 1.5px;
-      background: #CCB650; flex-shrink: 0;
+      color: rgba(80,204,198,.85);
+      background: rgba(80,204,198,.08);
+      border: 1px solid rgba(80,204,198,.18);
+      border-radius: 100px;
+      padding: .3rem .75rem;
+      margin-bottom: 1rem;
     }
     .hub-hero h1 {
-      font-size: 2.5rem; font-weight: 900; color: #fff;
-      letter-spacing: -.04em; line-height: 1.05; margin: 0 0 .25rem;
+      font-size: 2.25rem; font-weight: 900; color: #fff;
+      letter-spacing: -.04em; line-height: 1.06; margin: 0 0 .6rem;
     }
     .hero-accent {
       background: linear-gradient(90deg, #508FCB, #50CCC6);
@@ -69,190 +48,280 @@
       background-clip: text;
     }
     .hero-school {
-      font-size: .78rem; color: rgba(255,255,255,.42);
-      letter-spacing: .01em; margin: 0 0 1rem;
+      font-size: .8rem; color: rgba(255,255,255,.38);
+      letter-spacing: .01em; margin: 0 0 1.25rem;
     }
-    .hc-comment { font-family:'Consolas','Courier New',monospace; font-size:.7rem; color:#6A9955; letter-spacing:.02em; }
-    .hc-brace { font-family:'Consolas','Courier New',monospace; font-size:1.25rem; font-weight:600; color:#CCB650; line-height:1; margin-bottom:.1rem; opacity:.55; }
-    .hc-brace--close { margin-top:.05rem; margin-bottom:.4rem; }
-    .hc-prop { font-family:'Consolas','Courier New',monospace; font-size:.74rem; margin:0 0 .9rem; line-height:1.4; }
-    .hc-key { color:#50CCC6; }
-    .hc-op  { color:rgba(255,255,255,.4); }
-    .hc-str { color:rgba(255,255,255,.5); }
-    .hero-divider {
-      width: 36px; height: 2px; border-radius: 2px;
-      background: linear-gradient(90deg, #50CCC6, #508FCB);
-      margin-bottom: .85rem;
-    }
-    .hero-stats { display: flex; gap: .4rem; flex-wrap: wrap; }
+    .hero-stats { display: flex; gap: .5rem; flex-wrap: wrap; }
     .hero-stat {
       display: flex; align-items: center; gap: .35rem;
-      background: rgba(255,255,255,.06);
+      background: rgba(255,255,255,.07);
       border: 1px solid rgba(255,255,255,.1);
       border-radius: 100px;
-      padding: .25rem .75rem .25rem .5rem;
-      font-size: .72rem; font-weight: 700;
-      color: rgba(255,255,255,.7);
+      padding: .3rem .85rem .3rem .6rem;
+      font-size: .73rem; font-weight: 600;
+      color: rgba(255,255,255,.65);
     }
-    .hero-stat svg { width:13px; height:13px; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
-    .hero-stat strong { color:#fff; font-size:.85rem; margin-right:.1rem; }
-    /* ── Marca d'água HUB ──────────────────────────────────── */
+    .hero-stat svg { width:14px; height:14px; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; opacity:.8; }
+    .hero-stat strong { color:#fff; font-size:.88rem; margin-right:.05rem; }
     .hero-visual {
-      width: 340px; flex-shrink: 0;
+      width: 300px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: flex-start;
       overflow: hidden;
-      display: flex; align-items: flex-start; justify-content: flex-start;
     }
     .hero-logo-wm {
-      width: 840px; flex-shrink: 0;
-      opacity: .07; filter: brightness(10);
-      display: block; margin-left: -24px;
+      width: 700px; opacity: .05; filter: brightness(10);
+      display: block; margin-left: -20px;
     }
-    /* ── Tablet ──────────────────────────────────────────────── */
-    @media (max-width: 900px) {
-      .hero-visual { width: 260px; }
-      .hero-logo-wm { width: 610px; margin-left: -18px; }
-    }
-    /* ── Mobile ─────────────────────────────────────────────── */
+
+    @media (max-width: 900px) { .hero-visual { width: 220px; } .hero-logo-wm { width: 520px; } }
     @media (max-width: 600px) {
-      .hub-hero { height: auto; padding: 2rem 0 1.75rem; }
-      .hub-hero::after { background: none; }
-      .hub-hero-inner { flex-direction: column; padding: 0 1.25rem; gap: 0; }
-      .hub-hero h1 { font-size: 1.8rem; }
-      .hc-brace { font-size: 1.2rem; }
-      .hc-prop { font-size: .68rem; }
+      .hub-hero { padding: 1.75rem 0 1.5rem; }
+      .hub-hero-inner { flex-direction: column; gap: 0; padding: 0 1.25rem; }
+      .hub-hero h1 { font-size: 1.75rem; }
       .hero-visual { display: none; }
     }
 
-    /* ── Main ─────────────────────────────────────────────────── */
+    /* ── Main ──────────────────────────────────────────────────── */
     .hub-main {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 2rem;
+      padding: 2rem 2rem 3.5rem;
     }
 
-    /* ── Cards de navegação ───────────────────────────────────── */
-    .nav-cards {
+    /* ── Dashboard grid ────────────────────────────────────────── */
+    .hub-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 1rem;
     }
 
-    .nav-card {
-      background: var(--surface);
-      border-radius: 16px;
-      padding: 1.25rem 1.5rem;
+    /* ── Tiles base ────────────────────────────────────────────── */
+    .tile {
+      border-radius: 20px;
+      padding: 1.625rem 1.75rem;
       text-decoration: none;
       color: inherit;
       display: flex;
-      align-items: center;
-      gap: 1rem;
-      border: 1px solid var(--border-subtle);
-      box-shadow: 0 1px 3px rgba(15,23,42,.04);
-      transition: box-shadow .2s ease, transform .2s ease;
+      flex-direction: column;
+      min-height: 164px;
       position: relative;
       overflow: hidden;
+      border: 1px solid transparent;
+      transition: transform .2s ease, box-shadow .25s ease;
     }
-    .nav-card:hover {
-      box-shadow: 0 6px 20px rgba(15,23,42,.09);
-      transform: translateY(-2px);
-    }
-    .nav-card__icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .tile:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(15,23,42,.11); }
+
+    .tile__icon-wrap {
+      width: 52px; height: 52px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
+      margin-bottom: 1.1rem;
     }
-    .nav-card__icon svg {
-      width: 22px;
-      height: 22px;
-      stroke-width: 1.8;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
+    .tile__icon-wrap svg {
+      width: 24px; height: 24px;
+      fill: none; stroke-width: 1.8;
+      stroke-linecap: round; stroke-linejoin: round;
     }
-    .nav-card__body { flex: 1; min-width: 0; }
-    .nav-card__title {
-      font-size: .94rem;
-      font-weight: 700;
+    .tile__label {
+      font-size: .63rem; font-weight: 800;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: .3rem;
+    }
+    .tile__title {
+      font-size: 1.05rem; font-weight: 800;
       color: var(--text-primary);
-      margin-bottom: .25rem;
-      letter-spacing: -.01em;
+      letter-spacing: -.02em;
+      line-height: 1.2;
+      margin-bottom: .35rem;
     }
-    .nav-card__desc {
+    .tile__desc {
       font-size: .79rem;
       color: var(--text-secondary);
       line-height: 1.45;
+      flex: 1;
     }
-    /* chevron */
-    .nav-card__chevron {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      background: transparent;
-      border: 1px solid var(--border-subtle);
-      display: flex; align-items: center; justify-content: center;
+    .tile__footer {
+      margin-top: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: .35rem;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+    .tile__footer svg {
+      width: 13px; height: 13px;
+      fill: none; stroke-width: 2.2;
+      stroke-linecap: round; stroke-linejoin: round;
       flex-shrink: 0;
-      transition: background .2s, border-color .2s;
     }
-    .nav-card__chevron svg { width: 13px; height: 13px; color: #94A3B8; }
-    .nav-card:hover .nav-card__chevron { background: var(--azul-lt); border-color: transparent; }
-    .nav-card:hover .nav-card__chevron svg { color: var(--azul); }
 
-    /* card destaque (Arena) */
-    .nav-card--destaque {
-      background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%);
-      border: none;
-      color: #fff;
+    /* ── Arena: featured full-width ────────────────────────────── */
+    .tile--arena {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #0F172A 0%, #0E2B52 60%, #0A2240 100%);
+      border-color: rgba(255,255,255,.06);
+      flex-direction: row;
+      align-items: center;
+      min-height: 118px;
+      padding: 1.5rem 2rem;
+      gap: 1.75rem;
     }
-    .nav-card--destaque .nav-card__title { color: #fff; font-size: 1.05rem; }
-    .nav-card--destaque .nav-card__desc  { color: rgba(255,255,255,.6); }
-
-    /* chevron destaque */
-    .nav-card--destaque .nav-card__chevron { background: rgba(255,255,255,.12); border: none; }
-    .nav-card--destaque:hover .nav-card__chevron { background: rgba(255,255,255,.22); }
-    .nav-card--destaque .nav-card__chevron svg { color: #fff; }
-
-    /* badge on Arena card */
-    .nav-card__badge {
-      display: flex; align-items: center; gap: .4rem;
-      margin-top: .35rem;
-      font-size: .65rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .06em;
+    .tile--arena::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(80,204,198,.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+    .tile--arena .tile__icon-wrap {
+      background: rgba(255,255,255,.1);
+      width: 60px; height: 60px;
+      border-radius: 16px;
+      margin-bottom: 0;
+      flex-shrink: 0;
+      position: relative; z-index: 1;
+    }
+    .tile--arena .tile__icon-wrap svg { width: 28px; height: 28px; stroke: #fff; }
+    .tile--arena-body {
+      flex: 1;
+      position: relative; z-index: 1;
+    }
+    .tile--arena .tile__label { color: rgba(80,204,198,.7); }
+    .tile--arena .tile__title { font-size: 1.35rem; color: #fff; margin-bottom: .2rem; }
+    .tile--arena .tile__desc  { color: rgba(255,255,255,.5); font-size: .82rem; }
+    .arena-live {
+      position: relative; z-index: 1;
+      display: flex; align-items: center; gap: .55rem;
+      font-size: .68rem; font-weight: 700;
+      letter-spacing: .1em; text-transform: uppercase;
       color: rgba(255,255,255,.55);
+      flex-shrink: 0;
     }
-    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #50CCC6; flex-shrink: 0; }
-    .badge-year { margin-left: auto; color: rgba(255,255,255,.4); }
+    .arena-live-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #50CCC6;
+      box-shadow: 0 0 0 0 rgba(80,204,198,.4);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(80,204,198,.4); }
+      50%       { box-shadow: 0 0 0 6px rgba(80,204,198,0); }
+    }
 
-    /* ── Footer ───────────────────────────────────────────────── */
+    /* ── Ranking: azul ──────────────────────────────────────────── */
+    .tile--ranking {
+      background: #EBF4FF;
+      border-color: #C7DEFF;
+    }
+    .tile--ranking .tile__icon-wrap { background: #D0E7FF; }
+    .tile--ranking .tile__icon-wrap svg { stroke: #3B7DD8; }
+    .tile--ranking .tile__footer { color: #3B7DD8; }
+    .tile--ranking .tile__footer svg { stroke: #3B7DD8; }
+
+    /* ── Minha Turma: verde ─────────────────────────────────────── */
+    .tile--turma {
+      background: #EBF8F0;
+      border-color: #B6E5C8;
+    }
+    .tile--turma .tile__icon-wrap { background: #C8EDD9; }
+    .tile--turma .tile__icon-wrap svg { stroke: #1E9452; }
+    .tile--turma .tile__footer { color: #1E9452; }
+    .tile--turma .tile__footer svg { stroke: #1E9452; }
+
+    /* ── Juízes: laranja ────────────────────────────────────────── */
+    .tile--juizes {
+      background: #FFF4E8;
+      border-color: #F9D9B2;
+    }
+    .tile--juizes .tile__icon-wrap { background: #FAE5C2; }
+    .tile--juizes .tile__icon-wrap svg { stroke: #C7641A; }
+    .tile--juizes .tile__footer { color: #C7641A; }
+    .tile--juizes .tile__footer svg { stroke: #C7641A; }
+
+    /* ── Coordenação: roxo ──────────────────────────────────────── */
+    .tile--coord {
+      background: #F2EDFE;
+      border-color: #D4C4F8;
+    }
+    .tile--coord .tile__icon-wrap { background: #E0D4FB; }
+    .tile--coord .tile__icon-wrap svg { stroke: #7341CC; }
+    .tile--coord .tile__footer { color: #7341CC; }
+    .tile--coord .tile__footer svg { stroke: #7341CC; }
+
+    /* ── Cronograma: strip full-width ───────────────────────────── */
+    .tile--crono {
+      grid-column: 1 / -1;
+      background: var(--surface);
+      border-color: var(--border-subtle);
+      flex-direction: row;
+      align-items: center;
+      min-height: auto;
+      padding: 1.25rem 1.75rem;
+      gap: 1.25rem;
+    }
+    .tile--crono .tile__icon-wrap {
+      background: #F1F4F8;
+      width: 46px; height: 46px;
+      margin-bottom: 0; flex-shrink: 0;
+    }
+    .tile--crono .tile__icon-wrap svg { stroke: #566777; width: 20px; height: 20px; }
+    .tile--crono-body { flex: 1; min-width: 0; }
+    .tile--crono .tile__title { font-size: .95rem; margin-bottom: .15rem; }
+    .tile--crono .tile__desc { font-size: .77rem; }
+    .tile--crono .tile__footer {
+      margin-top: 0; flex-shrink: 0;
+      color: var(--text-secondary);
+    }
+    .tile--crono .tile__footer svg { stroke: var(--text-secondary); }
+
+    /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .hub-grid { grid-template-columns: repeat(2, 1fr); }
+      .tile--arena { flex-direction: column; align-items: flex-start; min-height: auto; }
+      .arena-live { margin-top: .75rem; }
+    }
+    @media (max-width: 560px) {
+      .hub-grid { grid-template-columns: 1fr; }
+      .hub-main { padding: 1rem 1rem 3.5rem; }
+      .tile { min-height: auto; }
+      .tile--arena { padding: 1.5rem; }
+      .tile--crono { flex-direction: column; align-items: flex-start; gap: .75rem; }
+      .tile--crono .tile__footer { margin-top: .25rem; }
+    }
+
+    /* ── Footer ─────────────────────────────────────────────────── */
     .hub-footer {
       position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
-      background: var(--surface-subtle); border-top: 1px solid var(--border-subtle); padding: .7rem 2rem;
+      background: var(--surface-subtle); border-top: 1px solid var(--border-subtle);
+      padding: .65rem 2rem;
     }
-    .hub-main { padding-bottom: 3rem; }
-    .hub-footer__inner { max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
-    .hub-footer__left { display:flex; align-items:center; gap:.5rem; }
-    .footer-dash { color:#CBD5E1; font-weight:300; }
-    .footer-brand { font-size:.72rem; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#1A3A52; }
-    .footer-sub { font-size:.68rem; color:#94A3B8; text-transform:uppercase; letter-spacing:.07em; }
-    .hub-footer__center { font-size:.77rem; color:#64748B; font-style:italic; text-align:center; }
-    .hub-footer__right { display:flex; align-items:center; gap:.5rem; font-size:.68rem; color:#94A3B8; text-transform:uppercase; letter-spacing:.07em; }
-    @media (max-width:700px) {
-      .hub-footer__inner { flex-direction:column; gap:.4rem; text-align:center; }
-      .hub-footer__left, .hub-footer__right { display:none; }
+    .hub-footer__inner {
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    }
+    .hub-footer__left { display: flex; align-items: center; gap: .5rem; }
+    .footer-dash { color: #CBD5E1; font-weight: 300; }
+    .footer-brand { font-size: .7rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1A3A52; }
+    .footer-sub { font-size: .67rem; color: #94A3B8; text-transform: uppercase; letter-spacing: .07em; }
+    .hub-footer__center { font-size: .75rem; color: #64748B; font-style: italic; text-align: center; }
+    .hub-footer__right { display: flex; align-items: center; gap: .5rem; font-size: .67rem; color: #94A3B8; text-transform: uppercase; letter-spacing: .07em; }
+    @media (max-width: 700px) {
+      .hub-footer__inner { flex-direction: column; gap: .3rem; text-align: center; }
+      .hub-footer__left, .hub-footer__right { display: none; }
     }
 
-    /* ── Responsive ───────────────────────────────────────────── */
-    @media (max-width: 840px) {
-      .nav-cards { grid-template-columns: repeat(2, 1fr); }
-      .hub-main { padding: 1.5rem; }
+    /* ── Topbar: btn tema ───────────────────────────────────────── */
+    .btn-tema {
+      background: none; border: none; cursor: pointer;
+      font-size: 1rem; color: rgba(255,255,255,.7);
+      padding: .3rem .5rem; line-height: 1;
     }
-    @media (max-width: 540px) {
-      .nav-cards { grid-template-columns: 1fr; }
-      .hub-main { padding: 1rem; }
-      .hub-footer__center { font-size: .7rem; }
-    }
+    .topbar-divider { color: rgba(255,255,255,.3); font-weight: 300; margin: 0 .2rem; }
   </style>
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';
@@ -278,18 +347,13 @@
   </div>
 </header>
 
-<!-- Hero institucional -->
+<!-- Hero -->
 <div class="hub-hero">
   <div class="hub-hero-inner">
-
-    <!-- Texto esquerdo -->
     <div class="hero-text">
-      <div class="hero-eyebrow"><span class="hc-comment">// FIRST LEGO LEAGUE · 2026/2027</span></div>
-      <div class="hc-brace">{</div>
+      <div class="hero-eyebrow">FIRST LEGO League · 2026/2027</div>
       <h1>Torneio Interno<br><span class="hero-accent">de Rob&oacute;tica</span></h1>
-      <div class="hc-brace hc-brace--close">}</div>
-      <p class="hc-prop"><span class="hc-key">escola</span><span class="hc-op"> = </span><span class="hc-str">"SESI Reitor Miguel Calmon"</span></p>
-      <div class="hero-divider"></div>
+      <p class="hero-school">Escola SESI Reitor Miguel Calmon &mdash; Salvador, Bahia</p>
       <div class="hero-stats">
         <span class="hero-stat">
           <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -303,102 +367,106 @@
           <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><polyline points="8 21 16 21"/><line x1="12" y1="17" x2="12" y2="21"/><path d="M7 4H17l-1 7a5 5 0 0 1-8 0L7 4z"/><path d="M7 4H2v1a6 6 0 0 0 6 6"/><path d="M17 4h5v1a6 6 0 0 1-6 6"/></svg>
           <strong>4</strong> categorias
         </span>
+        <span class="hero-stat">
+          <svg viewBox="0 0 24 24" stroke="rgba(255,255,255,.75)"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <strong>2:30</strong> por round
+        </span>
       </div>
     </div>
-
-    <!-- Marca d'água do logotipo -->
     <div class="hero-visual" aria-hidden="true">
       <img src="logo.svg" alt="" class="hero-logo-wm">
     </div>
-
   </div>
 </div>
 
-<!-- Cards -->
+<!-- Dashboard -->
 <div class="hub-main">
-  <div class="nav-cards">
+  <div class="hub-grid">
 
-    <!-- Arena -->
-    <a href="arena.html" class="nav-card nav-card--destaque">
-      <div class="nav-card__icon" style="background:rgba(255,255,255,.12)">
-        <svg viewBox="0 0 24 24" stroke="white"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    <!-- Arena: destaque full-width -->
+    <a href="arena.html" class="tile tile--arena">
+      <div class="tile__icon-wrap">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
       </div>
-      <div class="nav-card__body">
-        <div class="nav-card__title">Arena — Telão</div>
-        <div class="nav-card__desc">Pontuações · cronômetro 2:30</div>
+      <div class="tile--arena-body">
+        <div class="tile__label">Controle de pontuação</div>
+        <div class="tile__title">Arena &mdash; Telão</div>
+        <div class="tile__desc">Cronômetro 2:30 &middot; pontuações ao vivo &middot; modo apresentação</div>
       </div>
-      <div class="nav-card__chevron">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      <div class="arena-live">
+        <div class="arena-live-dot"></div>
+        Ao vivo
       </div>
     </a>
 
     <!-- Ranking -->
-    <a href="ranking.html" class="nav-card">
-      <div class="nav-card__icon" style="background:#EBF1F9">
-        <svg viewBox="0 0 24 24" stroke="#4C80B2"><polyline points="18 20 18 10"/><polyline points="12 20 12 4"/><polyline points="6 20 6 14"/></svg>
+    <a href="ranking.html" class="tile tile--ranking">
+      <div class="tile__icon-wrap">
+        <svg viewBox="0 0 24 24"><polyline points="18 20 18 10"/><polyline points="12 20 12 4"/><polyline points="6 20 6 14"/></svg>
       </div>
-      <div class="nav-card__body">
-        <div class="nav-card__title">Ranking Geral</div>
-        <div class="nav-card__desc">Classificação por pontuação e categoria</div>
-      </div>
-      <div class="nav-card__chevron">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      <div class="tile__label">Classificação</div>
+      <div class="tile__title">Ranking Geral</div>
+      <div class="tile__desc">Posição por pontuação e categoria STEAM</div>
+      <div class="tile__footer">
+        Ver ranking
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </a>
 
     <!-- Minha Turma -->
-    <a href="turma.html" class="nav-card">
-      <div class="nav-card__icon" style="background:#EDF7F1">
-        <svg viewBox="0 0 24 24" stroke="#27AE60"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    <a href="turma.html" class="tile tile--turma">
+      <div class="tile__icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
       </div>
-      <div class="nav-card__body">
-        <div class="nav-card__title">Minha Turma</div>
-        <div class="nav-card__desc">Professor: notas dos juízes com PIN</div>
-      </div>
-      <div class="nav-card__chevron">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      <div class="tile__label">Área do professor</div>
+      <div class="tile__title">Minha Turma</div>
+      <div class="tile__desc">Notas dos juízes e avaliação da equipe</div>
+      <div class="tile__footer">
+        Acessar
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </a>
 
     <!-- Juízes -->
-    <a href="juizes.html" class="nav-card">
-      <div class="nav-card__icon" style="background:#FAF2E8">
-        <svg viewBox="0 0 24 24" stroke="#F2994A"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    <a href="juizes.html" class="tile tile--juizes">
+      <div class="tile__icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       </div>
-      <div class="nav-card__body">
-        <div class="nav-card__title">Juízes</div>
-        <div class="nav-card__desc">Rubricas, formulários e deliberação</div>
-      </div>
-      <div class="nav-card__chevron">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      <div class="tile__label">Avaliação</div>
+      <div class="tile__title">Juízes</div>
+      <div class="tile__desc">Rubricas, formulários e deliberação</div>
+      <div class="tile__footer">
+        Acessar
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </a>
 
     <!-- Coordenação -->
-    <a href="coordenacao.html" class="nav-card">
-      <div class="nav-card__icon" style="background:#EEE9FA">
-        <svg viewBox="0 0 24 24" stroke="#8E5BD9"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    <a href="coordenacao.html" class="tile tile--coord">
+      <div class="tile__icon-wrap">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
       </div>
-      <div class="nav-card__body">
-        <div class="nav-card__title">Coordenação</div>
-        <div class="nav-card__desc">Resultados de todas as equipes</div>
-      </div>
-      <div class="nav-card__chevron">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      <div class="tile__label">Gestão</div>
+      <div class="tile__title">Coordenação</div>
+      <div class="tile__desc">Resultados consolidados de todas as equipes</div>
+      <div class="tile__footer">
+        Acessar
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </a>
 
-    <!-- Cronograma — full-width -->
-    <a href="cronograma.html" class="nav-card nav-card--cronograma">
-      <div class="nav-card__icon" style="background:#EEF2F7">
-        <svg viewBox="0 0 24 24" stroke="#1A3A52"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="8" y1="18" x2="8" y2="18"/></svg>
+    <!-- Cronograma: strip -->
+    <a href="cronograma.html" class="tile tile--crono">
+      <div class="tile__icon-wrap">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       </div>
-      <div class="nav-card__body">
-        <div class="nav-card__title">Cronograma do Evento</div>
-        <div class="nav-card__desc">07:00 – 12:00 · avaliações, rounds e cerimônias</div>
+      <div class="tile--crono-body">
+        <div class="tile__title">Cronograma do Evento</div>
+        <div class="tile__desc">07:00 &ndash; 12:00 &middot; avaliações, rounds e cerimônias</div>
       </div>
-      <div class="nav-card__chevron">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      <div class="tile__footer">
+        Ver programação
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </a>
 
@@ -422,15 +490,15 @@
 <footer class="hub-footer">
   <div class="hub-footer__inner">
     <div class="hub-footer__left">
-      <span class="footer-dash">—</span>
+      <span class="footer-dash">&mdash;</span>
       <span class="footer-brand">SESI</span>
       <span class="footer-sub">Educação que transforma</span>
     </div>
     <div class="hub-footer__center">
-      <span>Salvador · Bahia · Brasil</span>
+      <span>Salvador &middot; Bahia &middot; Brasil</span>
     </div>
     <div class="hub-footer__right">
-      <span class="footer-dash">—</span>
+      <span class="footer-dash">&mdash;</span>
       <span class="footer-sub">desenvolvido por <a href="https://talia-projetos.github.io/portfolio/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;opacity:.8">Talia Oliveira</a></span>
     </div>
   </div>
