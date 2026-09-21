@@ -247,15 +247,27 @@
 
 <header class="topbar">
   <a href="index.html" class="topbar__brand"><img src="logo.svg" alt="HUB Circuito"><span class="topbar__brand-name">Circuito</span></a>
-  <nav class="topbar__nav">
-    <a href="index.html">Vis&#xE3;o Geral</a>
-    <a href="arena.html">Arena</a>
-    <a href="turma.html">Minha Turma</a>
-    <a href="juizes.html">Ju&#xED;zes</a>
-    <a href="coordenacao.html">Coordena&#xE7;&#xE3;o</a>
-  </nav>
+  <div class="topbar__event">
+    <div class="topbar__event-name">Torneio Interno de Rob&#xF3;tica</div>
+    <div class="topbar__event-org">SESI Escola Djalma Pessoa</div>
+  </div>
   <div class="topbar__badge"></div>
 </header>
+
+<div class="app-body">
+
+<nav class="app-sidebar">
+  <a href="index.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg> Início</a>
+  <a href="arena.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg> Arena</a>
+  <a href="turma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1.5 13.5c0-2.5 2-4 4-4"/><circle cx="11" cy="5.5" r="2"/><path d="M10 13.5c0-2 1.5-3.5 3.5-3.5"/></svg> Minha Turma</a>
+  <a href="juizes.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11.5" rx="1.5"/><path d="M6 2.5a2 2 0 014 0"/><path d="M5.5 7.5h5M5.5 10.5h3"/></svg> Juízes</a>
+  <a href="coordenacao.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="2"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.6 3.6l1 1M11.4 11.4l1 1M3.6 12.4l1-1M11.4 4.6l1-1"/></svg> Coordenação</a>
+  <div class="sidebar-sep"></div>
+  <a href="ranking.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13V9M8 13V6M13 13V3"/></svg> Ranking</a>
+  <a href="cronograma.html" class="sidebar-item ativo"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="13" height="10.5" rx="1.5"/><path d="M1.5 7.5h13M5.5 1.5v3M10.5 1.5v3"/></svg> Cronograma</a>
+</nav>
+
+<main class="app-main">
 
 <div class="wrap">
 
@@ -513,6 +525,9 @@
   </div>
 
 </div><!-- /wrap -->
+
+</main>
+</div><!-- /app-body -->
 
 <div id="toast"></div>
 <script src="js/api.js"></script>
