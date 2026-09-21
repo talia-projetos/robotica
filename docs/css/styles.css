@@ -82,12 +82,24 @@ body {
 .topbar__brand {
   display: flex;
   align-items: center;
+  gap: .6rem;
   text-decoration: none;
   flex-shrink: 0;
   color: #fff;
   font-weight: 800;
   font-size: 1.05rem;
   letter-spacing: -.01em;
+}
+
+.topbar__brand img { height: 52px; }
+
+.topbar__brand-name {
+  font-size: .72rem;
+  font-weight: 300;
+  color: rgba(255,255,255,.75);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  line-height: 1;
 }
 
 .topbar__nav {
@@ -687,7 +699,7 @@ tbody td { padding: .7rem 1rem; vertical-align: middle; }
     min-height: 58px;
     gap: .4rem;
   }
-  .topbar__brand img { height: 50px; }
+  .topbar__brand img { height: 40px; }
   .topbar__nav {
     overflow-x: auto;
     flex-wrap: nowrap;
