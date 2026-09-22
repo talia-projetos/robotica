@@ -97,29 +97,14 @@
   }
 
   function enhanceDocumentLinks() {
-    document.querySelectorAll('a.doc-item[href^="pdf/"]').forEach(function (item) {
-      item.removeAttribute('href');
-      item.removeAttribute('download');
-      item.classList.add('doc-item--unavailable');
-      item.setAttribute('aria-disabled', 'true');
-      item.setAttribute('title', 'Documento ainda não publicado');
-      var action = item.querySelector('.doc-action');
-      if (action) {
-        action.innerHTML = 'Em breve';
-        action.style.color = '#94A3B8';
-      }
-      var meta = item.querySelector('.doc-meta');
-      if (meta && meta.textContent.indexOf('Pendente') === -1) {
-        meta.textContent = 'Pendente de publicação';
-      }
-    });
+    /* PDFs disponíveis — sem bloqueio */
   }
 
   function enhanceDocuments() {
     var hd = document.querySelector('.page-hd');
     if (!hd) return;
     var p = hd.querySelector('p');
-    if (p) p.textContent = 'Biblioteca oficial do torneio · guias, rubricas e agenda';
+    if (p) p.textContent = 'Materiais oficiais do torneio · Escola SESI Reitor Miguel Calmon';
     enhanceDocumentLinks();
   }
 
