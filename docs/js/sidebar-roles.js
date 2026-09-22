@@ -15,9 +15,9 @@
 
   var currentFile = (location.pathname.split('/').pop() || 'index.html').split('?')[0] || 'index.html';
   var ALLOWED = {
-    professor: ['turma.html','cronograma.html','documentos.html','arena.html'],
-    juiz:      ['juizes.html','rubricas.html','documentos.html','arena.html'],
-    coord:     ['index.html','arena.html','turma.html','juizes.html','coordenacao.html','deliberacao.html','ranking.html','cronograma.html','documentos.html','rubricas.html','relatorio.html']
+    professor: ['index.html','turma.html','cronograma.html','documentos.html','arena.html','ranking.html'],
+    juiz:      ['juizes.html','documentos.html','arena.html'],
+    coord:     ['index.html','arena.html','turma.html','juizes.html','coordenacao.html','deliberacao.html','ranking.html','cronograma.html','documentos.html','relatorio.html']
   };
   var DEFAULT_ROUTE = { professor:'turma.html', juiz:'juizes.html', coord:'index.html' };
 
@@ -122,7 +122,7 @@
   }
 
   function rename(href, label) {
-    var el = document.querySelector('.app-sidebar a[href="' + href + '"]');
+    var el = document.querySelector('.app-sidebar .sidebar-item[href="' + href + '"]');
     if (!el) return;
     var textNode = Array.prototype.slice.call(el.childNodes).find(function(n){ return n.nodeType === 3; });
     if (textNode) textNode.nodeValue = ' ' + label;
@@ -131,7 +131,6 @@
   if (role === 'coord') {
     addDelib();
     addDocumentos();
-    addRubricas();
     rename('juizes.html', 'Avaliações');
   } else if (role === 'juiz') {
     hide('index.html');
@@ -140,7 +139,6 @@
     hide('ranking.html');
     hide('cronograma.html');
     addDocumentos();
-    addRubricas();
     rename('juizes.html', 'Avaliações');
   } else if (role === 'professor') {
     hide('index.html');
@@ -302,13 +300,13 @@
     if (isCoord) {
       var coordNome = localStorage.getItem('coord_nome') || 'Coordenador';
       if (h1) h1.innerHTML = 'Olá, <span class="hero-accent">' + coordNome + '!</span>';
-      if (eyebrow) eyebrow.textContent = 'Bem-vindo ao HUB Circuito.';
+      if (eyebrow) eyebrow.textContent = 'Bem-vindo(a) ao HUB Circuito.';
       cta = 'Ver situação das equipes'; ctaHref = 'coordenacao.html';
 
     } else if (isJuiz) {
       var juizNome = localStorage.getItem('hub_juiz') || 'Juiz';
       if (h1) h1.innerHTML = 'Olá, <span class="hero-accent">' + juizNome + '!</span>';
-      if (eyebrow) eyebrow.textContent = 'Bem-vindo ao HUB Circuito.';
+      if (eyebrow) eyebrow.textContent = 'Bem-vindo(a) ao HUB Circuito.';
       cta = 'Ir para avaliações'; ctaHref = 'juizes.html';
 
     } else if (isTurma) {
