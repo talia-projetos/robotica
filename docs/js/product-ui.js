@@ -96,22 +96,44 @@
     copy.appendChild(sub);
   }
 
+  function enhanceDocumentLinks() {
+    document.querySelectorAll('a.doc-item[href^="pdf/"]').forEach(function (item) {
+      item.removeAttribute('href');
+      item.removeAttribute('download');
+      item.classList.add('doc-item--unavailable');
+      item.setAttribute('aria-disabled', 'true');
+      item.setAttribute('title', 'Documento ainda não publicado');
+      var action = item.querySelector('.doc-action');
+      if (action) {
+        action.innerHTML = 'Em breve';
+        action.style.color = '#94A3B8';
+      }
+      var meta = item.querySelector('.doc-meta');
+      if (meta && meta.textContent.indexOf('Pendente') === -1) {
+        meta.textContent = 'Pendente de publicação';
+      }
+    });
+  }
+
   function enhanceDocuments() {
     var hd = document.querySelector('.page-hd');
     if (!hd) return;
     var p = hd.querySelector('p');
     if (p) p.textContent = 'Biblioteca oficial do torneio · guias, rubricas e agenda';
+    enhanceDocumentLinks();
   }
 
   function enhanceTeam() {
     var header = document.getElementById('eq-header');
     var tabs = document.querySelector('.turma-tabs');
     if (header && tabs && !document.querySelector('.team-actionbar')) {
-      var id = localStorage.getItem('turma_id') || '';
+      var params = new URLSearchParams(location.search);
+      var id = params.get('equipe') || localStorage.getItem('turma_id') || '';
+      var isCoordView = !!localStorage.getItem('coord_nome');
       var bar = document.createElement('div');
       bar.className = 'team-actionbar';
       bar.innerHTML =
-        '<a href="cronograma.html' + (id ? '?equipe=' + encodeURIComponent(id) : '') + '">Minha agenda</a>' +
+        '<a data-team-agenda href="cronograma.html' + (id ? '?equipe=' + encodeURIComponent(id) : '') + '">' + (isCoordView ? 'Agenda da equipe' : 'Minha agenda') + '</a>' +
         '<a href="turma.html#metodologia">Metodologia</a>' +
         '<a href="documentos.html">Documentos oficiais</a>';
       header.insertAdjacentElement('afterend', bar);
@@ -338,7 +360,7 @@
     if (page === 'coordenacao') enhanceCoordination();
     if (page === 'ranking') enhanceRanking();
     if (page === 'documentos') enhanceDocuments();
-    if (page === 'turma') enhanceTeam();
+    if (page === 'turma') { enhanceTeam(); enhanceDocumentLinks(); }
     if (page === 'cronograma') enhanceSchedule();
     if (page === 'arena') enhanceArena();
   }
