@@ -926,6 +926,53 @@
     }
     .judge-chat-input button:disabled{ opacity:.5; cursor:default; }
 
+    /* ── Progresso por sala ─────────────────────────────────────── */
+    .sala-progress-card{
+      border:1px solid #E0E8F0;
+      border-radius:11px;
+      padding:.9rem;
+      background:#fff;
+    }
+    .sala-progress-row{
+      display:flex;
+      align-items:center;
+      gap:.6rem;
+      margin-bottom:.52rem;
+    }
+    .sala-progress-row:last-child{ margin-bottom:0; }
+    .sala-progress-label{
+      font-size:.67rem;
+      font-weight:700;
+      color:#3D5167;
+      min-width:60px;
+      flex-shrink:0;
+    }
+    .sala-progress-track{
+      flex:1;
+      height:6px;
+      border-radius:3px;
+      background:#EDF1F5;
+      overflow:hidden;
+    }
+    .sala-progress-fill{
+      height:100%;
+      border-radius:3px;
+      background:#2F80ED;
+      transition:width .4s ease;
+    }
+    .sala-progress-count{
+      font-size:.64rem;
+      font-weight:700;
+      color:#718096;
+      min-width:32px;
+      text-align:right;
+      flex-shrink:0;
+    }
+    .sala-progress-empty{
+      font-size:.72rem;
+      color:#A0AEC0;
+    }
+
     .judge-coord-only{
       margin-top:.85rem;
     }
@@ -1166,6 +1213,11 @@
         </a>
       </div>
 
+      <div class="sala-progress-card" id="sala-progress-card" style="display:none">
+        <div class="support-kicker">Progresso por sala</div>
+        <div id="sala-progress-rows"><span class="sala-progress-empty">Carregando…</span></div>
+      </div>
+
       <div class="judge-help">
         <strong>Fluxo de trabalho</strong>
         Consulte a rubrica antes da avaliação. O HUB destaca a categoria vinculada ao seu perfil e mantém os demais módulos fora do seu fluxo.
@@ -1226,6 +1278,7 @@
         document.getElementById('juiz-cat').textContent = r.categoria || 'Geral';
         document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
         configurarWorkspaceJuiz(r.categoria || '');
+        iniciarSalaProgress(r.categoria || '');
         return;
       }
       // só desloga se a API explicitamente negar (não em erros de rede)
@@ -1309,11 +1362,65 @@
     document.getElementById('jh-ini').textContent = (r.nome || 'J').trim()[0].toUpperCase();
     configurarWorkspaceJuiz(r.categoria || '');
     if (!_chatTimer) chatIniciar(r.nome);
+    iniciarSalaProgress(r.categoria || '');
+  }
+
+  /* ── Progresso por sala ───────────────────────────────────────── */
+  var _salaTimer = null;
+  var _judgeCategoria = '';
+
+  var _CAT_CAMPO = { arena: 'arena20', projeto: 'proj20', design: 'des20', core: 'core20' };
+
+  function normCampo(cat) {
+    var k = normalizarCategoriaJuiz(cat);
+    return _CAT_CAMPO[k] || null;
+  }
+
+  async function atualizarSalaProgress() {
+    var campo = normCampo(_judgeCategoria);
+    var card  = document.getElementById('sala-progress-card');
+    var rows  = document.getElementById('sala-progress-rows');
+    if (!campo || !card || !rows) return;
+    try {
+      var r = await API.ranking();
+      if (!r.ok || !r.equipes || !r.equipes.length) return;
+      card.style.display = '';
+      var grupos = {};
+      r.equipes.forEach(function(e) {
+        var sala = e.turno || 'Sem sala';
+        if (!grupos[sala]) grupos[sala] = { total: 0, feitas: 0 };
+        grupos[sala].total++;
+        if (Number(e[campo] || 0) > 0) grupos[sala].feitas++;
+      });
+      var salaKeys = Object.keys(grupos).sort();
+      if (!salaKeys.length) { rows.innerHTML = '<span class="sala-progress-empty">Sem dados.</span>'; return; }
+      rows.innerHTML = salaKeys.map(function(sala) {
+        var g   = grupos[sala];
+        var pct = g.total > 0 ? Math.round((g.feitas / g.total) * 100) : 0;
+        return '<div class="sala-progress-row">'
+          + '<div class="sala-progress-label">' + sala + '</div>'
+          + '<div class="sala-progress-track"><div class="sala-progress-fill" style="width:' + pct + '%"></div></div>'
+          + '<div class="sala-progress-count">' + g.feitas + '/' + g.total + '</div>'
+          + '</div>';
+      }).join('');
+    } catch(_) {}
+  }
+
+  function iniciarSalaProgress(cat) {
+    _judgeCategoria = cat;
+    var k = normalizarCategoriaJuiz(cat);
+    if (!_CAT_CAMPO[k]) return;
+    atualizarSalaProgress();
+    if (_salaTimer) clearInterval(_salaTimer);
+    _salaTimer = setInterval(atualizarSalaProgress, 30000);
   }
 
   function sair() {
     Sessao.clear();
     if (_chatTimer) clearInterval(_chatTimer);
+    if (_salaTimer) { clearInterval(_salaTimer); _salaTimer = null; }
+    var card = document.getElementById('sala-progress-card');
+    if (card) card.style.display = 'none';
     document.getElementById('view-painel').style.display = 'none';
     document.getElementById('view-login').style.display  = '';
     document.getElementById('badge-juiz').textContent = '';

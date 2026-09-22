@@ -1444,8 +1444,10 @@
     document.getElementById('view-coord').classList.remove('hidden');
     var _bc2 = document.getElementById('badge-coord');
     if (_bc2) _bc2.textContent = nome;
-    document.getElementById('lista-cards').innerHTML =
-      '<p style="color:var(--texto-sm);font-size:.85rem;padding:.5rem 0">Carregando equipes…</p>';
+    var lc = document.getElementById('lista-cards');
+    if (lc && !lc.children.length) {
+      lc.innerHTML = '<p style="color:var(--texto-sm);font-size:.85rem;padding:.5rem 0">Carregando equipes…</p>';
+    }
   }
 
   async function entrar(nome, pin) {
