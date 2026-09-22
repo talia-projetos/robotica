@@ -75,30 +75,35 @@
       text-transform: uppercase; letter-spacing: .06em; color: #fff;
     }
     .criterio-row {
-      display: grid; grid-template-columns: minmax(0,1fr) auto;
-      align-items: center; gap: 1rem;
+      display: block;
       padding: .9rem 1rem;
       border-top: 1px solid #F1F5F9;
     }
     .criterio-row:first-of-type { border-top: none; }
-    .criterio-cod  { font-size: .68rem; font-weight: 800; color: #94A3B8; margin-bottom: .2rem; }
-    .criterio-nome { font-size: .9rem; font-weight: 700; color: #0F172A; }
-    .criterio-desc { font-size: .75rem; color: #64748B; margin-top: .2rem; line-height: 1.45; }
+    .criterio-header { display: flex; align-items: baseline; gap: .42rem; margin-bottom: .18rem; }
+    .criterio-cod  { font-size: .68rem; font-weight: 800; color: #94A3B8; flex-shrink: 0; }
+    .criterio-nome { font-size: .88rem; font-weight: 700; color: #0F172A; }
+    .criterio-desc { font-size: .72rem; color: #94A3B8; line-height: 1.45; margin-bottom: .6rem; }
 
-    /* ── Selector de nota 1-4 ───────────────────────────────── */
-    .score-sel { display: flex; gap: .35rem; flex-shrink: 0; }
+    /* ── Selector de nota 1-4 (tiles visuais) ──────────────── */
+    .score-sel {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: .38rem;
+    }
     .score-btn {
-      width: 38px; height: 38px; border-radius: 9px;
-      border: 2px solid #D9E2EC; background: #F8FAFC;
-      font-size: .88rem; font-weight: 800; color: #94A3B8;
+      height: 60px; border-radius: 10px;
+      border: 2px solid #E2E8F0; background: #F8FAFC;
       cursor: pointer; transition: border-color .12s, background .12s, color .12s;
-      display: flex; align-items: center; justify-content: center;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 2px; padding: 0; width: 100%;
     }
-    .score-btn:hover { border-color: #94A3B8; color: #475569; }
-    .score-btn.ativo {
-      color: #fff;
-      border-color: transparent;
-    }
+    .score-btn__num { font-size: 1.3rem; font-weight: 900; line-height: 1; color: #CBD5E1; }
+    .score-btn__lbl { font-size: .56rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: #94A3B8; }
+    .score-btn:hover .score-btn__num { color: #64748B; }
+    .score-btn:hover .score-btn__lbl { color: #64748B; }
+    .score-btn.ativo { border-color: transparent; }
+    .score-btn.ativo .score-btn__num,
+    .score-btn.ativo .score-btn__lbl { color: #fff; }
 
     /* ── Soma progressiva ───────────────────────────────────── */
     .total-bar {
@@ -156,8 +161,8 @@
     @media (max-width: 600px) {
       .escala-bar { grid-template-columns: 1fr 1fr; }
       .obs-grid   { grid-template-columns: 1fr; }
-      .criterio-row { grid-template-columns: 1fr; }
-      .score-sel { margin-top: .4rem; }
+      .score-btn  { height: 54px; }
+      .score-btn__num { font-size: 1.1rem; }
     }
 
     /* ── Arena: missões ─────────────────────────────────────────── */
@@ -519,6 +524,8 @@ var NOTAS = {};   // cod -> 1|2|3|4
   verificarDraft();
 })();
 
+var NIVEL_LABEL = ['', 'Iniciante', 'Em desenv.', 'Finalizado', 'Excedente'];
+
 function renderCriterios() {
   var wrap = document.getElementById('criterios-wrap');
   var html = '';
@@ -529,14 +536,17 @@ function renderCriterios() {
 
     bloco.criterios.forEach(function(c) {
       html += '<div class="criterio-row">'
-        + '<div>'
-        + '<div class="criterio-cod">' + c.cod + '</div>'
-        + '<div class="criterio-nome">' + c.nome + '</div>'
-        + '<div class="criterio-desc">' + c.desc + '</div>'
+        + '<div class="criterio-header">'
+        + '<span class="criterio-cod">' + c.cod + '</span>'
+        + '<span class="criterio-nome">' + c.nome + '</span>'
         + '</div>'
+        + '<div class="criterio-desc">' + c.desc + '</div>'
         + '<div class="score-sel" id="sel-' + c.cod + '">';
       [1,2,3,4].forEach(function(n) {
-        html += '<button class="score-btn" data-cod="' + c.cod + '" data-val="' + n + '" onclick="marcar(this)">' + n + '</button>';
+        html += '<button class="score-btn" data-cod="' + c.cod + '" data-val="' + n + '" onclick="marcar(this)">'
+          + '<span class="score-btn__num">' + n + '</span>'
+          + '<span class="score-btn__lbl">' + NIVEL_LABEL[n] + '</span>'
+          + '</button>';
       });
       html += '</div></div>';
     });

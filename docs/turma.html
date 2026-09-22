@@ -2047,17 +2047,18 @@
     /* Mostra a equipe imediatamente — sem esperar a API */
     exibirTurmaImediato(id);
     var _sp3 = document.getElementById('spinner');
+    var _st  = document.getElementById('sync-tag');
     if (_sp3) _sp3.style.display = '';
+    if (_st)  { _st.classList.add('sync-tag--syncing'); _st.style.display = ''; }
 
     try {
       var r = await API.turma(id, pin || '');
       if (r.ok) {
         mostrarResultados(r);
-        var _st = document.getElementById('sync-tag');
         if (_st) {
           var _now = new Date();
           _st.textContent = 'Planilha · ' + _now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-          _st.style.display = '';
+          _st.classList.remove('sync-tag--syncing');
         }
       } else {
         /* Servidor rejeitou credenciais → limpa e volta ao login */
@@ -2072,6 +2073,7 @@
         '<div class="inline-state inline-state--error"><strong>Não foi possível atualizar os resultados.</strong><span>Metodologia, documentos e feedback continuam disponíveis. Tente novamente em alguns instantes.</span></div>';
     } finally {
       if (_sp3) _sp3.style.display = 'none';
+      if (_st)  _st.classList.remove('sync-tag--syncing');
     }
   }
 

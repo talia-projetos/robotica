@@ -1002,6 +1002,7 @@
   </div>
   <div class="topbar__badge">
     <span id="badge-coord" class="text-sm"></span>
+    <span id="sync-tag" class="sync-tag" style="display:none"></span>
     <span class="spinner" id="spinner" style="display:none"></span>
   </div>
 </header>
@@ -1415,7 +1416,9 @@
 
   async function entrar(nome, pin) {
     var _sp = document.getElementById('spinner');
+    var _st = document.getElementById('sync-tag');
     if (_sp) _sp.style.display = '';
+    if (_st) { _st.classList.add('sync-tag--syncing'); _st.style.display = ''; }
     try {
       const r = await API.todasTurmas(nome, pin);
       if (!r.ok) { sair(); toast(r.erro || 'Credenciais inválidas.', 'err'); return; }
@@ -1426,6 +1429,11 @@
       if (_bc3) _bc3.textContent = nome;
       renderTodas(dadosEquipes);
       renderSummary();
+      if (_st) {
+        var _now = new Date();
+        _st.textContent = 'Planilha · ' + _now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+        _st.classList.remove('sync-tag--syncing');
+      }
     } catch(e) {
       var _lc = document.getElementById('lista-cards');
       if (_lc) _lc.innerHTML =
@@ -1433,6 +1441,7 @@
       toast('Sem conexão: ' + e.message, 'err');
     } finally {
       if (_sp) _sp.style.display = 'none';
+      if (_st) _st.classList.remove('sync-tag--syncing');
     }
   }
 
