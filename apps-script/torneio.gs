@@ -1049,6 +1049,7 @@ function doGet(e) {
       case 'coordenacao': r = apiTodasTurmas_(p);   break;
       case 'auth':        r = apiVerificarJuiz_(p); break;
       case 'chat':        r = apiChatReceber_(p);   break;
+      case 'abas':        r = apiListarAbas_();     break;
       default:            r = { ok: false, erro: 'Ação desconhecida: ' + (p.action || '(vazia)') };
     }
     return jsonOut_(r, cb);
@@ -1335,6 +1336,14 @@ function apiSalvarVoto_(body) {
 // ================================================================
 // API — CHAT (juizes.html)
 // ================================================================
+
+function apiListarAbas_() {
+  const ss   = SpreadsheetApp.getActiveSpreadsheet();
+  const abas = ss.getSheets().map(function(s) {
+    return { nome: s.getName(), linhas: s.getLastRow() };
+  });
+  return { ok: true, abas: abas };
+}
 
 function apiChatEnviar_(body) {
   const msg = String(body.msg || '').trim();
