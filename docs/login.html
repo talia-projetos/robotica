@@ -532,7 +532,7 @@
     });
   }
 
-  /* Login — chamadas em paralelo para reduzir latência */
+  /* Login — chamada única ao endpoint unificado */
   async function tentarLogin() {
     var id  = document.getElementById('f-id').value.trim();
     var pin = document.getElementById('f-pin').value.trim();
@@ -543,18 +543,19 @@
 
     setLoading(true);
     try {
-      var resultados = await Promise.allSettled([
-        API.verificarJuiz(id, pin),
-        API.turma(id.toUpperCase(), pin)
-      ]);
+      var r = await API.login(id, pin);
 
-      var juizRes  = resultados[0];
-      var turmaRes = resultados[1];
+      if (!r.ok) {
+        fieldError('err-pin', r.erro || 'Identificação ou PIN incorretos.');
+        pinInput.focus();
+        pinInput.select();
+        return;
+      }
 
-      if (juizRes.status === 'fulfilled' && juizRes.value && juizRes.value.ok) {
-        var r = juizRes.value;
-        setSuccess();
-        limparSessoesDePapel();
+      setSuccess();
+      limparSessoesDePapel();
+
+      if (r.tipo === 'juiz') {
         if (r.coordenador) {
           CoordAuth.set(id, pin);
           Sessao.set(id, pin);
@@ -563,21 +564,13 @@
           Sessao.set(id, pin);
           setTimeout(function () { location.replace('juizes.html'); }, 600);
         }
-        return;
-      }
-
-      if (turmaRes.status === 'fulfilled' && turmaRes.value && turmaRes.value.ok) {
-        setSuccess();
-        limparSessoesDePapel();
+      } else {
         localStorage.setItem('turma_id',  id.toUpperCase());
         localStorage.setItem('turma_pin', pin);
         setTimeout(function () { location.replace('turma.html'); }, 600);
-        return;
       }
-
-      fieldError('err-pin', 'Identificação ou PIN incorretos.');
-      pinInput.focus();
-      pinInput.select();
+    } catch(e) {
+      fieldError('err-pin', 'Erro de conexão. Tente novamente.');
     } finally {
       if (!btn.classList.contains('success')) setLoading(false);
     }

@@ -533,6 +533,22 @@ function apiVerificarJuiz_(p) {
 
 
 // ================================================================
+// API — LOGIN UNIFICADO (juiz + turma em uma chamada)
+// ================================================================
+
+function apiLogin_(p) {
+  const juizR = apiVerificarJuiz_(p);
+  if (juizR.ok) return Object.assign({ tipo: 'juiz' }, juizR);
+  const id = String(p.juiz || '').trim().toUpperCase();
+  try {
+    const turmaR = apiTurma_({ id: id, pin: p.pin });
+    if (turmaR.ok) return Object.assign({ tipo: 'turma', id: id }, turmaR);
+  } catch(_) {}
+  return { ok: false, erro: 'Identificação ou PIN incorretos.' };
+}
+
+
+// ================================================================
 // API — TODAS AS TURMAS (coordenação)
 // ================================================================
 
@@ -1090,6 +1106,7 @@ function doGet(e) {
       case 'turma':       r = apiTurma_(p);         break;
       case 'coordenacao': r = apiTodasTurmas_(p);   break;
       case 'auth':        r = apiVerificarJuiz_(p); break;
+      case 'login':       r = apiLogin_(p);         break;
       case 'chat':        r = apiChatReceber_(p);   break;
       case 'abas':        r = apiListarAbas_();     break;
       default:            r = { ok: false, erro: 'Ação desconhecida: ' + (p.action || '(vazia)') };
