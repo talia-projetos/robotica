@@ -360,9 +360,9 @@ function lerEquipes_(ss, cfg, diag) {
 
     const eq = {
       id:    id,
-      nome:  String(r[iNome] || id).trim(),
-      turno: String(r[iTurno] || '').trim(),
-      tutor: String(r[iTutor] || '').trim(),
+      nome:  fixEnc_(String(r[iNome] || id).trim()),
+      turno: fixEnc_(String(r[iTurno] || '').trim()),
+      tutor: fixEnc_(String(r[iTutor] || '').trim()),
       alunos: Math.max(0, num_(r[iQtd])),
       pin:   iPin >= 0 ? String(r[iPin] || '').trim() : ''
     };
@@ -1472,6 +1472,27 @@ function jsonOut_(dados, cb) {
 // ================================================================
 // UTILITÁRIOS — TEXTO / NÚMERO
 // ================================================================
+
+// Corrige duplo-encoding Windows-1252→UTF-8 (ex: "Â°"→"°", "Ã‰"→"É")
+function fixEnc_(s) {
+  if (!s || typeof s !== 'string') return s;
+  // Mapa dos caracteres especiais Windows-1252 (0x80-0x9F) → byte value
+  var w = {'€':0x80,'‚':0x82,'ƒ':0x83,'„':0x84,'…':0x85,
+            '†':0x86,'‡':0x87,'ˆ':0x88,'‰':0x89,'Š':0x8A,
+            '‹':0x8B,'Œ':0x8C,'Ž':0x8E,'‘':0x91,'’':0x92,
+            '“':0x93,'”':0x94,'•':0x95,'–':0x96,'—':0x97,
+            '˜':0x98,'™':0x99,'š':0x9A,'›':0x9B,'œ':0x9C,
+            'ž':0x9E,'Ÿ':0x9F};
+  var bytes = [];
+  for (var i = 0; i < s.length; i++) {
+    var cp = s.charCodeAt(i);
+    if (w[s[i]] !== undefined) bytes.push(w[s[i]]);
+    else if (cp <= 0xFF) bytes.push(cp);
+    else return s; // tem char fora de Latin-1/Win1252 → já está correto
+  }
+  try { return Utilities.newBlob(bytes).getDataAsString('UTF-8'); }
+  catch(_) { return s; }
+}
 
 function norm_(v) {
   if (v === null || v === undefined) return '';
