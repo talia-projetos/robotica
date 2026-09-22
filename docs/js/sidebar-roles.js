@@ -423,13 +423,11 @@
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
-      addSidebarBrand();
       buildAvatar();
       buildGreeting();
       addSidebarToggle();
     });
   } else {
-    addSidebarBrand();
     buildAvatar();
     buildGreeting();
     addSidebarToggle();
