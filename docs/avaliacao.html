@@ -673,7 +673,7 @@ function initArena() {
     + '<label for="sel-round-av">Round</label>'
     + '<select id="sel-round-av" onchange="ROUND_SEL=this.value;verificarPronto()">'
     + '<option value="">— Selecione o round —</option>'
-    + ['R1','R2','R3','Quartas','Semifinais','Finais'].map(function(r){
+    + ['Round 1','Round 2','Round 3','Quartas','Semifinais','Finais'].map(function(r){
         return '<option value="'+r+'">'+r+'</option>';
       }).join('')
     + '</select></div>';

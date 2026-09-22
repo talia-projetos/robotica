@@ -1345,7 +1345,16 @@ function apiSalvarArena_(body) {
   }
   const cab   = aba.getRange(1,1,1,aba.getLastColumn()).getValues()[0];
   const linha = new Array(cab.length).fill('');
-  function set(nome, val){ const i=cab.indexOf(nome); if(i>=0) linha[i]=val; }
+  function set(nome, val){
+    var i = cab.indexOf(nome);
+    if (i < 0) {
+      var pfx = String(nome).toUpperCase();
+      for (var j = 0; j < cab.length; j++) {
+        if (String(cab[j]).toUpperCase().indexOf(pfx) === 0) { i = j; break; }
+      }
+    }
+    if (i >= 0) linha[i] = val;
+  }
   set('Carimbo de data/hora', new Date());
   set('ID_Equipe', body.idEquipe);
   set('Round', body.round);
