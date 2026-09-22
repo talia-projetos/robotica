@@ -3,6 +3,31 @@
   var isCoord = !!(localStorage.getItem('coord_nome') && localStorage.getItem('coord_pin'));
   var isJuiz  = !!(localStorage.getItem('hub_juiz')   && localStorage.getItem('hub_pin'));
   var isTurma = !!(localStorage.getItem('turma_id')   && localStorage.getItem('turma_pin'));
+  var role    = isCoord ? 'coord' : isJuiz ? 'juiz' : isTurma ? 'professor' : '';
+
+  /* Coordenação usa as mesmas credenciais nas áreas de avaliação/deliberação.
+     Espelha a sessão para evitar novo login ao trocar de workspace. */
+  if (isCoord && !isJuiz) {
+    localStorage.setItem('hub_juiz', localStorage.getItem('coord_nome') || '');
+    localStorage.setItem('hub_pin',  localStorage.getItem('coord_pin')  || '');
+    isJuiz = true;
+  }
+
+  var currentFile = (location.pathname.split('/').pop() || 'index.html').split('?')[0] || 'index.html';
+  var ALLOWED = {
+    professor: ['turma.html','cronograma.html','documentos.html','arena.html'],
+    juiz:      ['juizes.html','rubricas.html','documentos.html','arena.html'],
+    coord:     ['index.html','arena.html','turma.html','juizes.html','coordenacao.html','deliberacao.html','ranking.html','cronograma.html','documentos.html','rubricas.html','relatorio.html']
+  };
+  var DEFAULT_ROUTE = { professor:'turma.html', juiz:'juizes.html', coord:'index.html' };
+
+  var topbarBrand = document.querySelector('.topbar__brand');
+  if (topbarBrand && role) topbarBrand.href = DEFAULT_ROUTE[role];
+
+  if (role && currentFile !== 'login.html' && ALLOWED[role] && ALLOWED[role].indexOf(currentFile) === -1) {
+    location.replace(DEFAULT_ROUTE[role]);
+    return;
+  }
 
   /* ── Logout global ───────────────────────────────────── */
   function sair() {
@@ -77,15 +102,46 @@
     afterEl.insertAdjacentElement('afterend', a);
   }
 
-  if (isCoord) {
+  function addRubricas() {
+    var sidebar = document.querySelector('.app-sidebar');
+    if (!sidebar || sidebar.querySelector('a[href="rubricas.html"]')) return;
+    var afterEl = sidebar.querySelector('a[href="juizes.html"]') || sidebar.querySelector('a[href="arena.html"]');
+    if (!afterEl) return;
+    var a = document.createElement('a');
+    a.href = 'rubricas.html';
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.className = 'sidebar-item' + (currentFile === 'rubricas.html' ? ' ativo' : '');
+    a.innerHTML =
+      '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M3 2.5h10v11H3z"/><path d="M5.5 5.5h5M5.5 8h5M5.5 10.5h3"/>' +
+      '</svg> Rubricas';
+    afterEl.insertAdjacentElement('afterend', a);
+  }
+
+  function rename(href, label) {
+    var el = document.querySelector('.app-sidebar a[href="' + href + '"]');
+    if (!el) return;
+    var textNode = Array.prototype.slice.call(el.childNodes).find(function(n){ return n.nodeType === 3; });
+    if (textNode) textNode.nodeValue = ' ' + label;
+  }
+
+  if (role === 'coord') {
     addDelib();
-  } else if (isJuiz) {
-    hide('arena.html');
+    addDocumentos();
+    addRubricas();
+    rename('juizes.html', 'Avaliações');
+  } else if (role === 'juiz') {
+    hide('index.html');
     hide('turma.html');
     hide('coordenacao.html');
     hide('ranking.html');
-  } else if (isTurma) {
-    hide('arena.html');
+    hide('cronograma.html');
+    addDocumentos();
+    addRubricas();
+    rename('juizes.html', 'Avaliações');
+  } else if (role === 'professor') {
+    hide('index.html');
     hide('juizes.html');
     hide('coordenacao.html');
     hide('ranking.html');
@@ -185,10 +241,10 @@
     var sidebar = document.querySelector('.app-sidebar');
     if (!sidebar || sidebar.querySelector('.sidebar-brand')) return;
     var a   = document.createElement('a');
-    a.href  = 'index.html';
+    a.href  = DEFAULT_ROUTE[role] || 'index.html';
     a.className = 'sidebar-brand';
     var img = document.createElement('img');
-    img.src = 'logo.svg';
+    img.src = 'logo-claro.svg';
     img.alt = 'HUB Circuito';
     img.className = 'sidebar-brand__img';
     a.appendChild(img);
