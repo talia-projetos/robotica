@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="css/styles.css?v=7">
+  <link rel="stylesheet" href="css/styles.css?v=8">
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';
   </script>
@@ -666,9 +666,23 @@
     <!-- ── ABA: Resumo ───────────────────────────────────────────── -->
     <div class="ttab-panel ativo" id="ttab-resumo">
       <div id="ranking-row" style="display:none">
-        <div id="ranking-badges" style="margin-bottom:1.25rem"></div>
+        <div id="ranking-badges" style="margin-bottom:1rem"></div>
       </div>
-      <div class="scores-grid" id="scores-grid"></div>
+      <div class="team-summary-grid">
+        <div class="team-performance">
+          <div class="team-section-kicker">Desempenho da equipe</div>
+          <div class="scores-grid" id="scores-grid"></div>
+        </div>
+        <aside class="team-feedback-preview">
+          <div class="team-section-kicker">Feedback dos Juízes</div>
+          <div class="feedback-preview-icon">
+            <svg viewBox="0 0 24 24"><path d="M5 4h14v12H8l-3 3z"/><path d="M9 9h6M9 12h4"/></svg>
+          </div>
+          <div class="feedback-preview-title">Comentários e devolutivas</div>
+          <div class="feedback-preview-text">Consulte os comentários recebidos por categoria conforme as avaliações forem concluídas.</div>
+          <button type="button" class="feedback-preview-link" onclick="mudarTTab('feedback')">Abrir feedback</button>
+        </aside>
+      </div>
     </div>
 
     <!-- ── ABA: Metodologia ─────────────────────────────────────── -->

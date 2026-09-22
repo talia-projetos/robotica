@@ -25,7 +25,7 @@
 
   function enhanceJudges() {
     var wrap = document.querySelector('.painel-wrap');
-    if (!wrap || wrap.querySelector('.workspace-head')) return;
+    if (!wrap || wrap.querySelector('.workspace-head') || wrap.querySelector('.judge-workspace-head')) return;
 
     var head = document.createElement('div');
     head.className = 'workspace-head';
