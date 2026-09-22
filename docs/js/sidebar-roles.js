@@ -1,5 +1,6 @@
 /* Controle de visibilidade da sidebar, avatar e logout */
 (function () {
+  try {
   var isCoord = !!(localStorage.getItem('coord_nome') && localStorage.getItem('coord_pin'));
   var isJuiz  = !!(localStorage.getItem('hub_juiz')   && localStorage.getItem('hub_pin'));
   var isTurma = !!(localStorage.getItem('turma_id')   && localStorage.getItem('turma_pin'));
@@ -437,5 +438,7 @@
     buildGreeting();
     addSidebarToggle();
   }
-  document.documentElement.style.visibility = '';
+  } finally {
+    document.documentElement.style.visibility = '';
+  }
 })();
