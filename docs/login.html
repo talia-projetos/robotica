@@ -445,6 +445,12 @@
     btn.classList.add('success');
   }
 
+  function limparSessoesDePapel() {
+    ['coord_nome','coord_pin','hub_juiz','hub_pin','turma_id','turma_pin'].forEach(function(k) {
+      localStorage.removeItem(k);
+    });
+  }
+
   /* Login */
   async function tentarLogin() {
     var id  = document.getElementById('f-id').value.trim();
@@ -462,9 +468,13 @@
         if (r.ok) {
           setSuccess();
           if (r.coordenador) {
+            limparSessoesDePapel();
             CoordAuth.set(id, pin);
+            /* Coordenação também usa as áreas de avaliação sem novo login. */
+            Sessao.set(id, pin);
             setTimeout(function () { location.replace('index.html'); }, 600);
           } else {
+            limparSessoesDePapel();
             Sessao.set(id, pin);
             setTimeout(function () { location.replace('juizes.html'); }, 600);
           }
@@ -477,6 +487,7 @@
         var t = await API.turma(id.toUpperCase(), pin);
         if (t.ok) {
           setSuccess();
+          limparSessoesDePapel();
           localStorage.setItem('turma_id',  id.toUpperCase());
           localStorage.setItem('turma_pin', pin);
           setTimeout(function () { location.replace('turma.html'); }, 600);
