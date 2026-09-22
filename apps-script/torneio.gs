@@ -1257,9 +1257,9 @@ function apiEquipes_() {
   const iQtd  = achaCab_(cab, ['qtde','qtd','alunos'], 4);
   const lista = dados.slice(1).filter(function(r){ return r[iId]; }).map(function(r){ return {
     id: String(r[iId]||'').trim().toUpperCase(),
-    nome: String(r[iNome]||'').trim(),
-    turno: String(r[iTurno]||'').trim(),
-    tutor: String(r[iTutor]||'').trim(),
+    nome: fixEnc_(String(r[iNome]||'').trim()),
+    turno: fixEnc_(String(r[iTurno]||'').trim()),
+    tutor: fixEnc_(String(r[iTutor]||'').trim()),
     alunos: num_(r[iQtd])
   }; });
   return { ok: true, equipes: lista };
