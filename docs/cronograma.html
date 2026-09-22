@@ -808,9 +808,54 @@
     }
 
     @media print{
-      .app-sidebar,.topbar,.schedule-workspace-head .schedule-head-actions,.crono-toolbar,.schedule-viewbar{display:none!important}
-      .schedule-shell{display:block}
-      .wrap{max-width:none;padding:0}
+      @page { size: A4 landscape; margin:.8cm 1.2cm; }
+      *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+
+      /* Oculta navegação e controles */
+      .app-sidebar,
+      .topbar,
+      .schedule-workspace-head .schedule-head-actions,
+      .crono-toolbar,
+      .schedule-viewbar,
+      .schedule-mobile-brand { display:none!important }
+
+      /* Remove o layout de dois painéis */
+      .schedule-shell{ display:block; background:#fff }
+      .schedule-shell .app-main{ background:#fff }
+      .wrap{ max-width:none; padding:.4rem 0 0 }
+
+      /* Cabeçalho limpo */
+      .schedule-workspace-head{
+        margin-bottom:.6rem;
+        border-bottom:2px solid #12355B;
+        padding-bottom:.5rem;
+      }
+      .schedule-kicker{ font-size:.6rem; color:#508FCB; letter-spacing:.1em }
+      .schedule-workspace-head h1{ font-size:1.3rem; color:#12355B; margin:0 }
+      .page-meta{ font-size:.68rem; color:#5A6980; margin:.1rem 0 0 }
+
+      /* Timeline macro — mantém cores */
+      .timeline-macro{ margin-bottom:.7rem }
+
+      /* Cards de equipe */
+      .schedule-team{
+        border:1px solid #D9E2EC;
+        border-radius:8px;
+        margin-bottom:.4rem;
+        page-break-inside:avoid;
+      }
+      .schedule-team__head{ background:#F0F5FA }
+      .schedule-team__id  { font-size:.75rem; font-weight:800 }
+      .schedule-team__name{ font-size:.65rem }
+      .schedule-slot{ font-size:.65rem; padding:.28rem .5rem }
+      .schedule-slot__time{ font-size:.62rem; color:#6B7A90 }
+
+      /* Info cards */
+      .info-row{ gap:.35rem; margin-top:.5rem }
+      .ic{ padding:.5rem .7rem }
+      .ic__label{ font-size:.58rem }
+      .ic__val  { font-size:.8rem }
+      .ic__sub  { font-size:.58rem }
     }
 
     @media(max-width:900px){
