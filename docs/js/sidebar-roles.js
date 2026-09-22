@@ -5,19 +5,22 @@
   var isTurma = !!(localStorage.getItem('turma_id')   && localStorage.getItem('turma_pin'));
   var role    = isCoord ? 'coord' : isJuiz ? 'juiz' : isTurma ? 'professor' : '';
 
+  var currentFile = (location.pathname.split('/').pop() || 'index.html').split('?')[0] || 'index.html';
+
   /* Coordenação usa as mesmas credenciais nas áreas de avaliação/deliberação.
-     Espelha a sessão para evitar novo login ao trocar de workspace. */
-  if (isCoord && !isJuiz) {
+     Espelha a sessão para evitar novo login — mas NÃO em juizes.html, que tem
+     fluxo de auth próprio e não deve auto-entrar no modo juiz. */
+  if (isCoord && !isJuiz && currentFile !== 'juizes.html') {
     localStorage.setItem('hub_juiz', localStorage.getItem('coord_nome') || '');
     localStorage.setItem('hub_pin',  localStorage.getItem('coord_pin')  || '');
     isJuiz = true;
   }
 
-  var currentFile = (location.pathname.split('/').pop() || 'index.html').split('?')[0] || 'index.html';
   var ALLOWED = {
     professor: ['index.html','turma.html','cronograma.html','documentos.html','arena.html','ranking.html'],
-    juiz:      ['juizes.html','documentos.html','arena.html'],
-    coord:     ['index.html','arena.html','turma.html','juizes.html','coordenacao.html','ranking.html','cronograma.html','documentos.html','relatorio.html']
+    juiz:      ['juizes.html','documentos.html','arena.html','avaliacao.html'],
+    coord:     ['index.html','arena.html','turma.html','juizes.html','coordenacao.html','ranking.html',
+                'cronograma.html','documentos.html','relatorio.html','deliberacao.html','avaliacao.html']
   };
   var DEFAULT_ROUTE = { professor:'turma.html', juiz:'juizes.html', coord:'index.html' };
 

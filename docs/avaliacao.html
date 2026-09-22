@@ -159,6 +159,46 @@
       .criterio-row { grid-template-columns: 1fr; }
       .score-sel { margin-top: .4rem; }
     }
+
+    /* ── Arena: missões ─────────────────────────────────────────── */
+    .round-selector {
+      background: #fff; border: 1px solid #E2E8F0; border-radius: 14px;
+      padding: 1rem 1.2rem; margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .round-selector label { font-size: .8rem; font-weight: 700; color: #374151; white-space: nowrap; }
+    .round-selector select {
+      flex: 1; padding: .55rem .8rem; border: 1.5px solid #D9E2EC; border-radius: 9px;
+      font-family: inherit; font-size: .88rem; background: #F8FAFC; color: #0F172A; cursor: pointer;
+    }
+    .missao-card {
+      background: #fff; border: 1px solid #E2E8F0; border-radius: 14px;
+      padding: .85rem 1rem; margin-bottom: .6rem;
+      display: grid; grid-template-columns: 44px minmax(0,1fr) auto;
+      align-items: flex-start; gap: .8rem;
+    }
+    .missao-badge {
+      width: 44px; height: 44px; border-radius: 11px;
+      background: #EFF6FF; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .missao-badge__cod { font-size: .58rem; font-weight: 900; color: #1D4ED8; letter-spacing: .04em; }
+    .missao-nome { font-size: .88rem; font-weight: 700; color: #0F172A; }
+    .missao-desc { font-size: .72rem; color: #64748B; margin-top: .18rem; line-height: 1.4; }
+    .missao-restrito { font-size: .62rem; color: #D97706; font-weight: 700; margin-top: .2rem; }
+    .missao-opts { display: flex; flex-wrap: wrap; gap: .3rem; padding-top: .05rem; }
+    .missao-opt {
+      padding: .28rem .55rem; border-radius: 7px;
+      border: 2px solid #E2E8F0; background: #F8FAFC;
+      font-size: .78rem; font-weight: 800; color: #94A3B8;
+      cursor: pointer; transition: all .1s; white-space: nowrap;
+    }
+    .missao-opt:hover { border-color: #93C5FD; color: #1D4ED8; }
+    .missao-opt.ativo { color: #fff; border-color: transparent; background: #1D4ED8; }
+    @media (max-width: 580px) {
+      .missao-card { grid-template-columns: 44px minmax(0,1fr); }
+      .missao-opts { grid-column: 1/-1; }
+    }
   </style>
 </head>
 <body>
@@ -363,34 +403,27 @@ var RUBRICAS = {
       ]}
     ]
   },
-  arena: {
-    titulo: 'Desafio do Robô',
-    cor: '#0D47A1', corLight: '#E3F2FD', corDark: '#08306e',
-    icon: '<circle cx="11" cy="11" r="6.5"/><polygon points="9,8 15,11 9,14" fill="currentColor" stroke="none"/>',
-    blocos: [
-      { label: 'Identificar o Desafio', criterios: [
-        { cod:'R1', nome:'Compreensão das regras', desc:'A equipe domina as regras, limites e objetivos do desafio de arena' },
-        { cod:'R2', nome:'Estratégia de missões', desc:'Priorização das missões escolhidas com justificativas claras e coerentes' }
-      ]},
-      { label: 'Planejar e Programar', criterios: [
-        { cod:'R3', nome:'Planejamento da programação', desc:'Mapeamento de movimentos, sensores e sequências antes de codificar' },
-        { cod:'R4', nome:'Qualidade do código', desc:'Solução de programação eficiente, organizada e adaptada às missões' }
-      ]},
-      { label: 'Construir e Testar', criterios: [
-        { cod:'R5', nome:'Construção mecânica', desc:'Estabilidade, adequação e confiabilidade mecânica do robô em arena' },
-        { cod:'R6', nome:'Testes e iterações', desc:'Observação sistemática de falhas e registro de ajustes realizados' }
-      ]},
-      { label: 'Executar na Arena', criterios: [
-        { cod:'R7', nome:'Execução das missões', desc:'O robô completa as missões propostas de forma autônoma e precisa' },
-        { cod:'R8', nome:'Consistência entre rounds', desc:'Desempenho repetível e confiável ao longo dos diferentes rounds' }
-      ]},
-      { label: 'Comunicar e Cooperar', criterios: [
-        { cod:'R9', nome:'Trabalho em equipe na arena', desc:'Colaboração, comunicação e divisão de funções durante a operação' },
-        { cod:'R10', nome:'Postura e espírito esportivo', desc:'Respeito às regras, ao adversário e aos árbitros durante as partidas' }
-      ]}
-    ]
-  }
 };
+
+/* ─── Missões do Desafio do Robô ─────────────────────────────── */
+var MISSOES = [
+  { cod:'M00', nome:'Inspeção',               desc:'Robô e equipamentos cabem completamente nas áreas de lançamento',                             opts:[0,20] },
+  { cod:'M01', nome:'Escavação superficial',   desc:'Ausência de resíduos de solo no tapete; bônus se pincel não tocar o sítio',                   opts:[0,20,30,40,50] },
+  { cod:'M02', nome:'Revelação do mapa',       desc:'Seções superiores do solo totalmente limpas',                                                 opts:[0,25,50,75],       restrito:true },
+  { cod:'M03', nome:'Quem viveu aqui?',        desc:'Piso da estrutura completamente na vertical',                                                 opts:[0,30] },
+  { cod:'M04', nome:'Forja',                   desc:'Blocos de minério fora da forja; bônus por acertar o bloco com artefato fossilizado',         opts:[0,20,40,60,70] },
+  { cod:'M05', nome:'Levantamento de peso',    desc:'Pedra de moinho fora da sua base',                                                            opts:[0,30] },
+  { cod:'M06', nome:'Silo',                    desc:'Peças preservadas fora do silo (15 pts cada)',                                                opts:[0,15,30,45] },
+  { cod:'M07', nome:'O que está à venda?',     desc:'Telhado e mercadoria totalmente levantados',                                                  opts:[0,15,30,45],       restrito:true },
+  { cod:'M08', nome:'Desequilíbrio da balança',desc:'Balança desequilibrada tocando o tapete; prato removido',                                    opts:[0,10,20,30],       restrito:true },
+  { cod:'M09', nome:'Operação de resgate',     desc:'Areia removida (alavanca passa da linha); navio levantado',                                   opts:[0,10,20,30] },
+  { cod:'M10', nome:'Reconstrução da estátua', desc:'Estátua completamente levantada',                                                             opts:[0,30],             restrito:true },
+  { cod:'M11', nome:'Fórum',                   desc:'Artefatos no tapete e dentro do fórum (5 pts por artefato, máx. 9)',                         opts:[0,5,10,15,20,25,30,35,40,45], restrito:true },
+  { cod:'DIS', nome:'Discos de Precisão',      desc:'6 discos iniciais. Perde 1 a cada interrupção do robô fora da área de lançamento',           opts:[0,10,15,25,30,40,50] }
+];
+
+var ROUND_SEL    = '';
+var MISSAO_NOTAS = {};
 
 /* ─── Estado ─────────────────────────────────────────────────── */
 var CAT  = '';
@@ -406,6 +439,9 @@ var NOTAS = {};   // cod -> 1|2|3|4
   document.getElementById('badge-juiz').textContent = Sessao.juiz;
 
   CAT = new URLSearchParams(location.search).get('cat') || '';
+
+  if (CAT === 'arena') { initArena(); return; }
+
   DEF = RUBRICAS[CAT];
 
   if (!DEF) {
@@ -483,14 +519,98 @@ function atualizarTotal() {
   document.getElementById('total-val').textContent = soma;
 }
 
+/* ── Arena init / render / envio ─────────────────────────────── */
+function initArena() {
+  var head = document.getElementById('av-head');
+  head.style.background = 'linear-gradient(135deg,#0D47A1 0%,#08306e 100%)';
+  document.querySelector('.av-head__cat').textContent  = 'Ficha de Pontuação';
+  document.getElementById('av-head-nome').textContent  = 'Desafio do Robô';
+  document.getElementById('av-head-pts').textContent   = '13 missões •máx. 550 pts';
+  document.getElementById('total-max').textContent     = ' / 550';
+  document.querySelector('.total-bar__label').innerHTML = 'Pontuação total do round';
+  document.getElementById('btn-enviar').style.background = '#0D47A1';
+  document.getElementById('btn-enviar').textContent = 'Enviar pontuação';
+
+  document.querySelector('.escala-bar').style.display = 'none';
+  document.querySelector('.obs-grid').style.display   = 'none';
+
+  var roundHtml = '<div class="round-selector">'
+    + '<label for="sel-round-av">Round</label>'
+    + '<select id="sel-round-av" onchange="ROUND_SEL=this.value;verificarPronto()">'
+    + '<option value="">— Selecione o round —</option>'
+    + ['R1','R2','R3','Quartas','Semifinais','Finais'].map(function(r){
+        return '<option value="'+r+'">'+r+'</option>';
+      }).join('')
+    + '</select></div>';
+  document.querySelector('.eq-selector').insertAdjacentHTML('beforebegin', roundHtml);
+
+  document.getElementById('sel-equipe').addEventListener('change', verificarPronto);
+  renderArena();
+}
+
+function renderArena() {
+  var wrap = document.getElementById('criterios-wrap');
+  var html = '';
+  MISSOES.forEach(function(m) {
+    var marcado = MISSAO_NOTAS.hasOwnProperty(m.cod);
+    html += '<div class="missao-card">'
+      + '<div class="missao-badge"><div class="missao-badge__cod">' + m.cod + '</div></div>'
+      + '<div>'
+      + '<div class="missao-nome">' + m.nome + (marcado ? ' <span style="color:#22C55E;font-size:.7rem;font-weight:700">' + MISSAO_NOTAS[m.cod] + ' pts</span>' : '') + '</div>'
+      + '<div class="missao-desc">' + m.desc + '</div>'
+      + (m.restrito ? '<div class="missao-restrito">Nao pontua se equipamentos tocarem o modelo ao fim do round</div>' : '')
+      + '</div>'
+      + '<div class="missao-opts">';
+    m.opts.forEach(function(pts) {
+      var ativo = MISSAO_NOTAS[m.cod] === pts;
+      html += '<button class="missao-opt' + (ativo ? ' ativo' : '') + '"'
+        + ' data-cod="' + m.cod + '" data-pts="' + pts + '" onclick="marcarMissao(this)">' + pts + '</button>';
+    });
+    html += '</div></div>';
+  });
+  wrap.innerHTML = html;
+}
+
+function marcarMissao(btn) {
+  var cod = btn.dataset.cod;
+  var pts = Number(btn.dataset.pts);
+  MISSAO_NOTAS[cod] = pts;
+
+  btn.closest('.missao-opts').querySelectorAll('.missao-opt').forEach(function(b) {
+    b.classList.toggle('ativo', Number(b.dataset.pts) === pts);
+  });
+
+  /* Atualiza badge de pts no nome */
+  var card  = btn.closest('.missao-card');
+  var nome  = card.querySelector('.missao-nome');
+  var badge = nome.querySelector('span');
+  if (!badge) { badge = document.createElement('span'); badge.style.cssText = 'color:#22C55E;font-size:.7rem;font-weight:700'; nome.appendChild(badge); }
+  badge.textContent = ' ' + pts + ' pts';
+
+  var total = Object.values(MISSAO_NOTAS).reduce(function(a,b){return a+b;}, 0);
+  document.getElementById('total-val').textContent = total;
+  verificarPronto();
+}
+
 function verificarPronto() {
+  var btn  = document.getElementById('btn-enviar');
+  var info = document.getElementById('av-footer-info');
+  var equipe = document.getElementById('sel-equipe').value;
+
+  if (CAT === 'arena') {
+    var round      = ROUND_SEL;
+    var marcadas   = Object.keys(MISSAO_NOTAS).length;
+    var total      = MISSOES.length;
+    if (!round)  { info.textContent = 'Selecione o round.'; btn.disabled = true; }
+    else if (!equipe) { info.textContent = 'Selecione a equipe.'; btn.disabled = true; }
+    else if (marcadas < total) { info.textContent = marcadas + ' de ' + total + ' missões pontuadas.'; btn.disabled = true; }
+    else { info.textContent = 'Todas as missões pontuadas. Pronto para enviar.'; btn.disabled = false; }
+    return;
+  }
+
   var totalCriterios = 0;
   DEF.blocos.forEach(function(b) { totalCriterios += b.criterios.length; });
   var preenchidos = Object.keys(NOTAS).length;
-  var equipe      = document.getElementById('sel-equipe').value;
-
-  var btn  = document.getElementById('btn-enviar');
-  var info = document.getElementById('av-footer-info');
 
   if (!equipe) {
     info.textContent = 'Selecione a equipe antes de enviar.';
@@ -506,11 +626,21 @@ function verificarPronto() {
 
 document.getElementById('sel-equipe').addEventListener('change', verificarPronto);
 
+function ocultarFormulario() {
+  ['criterios-wrap'].forEach(function(id) {
+    var el = document.getElementById(id); if (el) el.style.display = 'none';
+  });
+  ['.escala-bar','.eq-selector','.total-bar','.obs-grid','.av-footer','.round-selector'].forEach(function(s) {
+    var el = document.querySelector(s); if (el) el.style.display = 'none';
+  });
+}
+
 async function enviar() {
+  if (CAT === 'arena') { await enviarArena(); return; }
+
   var equipe = document.getElementById('sel-equipe').value;
   if (!equipe) { toast('Selecione a equipe.', 'err'); return; }
 
-  /* Monta array ordenado de notas */
   var ordemCods = [];
   DEF.blocos.forEach(function(b) {
     b.criterios.forEach(function(c) { ordemCods.push(c.cod); });
@@ -528,18 +658,10 @@ async function enviar() {
     var r = await API.salvarRubrica(Sessao.juiz, Sessao.pin, CAT, equipe, notasArr);
     if (!r.ok) throw new Error(r.erro || 'Erro desconhecido');
 
-    /* Envia comentários se preenchidos */
     if (obsB) API.comentar(Sessao.juiz, Sessao.pin, '[BOM] ' + obsB, CAT).catch(function(){});
     if (obsM) API.comentar(Sessao.juiz, Sessao.pin, '[MEL] ' + obsM, CAT).catch(function(){});
 
-    /* Mostra sucesso */
-    document.getElementById('criterios-wrap').style.display = 'none';
-    document.querySelector('.escala-bar').style.display      = 'none';
-    document.querySelector('.eq-selector').style.display    = 'none';
-    document.querySelector('.total-bar').style.display      = 'none';
-    document.querySelector('.obs-grid').style.display       = 'none';
-    document.querySelector('.av-footer').style.display      = 'none';
-
+    ocultarFormulario();
     var soma = notasArr.reduce(function(a,b){return a+b;}, 0);
     document.getElementById('sucesso-sub').textContent =
       'Pontuação de ' + soma + ' pts registrada para ' + document.getElementById('sel-equipe').selectedOptions[0].text + '.';
@@ -554,20 +676,59 @@ async function enviar() {
   }
 }
 
+async function enviarArena() {
+  var equipe = document.getElementById('sel-equipe').value;
+  if (!equipe || !ROUND_SEL) { toast('Selecione equipe e round.', 'err'); return; }
+
+  var total = Object.values(MISSAO_NOTAS).reduce(function(a,b){return a+b;}, 0);
+  var btn = document.getElementById('btn-enviar');
+  btn.disabled = true; btn.textContent = 'Enviando…';
+  document.getElementById('spinner').style.display = '';
+
+  try {
+    var r = await API.salvarArena(Sessao.juiz, Sessao.pin, equipe, ROUND_SEL, total, 0);
+    if (!r.ok) throw new Error(r.erro || 'Erro desconhecido');
+
+    ocultarFormulario();
+    document.getElementById('sucesso-sub').textContent =
+      ROUND_SEL + ' •' + total + ' pts registrados para ' + document.getElementById('sel-equipe').selectedOptions[0].text + '.';
+    document.getElementById('av-sucesso').style.display = 'block';
+
+  } catch(e) {
+    toast('Erro ao enviar: ' + e.message, 'err');
+    btn.disabled = false;
+    btn.textContent = 'Enviar pontuação';
+  } finally {
+    document.getElementById('spinner').style.display = 'none';
+  }
+}
+
 function novaAvaliacao() {
-  /* Reseta estado */
-  NOTAS = {};
-  document.getElementById('sel-equipe').value = '';
-  document.getElementById('obs-bom').value    = '';
-  document.getElementById('obs-mel').value    = '';
   document.getElementById('av-sucesso').style.display = 'none';
+  document.getElementById('sel-equipe').value = '';
+  document.getElementById('total-val').textContent = '0';
 
-  ['criterios-wrap','.escala-bar','.eq-selector','.total-bar','.obs-grid','.av-footer'].forEach(function(s) {
-    var el = s.startsWith('.') ? document.querySelector(s) : document.getElementById(s);
-    if (el) el.style.display = '';
-  });
+  if (CAT === 'arena') {
+    MISSAO_NOTAS = {};
+    ROUND_SEL    = '';
+    var rs = document.getElementById('sel-round-av');
+    if (rs) rs.value = '';
+    ['.round-selector','.eq-selector','#criterios-wrap','.total-bar','.av-footer'].forEach(function(s) {
+      var el = s.startsWith('#') ? document.getElementById(s.slice(1)) : document.querySelector(s);
+      if (el) el.style.display = '';
+    });
+    renderArena();
+  } else {
+    NOTAS = {};
+    document.getElementById('obs-bom').value = '';
+    document.getElementById('obs-mel').value = '';
+    ['.escala-bar','.eq-selector','#criterios-wrap','.total-bar','.obs-grid','.av-footer'].forEach(function(s) {
+      var el = s.startsWith('#') ? document.getElementById(s.slice(1)) : document.querySelector(s);
+      if (el) el.style.display = '';
+    });
+    renderCriterios();
+  }
 
-  renderCriterios();
   verificarPronto();
 }
 </script>
