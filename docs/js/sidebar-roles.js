@@ -15,8 +15,8 @@
 
   var currentFile = (location.pathname.split('/').pop() || 'index.html').split('?')[0] || 'index.html';
   var ALLOWED = {
-    professor: ['index.html','turma.html','cronograma.html','documentos.html','arena.html'],
-    juiz:      ['index.html','juizes.html','rubricas.html','documentos.html','arena.html'],
+    professor: ['turma.html','cronograma.html','documentos.html','arena.html'],
+    juiz:      ['juizes.html','rubricas.html','documentos.html','arena.html'],
     coord:     ['index.html','arena.html','turma.html','juizes.html','coordenacao.html','deliberacao.html','ranking.html','cronograma.html','documentos.html','rubricas.html','relatorio.html']
   };
   var DEFAULT_ROUTE = { professor:'turma.html', juiz:'juizes.html', coord:'index.html' };
