@@ -1041,7 +1041,6 @@
       </div>
       <div class="coord-head-actions">
         <a class="coord-head-link" href="cronograma.html">Cronograma</a>
-        <a class="coord-head-link" href="deliberacao.html">Deliberação</a>
         <a class="coord-head-link coord-head-link--primary" href="relatorio.html">Fichas PDF</a>
       </div>
     </header>
@@ -1369,7 +1368,8 @@
     localStorage.removeItem(SK_PIN);
     document.getElementById('view-coord').classList.add('hidden');
     document.getElementById('view-login').classList.remove('hidden');
-    document.getElementById('badge-coord').textContent = '';
+    var _bc = document.getElementById('badge-coord');
+    if (_bc) _bc.textContent = '';
   }
 
   document.getElementById('btn-sair').addEventListener('click', sair);
@@ -1406,28 +1406,32 @@
   function exibirCoordImediato(nome) {
     document.getElementById('view-login').classList.add('hidden');
     document.getElementById('view-coord').classList.remove('hidden');
-    document.getElementById('badge-coord').textContent = nome;
+    var _bc2 = document.getElementById('badge-coord');
+    if (_bc2) _bc2.textContent = nome;
     document.getElementById('lista-cards').innerHTML =
       '<p style="color:var(--texto-sm);font-size:.85rem;padding:.5rem 0">Carregando equipes…</p>';
   }
 
   async function entrar(nome, pin) {
-    document.getElementById('spinner').style.display = '';
+    var _sp = document.getElementById('spinner');
+    if (_sp) _sp.style.display = '';
     try {
       const r = await API.todasTurmas(nome, pin);
       if (!r.ok) { sair(); toast(r.erro || 'Credenciais inválidas.', 'err'); return; }
       dadosEquipes = r.equipes || [];
       document.getElementById('view-login').classList.add('hidden');
       document.getElementById('view-coord').classList.remove('hidden');
-      document.getElementById('badge-coord').textContent = nome;
+      var _bc3 = document.getElementById('badge-coord');
+      if (_bc3) _bc3.textContent = nome;
       renderTodas(dadosEquipes);
       renderSummary();
     } catch(e) {
-      document.getElementById('lista-cards').innerHTML =
+      var _lc = document.getElementById('lista-cards');
+      if (_lc) _lc.innerHTML =
         '<p style="color:var(--coral);font-size:.85rem;padding:.5rem 0">Sem conexão. Verifique a internet e tente novamente.</p>';
       toast('Sem conexão: ' + e.message, 'err');
     } finally {
-      document.getElementById('spinner').style.display = 'none';
+      if (_sp) _sp.style.display = 'none';
     }
   }
 

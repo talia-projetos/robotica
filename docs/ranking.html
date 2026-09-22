@@ -9,6 +9,44 @@
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';
   </script>
+  <style>
+    .schedule-head-link {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      gap: .38rem;
+      padding: .45rem .85rem;
+      border: 1px solid #D9E4EE;
+      border-radius: 9px;
+      background: #fff;
+      color: #41556C;
+      font-size: .72rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color .15s, color .15s, background .15s;
+      white-space: nowrap;
+    }
+    .schedule-head-link:hover {
+      border-color: #BFD1E0;
+      color: #2D6EA7;
+    }
+    .schedule-head-link--ativo {
+      background: #12355B;
+      border-color: #12355B;
+      color: #fff;
+    }
+    .schedule-head-link--ativo:hover {
+      background: #0E2B4A;
+      border-color: #0E2B4A;
+      color: #fff;
+    }
+    .page-meta {
+      color: #6B7A90;
+      font-size: .78rem;
+      margin: .15rem 0 0;
+    }
+  </style>
 </head>
 <body>
 
@@ -42,11 +80,15 @@
 <main class="app-main">
 
 <div class="container">
-  <div class="flex items-center justify-between mt-2 mb-1" style="margin-bottom:1rem">
-    <h1 class="page-title" style="margin:0">Ranking</h1>
-    <div class="flex gap-1">
-      <button class="btn btn-outline btn-sm" id="btn-geral" onclick="mostrarView('geral')">Geral</button>
-      <button class="btn btn-outline btn-sm" id="btn-cat" onclick="mostrarView('categorias')">Por Categoria</button>
+  <div class="workspace-head" style="margin-bottom:1rem">
+    <div class="workspace-head__copy">
+      <div class="workspace-eyebrow">Torneio Interno de Robótica</div>
+      <h1>Ranking</h1>
+      <p class="page-meta">Classificação geral e desempenho por categoria.</p>
+    </div>
+    <div class="workspace-head-actions" style="display:flex;gap:.45rem;align-items:center">
+      <button class="schedule-head-link" id="btn-geral" onclick="mostrarView('geral')">Geral</button>
+      <button class="schedule-head-link" id="btn-cat" onclick="mostrarView('categorias')">Por Categoria</button>
     </div>
   </div>
 
@@ -147,8 +189,8 @@
   function mostrarView(v) {
     document.getElementById('view-geral').classList.toggle('hidden', v !== 'geral');
     document.getElementById('view-categorias').classList.toggle('hidden', v !== 'categorias');
-    document.getElementById('btn-geral').className = 'btn btn-sm ' + (v === 'geral' ? 'btn-primary' : 'btn-outline');
-    document.getElementById('btn-cat').className   = 'btn btn-sm ' + (v !== 'geral' ? 'btn-primary' : 'btn-outline');
+    document.getElementById('btn-geral').className = 'schedule-head-link' + (v === 'geral' ? ' schedule-head-link--ativo' : '');
+    document.getElementById('btn-cat').className   = 'schedule-head-link' + (v !== 'geral' ? ' schedule-head-link--ativo' : '');
     history.replaceState(null, '', v === 'categorias' ? '#categorias' : '#');
   }
 
@@ -192,10 +234,10 @@
         <td><strong>${nomeEquipe(e)}</strong><br><span class="text-sm">${e.id}</span></td>
         <td><span class="text-sm">${e.turno || '—'}</span></td>
         <td>${fmt(e.arena20)}</td>
-        <td>${fmt(e.projeto20)}</td>
-        <td>${fmt(e.design20)}</td>
+        <td>${fmt(e.proj20)}</td>
+        <td>${fmt(e.des20)}</td>
         <td>${fmt(e.core20)}</td>
-        <td>${fmt(e.tampinhas20)}</td>
+        <td>${fmt(e.tamp20)}</td>
         <td><strong>${fmt(e.total)}</strong></td>
         <td>${statusPill(e.status)}</td>
       </tr>`).join('');
@@ -231,11 +273,11 @@
       dadosEquipes = r.equipes || [];
 
       renderGeral(dadosEquipes);
-      renderCategoria('tbody-arena',    dadosEquipes, 'arena20',     { posField: 'Arena',    qtdField: 'arenaQtd' });
-      renderCategoria('tbody-projeto',  dadosEquipes, 'projeto20',   { posField: 'Projeto',  qtdField: 'projetoJuizes' });
-      renderCategoria('tbody-design',   dadosEquipes, 'design20',    { posField: 'Design',   qtdField: 'designJuizes' });
-      renderCategoria('tbody-core',     dadosEquipes, 'core20',      { posField: 'Core',     qtdField: 'coreJuizes' });
-      renderCategoria('tbody-tampinhas',dadosEquipes, 'tampinhas20', { posField: 'Tampinhas',qtdField: 'tampinhasPesagens' });
+      renderCategoria('tbody-arena',    dadosEquipes, 'arena20', { posField: 'Arena',  qtdField: 'arenaRounds' });
+      renderCategoria('tbody-projeto',  dadosEquipes, 'proj20',  { posField: 'Proj',   qtdField: 'projJuizes' });
+      renderCategoria('tbody-design',   dadosEquipes, 'des20',   { posField: 'Des',    qtdField: 'desJuizes' });
+      renderCategoria('tbody-core',     dadosEquipes, 'core20',  { posField: 'Core',   qtdField: 'coreJuizes' });
+      renderCategoria('tbody-tampinhas',dadosEquipes, 'tamp20',  { posField: 'Tamp',   qtdField: 'tampPes' });
 
       const agora = new Date();
       document.getElementById('ultimo-update').textContent =
