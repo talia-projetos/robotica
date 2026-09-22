@@ -98,6 +98,17 @@
       backdrop-filter:blur(12px);
     }
 
+    .home-mobile-brand {
+      display:none;
+      align-items:center;
+      text-decoration:none;
+    }
+
+    .home-mobile-brand img {
+      height:34px;
+      width:auto;
+    }
+
     .home-shell .topbar__event {
       flex:1;
       display:flex;
@@ -630,6 +641,14 @@
         padding:.45rem .75rem;
       }
 
+      .home-mobile-brand {
+        display:flex;
+      }
+
+      .home-shell .topbar__event {
+        display:none;
+      }
+
       .home-content {
         padding:1.2rem 1rem 2.4rem;
       }
@@ -695,7 +714,7 @@
 
   <nav class="app-sidebar">
     <a href="index.html" class="sidebar-brand" aria-label="HUB Circuito">
-      <img src="logo-claro.svg" alt="HUB Circuito" class="sidebar-brand__img">
+      <img src="logo-horizontal.svg" alt="HUB Circuito" class="sidebar-brand__img">
     </a>
 
     <a href="index.html" class="sidebar-item ativo">
@@ -732,6 +751,9 @@
   <div class="home-stage">
 
     <header class="topbar">
+      <a href="index.html" class="topbar__brand home-mobile-brand" aria-label="HUB Circuito">
+        <img src="logo-horizontal-escuro.svg" alt="HUB Circuito">
+      </a>
       <div class="topbar__event">
         <div class="home-event-icon">
           <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 11h5M8 15h7"/></svg>
