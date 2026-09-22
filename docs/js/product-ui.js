@@ -287,9 +287,51 @@
     if (sync) sync.setAttribute('aria-live','polite');
   }
 
+  function setupMobileNav() {
+    var topbar = document.querySelector('.topbar');
+    var sidebar = document.querySelector('.app-sidebar');
+    if (!topbar || !sidebar || document.querySelector('.mobile-nav-toggle')) return;
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'mobile-nav-toggle';
+    btn.setAttribute('aria-label', 'Abrir navegação');
+    btn.setAttribute('aria-expanded', 'false');
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>';
+
+    var brand = topbar.querySelector('.topbar__brand');
+    if (brand && brand.nextSibling) topbar.insertBefore(btn, brand.nextSibling);
+    else topbar.appendChild(btn);
+
+    var backdrop = document.createElement('div');
+    backdrop.className = 'sidebar-backdrop';
+    document.body.appendChild(backdrop);
+
+    function setOpen(open) {
+      document.body.classList.toggle('sidebar-mobile-open', open);
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      btn.setAttribute('aria-label', open ? 'Fechar navegação' : 'Abrir navegação');
+    }
+
+    btn.addEventListener('click', function () {
+      setOpen(!document.body.classList.contains('sidebar-mobile-open'));
+    });
+    backdrop.addEventListener('click', function () { setOpen(false); });
+    sidebar.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { setOpen(false); });
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') setOpen(false);
+    });
+    window.addEventListener('resize', function () {
+      if (window.innerWidth > 700) setOpen(false);
+    });
+  }
+
   function init() {
     addPageClass();
     markCurrentNavigation();
+    setupMobileNav();
 
     var page = currentPage();
     if (page === 'juizes') enhanceJudges();
