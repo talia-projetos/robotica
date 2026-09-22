@@ -126,7 +126,7 @@
   function enhanceTeam() {
     var header = document.getElementById('eq-header');
     var tabs = document.querySelector('.turma-tabs');
-    if (header && tabs && !document.querySelector('.team-actionbar')) {
+    if (header && tabs && !document.querySelector('.team-actionbar') && !document.querySelector('.team-workspace-head')) {
       var params = new URLSearchParams(location.search);
       var id = params.get('equipe') || localStorage.getItem('turma_id') || '';
       var isCoordView = !!localStorage.getItem('coord_nome');
