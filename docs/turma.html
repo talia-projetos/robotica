@@ -446,6 +446,131 @@
       padding: 1.25rem 0;
     }
 
+    /* ── Abas contextuais ──────────────────────────────────────── */
+    .turma-tabs {
+      display: flex;
+      border-bottom: 2px solid var(--cinza);
+      margin: 1.25rem 0 1.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+      gap: 0;
+    }
+    .turma-tabs::-webkit-scrollbar { display: none; }
+
+    .ttab {
+      padding: .55rem 1.1rem;
+      font-size: .83rem;
+      font-weight: 700;
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      color: var(--texto-sm);
+      transition: color .15s, border-color .15s;
+      white-space: nowrap;
+      font-family: inherit;
+      letter-spacing: .01em;
+    }
+    .ttab.ativo { border-bottom-color: var(--azul); color: var(--marinho); }
+    .ttab:hover:not(.ativo) { color: var(--azul); }
+
+    .ttab-panel { display: none; }
+    .ttab-panel.ativo { display: block; }
+
+    /* ── Metodologia: blocos pedagógicos ───────────────────────── */
+    .met-intro {
+      background: var(--branco);
+      border: 1px solid var(--cinza);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+      font-size: .88rem;
+      color: var(--texto-sm);
+      line-height: 1.65;
+    }
+    .met-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .met-card {
+      background: var(--branco);
+      border: 1px solid var(--cinza);
+      border-radius: 14px;
+      padding: 1.1rem 1.25rem;
+      border-top-width: 3px;
+    }
+    .met-card__label {
+      font-size: .65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: .4rem;
+    }
+    .met-card__titulo {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--marinho);
+      margin-bottom: .35rem;
+    }
+    .met-card__desc {
+      font-size: .79rem;
+      color: var(--texto-sm);
+      line-height: 1.55;
+    }
+    .met-card__pts {
+      margin-top: .6rem;
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--texto-sm);
+    }
+
+    /* ── Documentos inline ─────────────────────────────────────── */
+    .doc-item {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      padding: .8rem 1rem;
+      background: var(--branco);
+      border: 1px solid var(--cinza);
+      border-radius: 12px;
+      margin-bottom: .4rem;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      transition: border-color .14s, box-shadow .14s;
+    }
+    .doc-item:hover {
+      border-color: #93C5FD;
+      box-shadow: 0 2px 8px rgba(15,23,42,.06);
+    }
+    .doc-item--unavailable { opacity: .4; pointer-events: none; cursor: default; }
+    .doc-icon {
+      width: 36px; height: 36px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .doc-icon svg { fill: none; stroke: currentColor; stroke-width: 1.7;
+                    stroke-linecap: round; stroke-linejoin: round; }
+    .doc-icon--pdf { background: #FEF2F2; color: #DC2626; }
+    .doc-icon--web { background: #EFF6FF; color: #2563EB; }
+    .doc-body { flex: 1; min-width: 0; }
+    .doc-name { font-size: .84rem; font-weight: 700; color: #0F1F33; }
+    .doc-meta { font-size: .68rem; color: #94A3B8; margin-top: .08rem; }
+    .doc-action {
+      font-size: .7rem; font-weight: 700; color: #2563EB;
+      display: flex; align-items: center; gap: .3rem; flex-shrink: 0; white-space: nowrap;
+    }
+    .doc-action svg { fill: none; stroke: currentColor; stroke-width: 2.2;
+                      stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .doc-group { margin-bottom: 1.5rem; }
+    .doc-group__label {
+      font-size: .6rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+      color: #94A3B8; padding-bottom: .5rem; border-bottom: 1px solid var(--cinza);
+      margin-bottom: .7rem;
+    }
+
     /* ── Responsividade local ───────────────────────────────────── */
     @media (max-width: 640px) {
       .eq-header { padding: 1.25rem; gap: 1rem; }
@@ -453,6 +578,7 @@
       .eq-logo { width: 52px; height: 52px; }
       .scores-cats-grid { grid-template-columns: repeat(2, 1fr); }
       #ranking-badges { gap: .375rem; }
+      .met-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 420px) {
@@ -529,17 +655,128 @@
       <div class="eq-header__status" id="eq-status"></div>
     </div>
 
-    <!-- Indicadores de classificação -->
-    <div id="ranking-row" style="display:none">
-      <div id="ranking-badges"></div>
+    <!-- Abas contextuais -->
+    <div class="turma-tabs">
+      <button class="ttab ativo" data-tab="resumo"      onclick="mudarTTab('resumo')">Resumo</button>
+      <button class="ttab"       data-tab="metodologia" onclick="mudarTTab('metodologia')">Metodologia</button>
+      <button class="ttab"       data-tab="documentos"  onclick="mudarTTab('documentos')">Documentos</button>
+      <button class="ttab"       data-tab="feedback"    onclick="mudarTTab('feedback')">Feedback</button>
     </div>
 
-    <!-- Score cards -->
-    <div class="scores-grid" id="scores-grid"></div>
+    <!-- ── ABA: Resumo ───────────────────────────────────────────── -->
+    <div class="ttab-panel ativo" id="ttab-resumo">
+      <div id="ranking-row" style="display:none">
+        <div id="ranking-badges" style="margin-bottom:1.25rem"></div>
+      </div>
+      <div class="scores-grid" id="scores-grid"></div>
+    </div>
 
-    <!-- Comentários -->
-    <div class="comments-section" id="comments-section">
-      <h3>Feedback dos Juízes</h3>
+    <!-- ── ABA: Metodologia ─────────────────────────────────────── -->
+    <div class="ttab-panel" id="ttab-metodologia">
+      <p class="met-intro">
+        O torneio segue o formato da <strong>FIRST LEGO League</strong> e avalia as equipes em quatro frentes complementares: cada uma vale até 20 pontos, totalizando 80 pontos nas categorias avaliadas por juízes — mais até 20 pontos em Tampinhas (educação ambiental).
+      </p>
+      <div class="met-grid">
+        <div class="met-card" style="border-top-color:#2F80ED">
+          <div class="met-card__label" style="color:#2F80ED">Missões do Robô</div>
+          <div class="met-card__titulo">Desafio da Arena</div>
+          <div class="met-card__desc">A equipe programa o robô para completar missões na pista em 2min 30s. A pontuação é o melhor resultado entre os rounds.</div>
+          <div class="met-card__pts">Melhor round &bull; até 20 pts</div>
+        </div>
+        <div class="met-card" style="border-top-color:#8E5BD9">
+          <div class="met-card__label" style="color:#8E5BD9">Avaliação por Juízes</div>
+          <div class="met-card__titulo">Projeto de Inovação</div>
+          <div class="met-card__desc">A equipe identifica um problema real, pesquisa soluções e apresenta uma proposta inovadora para um painel de juízes.</div>
+          <div class="met-card__pts">Média dos juízes &bull; até 20 pts</div>
+        </div>
+        <div class="met-card" style="border-top-color:#F2994A">
+          <div class="met-card__label" style="color:#F2994A">Avaliação por Juízes</div>
+          <div class="met-card__titulo">Design do Rob&ocirc;</div>
+          <div class="met-card__desc">Os juízes avaliam como o robô foi projetado, construído e programado — lógica de engenharia, iterações e elegância da solução.</div>
+          <div class="met-card__pts">Média dos juízes &bull; até 20 pts</div>
+        </div>
+        <div class="met-card" style="border-top-color:#27AE60">
+          <div class="met-card__label" style="color:#27AE60">Avaliação por Juízes</div>
+          <div class="met-card__titulo">Core Values</div>
+          <div class="met-card__desc">A essência do FLL: trabalho em equipe, inclusão, respeito e diversão. Os juízes observam como a equipe colabora e se comunica.</div>
+          <div class="met-card__pts">Média dos juízes &bull; até 20 pts</div>
+        </div>
+        <div class="met-card" style="border-top-color:#0D9488">
+          <div class="met-card__label" style="color:#0D9488">Educação Ambiental</div>
+          <div class="met-card__titulo">Tampinhas</div>
+          <div class="met-card__desc">Coleta de tampinhas plásticas para reciclagem e apoio a causas socioambientais. Quanto mais quilo, maior a pontuação.</div>
+          <div class="met-card__pts">Por peso coletado &bull; até 20 pts</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ABA: Documentos ──────────────────────────────────────── -->
+    <div class="ttab-panel" id="ttab-documentos">
+      <div class="doc-group">
+        <div class="doc-group__label">Guias da competi&ccedil;&atilde;o</div>
+        <a class="doc-item" href="pdf/guia-desafio-robo.pdf" download="Guia para o Desafio do Robo.pdf">
+          <div class="doc-icon doc-icon--pdf">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+          </div>
+          <div class="doc-body">
+            <div class="doc-name">Guia para o Desafio do Rob&ocirc;</div>
+            <div class="doc-meta">PDF &middot; Miss&otilde;es e regras da pista</div>
+          </div>
+          <div class="doc-action">
+            <svg width="13" height="13" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Baixar
+          </div>
+        </a>
+        <a class="doc-item" href="pdf/guia-projeto-inovacao.pdf" download="Guia para o Projeto de Inovacao.pdf">
+          <div class="doc-icon doc-icon--pdf">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+          </div>
+          <div class="doc-body">
+            <div class="doc-name">Guia para o Projeto de Inova&ccedil;&atilde;o</div>
+            <div class="doc-meta">PDF &middot; Etapas, crit&eacute;rios e formato do projeto</div>
+          </div>
+          <div class="doc-action">
+            <svg width="13" height="13" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Baixar
+          </div>
+        </a>
+      </div>
+      <div class="doc-group">
+        <div class="doc-group__label">Avalia&ccedil;&atilde;o</div>
+        <a class="doc-item" href="rubricas.html" target="_blank" rel="noopener">
+          <div class="doc-icon doc-icon--web">
+            <svg width="16" height="16" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div class="doc-body">
+            <div class="doc-name">Rubricas de Avalia&ccedil;&atilde;o</div>
+            <div class="doc-meta">Web &middot; Projeto, Design do Rob&ocirc;, Core Values</div>
+          </div>
+          <div class="doc-action">
+            <svg width="13" height="13" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Abrir
+          </div>
+        </a>
+      </div>
+      <div class="doc-group">
+        <div class="doc-group__label">Cronograma</div>
+        <a class="doc-item" href="cronograma.html">
+          <div class="doc-icon doc-icon--web">
+            <svg width="16" height="16" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div class="doc-body">
+            <div class="doc-name">Cronograma do Evento</div>
+            <div class="doc-meta">Agenda completa &middot; 07:00&ndash;12:00</div>
+          </div>
+          <div class="doc-action">
+            <svg width="13" height="13" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            Ver
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── ABA: Feedback ────────────────────────────────────────── -->
+    <div class="ttab-panel" id="ttab-feedback">
       <div id="accordions"></div>
     </div>
 
@@ -698,6 +935,16 @@
     document.getElementById('accordions').innerHTML = html;
   }
 
+  /* ── Navegação entre abas ───────────────────────────────────── */
+  function mudarTTab(tab) {
+    document.querySelectorAll('.ttab').forEach(function(b) {
+      b.classList.toggle('ativo', b.dataset.tab === tab);
+    });
+    document.querySelectorAll('.ttab-panel').forEach(function(p) {
+      p.classList.toggle('ativo', p.id === 'ttab-' + tab);
+    });
+  }
+
   function toggleAcc(btn) {
     btn.closest('.cat-accordion').classList.toggle('open');
   }
@@ -778,11 +1025,16 @@
     renderScores(data.scores);
     renderComments(data.comentarios);
 
-    // Auto-abre accordion com comentários
-    document.querySelectorAll('.cat-accordion').forEach(function(el) {
-      var count = parseInt(el.querySelector('.cat-accordion__count').textContent) || 0;
-      if (count > 0) el.classList.add('open');
+    /* Volta para a aba Resumo ao recarregar dados */
+    mudarTTab('resumo');
+
+    /* Se houver comentários, destaca a aba Feedback */
+    var temFeedback = data.comentarios && Object.values(data.comentarios).some(function(arr) {
+      return Array.isArray(arr) && arr.length > 0;
     });
+    if (temFeedback) {
+      document.querySelector('[data-tab="feedback"]').style.fontStyle = '';
+    }
   }
 
   function sair() {
