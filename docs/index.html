@@ -5,304 +5,684 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="css/styles.css?v=7">
+  <link rel="stylesheet" href="css/styles.css?v=8">
   <style>
-    body { background:#F4F7FB; }
+    body {
+      background:#EEF3F8;
+      color:#172236;
+    }
+
+    /* ── Shell da Home ───────────────────────────────────────── */
+    .home-shell {
+      min-height:100vh;
+      display:flex;
+      background:#EEF3F8;
+    }
+
+    .home-shell .app-sidebar {
+      position:sticky;
+      top:0;
+      height:100vh;
+      width:190px;
+      min-width:190px;
+      padding:.65rem .45rem .8rem;
+      background:#0C1521;
+      border-right:1px solid rgba(255,255,255,.055);
+      z-index:20;
+    }
+
+    .home-shell .sidebar-brand {
+      min-height:74px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 0 .65rem;
+      padding:.65rem .75rem .85rem;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .home-shell .sidebar-brand__img {
+      width:124px;
+      height:auto;
+      max-height:48px;
+      object-fit:contain;
+    }
+
+    .home-shell .sidebar-item {
+      min-height:38px;
+      margin:.08rem .15rem;
+      padding:.58rem .72rem;
+      border-radius:8px;
+      color:rgba(255,255,255,.55);
+      font-size:.73rem;
+      font-weight:600;
+    }
+
+    .home-shell .sidebar-item.ativo {
+      color:#B8DCF5;
+      background:rgba(80,143,203,.17);
+      box-shadow:inset 2px 0 0 #508FCB;
+    }
+
+    .home-shell.sidebar-collapsed .app-sidebar {
+      width:58px;
+      min-width:58px;
+    }
+
+    .home-shell.sidebar-collapsed .sidebar-brand__img {
+      width:30px;
+      height:30px;
+      object-fit:cover;
+      object-position:left;
+    }
+
+    .home-stage {
+      flex:1;
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .home-shell .topbar {
+      position:sticky;
+      top:0;
+      z-index:15;
+      min-height:66px;
+      padding:.55rem 1.35rem;
+      display:flex;
+      align-items:center;
+      gap:1rem;
+      background:rgba(255,255,255,.96);
+      border-bottom:1px solid #E3EAF1;
+      box-shadow:0 1px 0 rgba(15,23,42,.025);
+      backdrop-filter:blur(12px);
+    }
+
+    .home-shell .topbar__event {
+      flex:1;
+      display:flex;
+      align-items:center;
+      gap:.65rem;
+      padding:0;
+      text-align:left;
+    }
+
+    .home-event-icon {
+      width:34px;
+      height:34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      border-radius:9px;
+      background:#EDF5FC;
+      color:#3979B8;
+    }
+
+    .home-event-icon svg {
+      width:16px;
+      height:16px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:1.8;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .home-shell .topbar__event-name {
+      color:#26384D;
+      font-size:.72rem;
+      font-weight:730;
+    }
+
+    .home-shell .topbar__event-org {
+      margin-top:.05rem;
+      color:#8A97A7;
+      font-size:.59rem;
+    }
+
+    .home-shell .topbar-avatar__name {
+      color:#26384D;
+    }
+
+    .home-shell .topbar-avatar__role {
+      color:#8492A4;
+    }
+
+    .home-shell .av-btn {
+      color:#24364A;
+    }
+
+    .home-shell .btn-entrar {
+      border-color:#D9E3EC;
+      color:#43556C;
+      background:#fff;
+    }
+
+    .home-shell .mobile-nav-toggle {
+      border-color:#DDE6EE;
+      background:#F7F9FC;
+      color:#526477;
+    }
+
+    /* ── Conteúdo principal ──────────────────────────────────── */
+    .home-content {
+      width:100%;
+      max-width:1160px;
+      margin:0 auto;
+      padding:1.7rem 2rem 3rem;
+    }
 
     .hub-hero {
-      background: transparent;
-      border: 0;
-      padding: 2rem 0 .7rem;
+      margin:0;
+      padding:0;
+      background:transparent;
+      border:0;
     }
-    .hub-hero-inner {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      display: block;
-    }
+
     .hero-heading {
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap:2rem;
-      margin-bottom:1.15rem;
+      gap:1.5rem;
+      margin-bottom:1.05rem;
     }
-    .hero-text { min-width:0; }
+
+    .hero-text {
+      min-width:0;
+    }
+
     .hero-eyebrow {
-      font-size:.66rem;
-      font-weight:800;
-      letter-spacing:.09em;
-      text-transform:uppercase;
-      color:#3979B8;
-      margin-bottom:.38rem;
+      margin-bottom:.22rem;
+      color:#718096;
+      font-size:.68rem;
+      font-weight:600;
+      letter-spacing:0;
+      text-transform:none;
     }
+
     .hub-hero h1 {
       margin:0;
-      color:#172236;
-      font-size:clamp(1.7rem,3vw,2.15rem);
-      line-height:1.08;
-      font-weight:760;
-      letter-spacing:-.045em;
+      color:#162237;
+      font-size:clamp(1.7rem,3vw,2rem);
+      line-height:1.1;
+      font-weight:780;
+      letter-spacing:-.04em;
     }
-    .hero-accent { color:#172236; }
+
+    .hero-accent {
+      color:#162237;
+    }
+
     .hero-date {
       flex-shrink:0;
-      padding-top:.18rem;
-      color:#738297;
-      font-size:.72rem;
-      line-height:1.45;
+      padding-top:.12rem;
+      color:#8190A2;
+      font-size:.66rem;
+      line-height:1.5;
       text-align:right;
     }
-    .hero-stats { display:none; }
-    .hero-cta-btn { display:none !important; }
 
+    .hero-stats {
+      display:none;
+    }
+
+    .hero-cta-btn {
+      display:inline-flex !important;
+      align-items:center;
+      justify-content:center;
+      min-height:32px;
+      margin-top:.65rem;
+      padding:.4rem .68rem;
+      border:1px solid #CDE0EF;
+      border-radius:7px;
+      background:#EDF5FC;
+      color:#2F6FA8;
+      font-size:.66rem;
+      font-weight:720;
+      text-decoration:none;
+      box-shadow:none;
+    }
+
+    .hero-cta-btn:hover {
+      background:#E3F0FA;
+    }
+
+    /* ── Hero visual + torneio ───────────────────────────────── */
     .hero-dashboard {
       display:grid;
-      grid-template-columns:minmax(0,1.55fr) minmax(270px,.85fr);
-      gap:.9rem;
+      grid-template-columns:minmax(0,1.52fr) minmax(270px,.82fr);
+      gap:.8rem;
     }
+
     .home-feature {
-      min-height:190px;
       position:relative;
+      min-height:182px;
       overflow:hidden;
       display:flex;
-      align-items:flex-end;
-      padding:1.45rem 1.55rem;
-      border-radius:14px;
-      text-decoration:none;
+      align-items:stretch;
+      border:1px solid #173B5D;
+      border-radius:11px;
       background:
-        radial-gradient(circle at 80% 35%, rgba(80,204,198,.18), transparent 24%),
-        radial-gradient(circle at 65% 80%, rgba(80,143,203,.22), transparent 30%),
-        linear-gradient(135deg,#10243B 0%,#173B61 58%,#1C5076 100%);
-      border:1px solid rgba(255,255,255,.06);
-      box-shadow:0 12px 32px rgba(20,45,75,.12);
+        radial-gradient(circle at 83% 30%,rgba(74,196,222,.23),transparent 25%),
+        linear-gradient(135deg,#10243B 0%,#183A5E 64%,#1A4F75 100%);
+      color:#fff;
+      text-decoration:none;
+      box-shadow:0 8px 20px rgba(21,52,82,.09);
     }
+
     .home-feature::before {
       content:'';
       position:absolute;
       inset:0;
-      opacity:.5;
+      opacity:.52;
       background-image:
-        linear-gradient(90deg,transparent 24%,rgba(255,255,255,.05) 25%,rgba(255,255,255,.05) 26%,transparent 27%,transparent 74%,rgba(255,255,255,.04) 75%,rgba(255,255,255,.04) 76%,transparent 77%),
-        linear-gradient(transparent 24%,rgba(255,255,255,.04) 25%,rgba(255,255,255,.04) 26%,transparent 27%,transparent 74%,rgba(255,255,255,.035) 75%,rgba(255,255,255,.035) 76%,transparent 77%);
-      background-size:64px 64px;
-      mask-image:linear-gradient(to left,#000,transparent 80%);
+        linear-gradient(90deg,transparent 24%,rgba(255,255,255,.045) 25%,rgba(255,255,255,.045) 26%,transparent 27%,transparent 74%,rgba(255,255,255,.035) 75%,rgba(255,255,255,.035) 76%,transparent 77%),
+        linear-gradient(transparent 24%,rgba(255,255,255,.04) 25%,rgba(255,255,255,.04) 26%,transparent 27%,transparent 74%,rgba(255,255,255,.03) 75%,rgba(255,255,255,.03) 76%,transparent 77%);
+      background-size:54px 54px;
+      mask-image:linear-gradient(to right,transparent 10%,#000 55%);
       pointer-events:none;
     }
-    .home-feature::after {
-      content:'';
-      position:absolute;
-      right:42px;
-      top:31px;
-      width:86px;
-      height:86px;
-      border:2px solid rgba(117,207,231,.28);
-      border-radius:50%;
-      box-shadow:
-        0 0 0 18px rgba(80,143,203,.06),
-        58px 38px 0 -35px rgba(80,204,198,.8),
-        -44px 58px 0 -36px rgba(80,143,203,.85);
-    }
-    .home-feature__copy { position:relative; z-index:1; }
-    .home-feature__kicker {
-      margin-bottom:.38rem;
-      font-size:.63rem;
-      font-weight:750;
-      text-transform:uppercase;
-      letter-spacing:.11em;
-      color:#84DCD6;
-    }
-    .home-feature__title {
-      max-width:420px;
-      color:#fff;
-      font-size:1.28rem;
-      line-height:1.18;
-      font-weight:730;
-      letter-spacing:-.025em;
-    }
-    .home-feature__sub {
-      margin-top:.42rem;
-      color:rgba(230,240,250,.66);
-      font-size:.74rem;
-      line-height:1.45;
-    }
 
-    .hero-event-card {
-      width:auto;
-      min-width:0;
+    .home-feature__copy {
+      position:relative;
+      z-index:2;
+      width:56%;
       display:flex;
       flex-direction:column;
       justify-content:center;
-      padding:1.35rem 1.45rem;
-      border:1px solid #E0E8F1;
-      border-radius:14px;
-      background:#fff;
-      box-shadow:0 5px 18px rgba(15,23,42,.035);
+      padding:1.25rem 0 1.25rem 1.35rem;
     }
-    .hero-event-label {
-      margin-bottom:.45rem;
-      color:#8390A2;
-      font-size:.61rem;
+
+    .home-feature__kicker {
+      margin-bottom:.4rem;
+      color:#73D8D2;
+      font-size:.59rem;
       font-weight:800;
       letter-spacing:.09em;
       text-transform:uppercase;
     }
+
+    .home-feature__title {
+      max-width:350px;
+      color:#fff;
+      font-size:1.18rem;
+      line-height:1.22;
+      font-weight:760;
+      letter-spacing:-.025em;
+    }
+
+    .home-feature__sub {
+      max-width:330px;
+      margin-top:.42rem;
+      color:rgba(231,241,250,.68);
+      font-size:.68rem;
+      line-height:1.45;
+    }
+
+    .home-robot {
+      position:relative;
+      z-index:2;
+      width:44%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:.8rem 1.2rem .8rem .2rem;
+    }
+
+    .home-robot svg {
+      width:min(180px,100%);
+      height:auto;
+      filter:drop-shadow(0 12px 18px rgba(0,0,0,.22));
+    }
+
+    .hero-event-card {
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      padding:1.2rem 1.25rem;
+      border:1px solid #E0E8F0;
+      border-radius:11px;
+      background:#fff;
+      box-shadow:0 4px 14px rgba(15,23,42,.025);
+    }
+
+    .hero-event-label {
+      margin-bottom:.38rem;
+      color:#8391A3;
+      font-size:.58rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
     .hero-event-name {
-      margin-bottom:.25rem;
       color:#182438;
-      font-size:.94rem;
-      line-height:1.3;
+      font-size:.86rem;
+      line-height:1.35;
       font-weight:750;
     }
+
     .hero-event-org {
-      margin-bottom:1rem;
-      color:#728196;
-      font-size:.72rem;
+      margin-top:.16rem;
+      margin-bottom:.85rem;
+      color:#7F8DA0;
+      font-size:.65rem;
+      line-height:1.4;
     }
+
     .hero-event-link {
       align-self:flex-start;
       display:inline-flex;
       align-items:center;
       gap:.3rem;
-      padding:.48rem .7rem;
-      border-radius:8px;
+      min-height:32px;
+      padding:.38rem .62rem;
+      border:1px solid #D6E5F1;
+      border-radius:7px;
       background:#EDF5FC;
-      color:#3979B8;
-      font-size:.7rem;
-      font-weight:750;
+      color:#2F6FA8;
+      font-size:.64rem;
+      font-weight:720;
       text-decoration:none;
     }
-    .hero-event-link:hover { background:#E4F0FA; text-decoration:none; }
-    .hero-event-link svg { width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2; }
 
+    .hero-event-link:hover {
+      background:#E3F0FA;
+    }
+
+    .hero-event-link svg {
+      width:11px;
+      height:11px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2;
+    }
+
+    /* ── Seções ──────────────────────────────────────────────── */
     .hub-main {
-      max-width:1180px;
-      margin:0 auto;
-      padding:1.1rem 2rem 3rem;
+      margin-top:1.15rem;
       display:flex;
       flex-direction:column;
-      gap:1.55rem;
+      gap:1.15rem;
     }
+
     .home-section-header {
       display:flex;
       align-items:center;
       justify-content:space-between;
-      margin-bottom:.65rem;
+      gap:1rem;
+      margin-bottom:.52rem;
     }
+
     .home-section-title {
-      color:#617086;
-      font-size:.64rem;
+      color:#5F6F83;
+      font-size:.61rem;
       font-weight:800;
-      letter-spacing:.095em;
+      letter-spacing:.08em;
       text-transform:uppercase;
     }
+
     .home-section-link {
       display:inline-flex;
       align-items:center;
-      gap:.2rem;
+      gap:.22rem;
       color:#3979B8;
-      font-size:.69rem;
-      font-weight:700;
+      font-size:.63rem;
+      font-weight:720;
       text-decoration:none;
     }
-    .home-section-link:hover { text-decoration:underline; }
-    .home-section-link svg { width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2; }
+
+    .home-section-link:hover {
+      text-decoration:underline;
+    }
+
+    .home-section-link svg {
+      width:10px;
+      height:10px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2;
+    }
 
     .acessos-grid {
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:.65rem;
+      gap:.58rem;
     }
+
     .acesso {
+      min-height:66px;
       display:flex;
       align-items:center;
-      gap:.72rem;
-      min-height:76px;
-      padding:.88rem .95rem;
+      gap:.62rem;
+      padding:.72rem .78rem;
       border:1px solid #E1E8F0 !important;
-      border-radius:11px !important;
+      border-radius:9px !important;
       background:#fff !important;
       box-shadow:none !important;
       color:inherit;
       text-decoration:none;
-      transition:border-color .15s,transform .15s,box-shadow .15s;
+      transition:transform .15s,border-color .15s,box-shadow .15s;
     }
+
     .acesso:hover {
       transform:translateY(-1px);
-      border-color:#C8D7E6 !important;
-      box-shadow:0 8px 20px rgba(15,23,42,.045) !important;
+      border-color:#C7D7E6 !important;
+      box-shadow:0 7px 18px rgba(15,23,42,.04) !important;
     }
+
     .acesso__icon {
-      width:36px;height:36px;
-      display:flex;align-items:center;justify-content:center;
+      width:34px;
+      height:34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       flex-shrink:0;
-      border-radius:9px;
+      border-radius:8px;
     }
-    .acesso__icon svg { width:18px;height:18px; }
+
+    .acesso__icon svg {
+      width:17px;
+      height:17px;
+      stroke:currentColor !important;
+    }
+
     .acesso--arena .acesso__icon { background:#EAF3FD; color:#3979B8; }
     .acesso--turma .acesso__icon { background:#EAF8F2; color:#229A68; }
     .acesso--juizes .acesso__icon { background:#FFF2E8; color:#D4772C; }
     .acesso--coord .acesso__icon { background:#F2EEFC; color:#7656C8; }
-    .acesso__icon svg { stroke:currentColor !important; }
-    .acesso__name { color:#172236;font-size:.78rem;font-weight:730;margin-bottom:.08rem;white-space:nowrap; }
-    .acesso__desc { color:#8290A2;font-size:.65rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
 
+    .acesso__body {
+      min-width:0;
+    }
+
+    .acesso__name {
+      color:#172236;
+      font-size:.72rem;
+      font-weight:730;
+      white-space:nowrap;
+    }
+
+    .acesso__desc {
+      margin-top:.06rem;
+      color:#8794A5;
+      font-size:.59rem;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    /* ── Atividades ───────────────────────────────────────────── */
     .atividades-list {
       overflow:hidden;
       border:1px solid #E1E8F0;
-      border-radius:11px;
+      border-radius:9px;
       background:#fff;
-      box-shadow:none;
     }
+
     .atividade {
+      min-height:48px;
       display:grid;
-      grid-template-columns:62px 8px minmax(0,1fr);
+      grid-template-columns:58px minmax(150px,.72fr) minmax(170px,1fr);
       align-items:center;
       gap:.75rem;
-      padding:.7rem .95rem;
+      padding:.62rem .85rem;
       border-bottom:1px solid #EEF2F6;
     }
-    .atividade:last-child { border-bottom:0; }
+
+    .atividade:last-child {
+      border-bottom:0;
+    }
+
     .ativ-time {
-      width:auto;
-      color:#365E82;
-      font-size:.7rem;
-      font-weight:750;
+      color:#355F84;
+      font-size:.65rem;
+      font-weight:800;
       font-variant-numeric:tabular-nums;
     }
-    .ativ-dot { width:6px;height:6px;border-radius:50%;background:#9DB5C9; }
-    .ativ-nome { color:#243247;font-size:.76rem;font-weight:680; }
-    .ativ-local { color:#8A97A8;font-size:.65rem;margin-top:.05rem; }
 
-    .hub-footer {
-      position:static;
-      border-top:1px solid #E5EBF2;
-      background:#F7F9FC;
-      padding:.7rem 2rem;
+    .ativ-nome {
+      color:#27364A;
+      font-size:.68rem;
+      font-weight:700;
     }
+
+    .ativ-local {
+      color:#8492A4;
+      font-size:.61rem;
+    }
+
+    .ativ-dot {
+      display:none;
+    }
+
+    /* ── Footer ───────────────────────────────────────────────── */
+    .hub-footer {
+      margin-top:auto;
+      padding:.65rem 1.3rem;
+      border-top:1px solid #E4EAF0;
+      background:#F8FAFC;
+    }
+
     .hub-footer__inner {
-      max-width:1180px;
+      max-width:1160px;
       margin:0 auto;
       display:flex;
       align-items:center;
       justify-content:space-between;
+      gap:1rem;
     }
-    .footer-brand { color:#27374A;font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }
-    .footer-sub,.hub-footer__center,.hub-footer__right { color:#95A0AF;font-size:.61rem; }
-    .hub-footer__center { font-style:normal; }
 
-    @media (max-width:900px) {
-      .hero-dashboard { grid-template-columns:1fr; }
-      .acessos-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .footer-brand {
+      color:#304154;
+      font-size:.58rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
+
+    .footer-sub,
+    .hub-footer__center,
+    .hub-footer__right {
+      color:#9AA6B4;
+      font-size:.56rem;
+    }
+
+    .hub-footer__center {
+      font-style:normal;
+    }
+
+    @media (max-width:980px) {
+      .hero-dashboard {
+        grid-template-columns:1fr;
+      }
+
+      .home-feature {
+        min-height:170px;
+      }
+
+      .acessos-grid {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
     @media (max-width:700px) {
-      .hub-hero-inner,.hub-main { padding-left:1rem;padding-right:1rem; }
-      .hero-heading { flex-direction:column;gap:.5rem; }
-      .hero-date { text-align:left; }
-      .home-feature { min-height:160px; }
-      .acessos-grid { grid-template-columns:1fr; }
-      .hub-footer__inner { justify-content:center; }
-      .hub-footer__left,.hub-footer__right { display:none; }
+      .home-shell {
+        display:block;
+      }
+
+      .home-shell .app-sidebar {
+        position:fixed;
+        top:60px;
+        height:calc(100vh - 60px);
+        width:min(82vw,280px);
+        min-width:min(82vw,280px);
+      }
+
+      .home-shell .sidebar-brand {
+        display:none;
+      }
+
+      .home-shell .topbar {
+        min-height:60px;
+        padding:.45rem .75rem;
+      }
+
+      .home-content {
+        padding:1.2rem 1rem 2.4rem;
+      }
+
+      .hero-heading {
+        flex-direction:column;
+        gap:.35rem;
+      }
+
+      .hero-date {
+        text-align:left;
+      }
+
+      .home-feature {
+        min-height:178px;
+      }
+
+      .home-feature__copy {
+        width:66%;
+        padding:1.1rem 0 1.1rem 1rem;
+      }
+
+      .home-robot {
+        width:34%;
+        padding:.5rem .65rem .5rem 0;
+      }
+
+      .home-feature__title {
+        font-size:1rem;
+      }
+
+      .acessos-grid {
+        grid-template-columns:1fr;
+      }
+
+      .atividade {
+        grid-template-columns:54px 1fr;
+        gap:.55rem;
+      }
+
+      .ativ-local {
+        grid-column:2;
+        margin-top:-.25rem;
+      }
+
+      .hub-footer__inner {
+        justify-content:center;
+      }
+
+      .hub-footer__left,
+      .hub-footer__right {
+        display:none;
+      }
     }
   </style>
   <script>
@@ -311,225 +691,263 @@
 </head>
 <body>
 
-<header class="topbar">
-  <a href="index.html" class="topbar__brand"><img src="logo.svg" alt="HUB Circuito"></a>
-  <div class="topbar__event">
-    <div class="topbar__event-name">Torneio Interno de Rob&#xF3;tica</div>
-    <div class="topbar__event-org">Escola SESI Reitor Miguel Calmon</div>
-  </div>
-  <div class="topbar__badge">
-    <span id="badge-nome" class="text-sm"></span>
-    <button id="btn-sessao" class="btn-entrar">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      Entrar
-    </button>
-  </div>
-</header>
+<div class="app-body home-shell">
 
-<div class="app-body">
+  <nav class="app-sidebar">
+    <a href="index.html" class="sidebar-brand" aria-label="HUB Circuito">
+      <img src="logo-claro.svg" alt="HUB Circuito" class="sidebar-brand__img">
+    </a>
 
-<nav class="app-sidebar">
-  <a href="index.html" class="sidebar-item ativo"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg> Início</a>
-  <a href="arena.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg> Arena</a>
-  <a href="turma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1.5 13.5c0-2.5 2-4 4-4"/><circle cx="11" cy="5.5" r="2"/><path d="M10 13.5c0-2 1.5-3.5 3.5-3.5"/></svg> Minha Turma</a>
-  <a href="juizes.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11.5" rx="1.5"/><path d="M6 2.5a2 2 0 014 0"/><path d="M5.5 7.5h5M5.5 10.5h3"/></svg> Juízes</a>
-  <a href="coordenacao.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="2"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.6 3.6l1 1M11.4 11.4l1 1M3.6 12.4l1-1M11.4 4.6l1-1"/></svg> Coordenação</a>
-  <div class="sidebar-sep"></div>
-  <a href="ranking.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13V9M8 13V6M13 13V3"/></svg> Ranking</a>
-  <a href="cronograma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="13" height="10.5" rx="1.5"/><path d="M1.5 7.5h13M5.5 1.5v3M10.5 1.5v3"/></svg> Cronograma</a>
-</nav>
+    <a href="index.html" class="sidebar-item ativo">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg>
+      Início
+    </a>
+    <a href="arena.html" class="sidebar-item">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg>
+      Arena
+    </a>
+    <a href="turma.html" class="sidebar-item">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1.5 13.5c0-2.5 2-4 4-4"/><circle cx="11" cy="5.5" r="2"/><path d="M10 13.5c0-2 1.5-3.5 3.5-3.5"/></svg>
+      Minha Turma
+    </a>
+    <a href="juizes.html" class="sidebar-item">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11.5" rx="1.5"/><path d="M6 2.5a2 2 0 014 0"/><path d="M5.5 7.5h5M5.5 10.5h3"/></svg>
+      Juízes
+    </a>
+    <a href="coordenacao.html" class="sidebar-item">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="2"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.6 3.6l1 1M11.4 11.4l1 1M3.6 12.4l1-1M11.4 4.6l1-1"/></svg>
+      Coordenação
+    </a>
+    <div class="sidebar-sep"></div>
+    <a href="ranking.html" class="sidebar-item">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13V9M8 13V6M13 13V3"/></svg>
+      Ranking
+    </a>
+    <a href="cronograma.html" class="sidebar-item">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="13" height="10.5" rx="1.5"/><path d="M1.5 7.5h13M5.5 1.5v3M10.5 1.5v3"/></svg>
+      Cronograma
+    </a>
+  </nav>
 
-<main class="app-main">
+  <div class="home-stage">
 
-<!-- Hero -->
-<div class="hub-hero">
-  <div class="hub-hero-inner">
-    <div class="hero-heading">
-      <div class="hero-text">
-        <div class="hero-eyebrow">Bem-vindo ao HUB Circuito</div>
-        <h1>Ol&aacute;!</h1>
-        <div class="hero-stats"></div>
-      </div>
-      <div class="hero-date" id="hero-date"></div>
-    </div>
-
-    <div class="hero-dashboard">
-      <a class="home-feature" href="coordenacao.html">
-        <div class="home-feature__copy">
-          <div class="home-feature__kicker">Rob&oacute;tica educacional</div>
-          <div class="home-feature__title">Tecnologia, aprendizagem e competi&ccedil;&atilde;o em um s&oacute; ambiente.</div>
-          <div class="home-feature__sub">Acompanhe equipes, avalia&ccedil;&otilde;es e opera&ccedil;&atilde;o do torneio.</div>
+    <header class="topbar">
+      <div class="topbar__event">
+        <div class="home-event-icon">
+          <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 11h5M8 15h7"/></svg>
         </div>
-      </a>
-
-      <div class="hero-event-card">
-        <div class="hero-event-label">Torneio atual</div>
-        <div class="hero-event-name">Torneio Interno de Rob&oacute;tica</div>
-        <div class="hero-event-org">Escola SESI Reitor Miguel Calmon</div>
-        <a href="cronograma.html" class="hero-event-link">
-          Ver detalhes
-          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-        </a>
+        <div>
+          <div class="topbar__event-name">Torneio Interno de Robótica</div>
+          <div class="topbar__event-org">Escola SESI Reitor Miguel Calmon</div>
+        </div>
       </div>
-    </div>
+
+      <div class="topbar__badge">
+        <span id="badge-nome" class="text-sm"></span>
+        <button id="btn-sessao" class="btn-entrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Entrar
+        </button>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <div class="home-content">
+
+        <section class="hub-hero">
+          <div class="hero-heading">
+            <div class="hero-text">
+              <div class="hero-eyebrow">Bem-vindo ao HUB Circuito.</div>
+              <h1>Olá!</h1>
+              <div class="hero-stats"></div>
+            </div>
+            <div class="hero-date" id="hero-date"></div>
+          </div>
+
+          <div class="hero-dashboard">
+            <a class="home-feature" href="coordenacao.html">
+              <div class="home-feature__copy">
+                <div class="home-feature__kicker">Robótica educacional</div>
+                <div class="home-feature__title">Tecnologia, educação e trabalho em equipe em um só ambiente.</div>
+                <div class="home-feature__sub">Acompanhe equipes, avaliações e a operação do torneio com clareza.</div>
+              </div>
+
+              <div class="home-robot" aria-hidden="true">
+                <svg viewBox="0 0 220 170" fill="none">
+                  <defs>
+                    <linearGradient id="rg1" x1="40" y1="20" x2="170" y2="150" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#78D8ED"/>
+                      <stop offset="1" stop-color="#3887CC"/>
+                    </linearGradient>
+                    <linearGradient id="rg2" x1="70" y1="45" x2="145" y2="130" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#F8FCFF"/>
+                      <stop offset="1" stop-color="#A9CBE5"/>
+                    </linearGradient>
+                  </defs>
+                  <path d="M38 125h144" stroke="rgba(255,255,255,.14)" stroke-width="2"/>
+                  <circle cx="56" cy="132" r="18" fill="#0D1724" stroke="#69CBE2" stroke-width="4"/>
+                  <circle cx="164" cy="132" r="18" fill="#0D1724" stroke="#69CBE2" stroke-width="4"/>
+                  <path d="M57 107h106l10 22H46l11-22Z" fill="#142A42" stroke="#5EB7D6" stroke-width="2"/>
+                  <rect x="67" y="57" width="87" height="61" rx="13" fill="url(#rg2)" stroke="#DDF4FF" stroke-width="2"/>
+                  <rect x="78" y="70" width="65" height="34" rx="8" fill="#0F2235"/>
+                  <circle cx="96" cy="87" r="6" fill="#61D6D0"/>
+                  <circle cx="125" cy="87" r="6" fill="#61D6D0"/>
+                  <path d="M99 101c8 5 17 5 24 0" stroke="#79DCE0" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M110 57V42" stroke="#A8E8EF" stroke-width="3"/>
+                  <circle cx="110" cy="35" r="7" fill="#59C5D9"/>
+                  <path d="M67 76 46 68l-7 17 23 10M154 76l20-8 7 17-22 10" fill="#1A4265" stroke="#62BBD8" stroke-width="2"/>
+                  <rect x="83" y="112" width="16" height="18" rx="4" fill="url(#rg1)"/>
+                  <rect x="122" y="112" width="16" height="18" rx="4" fill="url(#rg1)"/>
+                  <path d="M31 39h23M42.5 27v24M169 35h18M178 26v18" stroke="rgba(125,220,232,.55)" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </a>
+
+            <div class="hero-event-card">
+              <div class="hero-event-label">Torneio atual</div>
+              <div class="hero-event-name">Torneio Interno de Robótica</div>
+              <div class="hero-event-org">Escola SESI Reitor Miguel Calmon</div>
+              <a href="cronograma.html" class="hero-event-link">
+                Ver detalhes
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <div class="hub-main">
+
+          <section class="home-section">
+            <div class="home-section-header">
+              <div class="home-section-title">Acessos rápidos</div>
+            </div>
+
+            <div class="acessos-grid">
+              <a href="arena.html" class="acesso acesso--arena">
+                <div class="acesso__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M9 8.5 16 12l-7 3.5z" fill="currentColor" stroke="none"/>
+                  </svg>
+                </div>
+                <div class="acesso__body">
+                  <div class="acesso__name">Arena</div>
+                  <div class="acesso__desc">Controle e telão</div>
+                </div>
+              </a>
+
+              <a href="turma.html" class="acesso acesso--turma">
+                <div class="acesso__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2M17 4a4 4 0 0 1 0 7"/>
+                  </svg>
+                </div>
+                <div class="acesso__body">
+                  <div class="acesso__name">Minha Turma</div>
+                  <div class="acesso__desc">Acompanhar equipe</div>
+                </div>
+              </a>
+
+              <a href="juizes.html" class="acesso acesso--juizes">
+                <div class="acesso__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="3" width="14" height="18" rx="2"/>
+                    <path d="M9 3.5h6M8 9h8M8 13h8M8 17h5"/>
+                  </svg>
+                </div>
+                <div class="acesso__body">
+                  <div class="acesso__name">Juízes</div>
+                  <div class="acesso__desc">Avaliações</div>
+                </div>
+              </a>
+
+              <a href="coordenacao.html" class="acesso acesso--coord">
+                <div class="acesso__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="4" y="5" width="16" height="14" rx="3"/>
+                    <path d="M8 9h8M8 13h5"/>
+                  </svg>
+                </div>
+                <div class="acesso__body">
+                  <div class="acesso__name">Coordenação</div>
+                  <div class="acesso__desc">Gestão do torneio</div>
+                </div>
+              </a>
+            </div>
+          </section>
+
+          <section class="home-section">
+            <div class="home-section-header">
+              <div class="home-section-title">Próximas atividades</div>
+              <a href="cronograma.html" class="home-section-link">
+                Ver cronograma
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+              </a>
+            </div>
+
+            <div class="atividades-list">
+              <div class="atividade">
+                <div class="ativ-time">07:30</div>
+                <div class="ativ-nome">Credenciamento</div>
+                <div class="ativ-local">Entrada principal</div>
+              </div>
+              <div class="atividade">
+                <div class="ativ-time">08:00</div>
+                <div class="ativ-nome">Abertura oficial</div>
+                <div class="ativ-local">Auditório</div>
+              </div>
+              <div class="atividade">
+                <div class="ativ-time">09:00</div>
+                <div class="ativ-nome">Rounds de robótica</div>
+                <div class="ativ-local">Arena Principal · Rounds 1 a 3</div>
+              </div>
+              <div class="atividade">
+                <div class="ativ-time">10:30</div>
+                <div class="ativ-nome">Projeto de Inovação</div>
+                <div class="ativ-local">Apresentações · Sala 1</div>
+              </div>
+              <div class="atividade">
+                <div class="ativ-time">14:00</div>
+                <div class="ativ-nome">Cerimônia de encerramento</div>
+                <div class="ativ-local">Auditório · Premiação</div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </main>
+
+    <footer class="hub-footer">
+      <div class="hub-footer__inner">
+        <div class="hub-footer__left">
+          <span class="footer-brand">SESI</span>&ensp;<span class="footer-sub">Educação que transforma</span>
+        </div>
+        <div class="hub-footer__center">HUB Circuito · Plataforma de Robótica Educacional</div>
+        <div class="hub-footer__right">v2026.1</div>
+      </div>
+    </footer>
+
   </div>
 </div>
 
-<!-- Conteúdo principal -->
-<div class="hub-main">
-
-  <!-- Acessos rápidos -->
-  <section class="home-section">
-    <div class="home-section-header">
-      <div class="home-section-title">Acessos r&aacute;pidos</div>
-    </div>
-    <div class="acessos-grid">
-
-      <a href="arena.html" class="acesso acesso--arena">
-        <div class="acesso__icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none"/>
-          </svg>
-        </div>
-        <div class="acesso__body">
-          <div class="acesso__name">Arena</div>
-          <div class="acesso__desc">Controle e trilha</div>
-        </div>
-      </a>
-
-      <a href="turma.html" class="acesso acesso--turma">
-        <div class="acesso__icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-            <circle cx="9" cy="7" r="4"/>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-          </svg>
-        </div>
-        <div class="acesso__body">
-          <div class="acesso__name">Minha Turma</div>
-          <div class="acesso__desc">Acompanhar equipe</div>
-        </div>
-      </a>
-
-      <a href="juizes.html" class="acesso acesso--juizes">
-        <div class="acesso__icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-            <polyline points="14 2 14 8 20 8"/>
-            <line x1="16" y1="13" x2="8" y2="13"/>
-            <line x1="16" y1="17" x2="8" y2="17"/>
-            <polyline points="10 9 9 9 8 9"/>
-          </svg>
-        </div>
-        <div class="acesso__body">
-          <div class="acesso__name">Ju&iacute;zes</div>
-          <div class="acesso__desc">Avalia&ccedil;&otilde;es</div>
-        </div>
-      </a>
-
-      <a href="coordenacao.html" class="acesso acesso--coord">
-        <div class="acesso__icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="3"/>
-            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
-            <path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/>
-          </svg>
-        </div>
-        <div class="acesso__body">
-          <div class="acesso__name">Coordena&ccedil;&atilde;o</div>
-          <div class="acesso__desc">Gest&atilde;o do torneio</div>
-        </div>
-      </a>
-
-    </div>
-  </section>
-
-  <!-- Próximas atividades -->
-  <section class="home-section">
-    <div class="home-section-header">
-      <div class="home-section-title">Pr&oacute;ximas atividades</div>
-      <a href="cronograma.html" class="home-section-link">
-        Ver cronograma
-        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-      </a>
-    </div>
-    <div class="atividades-list">
-      <div class="atividade">
-        <div class="ativ-time">07:30</div>
-        <div class="ativ-dot"></div>
-        <div>
-          <div class="ativ-nome">Credenciamento</div>
-          <div class="ativ-local">Entrada principal</div>
-        </div>
-      </div>
-      <div class="atividade">
-        <div class="ativ-time">08:00</div>
-        <div class="ativ-dot"></div>
-        <div>
-          <div class="ativ-nome">Abertura oficial</div>
-          <div class="ativ-local">Audit&oacute;rio</div>
-        </div>
-      </div>
-      <div class="atividade">
-        <div class="ativ-time">09:00</div>
-        <div class="ativ-dot"></div>
-        <div>
-          <div class="ativ-nome">Rounds de rob&oacute;tica</div>
-          <div class="ativ-local">Arena Principal &middot; Rounds 1&ndash;3</div>
-        </div>
-      </div>
-      <div class="atividade">
-        <div class="ativ-time">10:30</div>
-        <div class="ativ-dot"></div>
-        <div>
-          <div class="ativ-nome">Projeto de Inova&ccedil;&atilde;o</div>
-          <div class="ativ-local">Apresenta&ccedil;&otilde;es &middot; Sala 1</div>
-        </div>
-      </div>
-      <div class="atividade">
-        <div class="ativ-time">14:00</div>
-        <div class="ativ-dot"></div>
-        <div>
-          <div class="ativ-nome">Cerim&ocirc;nia de encerramento</div>
-          <div class="ativ-local">Audit&oacute;rio &middot; Premia&ccedil;&atilde;o</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-</div><!-- /hub-main -->
-
-</main>
-</div><!-- /app-body -->
-
 <div id="toast"></div>
+
 <script src="js/api.js"></script>
 <script src="js/sidebar-roles.js?v=2"></script>
-<script src="js/product-ui.js?v=2"></script>
+<script src="js/product-ui.js?v=3"></script>
 <script>
-  /* Data em português */
   (function () {
     var el = document.getElementById('hero-date');
     if (!el) return;
     var dias  = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
     var meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
-    var d     = new Date();
-    el.textContent = dias[d.getDay()] + ' · ' + d.getDate() + ' de ' + meses[d.getMonth()] + ' de ' + d.getFullYear();
+    var d = new Date();
+    el.innerHTML = '<strong style="color:#5E6D80;font-weight:650">' + dias[d.getDay()] + '</strong><br>' +
+      d.getDate() + ' de ' + meses[d.getMonth()] + ' de ' + d.getFullYear();
   })();
-
-  /* Auth gerenciado inteiramente pelo sidebar-roles.js */
 </script>
 
-<footer class="hub-footer">
-  <div class="hub-footer__inner">
-    <div class="hub-footer__left">
-      <span class="footer-brand">SESI</span>&ensp;<span class="footer-sub">Educa&ccedil;&atilde;o que transforma</span>
-    </div>
-    <div class="hub-footer__center">Salvador &middot; Bahia &middot; Brasil</div>
-    <div class="hub-footer__right">desenvolvido por <a href="https://talia-projetos.github.io/portfolio/" target="_blank" rel="noopener" style="color:inherit;text-underline-offset:3px">Talia Oliveira</a></div>
-  </div>
-</footer>
 </body>
 </html>
