@@ -157,18 +157,6 @@
         </div>
       </div>
 
-      <!-- Categoria do chat -->
-      <div class="field mt-1" style="margin-top:.75rem">
-        <label class="text-sm">Associar mensagem a:</label>
-        <select id="chat-categoria" style="font-size:.85rem;padding:.4rem .7rem;border:1.5px solid var(--cinza);border-radius:7px;background:var(--branco);font-family:inherit">
-          <option value="">— geral —</option>
-          <option value="Arena">Arena</option>
-          <option value="Projeto de Inovação">Projeto de Inovação</option>
-          <option value="Design do Robô">Design do Robô</option>
-          <option value="Core Values">Core Values</option>
-          <option value="Tampinhas que Transformam">Tampinhas que Transformam</option>
-        </select>
-      </div>
     </div>
 
   </div>
@@ -392,16 +380,11 @@
     const input = document.getElementById('chat-texto');
     const texto = input.value.trim();
     if (!texto) return;
-    const categoria = document.getElementById('chat-categoria').value;
 
     try {
-      const r = await API.comentar(Sessao.juiz, Sessao.pin, texto, categoria);
-      if (r.ok) {
-        input.value = '';
-        carregarTudo();
-      } else {
-        throw new Error(r.erro);
-      }
+      await API.chatEnviar(Sessao.juiz, texto);
+      input.value = '';
+      carregarTudo();
     } catch (e) {
       toast('Erro: ' + e.message, 'err');
     }
