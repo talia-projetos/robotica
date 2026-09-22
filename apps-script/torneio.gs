@@ -1362,20 +1362,24 @@ function apiSalvarArena_(body) {
   }
   const cab   = aba.getRange(1,1,1,aba.getLastColumn()).getValues()[0];
   const linha = new Array(cab.length).fill('');
-  function set(nome, val){
-    var i = cab.indexOf(nome);
-    if (i < 0) {
-      var pfx = String(nome).toUpperCase();
-      for (var j = 0; j < cab.length; j++) {
-        if (String(cab[j]).toUpperCase().indexOf(pfx) === 0) { i = j; break; }
+  function set(nomes, val){
+    var lista = Array.isArray(nomes) ? nomes : [nomes];
+    for (var k = 0; k < lista.length; k++) {
+      var i = cab.indexOf(lista[k]);
+      if (i < 0) {
+        var pfx = String(lista[k]).toUpperCase();
+        for (var j = 0; j < cab.length; j++) {
+          if (String(cab[j]).toUpperCase().indexOf(pfx) === 0) { i = j; break; }
+        }
       }
+      if (i >= 0) { linha[i] = val; return; }
     }
-    if (i >= 0) linha[i] = val;
   }
   set('Carimbo de data/hora', new Date());
-  set('ID_Equipe', body.idEquipe);
-  set('Round', body.round);
-  set('Árbitro', body.juiz);
+  set(['Selecione a Equipe','ID_Equipe'], body.idEquipe);
+  set(['Selecione o Round','Round'], body.round);
+  set(['Árbitro','Juiz'], body.juiz);
+  set(['Arena'], String(body.arena || ''));
   set('Penalidade', num_(body.penalidade));
   set('Validado', 'Sim');
   Object.keys(body.missoes).forEach(function(m){ set(m, num_(body.missoes[m])); });

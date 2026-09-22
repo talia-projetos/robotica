@@ -19,10 +19,12 @@ const API = (function () {
   async function post(body) {
     const res = await fetch(url(), {
       method: 'POST',
-      redirect: 'follow',
+      redirect: 'manual',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(body)
     });
+    // Google Apps Script redireciona POST com 302 — opaqueredirect = aceito
+    if (res.type === 'opaqueredirect' || res.status === 0) return { ok: true };
     if (!res.ok) throw new Error('Erro HTTP ' + res.status);
     return res.json();
   }
@@ -42,8 +44,8 @@ const API = (function () {
     salvarRubrica: (juiz, pin, categoria, idEquipe, notas, obs) =>
       post({ action: 'rubrica', juiz, pin, categoria, idEquipe, notas, obs: obs || {} }),
 
-    salvarArena: (juiz, pin, idEquipe, round, missoes, penalidade) =>
-      post({ action: 'arena', juiz, pin, idEquipe, round, missoes, penalidade: penalidade || 0 }),
+    salvarArena: (juiz, pin, idEquipe, round, missoes, penalidade, arena) =>
+      post({ action: 'arena', juiz, pin, idEquipe, round, missoes, penalidade: penalidade || 0, arena: arena || '' }),
 
     comentar: (juiz, pin, texto, categoria) =>
       post({ action: 'comentario', juiz, pin, texto, categoria: categoria || '' }),

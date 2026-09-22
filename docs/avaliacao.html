@@ -476,6 +476,7 @@ var MISSOES = [
 ];
 
 var ROUND_SEL    = '';
+var ARENA_SEL    = '';
 var MISSAO_NOTAS = {};
 
 /* ─── Estado ─────────────────────────────────────────────────── */
@@ -669,15 +670,20 @@ function initArena() {
   document.querySelector('.escala-bar').style.display = 'none';
   document.querySelector('.obs-grid').style.display   = 'none';
 
-  var roundHtml = '<div class="round-selector">'
-    + '<label for="sel-round-av">Round</label>'
+  var seletoresHtml = '<div class="round-selector">'
+    + '<label for="sel-arena-av">Arena</label>'
+    + '<select id="sel-arena-av" onchange="ARENA_SEL=this.value;verificarPronto()" style="max-width:120px">'
+    + '<option value="">—</option>'
+    + ['Arena A','Arena B','Arena C'].map(function(a){ return '<option value="'+a+'">'+a+'</option>'; }).join('')
+    + '</select>'
+    + '<label for="sel-round-av" style="margin-left:.75rem">Round</label>'
     + '<select id="sel-round-av" onchange="ROUND_SEL=this.value;verificarPronto()">'
-    + '<option value="">— Selecione o round —</option>'
+    + '<option value="">— Selecione —</option>'
     + ['Round 1','Round 2','Round 3','Quartas','Semifinais','Finais'].map(function(r){
         return '<option value="'+r+'">'+r+'</option>';
       }).join('')
     + '</select></div>';
-  document.querySelector('.eq-selector').insertAdjacentHTML('beforebegin', roundHtml);
+  document.querySelector('.eq-selector').insertAdjacentHTML('beforebegin', seletoresHtml);
 
   document.getElementById('sel-equipe').addEventListener('change', verificarPronto);
   renderArena();
@@ -738,7 +744,8 @@ function verificarPronto() {
     var round      = ROUND_SEL;
     var marcadas   = Object.keys(MISSAO_NOTAS).length;
     var total      = MISSOES.length;
-    if (!round)  { info.textContent = 'Selecione o round.'; btn.disabled = true; }
+    if (!ARENA_SEL) { info.textContent = 'Selecione a arena.'; btn.disabled = true; }
+    else if (!round)  { info.textContent = 'Selecione o round.'; btn.disabled = true; }
     else if (!equipe) { info.textContent = 'Selecione a equipe.'; btn.disabled = true; }
     else if (marcadas < total) { info.textContent = marcadas + ' de ' + total + ' missões pontuadas.'; btn.disabled = true; }
     else { info.textContent = 'Todas as missões pontuadas. Pronto para enviar.'; btn.disabled = false; }
@@ -813,7 +820,7 @@ async function enviar() {
 
 async function enviarArena() {
   var equipe = document.getElementById('sel-equipe').value;
-  if (!equipe || !ROUND_SEL) { toast('Selecione equipe e round.', 'err'); return; }
+  if (!equipe || !ROUND_SEL || !ARENA_SEL) { toast('Selecione arena, equipe e round.', 'err'); return; }
 
   var total = Object.values(MISSAO_NOTAS).reduce(function(a,b){return a+b;}, 0);
   var btn = document.getElementById('btn-enviar');
@@ -821,7 +828,7 @@ async function enviarArena() {
   document.getElementById('spinner').style.display = '';
 
   try {
-    var r = await API.salvarArena(Sessao.juiz, Sessao.pin, equipe, ROUND_SEL, MISSAO_NOTAS, 0);
+    var r = await API.salvarArena(Sessao.juiz, Sessao.pin, equipe, ROUND_SEL, MISSAO_NOTAS, 0, ARENA_SEL);
     if (!r.ok) throw new Error(r.erro || 'Erro desconhecido');
 
     limparDraft();
@@ -848,8 +855,11 @@ function novaAvaliacao() {
   if (CAT === 'arena') {
     MISSAO_NOTAS = {};
     ROUND_SEL    = '';
+    ARENA_SEL    = '';
     var rs = document.getElementById('sel-round-av');
     if (rs) rs.value = '';
+    var as = document.getElementById('sel-arena-av');
+    if (as) as.value = '';
     ['.round-selector','.eq-selector','#criterios-wrap','.total-bar','.av-footer'].forEach(function(s) {
       var el = s.startsWith('#') ? document.getElementById(s.slice(1)) : document.querySelector(s);
       if (el) el.style.display = '';
