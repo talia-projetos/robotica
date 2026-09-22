@@ -58,7 +58,7 @@
   </div>
   <div class="topbar__badge">
     <span id="badge-coord" class="text-sm"></span>
-    <span id="ultimo-update" class="text-sm"></span>
+    <span id="sync-tag" class="sync-tag" style="display:none"></span>
     <span class="spinner" id="spinner"></span>
     <button class="btn btn-outline btn-sm" id="btn-sair" style="border-color:rgba(255,255,255,.3);color:#fff;display:none" onclick="CoordAuth.clear();location.reload()">Sair</button>
   </div>
@@ -280,8 +280,11 @@
       renderCategoria('tbody-tampinhas',dadosEquipes, 'tamp20',  { posField: 'Tamp',   qtdField: 'tampPes' });
 
       const agora = new Date();
-      document.getElementById('ultimo-update').textContent =
-        'Atualizado ' + agora.toLocaleTimeString('pt-BR');
+      var stEl = document.getElementById('sync-tag');
+      if (stEl) {
+        stEl.textContent = 'Planilha · ' + agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+        stEl.style.display = '';
+      }
     } catch (e) {
       toast('Erro ao carregar ranking: ' + e.message, 'err');
     } finally {
@@ -292,11 +295,13 @@
   if (location.hash === '#categorias') mostrarView('categorias');
   else mostrarView('geral');
 
-  iniciarGateCoord(function(nome) {
-    document.getElementById('badge-coord').textContent = nome;
+  // Ranking is public — show coord badge only if already logged in, no gate popup
+  if (CoordAuth.logado()) {
+    var _bc = document.getElementById('badge-coord');
+    if (_bc) _bc.textContent = CoordAuth.nome;
     document.getElementById('btn-sair').style.display = '';
-    iniciarPolling(carregar, 10000);
-  });
+  }
+  iniciarPolling(carregar, 10000);
 </script>
 </body>
 </html>

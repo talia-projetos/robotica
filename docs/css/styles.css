@@ -652,6 +652,31 @@ tbody td { padding: .7rem 1rem; vertical-align: middle; }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ── Sync tag ────────────────────────────────────────────────── */
+.sync-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: .28rem;
+  font-size: .65rem;
+  color: #94A3B8;
+  font-weight: 500;
+  letter-spacing: .01em;
+}
+.sync-tag::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #22C55E;
+  flex-shrink: 0;
+}
+.sync-tag--syncing::before {
+  background: #F59E0B;
+  animation: sync-pulse .9s ease-in-out infinite;
+}
+@keyframes sync-pulse { 0%,100%{opacity:1} 50%{opacity:.25} }
+
 /* ── Utilitários ─────────────────────────────────────────────── */
 .text-sm   { font-size: .8rem; color: var(--texto-sm); }
 .text-bold { font-weight: 700; }

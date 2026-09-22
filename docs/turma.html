@@ -1101,10 +1101,12 @@
 
     .met-intro{
       margin-bottom:.7rem;
-      padding:.9rem 1rem;
+      padding:.7rem .82rem;
       border-radius:9px;
       border-color:#E0E8F0;
-      background:#fff;
+      border-left-width:3px;
+      border-left-color:#CBD5E0;
+      background:#F8FAFC;
       color:#66778B;
       font-size:.72rem;
       line-height:1.55;
@@ -1152,9 +1154,20 @@
 
     .met-card__pts{
       margin:0;
-      color:#697A8E;
-      font-size:.6rem;
       text-align:right;
+      white-space:nowrap;
+    }
+    .met-card__pts-pct{
+      font-size:.95rem;
+      font-weight:800;
+      color:#12355B;
+      line-height:1;
+    }
+    .met-card__pts-label{
+      font-size:.55rem;
+      color:#94A3B8;
+      margin-top:.15rem;
+      letter-spacing:.03em;
     }
 
     .doc-group{
@@ -1234,6 +1247,7 @@
     .comment-text{
       font-size:.68rem;
       line-height:1.5;
+      text-align:justify;
     }
 
     .comment-bom,
@@ -1337,6 +1351,7 @@
   </div>
   <div class="topbar__badge">
     <span id="badge-turma" class="text-sm"></span>
+    <span id="sync-tag" class="sync-tag" style="display:none"></span>
     <span class="spinner" id="spinner" style="display:none"></span>
   </div>
 </header>
@@ -1425,31 +1440,31 @@
           <div class="met-card__label" style="color:#8E5BD9">Ciência</div>
           <div class="met-card__titulo">Projeto de Inovação</div>
           <div class="met-card__desc">A equipe identifica um problema real, pesquisa suas causas e possíveis soluções e apresenta uma proposta inovadora a um painel de juízes.</div>
-          <div class="met-card__pts">Média dos juízes &bull; até 20 pts</div>
+          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Média da avaliação</div></div>
         </div>
         <div class="met-card" style="border-top-color:#2F80ED">
           <div class="met-card__label" style="color:#2F80ED">Tecnologia</div>
           <div class="met-card__titulo">Desafio do Robô</div>
           <div class="met-card__desc">A equipe programa o robô para executar missões na arena em 2min 30s, aplicando lógica, estratégia e programação. Entre os rounds realizados, vale a maior pontuação alcançada.</div>
-          <div class="met-card__pts">Melhor round &bull; até 20 pts</div>
+          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Melhor round</div></div>
         </div>
         <div class="met-card" style="border-top-color:#F2994A">
           <div class="met-card__label" style="color:#F2994A">Engenharia</div>
           <div class="met-card__titulo">Design do Robô</div>
           <div class="met-card__desc">Os juízes avaliam como o robô foi pensado, construído e programado, considerando as escolhas de engenharia, o processo de testes e melhorias e a eficiência da solução desenvolvida.</div>
-          <div class="met-card__pts">Média dos juízes &bull; até 20 pts</div>
+          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Média da avaliação</div></div>
         </div>
         <div class="met-card" style="border-top-color:#27AE60">
           <div class="met-card__label" style="color:#27AE60">Artes</div>
           <div class="met-card__titulo">Core Values</div>
           <div class="met-card__desc">Os Core Values representam a essência da FLL, valorizando criatividade, trabalho em equipe, inclusão, respeito, descoberta e diversão. Os juízes observam como a equipe colabora, se organiza e comunica suas ideias.</div>
-          <div class="met-card__pts">Média dos juízes &bull; até 20 pts</div>
+          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Média da avaliação</div></div>
         </div>
         <div class="met-card" style="border-top-color:#0D9488">
           <div class="met-card__label" style="color:#0D9488">Matemática · Bioglow FLL</div>
           <div class="met-card__titulo">Tampinhas &amp; Latas</div>
           <div class="met-card__desc">Desafio especial desta edição, inspirado na temporada Bioglow da FIRST LEGO League. A equipe coleta tampinhas plásticas e latas destinadas à reciclagem, unindo responsabilidade socioambiental a um objetivo mensurável. Quanto maior o peso coletado, maior a pontuação.</div>
-          <div class="met-card__pts">Por peso coletado &bull; até 20 pts</div>
+          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Por peso coletado</div></div>
         </div>
       </div>
     </div>
@@ -1991,6 +2006,12 @@
       var r = await API.turma(id, pin || '');
       if (r.ok) {
         mostrarResultados(r);
+        var _st = document.getElementById('sync-tag');
+        if (_st) {
+          var _now = new Date();
+          _st.textContent = 'Planilha · ' + _now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+          _st.style.display = '';
+        }
       } else {
         /* Servidor rejeitou credenciais → limpa e volta ao login */
         localStorage.removeItem(STORAGE_KEY_ID);
