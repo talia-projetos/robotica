@@ -1304,11 +1304,13 @@ function apiSalvarRubrica_(body) {
   if (body.notas.length !== cfg.criterios) throw new Error('Esperadas ' + cfg.criterios + ' notas; recebidas: ' + body.notas.length + '.');
   body.notas.forEach(function(n,i){ const v=num_(n); if(v<1||v>4) throw new Error('Nota '+(i+1)+' inválida (1–4): '+n); });
 
+  const aliases = { 'projeto': T.CAT.PROJETO, 'design': T.CAT.DESIGN, 'core': T.CAT.CORE };
+  const categoriaReal = aliases[body.categoria] || body.categoria;
   const mapa = {};
   mapa[T.CAT.PROJETO] = cfg.abaProj;
   mapa[T.CAT.DESIGN]  = cfg.abaDes;
   mapa[T.CAT.CORE]    = cfg.abaCore;
-  const nomeAba = mapa[body.categoria];
+  const nomeAba = mapa[categoriaReal];
   if (!nomeAba) throw new Error('Categoria inválida: ' + body.categoria);
 
   let aba = ss.getSheetByName(nomeAba);

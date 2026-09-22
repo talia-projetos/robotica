@@ -792,7 +792,7 @@ async function enviar() {
     var obsB = document.getElementById('obs-bom').value.trim();
     var obsM = document.getElementById('obs-mel').value.trim();
 
-    var r = await API.salvarRubrica(Sessao.juiz, Sessao.pin, CAT, equipe, notasArr, { bom: obsB, melhorar: obsM });
+    var r = await API.salvarRubrica(Sessao.juiz, Sessao.pin, DEF.titulo, equipe, notasArr, { bom: obsB, melhorar: obsM });
     if (!r.ok) throw new Error(r.erro || 'Erro desconhecido');
 
     limparDraft();
