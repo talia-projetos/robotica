@@ -164,7 +164,7 @@
       color = '#2563EB';
     } else if (isJuiz) {
       name  = localStorage.getItem('hub_juiz') || 'J';
-      role  = 'Juíz';
+      role  = 'Juiz';
       color = '#7C3AED';
     } else if (isTurma) {
       name  = localStorage.getItem('turma_id') || 'T';

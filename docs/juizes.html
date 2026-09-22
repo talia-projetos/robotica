@@ -396,27 +396,492 @@
       .acao-card { align-items:flex-start; flex-direction:column; }
     }
 
+    /* ── Juízes v5: shell e workspace final ──────────────────── */
+    body{background:#EEF3F8}
+
+    .judge-shell{
+      min-height:100vh;
+      display:flex;
+      background:#EEF3F8;
+    }
+
+    .judge-shell .app-sidebar{
+      position:sticky;
+      top:0;
+      height:100vh;
+      width:190px;
+      min-width:190px;
+      padding:.65rem .45rem .8rem;
+      background:#0C1521;
+      border-right:1px solid rgba(255,255,255,.055);
+      z-index:20;
+    }
+
+    .judge-shell .sidebar-brand{
+      min-height:74px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 0 .65rem;
+      padding:.65rem .75rem .85rem;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .judge-shell .sidebar-brand__img{
+      width:124px;
+      height:auto;
+      max-height:48px;
+      object-fit:contain;
+    }
+
+    .judge-shell .sidebar-item{
+      min-height:38px;
+      margin:.08rem .15rem;
+      padding:.58rem .72rem;
+      border-radius:8px;
+      color:rgba(255,255,255,.55);
+      font-size:.73rem;
+      font-weight:600;
+    }
+
+    .judge-shell .sidebar-item.ativo{
+      color:#B8DCF5;
+      background:rgba(80,143,203,.17);
+      box-shadow:inset 2px 0 0 #508FCB;
+    }
+
+    .judge-shell.sidebar-collapsed .app-sidebar{
+      width:58px;
+      min-width:58px;
+    }
+
+    .judge-shell.sidebar-collapsed .sidebar-brand__img{
+      width:30px;
+      height:30px;
+      object-fit:cover;
+      object-position:left;
+    }
+
+    .judge-stage{
+      flex:1;
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .judge-shell .topbar{
+      position:sticky;
+      top:0;
+      z-index:15;
+      min-height:66px;
+      display:flex;
+      align-items:center;
+      gap:1rem;
+      padding:.55rem 1.35rem;
+      background:rgba(255,255,255,.96);
+      border-bottom:1px solid #E3EAF1;
+      box-shadow:0 1px 0 rgba(15,23,42,.025);
+      backdrop-filter:blur(12px);
+    }
+
+    .judge-mobile-brand{
+      display:none;
+      align-items:center;
+      text-decoration:none;
+    }
+
+    .judge-mobile-brand img{
+      width:auto;
+      height:34px;
+    }
+
+    .judge-shell .topbar__event{
+      flex:1;
+      display:flex;
+      align-items:center;
+      gap:.65rem;
+      padding:0;
+      text-align:left;
+    }
+
+    .judge-event-icon{
+      width:34px;
+      height:34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      border-radius:9px;
+      background:#EDF5FC;
+      color:#3979B8;
+    }
+
+    .judge-event-icon svg{
+      width:16px;
+      height:16px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:1.8;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .judge-shell .topbar__event-name{
+      color:#26384D;
+      font-size:.72rem;
+      font-weight:730;
+    }
+
+    .judge-shell .topbar__event-org{
+      margin-top:.05rem;
+      color:#8A97A7;
+      font-size:.59rem;
+    }
+
+    .judge-shell .topbar-avatar__name{color:#26384D}
+    .judge-shell .topbar-avatar__role{color:#8492A4}
+    .judge-shell .av-btn{color:#24364A}
+    .judge-shell .av-chevron{stroke:#8A97A7}
+    .judge-shell #btn-sair{
+      border-color:#D9E3EC!important;
+      color:#43556C!important;
+      background:#fff!important;
+    }
+
+    #view-painel{
+      min-height:calc(100vh - 66px);
+      background:#EEF3F8;
+    }
+
+    .painel-wrap{
+      width:100%;
+      max-width:1120px;
+      margin:0 auto;
+      padding:1.8rem 2rem 3.5rem;
+    }
+
+    .judge-workspace-head{
+      align-items:flex-start;
+      margin-bottom:1.15rem;
+    }
+
+    .judge-workspace-kicker{
+      margin-bottom:.22rem;
+      color:#718096;
+      font-size:.68rem;
+      font-weight:600;
+      letter-spacing:0;
+      text-transform:none;
+    }
+
+    .judge-workspace-head h1{
+      color:#162237;
+      font-size:clamp(1.65rem,3vw,1.95rem);
+      font-weight:780;
+      letter-spacing:-.04em;
+    }
+
+    .judge-workspace-sub{
+      margin-top:.32rem;
+      color:#77869A;
+      font-size:.72rem;
+    }
+
+    .judge-head-link{
+      min-height:34px;
+      padding:.42rem .66rem;
+      border-color:#D6E2EC;
+      border-radius:7px;
+      background:#fff;
+      color:#40556D;
+      font-size:.65rem;
+      box-shadow:none;
+    }
+
+    .judge-layout{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 280px;
+      gap:.85rem;
+      align-items:start;
+    }
+
+    .judge-main-card,
+    .judge-support-card{
+      border:1px solid #E0E8F0;
+      border-radius:11px;
+      background:#fff;
+      box-shadow:0 4px 14px rgba(15,23,42,.025);
+    }
+
+    .judge-main-card{
+      padding:1rem;
+    }
+
+    .judge-area-strip{
+      margin:0 0 1rem;
+      padding:.7rem .78rem;
+      border:1px solid #E4EBF2;
+      border-radius:9px;
+      background:#F8FAFC;
+    }
+
+    .judge-area-label{
+      color:#8997A8;
+      font-size:.56rem;
+    }
+
+    .judge-area-value{
+      color:#24364B;
+      font-size:.76rem;
+    }
+
+    .judge-area-note{
+      max-width:310px;
+      color:#8B98A8;
+      font-size:.62rem;
+    }
+
+    .judge-section-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      margin:.15rem 0 .5rem;
+    }
+
+    .judge-section-title{
+      color:#5F6F83;
+      font-size:.61rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .judge-section-hint{
+      color:#99A5B3;
+      font-size:.6rem;
+    }
+
+    .form-grid{
+      width:100%;
+      margin:0;
+      gap:.42rem;
+    }
+
+    .form-card{
+      min-height:68px;
+      padding:.72rem .78rem;
+      border-color:#E2E9F0;
+      border-radius:9px;
+    }
+
+    .form-card:hover{
+      border-color:#C8D7E5;
+      box-shadow:0 6px 16px rgba(15,23,42,.035);
+    }
+
+    .form-card.is-assigned{
+      border-color:#AFCDE5;
+      background:#FBFDFF;
+      box-shadow:inset 3px 0 0 #3979B8;
+    }
+
+    .fc-icon{
+      width:36px;
+      height:36px;
+      border-radius:8px;
+    }
+
+    .fc-title{
+      font-size:.76rem;
+    }
+
+    .fc-desc{
+      margin-top:.08rem;
+      color:#8491A1;
+      font-size:.63rem;
+    }
+
+    .fc-assigned{
+      background:#E8F3FB;
+      color:#2F6FA8;
+      font-size:.54rem;
+    }
+
+    .fc-cta{
+      min-width:112px;
+      padding:.38rem .58rem;
+      border-radius:7px;
+      font-size:.62rem;
+    }
+
+    .judge-support{
+      display:flex;
+      flex-direction:column;
+      gap:.65rem;
+    }
+
+    .judge-support-card{
+      padding:.9rem;
+    }
+
+    .support-kicker{
+      margin-bottom:.55rem;
+      color:#5F6F83;
+      font-size:.59rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .support-row{
+      display:flex;
+      align-items:center;
+      gap:.68rem;
+      min-height:58px;
+      padding:.66rem .68rem;
+      border:1px solid #E6ECF2;
+      border-radius:8px;
+      background:#FBFCFE;
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .support-row + .support-row{margin-top:.42rem}
+
+    .support-row:hover{
+      border-color:#CCD9E5;
+      background:#fff;
+    }
+
+    .support-icon{
+      width:34px;
+      height:34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      border-radius:8px;
+      background:#EDF5FC;
+      color:#3979B8;
+    }
+
+    .support-icon svg{
+      width:16px;
+      height:16px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:1.8;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .support-copy{
+      min-width:0;
+      flex:1;
+    }
+
+    .support-title{
+      color:#26364A;
+      font-size:.68rem;
+      font-weight:730;
+    }
+
+    .support-sub{
+      margin-top:.05rem;
+      color:#8B98A8;
+      font-size:.57rem;
+      line-height:1.35;
+    }
+
+    .support-arrow{
+      color:#9BA8B6;
+      font-size:.82rem;
+    }
+
+    .judge-help{
+      padding:.78rem .82rem;
+      border:1px solid #E1E9F0;
+      border-radius:9px;
+      background:#F7FAFC;
+      color:#7A899B;
+      font-size:.62rem;
+      line-height:1.48;
+    }
+
+    .judge-help strong{
+      display:block;
+      margin-bottom:.14rem;
+      color:#53657A;
+      font-size:.63rem;
+    }
+
+    .judge-coord-only{
+      margin-top:.85rem;
+    }
+
+    .judge-coord-only .sec-lbl{
+      display:none;
+    }
+
+    .acao-card{
+      min-height:66px;
+      padding:.78rem .85rem;
+      border-radius:9px;
+      box-shadow:none;
+    }
+
+    .acao-title{font-size:.76rem}
+    .acao-desc{font-size:.63rem}
+
+    .jh{display:none!important}
+    .print-banner{display:none!important}
+
+    @media(max-width:900px){
+      .judge-layout{grid-template-columns:1fr}
+      .judge-support{display:grid;grid-template-columns:1fr 1fr}
+      .judge-help{grid-column:1 / -1}
+    }
+
+    @media(max-width:700px){
+      .judge-shell{display:block}
+      .judge-shell .app-sidebar{
+        position:fixed;
+        top:60px;
+        height:calc(100vh - 60px);
+        width:min(82vw,280px);
+        min-width:min(82vw,280px);
+      }
+      .judge-shell .sidebar-brand{display:none}
+      .judge-shell .topbar{
+        min-height:60px;
+        padding:.45rem .75rem;
+      }
+      .judge-mobile-brand{display:flex}
+      .judge-shell .topbar__event{display:none}
+      .painel-wrap{padding:1.25rem 1rem 3rem}
+      .judge-workspace-head{flex-direction:column;gap:.65rem}
+      .judge-head-actions{width:100%}
+      .judge-head-link{flex:1;justify-content:center}
+      .judge-area-strip{align-items:flex-start;flex-direction:column}
+      .judge-area-note{text-align:left}
+      .judge-support{display:block}
+      .judge-support-card{margin-bottom:.65rem}
+      .form-card{display:grid;grid-template-columns:36px minmax(0,1fr);gap:.68rem}
+      .fc-cta{grid-column:2;justify-self:start}
+      .acao-card{align-items:flex-start;flex-direction:column}
+    }
+
   </style>
 </head>
 <body>
 
-<header class="topbar">
-  <a href="index.html" class="topbar__brand"><img src="logo.svg" alt="HUB Circuito"></a>
-  <div class="topbar__event">
-    <div class="topbar__event-name">Torneio Interno de Rob&#xF3;tica</div>
-    <div class="topbar__event-org">Escola SESI Reitor Miguel Calmon</div>
-  </div>
-  <div class="topbar__badge">
-    <span id="badge-juiz" class="text-sm"></span>
-    <button class="btn btn-outline btn-sm" id="btn-sair"
-      style="border-color:rgba(255,255,255,.3);color:#fff;display:none"
-      onclick="sair()">Sair</button>
-  </div>
-</header>
-
-<div class="app-body">
+<div class="app-body judge-shell">
 
 <nav class="app-sidebar">
+  <a href="juizes.html" class="sidebar-brand" aria-label="HUB Circuito">
+    <img src="logo-horizontal.svg" alt="HUB Circuito" class="sidebar-brand__img">
+  </a>
   <a href="index.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg> Início</a>
   <a href="arena.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg> Arena</a>
   <a href="turma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1.5 13.5c0-2.5 2-4 4-4"/><circle cx="11" cy="5.5" r="2"/><path d="M10 13.5c0-2 1.5-3.5 3.5-3.5"/></svg> Minha Turma</a>
@@ -427,6 +892,26 @@
   <a href="cronograma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="13" height="10.5" rx="1.5"/><path d="M1.5 7.5h13M5.5 1.5v3M10.5 1.5v3"/></svg> Cronograma</a>
 </nav>
 
+<div class="judge-stage">
+<header class="topbar">
+  <a href="juizes.html" class="topbar__brand judge-mobile-brand" aria-label="HUB Circuito">
+    <img src="logo-horizontal-escuro.svg" alt="HUB Circuito">
+  </a>
+  <div class="topbar__event">
+    <div class="judge-event-icon">
+      <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 11h5M8 15h7"/></svg>
+    </div>
+    <div>
+      <div class="topbar__event-name">Torneio Interno de Robótica</div>
+      <div class="topbar__event-org">Escola SESI Reitor Miguel Calmon</div>
+    </div>
+  </div>
+  <div class="topbar__badge">
+    <span id="badge-juiz" class="text-sm"></span>
+    <button class="btn btn-outline btn-sm" id="btn-sair" style="display:none" onclick="sair()">Sair</button>
+  </div>
+</header>
+
 <main class="app-main">
 
 <!-- ── LOGIN ─────────────────────────────────────────────────────── -->
@@ -436,7 +921,7 @@
       <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     </div>
     <h2>Acesso dos Juízes</h2>
-    <p class="login-sub">Entre com seu nome e PIN para acessar os formulários de avaliação e o chat.</p>
+    <p class="login-sub">Entre com seu nome e PIN para acessar as avaliações e os materiais de apoio.</p>
     <div class="field">
       <label>Nome</label>
       <input id="l-nome" type="text" placeholder="Seu nome completo" autocomplete="name">
@@ -475,28 +960,22 @@
     </div>
   </header>
 
-  <div class="judge-area-strip">
-    <div class="judge-area-copy">
-      <div class="judge-area-label">Área atribuída</div>
-      <div class="judge-area-value" id="judge-area-value">Carregando…</div>
-    </div>
-    <div class="judge-area-note" id="judge-area-note">As categorias disponíveis serão ajustadas ao seu perfil.</div>
-  </div>
+  <div class="judge-layout">
+    <section class="judge-main-card">
+      <div class="judge-area-strip">
+        <div class="judge-area-copy">
+          <div class="judge-area-label">Área atribuída</div>
+          <div class="judge-area-value" id="judge-area-value">Carregando…</div>
+        </div>
+        <div class="judge-area-note" id="judge-area-note">As categorias disponíveis serão ajustadas ao seu perfil.</div>
+      </div>
 
-  <div class="sec-lbl">Preparação</div>
-  <a href="rubricas.html" target="_blank" rel="noopener" class="print-banner">
-    <div class="print-banner__icon">
-      <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-    </div>
-    <div class="print-banner__body">
-      <div class="print-banner__title">Rubricas de Avaliação</div>
-      <div class="print-banner__sub">Critérios completos para Projeto, Design, Core Values e Arena.</div>
-    </div>
-    <div class="print-banner__pill">Imprimir / PDF</div>
-  </a>
+      <div class="judge-section-head">
+        <div class="judge-section-title">Avaliações</div>
+        <div class="judge-section-hint">Abra somente a categoria atribuída ao seu perfil.</div>
+      </div>
 
-  <div class="sec-lbl">Categorias</div>
-  <div class="form-grid">
+      <div class="form-grid">
     <a id="link-desafio" data-cat="arena" href="#" target="_blank" rel="noopener" class="form-card">
       <div class="fc-icon" style="background:#FFF4E9">
         <svg viewBox="0 0 24 24" stroke="#F2994A"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
@@ -540,6 +1019,52 @@
       </div>
       <span class="fc-cta">Iniciar avaliação</span>
     </a>
+      </div>
+    </section>
+
+    <aside class="judge-support">
+      <div class="judge-support-card">
+        <div class="support-kicker">Preparação</div>
+
+        <a href="rubricas.html" target="_blank" rel="noopener" class="support-row">
+          <div class="support-icon">
+            <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          </div>
+          <div class="support-copy">
+            <div class="support-title">Rubricas de avaliação</div>
+            <div class="support-sub">Critérios completos para consulta ou impressão.</div>
+          </div>
+          <div class="support-arrow">›</div>
+        </a>
+
+        <a href="documentos.html" class="support-row">
+          <div class="support-icon">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8M8 17h6"/></svg>
+          </div>
+          <div class="support-copy">
+            <div class="support-title">Documentos</div>
+            <div class="support-sub">Guias e materiais oficiais do torneio.</div>
+          </div>
+          <div class="support-arrow">›</div>
+        </a>
+
+        <a href="arena.html" class="support-row">
+          <div class="support-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 8.5 16 12l-7 3.5z"/></svg>
+          </div>
+          <div class="support-copy">
+            <div class="support-title">Arena</div>
+            <div class="support-sub">Acompanhe rounds, timer e classificação.</div>
+          </div>
+          <div class="support-arrow">›</div>
+        </a>
+      </div>
+
+      <div class="judge-help">
+        <strong>Fluxo de trabalho</strong>
+        Consulte a rubrica antes da avaliação. O HUB destaca a categoria vinculada ao seu perfil e mantém os demais módulos fora do seu fluxo.
+      </div>
+    </aside>
   </div>
 
   <div class="judge-coord-only">
@@ -559,12 +1084,13 @@
 </div><!-- /view-painel -->
 
 </main>
+</div><!-- /judge-stage -->
 </div><!-- /app-body -->
 
 <div id="toast"></div>
 <script src="js/api.js"></script>
-<script src="js/sidebar-roles.js?v=2"></script>
-<script src="js/product-ui.js?v=3"></script>
+<script src="js/sidebar-roles.js?v=3"></script>
+<script src="js/product-ui.js?v=4"></script>
 <script>
   const FORMS = {
     desafio: 'https://forms.gle/6zZxqCMxTdndWUh58',
