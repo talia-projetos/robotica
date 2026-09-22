@@ -77,6 +77,7 @@ function onOpen() {
     .addItem('Ver Ranking',              'TORNEIO_abrirRanking')
     .addItem('Ver Diagnóstico',          'TORNEIO_abrirDiagnostico')
     .addSeparator()
+    .addItem('Corrigir nomes de equipes', 'TORNEIO_corrigirNomes')
     .addItem('Reinstalar gatilho Forms', 'TORNEIO_instalarGatilho')
     .addToUi();
 }
@@ -129,6 +130,47 @@ function TORNEIO_atualizar() {
   } finally {
     lock.releaseLock();
   }
+}
+
+function TORNEIO_corrigirNomes() {
+  const ss  = SpreadsheetApp.getActiveSpreadsheet();
+  const aba = ss.getSheetByName(T.ABAS.EQUIPES);
+  if (!aba) { SpreadsheetApp.getUi().alert('Aba EQUIPES não encontrada.'); return; }
+
+  // Nomes corretos: [ID, Nome_Equipe, Tutor]
+  const corretos = [
+    ['TUR01', '6° A - Cyber Panter',       'Éverton'],
+    ['TUR02', '6° B - Liga do Choque',      'Izabela'],
+    ['TUR03', '6° C - Alpha Tech',          'Patrícia'],
+    ['TUR04', '6° D - Pheonics Mecanics',   'Moaci'],
+    ['TUR05', '6° E - TecShark',            'Yulo'],
+    ['TUR06', '7° A - Hoppin Robots',       'João'],
+    ['TUR07', '7° B - Bivoltx',             'Joseli'],
+    ['TUR08', '7° C - Ecoshift',            'Ana Claudia'],
+    ['TUR09', '7° D - Pantera Lego Team',   'Diego Lopes'],
+    ['TUR10', '7° E - Império das Onças',   'Fabiana'],
+    ['TUR11', '7° F - Poseidon',            'Marilia'],
+    ['TUR12', '7° G - Arara Azul',          'Reinalda'],
+    ['TUR13', '7° H - Nexos',               'Rute']
+  ];
+
+  const dados = aba.getDataRange().getValues();
+  const cab   = dados[0];
+  const iId   = achaCab_(cab, ['id equipe','id_equipe','id'], 0);
+  const iNome = achaCab_(cab, ['nome equipe','nome_equipe','turma'], 1);
+  const iTutor= achaCab_(cab, ['tutor','professor'], 3);
+
+  corretos.forEach(function(c) {
+    for (var i = 1; i < dados.length; i++) {
+      if (String(dados[i][iId]).trim().toUpperCase() === c[0]) {
+        aba.getRange(i + 1, iNome + 1).setValue(c[1]);
+        aba.getRange(i + 1, iTutor + 1).setValue(c[2]);
+        break;
+      }
+    }
+  });
+
+  SpreadsheetApp.getActiveSpreadsheet().toast('Nomes corrigidos com sucesso!', 'Torneio', 5);
 }
 
 function TORNEIO_instalarGatilho() {
