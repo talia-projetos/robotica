@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="css/styles.css?v=7">
+  <link rel="stylesheet" href="css/styles.css?v=8">
   <style>
     body { background: #F0F4F8; }
     .wrap { max-width: 1280px; margin: 0 auto; padding: 1.75rem 1.75rem 5rem; }
@@ -280,23 +280,577 @@
       .info-row { grid-template-columns: repeat(2, 1fr); }
       :root { --lbl: 140px; }
     }
+
+    /* ── Cronograma v5: agenda operacional ───────────────────── */
+    body{background:#EEF3F8}
+
+    .schedule-shell{
+      min-height:100vh;
+      display:flex;
+      background:#EEF3F8;
+    }
+
+    .schedule-shell .app-sidebar{
+      position:sticky;
+      top:0;
+      height:100vh;
+      width:190px;
+      min-width:190px;
+      padding:.65rem .45rem .8rem;
+      background:#0C1521;
+      border-right:1px solid rgba(255,255,255,.055);
+      z-index:20;
+    }
+
+    .schedule-shell .sidebar-brand{
+      min-height:74px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 0 .65rem;
+      padding:.65rem .75rem .85rem;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .schedule-shell .sidebar-brand__img{
+      width:124px;
+      height:auto;
+      max-height:48px;
+      object-fit:contain;
+    }
+
+    .schedule-shell .sidebar-item{
+      min-height:38px;
+      margin:.08rem .15rem;
+      padding:.58rem .72rem;
+      border-radius:8px;
+      color:rgba(255,255,255,.55);
+      font-size:.73rem;
+      font-weight:600;
+    }
+
+    .schedule-shell .sidebar-item.ativo{
+      color:#B8DCF5;
+      background:rgba(80,143,203,.17);
+      box-shadow:inset 2px 0 0 #508FCB;
+    }
+
+    .schedule-shell.sidebar-collapsed .app-sidebar{
+      width:58px;
+      min-width:58px;
+    }
+
+    .schedule-shell.sidebar-collapsed .sidebar-brand__img{
+      width:30px;
+      height:30px;
+      object-fit:cover;
+      object-position:left;
+    }
+
+    .schedule-stage{
+      flex:1;
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .schedule-shell .topbar{
+      position:sticky;
+      top:0;
+      z-index:15;
+      min-height:66px;
+      display:flex;
+      align-items:center;
+      gap:1rem;
+      padding:.55rem 1.35rem;
+      background:rgba(255,255,255,.96);
+      border-bottom:1px solid #E3EAF1;
+      box-shadow:0 1px 0 rgba(15,23,42,.025);
+      backdrop-filter:blur(12px);
+    }
+
+    .schedule-mobile-brand{
+      display:none;
+      align-items:center;
+      text-decoration:none;
+    }
+
+    .schedule-mobile-brand img{
+      width:auto;
+      height:34px;
+    }
+
+    .schedule-shell .topbar__event{
+      flex:1;
+      display:flex;
+      align-items:center;
+      gap:.65rem;
+      padding:0;
+      text-align:left;
+    }
+
+    .schedule-event-icon{
+      width:34px;
+      height:34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      border-radius:9px;
+      background:#EDF5FC;
+      color:#3979B8;
+    }
+
+    .schedule-event-icon svg{
+      width:16px;
+      height:16px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:1.8;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .schedule-shell .topbar__event-name{
+      color:#26384D;
+      font-size:.72rem;
+      font-weight:730;
+    }
+
+    .schedule-shell .topbar__event-org{
+      margin-top:.05rem;
+      color:#8A97A7;
+      font-size:.59rem;
+    }
+
+    .schedule-shell .topbar-avatar__name{color:#26384D}
+    .schedule-shell .topbar-avatar__role{color:#8492A4}
+    .schedule-shell .av-btn{color:#24364A}
+    .schedule-shell .av-chevron{stroke:#8A97A7}
+
+    .schedule-shell .app-main{
+      min-width:0;
+      background:#EEF3F8;
+    }
+
+    .wrap{
+      width:100%;
+      max-width:1180px;
+      margin:0 auto;
+      padding:1.8rem 2rem 3.8rem;
+    }
+
+    .schedule-workspace-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:1.25rem;
+      margin-bottom:1.05rem;
+    }
+
+    .schedule-kicker{
+      margin-bottom:.22rem;
+      color:#718096;
+      font-size:.68rem;
+      font-weight:600;
+    }
+
+    .schedule-workspace-head h1{
+      margin:0;
+      color:#162237;
+      font-size:clamp(1.7rem,3vw,2rem);
+      line-height:1.08;
+      font-weight:780;
+      letter-spacing:-.04em;
+    }
+
+    .schedule-workspace-head .page-meta{
+      margin:.34rem 0 0;
+      color:#78879A;
+      font-size:.72rem;
+      line-height:1.45;
+    }
+
+    .schedule-head-actions{
+      display:flex;
+      align-items:center;
+      gap:.38rem;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .schedule-head-link{
+      min-height:34px;
+      display:inline-flex;
+      align-items:center;
+      gap:.32rem;
+      padding:.42rem .64rem;
+      border:1px solid #D6E2EC;
+      border-radius:7px;
+      background:#fff;
+      color:#40556D;
+      font:700 .63rem/1 inherit;
+      text-decoration:none;
+      cursor:pointer;
+    }
+
+    .schedule-head-link:hover{
+      border-color:#BFD1E0;
+      color:#2F6FA8;
+    }
+
+    .timeline-macro{
+      margin-bottom:.75rem;
+      padding:.8rem .9rem .88rem;
+      border:1px solid #E0E8F0;
+      border-radius:9px;
+      background:#fff;
+      box-shadow:none;
+    }
+
+    .tl-label{
+      margin-bottom:.5rem;
+      color:#69798C;
+      font-size:.58rem;
+      letter-spacing:.08em;
+    }
+
+    .tl-bar{
+      height:29px;
+      border-radius:6px;
+      background:#F2F5F8;
+    }
+
+    .tl-seg{
+      font-size:.55rem;
+    }
+
+    .tl-ticks{
+      height:15px;
+      margin-top:.22rem;
+    }
+
+    .tl-tick{
+      color:#9AA6B4;
+      font-size:.54rem;
+    }
+
+    .crono-toolbar{
+      display:flex;
+      align-items:center;
+      gap:.38rem;
+      margin-bottom:.75rem;
+      padding:.42rem .48rem;
+      border:1px solid #E0E8F0;
+      border-radius:9px;
+      background:#fff;
+      box-shadow:none;
+    }
+
+    .toolbar-label{
+      margin:0 .12rem 0 .18rem;
+      color:#78879A;
+      font-size:.56rem;
+      letter-spacing:.08em;
+    }
+
+    .filter-sala{
+      min-height:31px;
+      padding:.36rem .56rem;
+      border:1px solid #DDE6EE;
+      border-radius:7px;
+      background:#F8FAFC;
+      color:#68798C;
+      font-size:.61rem;
+      font-weight:700;
+    }
+
+    .filter-sala:hover{
+      background:#F1F6FA;
+      border-color:#CAD9E6;
+      color:#2F6FA8;
+    }
+
+    .filter-sala.active{
+      background:#EDF5FC;
+      border-color:#C5D9EA;
+      color:#2F6FA8;
+    }
+
+    .toolbar-sep{
+      height:22px;
+      margin:0 .28rem;
+      background:#E6EBF0;
+    }
+
+    .search-wrap{
+      margin-left:auto;
+      min-height:31px;
+      padding:0 .58rem;
+      border:1px solid #DDE6EE;
+      border-radius:7px;
+      background:#F8FAFC;
+    }
+
+    #search-equipe{
+      width:175px;
+      font-size:.63rem;
+    }
+
+    .schedule-viewbar{
+      margin:.8rem 0 .48rem;
+    }
+
+    .schedule-viewbar__title{
+      color:#5F6F83;
+      font-size:.61rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .schedule-viewbar__sub{
+      color:#98A4B2;
+      font-size:.59rem;
+    }
+
+    .schedule-segmented{
+      padding:2px;
+      border-color:#DDE6EE;
+      border-radius:7px;
+      background:#F3F6F9;
+    }
+
+    .schedule-segmented button{
+      min-height:29px;
+      padding:.34rem .54rem;
+      border-radius:5px;
+      font-size:.61rem;
+    }
+
+    .schedule-team{
+      grid-template-columns:170px minmax(0,1fr);
+      gap:0;
+      border-color:#E1E8F0;
+      border-radius:9px;
+      box-shadow:none;
+    }
+
+    .schedule-team__head{
+      padding:.72rem .78rem;
+      border-right-color:#E5EBF1;
+      background:#F8FAFC;
+    }
+
+    .schedule-team__id{
+      color:#2F6FA8;
+      font-size:.63rem;
+      letter-spacing:.04em;
+    }
+
+    .schedule-team__name{
+      margin-top:.12rem;
+      color:#66778B;
+      font-size:.65rem;
+    }
+
+    .schedule-team__items{
+      grid-template-columns:repeat(4,minmax(125px,1fr));
+    }
+
+    .schedule-slot{
+      padding:.65rem .7rem;
+      border-right-color:#E7EDF3;
+      box-shadow:none!important;
+      position:relative;
+    }
+
+    .schedule-slot--avaliacao::before,
+    .schedule-slot--round::before{
+      content:'';
+      position:absolute;
+      left:0;
+      top:0;
+      bottom:0;
+      width:2px;
+    }
+
+    .schedule-slot--avaliacao::before{background:#7967C9}
+    .schedule-slot--round::before{background:#508FCB}
+
+    .schedule-slot__time{
+      color:#26374B;
+      font-size:.66rem;
+    }
+
+    .schedule-slot__activity{
+      margin-top:.18rem;
+      color:#4D5F74;
+      font-size:.62rem;
+    }
+
+    .schedule-slot__place{
+      margin-top:.08rem;
+      color:#929EAC;
+      font-size:.57rem;
+    }
+
+    .gantt-card{
+      border:1px solid #E1E8F0;
+      border-radius:9px;
+      box-shadow:none;
+    }
+
+    .gantt{
+      min-width:860px;
+    }
+
+    .g-axis{
+      background:#F7F9FC;
+      border-bottom-color:#E1E8F0;
+    }
+
+    .g-axis__lbl{
+      background:#F7F9FC;
+      border-right-color:#E1E8F0;
+      color:#8A97A7;
+      font-size:.56rem;
+    }
+
+    .g-tick{
+      color:#8C99A9;
+      font-size:.57rem;
+    }
+
+    .g-phase{
+      padding:.38rem .8rem;
+      background:#FAFBFD;
+      color:#718096;
+      font-size:.56rem;
+    }
+
+    .g-lbl{
+      padding:.52rem .75rem;
+      border-right-color:#E9EEF3;
+    }
+
+    .g-lbl__id{
+      color:#26374B;
+      font-size:.68rem;
+    }
+
+    .g-lbl__nome{
+      color:#8794A4;
+      font-size:.58rem;
+    }
+
+    .g-track{
+      height:46px;
+    }
+
+    .gb{
+      top:7px;
+      height:32px;
+      border-radius:5px;
+      font-size:.57rem;
+    }
+
+    .info-row{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.5rem;
+      margin-top:.75rem;
+    }
+
+    .ic{
+      min-height:86px;
+      padding:.7rem .78rem;
+      border:1px solid #E1E8F0;
+      border-radius:9px;
+      background:#fff;
+      box-shadow:none;
+    }
+
+    .ic__label{
+      margin-bottom:.22rem;
+      color:#8390A1;
+      font-size:.54rem;
+      letter-spacing:.08em;
+    }
+
+    .ic__val{
+      color:#2A3B50;
+      font-size:.72rem;
+    }
+
+    .ic__sub{
+      margin-top:.18rem;
+      color:#8C99A9;
+      font-size:.57rem;
+      line-height:1.4;
+    }
+
+    .schedule-context{
+      margin:.42rem 0 0!important;
+      color:#2F6FA8!important;
+      font-size:.63rem!important;
+    }
+
+    @media print{
+      .app-sidebar,.topbar,.schedule-workspace-head .schedule-head-actions,.crono-toolbar,.schedule-viewbar{display:none!important}
+      .schedule-shell{display:block}
+      .wrap{max-width:none;padding:0}
+    }
+
+    @media(max-width:900px){
+      .schedule-team{grid-template-columns:145px 1fr}
+      .schedule-team__items{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .info-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
+    @media(max-width:700px){
+      .schedule-shell{display:block}
+      .schedule-shell .app-sidebar{
+        position:fixed;
+        top:60px;
+        height:calc(100vh - 60px);
+        width:min(82vw,280px);
+        min-width:min(82vw,280px);
+      }
+      .schedule-shell .sidebar-brand{display:none}
+      .schedule-shell .topbar{
+        min-height:60px;
+        padding:.45rem .75rem;
+      }
+      .schedule-mobile-brand{display:flex}
+      .schedule-shell .topbar__event{display:none}
+      .wrap{padding:1.25rem 1rem 3rem}
+      .schedule-workspace-head{flex-direction:column;gap:.6rem}
+      .schedule-head-actions{justify-content:flex-start}
+      .crono-toolbar{align-items:stretch;flex-wrap:wrap}
+      .search-wrap{width:100%;margin-left:0}
+      #search-equipe{width:100%}
+      .toolbar-sep{display:none}
+      .schedule-viewbar{align-items:flex-start}
+      .schedule-team{display:block}
+      .schedule-team__head{border-right:0;border-bottom:1px solid #E5EBF1}
+      .schedule-team__items{display:block}
+      .schedule-slot{display:grid;grid-template-columns:92px minmax(0,1fr) auto;gap:.5rem;border-right:0;border-bottom:1px solid #E7EDF3}
+      .schedule-slot__activity,.schedule-slot__place{margin-top:0}
+      .schedule-slot__place{text-align:right}
+      .info-row{grid-template-columns:1fr}
+    }
+
   </style>
   <script>window.API_URL='https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';</script>
 </head>
 <body>
 
-<header class="topbar">
-  <a href="index.html" class="topbar__brand"><img src="logo.svg" alt="HUB Circuito"></a>
-  <div class="topbar__event">
-    <div class="topbar__event-name">Torneio Interno de Rob&#xF3;tica</div>
-    <div class="topbar__event-org">Escola SESI Reitor Miguel Calmon</div>
-  </div>
-  <div class="topbar__badge"></div>
-</header>
-
-<div class="app-body">
+<div class="app-body schedule-shell">
 
 <nav class="app-sidebar">
+  <a href="cronograma.html" class="sidebar-brand" aria-label="HUB Circuito">
+    <img src="logo-horizontal.svg" alt="HUB Circuito" class="sidebar-brand__img">
+  </a>
   <a href="index.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg> Início</a>
   <a href="arena.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg> Arena</a>
   <a href="turma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1.5 13.5c0-2.5 2-4 4-4"/><circle cx="11" cy="5.5" r="2"/><path d="M10 13.5c0-2 1.5-3.5 3.5-3.5"/></svg> Minha Turma</a>
@@ -307,14 +861,38 @@
   <a href="cronograma.html" class="sidebar-item ativo"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="13" height="10.5" rx="1.5"/><path d="M1.5 7.5h13M5.5 1.5v3M10.5 1.5v3"/></svg> Cronograma</a>
 </nav>
 
+<div class="schedule-stage">
+<header class="topbar">
+  <a href="cronograma.html" class="topbar__brand schedule-mobile-brand" aria-label="HUB Circuito">
+    <img src="logo-horizontal-escuro.svg" alt="HUB Circuito">
+  </a>
+  <div class="topbar__event">
+    <div class="schedule-event-icon">
+      <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4M17 3v4M3 10h18"/></svg>
+    </div>
+    <div>
+      <div class="topbar__event-name">Torneio Interno de Robótica</div>
+      <div class="topbar__event-org">Escola SESI Reitor Miguel Calmon</div>
+    </div>
+  </div>
+  <div class="topbar__badge"></div>
+</header>
+
 <main class="app-main">
 <div class="wrap">
 
-  <!-- Nível 1: Cabeçalho + timeline macro -->
-  <div class="page-hd">
-    <h1>Cronograma</h1>
-    <p class="page-meta">07:00 &agrave;s 12:00 &middot; 2 arenas &middot; 2 salas de avalia&ccedil;&atilde;o &middot; 13 equipes</p>
-  </div>
+  <!-- Cabeçalho -->
+  <header class="page-hd schedule-workspace-head">
+    <div>
+      <div class="schedule-kicker">Operação do torneio</div>
+      <h1>Cronograma</h1>
+      <p class="page-meta">07:00 às 12:00 · 2 arenas · 2 salas de avaliação · 13 equipes</p>
+    </div>
+    <div class="schedule-head-actions">
+      <a class="schedule-head-link" href="arena.html">Arena</a>
+      <button class="schedule-head-link" type="button" onclick="window.print()">Imprimir</button>
+    </div>
+  </header>
 
   <div class="timeline-macro">
     <div class="tl-label">Vis&atilde;o geral do evento</div>
@@ -552,12 +1130,13 @@
 
 </div><!-- /wrap -->
 </main>
+</div><!-- /schedule-stage -->
 </div><!-- /app-body -->
 
 <div id="toast"></div>
 <script src="js/api.js"></script>
-<script src="js/sidebar-roles.js?v=2"></script>
-<script src="js/product-ui.js?v=2"></script>
+<script src="js/sidebar-roles.js?v=3"></script>
+<script src="js/product-ui.js?v=4"></script>
 <script>
   /* ── Filtro por sala ─────────────────────────────────────── */
   document.querySelectorAll('.filter-sala').forEach(function (btn) {

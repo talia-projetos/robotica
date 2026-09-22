@@ -23,6 +23,8 @@
 
   var topbarBrand = document.querySelector('.topbar__brand');
   if (topbarBrand && role) topbarBrand.href = DEFAULT_ROUTE[role];
+  var sidebarBrand = document.querySelector('.sidebar-brand');
+  if (sidebarBrand && role) sidebarBrand.href = DEFAULT_ROUTE[role];
 
   if (role && currentFile !== 'login.html' && ALLOWED[role] && ALLOWED[role].indexOf(currentFile) === -1) {
     location.replace(DEFAULT_ROUTE[role]);
