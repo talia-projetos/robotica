@@ -980,23 +980,26 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-      padding:.75rem .6rem .65rem;
+      padding:.5rem .4rem .7rem;
       text-align:center;
+      border:none!important;
+      background:transparent!important;
+      box-shadow:none!important;
     }
     .donut-wrap{
       position:relative;
       display:flex;
       align-items:center;
       justify-content:center;
-      margin-bottom:.45rem;
+      margin-bottom:.5rem;
     }
     .donut-svg{
-      width:80px;
-      height:80px;
+      width:130px;
+      height:130px;
     }
     .total-card .donut-svg{
-      width:104px;
-      height:104px;
+      width:150px;
+      height:150px;
     }
     .donut-center{
       position:absolute;
@@ -1006,35 +1009,33 @@
       line-height:1;
     }
     .donut-val{
-      font-size:1rem;
+      font-size:1.6rem;
       font-weight:800;
-      color:#203047;
     }
     .total-card .donut-val{
-      font-size:1.3rem;
-      color:#8B7218;
+      font-size:1.9rem;
     }
     .donut-val--pending{
-      color:#B0BAC5;
+      color:#CBD5E0!important;
     }
     .donut-sub{
-      font-size:.58rem;
+      font-size:.6rem;
       color:#94A3B8;
-      margin-top:.12rem;
+      margin-top:.22rem;
     }
     .donut-label{
-      font-size:.68rem;
+      font-size:.65rem;
       font-weight:700;
-      color:#718096;
+      color:#4A5568;
       text-transform:uppercase;
       letter-spacing:.06em;
       margin-bottom:.1rem;
     }
     .total-card .donut-label{
-      font-size:.72rem;
+      font-size:.7rem;
     }
     .donut-meta{
-      font-size:.63rem;
+      font-size:.6rem;
       color:#94A3B8;
     }
     .donut-meta--waiting{
@@ -1100,6 +1101,10 @@
     }
 
     .met-intro{
+      display:grid;
+      grid-template-columns:150px 180px minmax(0,1fr) 150px;
+      align-items:center;
+      gap:.7rem;
       margin-bottom:.7rem;
       padding:.7rem .82rem;
       border-radius:9px;
@@ -1107,9 +1112,6 @@
       border-left-width:3px;
       border-left-color:#CBD5E0;
       background:#F8FAFC;
-      color:#66778B;
-      font-size:.72rem;
-      line-height:1.55;
     }
 
     .met-grid{
@@ -1432,9 +1434,10 @@
 
     <!-- ── ABA: Metodologia ─────────────────────────────────────── -->
     <div class="ttab-panel" id="ttab-metodologia">
-      <p class="met-intro">
-        O torneio integra Ciência, Tecnologia, Engenharia, Artes e Matemática (STEAM) em desafios que combinam criatividade, raciocínio lógico, programação, pesquisa, colaboração e resolução de problemas.
-      </p>
+      <div class="met-intro">
+        <div style="grid-column:1/4;font-size:.72rem;color:#66778B;line-height:1.55;text-align:justify">O torneio integra Ciência, Tecnologia, Engenharia, Artes e Matemática (STEAM) em desafios que combinam criatividade, raciocínio lógico, programação, pesquisa, colaboração e resolução de problemas.</div>
+        <div class="met-card__pts"><div class="met-card__pts-pct">5 × 20%</div><div class="met-card__pts-label">áreas avaliadas</div></div>
+      </div>
       <div class="met-grid">
         <div class="met-card" style="border-top-color:#8E5BD9">
           <div class="met-card__label" style="color:#8E5BD9">Ciência</div>
@@ -1615,28 +1618,32 @@
       return;
     }
 
-    /* SVG donut: r=18, viewBox 48x48, circunferência = 2π×18 ≈ 113.10 */
-    var C  = 113.10;
-    /* SVG donut grande (total): r=26, viewBox 64x64, circunferência = 2π×26 ≈ 163.36 */
-    var BC = 163.36;
+    /* SVG donut: viewBox 140×140, r=58, circunferência = 2π×58 ≈ 364.42 */
+    var C  = 364.42;
+    /* SVG donut total: viewBox 160×160, r=66, circunferência = 2π×66 ≈ 414.69 */
+    var BC = 414.69;
+    var _did = 0;
 
-    function ring(cx, cy, r, c, pct, stroke, bg) {
-      var dash = (Math.min(pct, 100) / 100 * c).toFixed(2);
-      return '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + bg + '" stroke-width="' + stroke + '"/>'
-        + (pct > 0
-          ? '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + '%%COLOR%%' + '" stroke-width="' + stroke + '" '
-          + 'stroke-dasharray="' + dash + ' ' + c + '" stroke-linecap="round" transform="rotate(-90 ' + cx + ' ' + cy + ')"/>'
-          : '');
-    }
+    /* lighter color variants for gradient */
+    var LIGHTER = {
+      '#2F80ED':'#56CCF2', '#8E5BD9':'#A78BFA', '#F2994A':'#FBBF24',
+      '#27AE60':'#6FCF97', '#0D9488':'#4DD0E1', '#CCB650':'#F6E05E'
+    };
 
     function donut(size, r, circ, strokeW, color, pct, valHtml, subHtml) {
       var cx = size / 2, cy = size / 2;
       var dash = (Math.min(pct, 100) / 100 * circ).toFixed(2);
+      var gid  = 'dg' + (++_did);
+      var c2   = LIGHTER[color] || color;
       return '<div class="donut-wrap">'
-        + '<svg viewBox="0 0 ' + size + ' ' + size + '" class="donut-svg">'
-        + '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#EEF2F6" stroke-width="' + strokeW + '"/>'
+        + '<svg viewBox="0 0 ' + size + ' ' + size + '" class="donut-svg" overflow="visible">'
+        + '<defs><linearGradient id="' + gid + '" x1="1" y1="0" x2="0" y2="1">'
+        + '<stop offset="0%" stop-color="' + c2 + '"/>'
+        + '<stop offset="100%" stop-color="' + color + '"/>'
+        + '</linearGradient></defs>'
+        + '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#EAECF4" stroke-width="' + strokeW + '"/>'
         + (pct > 0
-          ? '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + color + '" stroke-width="' + strokeW + '" '
+          ? '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="url(#' + gid + ')" stroke-width="' + strokeW + '" '
           + 'stroke-dasharray="' + dash + ' ' + circ + '" stroke-linecap="round" transform="rotate(-90 ' + cx + ' ' + cy + ')"/>'
           : '')
         + '</svg>'
@@ -1648,9 +1655,9 @@
     var totalPct = Math.min(100, (total / 100) * 100);
 
     var totalCard = '<div class="score-card total-card score-card--donut">'
-      + donut(64, 26, BC, 5, 'var(--brand-ouro,#CCB650)', totalPct,
-          '<div class="donut-val">' + fmt(total) + '</div>',
-          '<div class="donut-sub">de 100</div>')
+      + donut(160, 66, BC, 14, '#CCB650', totalPct,
+          '<div class="donut-val" style="color:#8B7218">' + Math.round(totalPct) + '%</div>',
+          '<div class="donut-sub">' + fmt(total) + ' pts</div>')
       + '<div class="donut-label">Total Geral</div>'
       + '</div>';
 
@@ -1659,11 +1666,11 @@
       var pct  = Math.min(100, (val / c.max) * 100);
       var sub  = c.sub(scores);
       var sem  = !sub;
-      return '<div class="score-card score-card--donut" style="border-top:2px solid ' + c.color + '">'
-        + donut(48, 18, C, 4, c.color, sem ? 0 : pct,
+      return '<div class="score-card score-card--donut">'
+        + donut(140, 58, C, 13, c.color, sem ? 0 : pct,
             sem ? '<div class="donut-val donut-val--pending">—</div>'
-                : '<div class="donut-val">' + fmt(val) + '</div>',
-            '<div class="donut-sub">de ' + c.max + '</div>')
+                : '<div class="donut-val" style="color:' + c.color + '">' + Math.round(pct) + '%</div>',
+            '<div class="donut-sub">' + (sem ? 'Aguardando' : fmt(val) + ' pts') + '</div>')
         + '<div class="donut-label">' + c.label + '</div>'
         + (sub
           ? '<div class="donut-meta">' + sub + '</div>'
