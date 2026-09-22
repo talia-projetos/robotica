@@ -1155,11 +1155,14 @@
 
   iniciarPolling(carregar, 10000);
 
-  // Modo professor (?prof=1): só exibe aba Ranking, oculta Cronômetro
-  if (new URLSearchParams(location.search).get('prof') === '1') {
+  // Professor (só turma_id, sem coord nem juiz): exibe apenas Ranking
+  var _isProf = !localStorage.getItem('coord_nome') && !localStorage.getItem('hub_juiz') && !!localStorage.getItem('turma_id');
+  if (_isProf || new URLSearchParams(location.search).get('prof') === '1') {
     mudarAbaArena('ranking');
     var tabCrono = document.getElementById('tab-crono');
     if (tabCrono) tabCrono.style.display = 'none';
+    var tabFF = document.getElementById('tab-fasefinal');
+    if (tabFF) tabFF.style.display = 'none';
   }
 
   /* ── Cronômetro ───────────────────────────────────────────── */

@@ -810,8 +810,8 @@ tbody td { padding: .7rem 1rem; vertical-align: middle; }
   flex-shrink: 0;
 }
 .sidebar-brand__img {
-  height: 40px;
-  max-width: 148px;
+  height: 52px;
+  max-width: 160px;
   object-fit: contain;
   transition: height .2s cubic-bezier(.4,0,.2,1), max-width .2s cubic-bezier(.4,0,.2,1), opacity .15s;
 }

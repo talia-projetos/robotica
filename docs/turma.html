@@ -639,9 +639,9 @@
     }
 
     .team-shell .sidebar-brand__img{
-      width:124px;
+      width:158px;
       height:auto;
-      max-height:48px;
+      max-height:58px;
       object-fit:contain;
     }
 
@@ -1128,12 +1128,16 @@
       align-items:center;
       gap:.7rem;
       margin-bottom:.7rem;
+      margin-left:0;
+      margin-right:0;
       padding:.7rem .82rem;
       border-radius:9px;
       border-color:#E0E8F0;
       border-left-width:3px;
       border-left-color:#CBD5E0;
       background:#F8FAFC;
+      width:100%;
+      box-sizing:border-box;
     }
 
     .met-grid{
@@ -1141,6 +1145,9 @@
       flex-direction:column;
       gap:.42rem;
       margin-bottom:1rem;
+      margin-left:0;
+      margin-right:0;
+      width:100%;
     }
 
     .met-card{
@@ -1981,10 +1988,22 @@
       var url = new URL(location.href);
       url.searchParams.set('equipe', id);
       history.replaceState(null, '', url.pathname + '?' + url.searchParams.toString() + location.hash);
-      mostrarResultados(item);
+      mostrarResultados(remapComentariosItem(item));
       var agenda = document.querySelector('[data-team-agenda]');
       if (agenda) agenda.href = 'cronograma.html?equipe=' + encodeURIComponent(id);
     };
+  }
+
+  function remapComentariosItem(item) {
+    if (!item || !item.comentarios) return item;
+    var c = item.comentarios;
+    return Object.assign({}, item, {
+      comentarios: {
+        'Projeto de Inovação': c.projeto || c['Projeto de Inovação'] || [],
+        'Design do Robô':      c.design  || c['Design do Robô']      || [],
+        'Core Values':         c.core    || c['Core Values']          || []
+      }
+    });
   }
 
   async function abrirComoCoordenacao(nome, pin) {
@@ -2000,7 +2019,7 @@
       if (!r.ok || !r.equipes || !r.equipes.length) throw new Error(r.erro || 'Nenhuma equipe disponível.');
       var requested = new URLSearchParams(location.search).get('equipe');
       var item = r.equipes.find(function(x) { return x.equipe && x.equipe.id === requested; }) || r.equipes[0];
-      mostrarResultados(item);
+      mostrarResultados(remapComentariosItem(item));
       montarSeletorCoord(r.equipes, item.equipe && item.equipe.id);
       var agenda = document.querySelector('[data-team-agenda]');
       if (agenda && item.equipe && item.equipe.id) agenda.href = 'cronograma.html?equipe=' + encodeURIComponent(item.equipe.id);
