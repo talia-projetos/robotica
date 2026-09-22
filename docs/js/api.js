@@ -99,16 +99,14 @@ const CoordAuth = {
 
 async function iniciarGateCoord(onSuccess) {
   if (CoordAuth.logado()) {
+    /* Acesso imediato com cache — não aguarda API */
+    onSuccess(CoordAuth.nome);
+    /* Verifica em background; revoga apenas se servidor rejeitar explicitamente */
     try {
       const r = await API.verificarJuiz(CoordAuth.nome, CoordAuth.pin);
-      if (r.ok && r.coordenador) { onSuccess(CoordAuth.nome); return; }
-      /* Servidor rejeitou explicitamente — pede login novamente */
-      CoordAuth.clear();
-    } catch(_) {
-      /* API indisponível — confia nas credenciais em cache */
-      onSuccess(CoordAuth.nome);
-      return;
-    }
+      if (!r.ok || !r.coordenador) CoordAuth.clear();
+    } catch(_) { /* sem conexão: mantém sessão */ }
+    return;
   }
   _abrirGateCoord(onSuccess);
 }

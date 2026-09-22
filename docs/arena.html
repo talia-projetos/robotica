@@ -839,8 +839,8 @@
 
   iniciarPolling(carregar, 10000);
 
-  // Professor/coord view: only show Ranking tab
-  if (CoordAuth.logado()) {
+  // Modo professor (?prof=1): só exibe aba Ranking, oculta Cronômetro
+  if (new URLSearchParams(location.search).get('prof') === '1') {
     mudarAbaArena('ranking');
     var tabCrono = document.getElementById('tab-crono');
     if (tabCrono) tabCrono.style.display = 'none';
