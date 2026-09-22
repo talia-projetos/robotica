@@ -17,7 +17,7 @@
   var ALLOWED = {
     professor: ['index.html','turma.html','cronograma.html','documentos.html','arena.html','ranking.html'],
     juiz:      ['juizes.html','documentos.html','arena.html'],
-    coord:     ['index.html','arena.html','turma.html','juizes.html','coordenacao.html','deliberacao.html','ranking.html','cronograma.html','documentos.html','relatorio.html']
+    coord:     ['index.html','arena.html','turma.html','juizes.html','coordenacao.html','ranking.html','cronograma.html','documentos.html','relatorio.html']
   };
   var DEFAULT_ROUTE = { professor:'turma.html', juiz:'juizes.html', coord:'index.html' };
 
@@ -132,7 +132,6 @@
   }
 
   if (role === 'coord') {
-    addDelib();
     addDocumentos();
     rename('juizes.html', 'Avaliações');
   } else if (role === 'juiz') {

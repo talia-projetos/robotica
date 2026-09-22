@@ -62,8 +62,34 @@
       display: flex;
       align-items: center;
       gap: .85rem;
-      margin: 1.5rem 0 1.25rem;
+      margin: 1.5rem 0 .75rem;
     }
+
+    .arena-tab-bar {
+      display: flex;
+      gap: .25rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--ar-border2);
+      padding-bottom: .35rem;
+    }
+
+    .arena-tab {
+      padding: .38rem .75rem;
+      border: none;
+      background: none;
+      color: var(--ar-muted);
+      font: 600 .72rem/1 inherit;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background .12s, color .12s;
+      letter-spacing: .03em;
+    }
+
+    .arena-tab:hover { background: rgba(255,255,255,.06); color: var(--ar-text); }
+    .arena-tab.ativo { background: rgba(77,201,195,.12); color: #4DC9C3; }
+
+    body.claro .arena-tab { color: #6B7A90; }
+    body.claro .arena-tab.ativo { background: rgba(18,53,91,.08); color: #12355B; }
     .arena-titulo {
       font-size: 1.3rem;
       font-weight: 800;
@@ -559,14 +585,29 @@
 <main class="app-main">
 <div class="container">
 
-  <!-- Cabeçalho -->
+  <!-- Cabeçalho + abas -->
   <div class="arena-header">
     <span class="arena-titulo">Desafio do Rob&ocirc;</span>
     <span class="arena-update" id="arena-update"></span>
   </div>
 
+  <div class="arena-tab-bar">
+    <button class="arena-tab ativo" id="tab-crono" onclick="mudarAbaArena('crono')">Cronômetro</button>
+    <button class="arena-tab" id="tab-ranking" onclick="mudarAbaArena('ranking')">Ranking</button>
+  </div>
+
+  <!-- Vista ranking-only -->
+  <div id="view-ranking-only" class="hidden">
+    <div class="arena-wrap" style="border-radius:12px;overflow:hidden">
+      <table class="arena-table">
+        <thead id="arena-head-r"></thead>
+        <tbody id="arena-body-r"></tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- Layout dois painéis -->
-  <div class="arena-layout">
+  <div class="arena-layout" id="view-crono">
 
     <!-- Painel principal: timer + ranking -->
     <div class="arena-main">
@@ -702,26 +743,35 @@
     TUR13:'7° H – Nexos'
   };
 
+  function mudarAbaArena(aba) {
+    document.getElementById('tab-crono').classList.toggle('ativo', aba === 'crono');
+    document.getElementById('tab-ranking').classList.toggle('ativo', aba === 'ranking');
+    document.getElementById('view-crono').classList.toggle('hidden', aba !== 'crono');
+    document.getElementById('view-ranking-only').classList.toggle('hidden', aba !== 'ranking');
+  }
+
   function renderArena(data) {
     var equipes     = data.equipes     || [];
     var roundsOrdem = data.roundsOrdem || [];
-    var head = document.getElementById('arena-head');
-    var body = document.getElementById('arena-body');
+    var head  = document.getElementById('arena-head');
+    var body  = document.getElementById('arena-body');
+    var headR = document.getElementById('arena-head-r');
+    var bodyR = document.getElementById('arena-body-r');
 
     if (!equipes.length) {
-      head.innerHTML = '';
-      body.innerHTML = '<tr><td colspan="10" class="arena-vazio">Nenhum resultado de Arena ainda.</td></tr>';
+      head.innerHTML = headR.innerHTML = '';
+      body.innerHTML = bodyR.innerHTML = '<tr><td colspan="10" class="arena-vazio">Nenhum resultado de Arena ainda.</td></tr>';
       return;
     }
 
-    head.innerHTML = '<tr>'
+    var theadHtml = '<tr>'
       + '<th style="width:48px">Pos.</th>'
       + '<th class="th-equipe">Equipe</th>'
       + roundsOrdem.map(function(r) { return '<th>' + r + '</th>'; }).join('')
       + '<th>Melhor</th>'
       + '</tr>';
 
-    body.innerHTML = equipes.map(function(e, i) {
+    var tbodyHtml = equipes.map(function(e, i) {
       var pos    = i + 1;
       var posCls = pos === 1 ? 'pos-1' : pos === 2 ? 'pos-2' : pos === 3 ? 'pos-3' : 'pos-n';
       var raw    = nomesMap[e.id] || e.nome || e.id;
@@ -746,6 +796,9 @@
         + '<td class="td-melhor">' + e.melhor + '</td>'
         + '</tr>';
     }).join('');
+
+    head.innerHTML = headR.innerHTML = theadHtml;
+    body.innerHTML = bodyR.innerHTML = tbodyHtml;
   }
 
   /* ── Sincronização ────────────────────────────────────────── */
@@ -765,7 +818,8 @@
   async function carregar() {
     var upEl = document.getElementById('arena-update');
     upEl.classList.add('carregando');
-    document.getElementById('spinner').style.display = '';
+    var sp = document.getElementById('spinner');
+    if (sp) sp.style.display = '';
     try {
       var r = await API.arena();
       if (!r.ok) throw new Error(r.erro || 'Erro');
@@ -779,7 +833,7 @@
       upEl.textContent = 'Falha na sincronização';
       toast('Erro ao carregar: ' + e.message, 'err');
     } finally {
-      document.getElementById('spinner').style.display = 'none';
+      if (sp) sp.style.display = 'none';
     }
   }
 

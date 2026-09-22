@@ -1426,37 +1426,37 @@
     <!-- ── ABA: Metodologia ─────────────────────────────────────── -->
     <div class="ttab-panel" id="ttab-metodologia">
       <p class="met-intro">
-        O torneio segue o formato da <strong>FIRST LEGO League</strong> e avalia as equipes em quatro frentes complementares: cada uma vale até 20 pontos, totalizando 80 pontos nas categorias avaliadas por juízes — mais até 20 pontos em Tampinhas (educação ambiental).
+        O torneio integra Ciência, Tecnologia, Engenharia, Artes e Matemática (STEAM) em desafios que combinam criatividade, raciocínio lógico, programação, pesquisa, colaboração e resolução de problemas.
       </p>
       <div class="met-grid">
-        <div class="met-card" style="border-top-color:#2F80ED">
-          <div class="met-card__label" style="color:#2F80ED">Tecnologia</div>
-          <div class="met-card__titulo">Desafio da Arena</div>
-          <div class="met-card__desc">A equipe programa o robô para completar missões na pista em 2min 30s. A pontuação é o melhor resultado entre os rounds.</div>
-          <div class="met-card__pts">Melhor round &bull; até 20 pts</div>
-        </div>
         <div class="met-card" style="border-top-color:#8E5BD9">
           <div class="met-card__label" style="color:#8E5BD9">Ciência</div>
           <div class="met-card__titulo">Projeto de Inovação</div>
-          <div class="met-card__desc">A equipe identifica um problema real, pesquisa soluções e apresenta uma proposta inovadora para um painel de juízes.</div>
+          <div class="met-card__desc">A equipe identifica um problema real, pesquisa suas causas e possíveis soluções e apresenta uma proposta inovadora a um painel de juízes.</div>
           <div class="met-card__pts">Média dos juízes &bull; até 20 pts</div>
+        </div>
+        <div class="met-card" style="border-top-color:#2F80ED">
+          <div class="met-card__label" style="color:#2F80ED">Tecnologia</div>
+          <div class="met-card__titulo">Desafio do Robô</div>
+          <div class="met-card__desc">A equipe programa o robô para executar missões na arena em 2min 30s, aplicando lógica, estratégia e programação. Entre os rounds realizados, vale a maior pontuação alcançada.</div>
+          <div class="met-card__pts">Melhor round &bull; até 20 pts</div>
         </div>
         <div class="met-card" style="border-top-color:#F2994A">
           <div class="met-card__label" style="color:#F2994A">Engenharia</div>
-          <div class="met-card__titulo">Design do Rob&ocirc;</div>
-          <div class="met-card__desc">Os juízes avaliam como o robô foi projetado, construído e programado — lógica de engenharia, iterações e elegância da solução.</div>
+          <div class="met-card__titulo">Design do Robô</div>
+          <div class="met-card__desc">Os juízes avaliam como o robô foi pensado, construído e programado, considerando as escolhas de engenharia, o processo de testes e melhorias e a eficiência da solução desenvolvida.</div>
           <div class="met-card__pts">Média dos juízes &bull; até 20 pts</div>
         </div>
         <div class="met-card" style="border-top-color:#27AE60">
           <div class="met-card__label" style="color:#27AE60">Artes</div>
           <div class="met-card__titulo">Core Values</div>
-          <div class="met-card__desc">A essência do FLL: trabalho em equipe, inclusão, respeito e diversão. Os juízes observam como a equipe colabora e se comunica.</div>
+          <div class="met-card__desc">Os Core Values representam a essência da FLL, valorizando criatividade, trabalho em equipe, inclusão, respeito, descoberta e diversão. Os juízes observam como a equipe colabora, se organiza e comunica suas ideias.</div>
           <div class="met-card__pts">Média dos juízes &bull; até 20 pts</div>
         </div>
         <div class="met-card" style="border-top-color:#0D9488">
           <div class="met-card__label" style="color:#0D9488">Matemática · Bioglow FLL</div>
           <div class="met-card__titulo">Tampinhas &amp; Latas</div>
-          <div class="met-card__desc">Desafio exclusivo desta edição, inspirado na temporada <strong>Bioglow</strong> da FIRST LEGO League. A equipe coleta tampinhas plásticas e latas para reciclagem — promovendo responsabilidade socioambiental. Quanto maior o peso coletado, maior a pontuação.</div>
+          <div class="met-card__desc">Desafio especial desta edição, inspirado na temporada Bioglow da FIRST LEGO League. A equipe coleta tampinhas plásticas e latas destinadas à reciclagem, unindo responsabilidade socioambiental a um objetivo mensurável. Quanto maior o peso coletado, maior a pontuação.</div>
           <div class="met-card__pts">Por peso coletado &bull; até 20 pts</div>
         </div>
       </div>
@@ -1749,8 +1749,10 @@
     document.getElementById('eq-id').textContent   = nomeExibido;
     document.getElementById('eq-nome').textContent = metaPartes.join(' · ');
     document.getElementById('eq-status').innerHTML = data.scores ? statusPill(data.scores.status) : '';
-    document.getElementById('badge-turma').textContent = eq.id || '';
-    document.getElementById('logout-info').textContent = '';
+    var btEl = document.getElementById('badge-turma');
+    if (btEl) btEl.textContent = eq.id || '';
+    var liEl = document.getElementById('logout-info');
+    if (liEl) liEl.textContent = '';
 
     // Busca posição no ranking
     document.getElementById('ranking-row').style.display = 'none';
@@ -1825,7 +1827,8 @@
     localStorage.removeItem(STORAGE_KEY_PIN);
     document.getElementById('view-resultados').classList.add('hidden');
     document.getElementById('view-login').classList.remove('hidden');
-    document.getElementById('badge-turma').textContent = '';
+    var _bt = document.getElementById('badge-turma');
+    if (_bt) _bt.textContent = '';
     document.getElementById('l-pin').value = '';
   }
 
@@ -1843,7 +1846,8 @@
 
     if (!id) { erroEl.textContent = 'Selecione a equipe.'; erroEl.style.display = ''; return; }
 
-    document.getElementById('spinner').style.display = '';
+    var _sp = document.getElementById('spinner');
+    if (_sp) _sp.style.display = '';
     this.disabled = true;
     try {
       var r = await API.turma(id, pin);
@@ -1859,7 +1863,7 @@
       erroEl.textContent = 'Erro de conexão: ' + e.message;
       erroEl.style.display = '';
     } finally {
-      document.getElementById('spinner').style.display = 'none';
+      if (_sp) _sp.style.display = 'none';
       this.disabled = false;
     }
   });
@@ -1906,7 +1910,8 @@
     var sigla  = partes.length > 1 ? partes[0].trim() : '';
     document.getElementById('eq-id').textContent   = nome;
     document.getElementById('eq-nome').textContent = [sigla, id].filter(Boolean).join(' · ');
-    document.getElementById('badge-turma').textContent = id;
+    var _bt2 = document.getElementById('badge-turma');
+    if (_bt2) _bt2.textContent = id;
     document.getElementById('scores-grid').innerHTML =
       '<p style="color:#94A3B8;font-size:.8rem;padding:.5rem 0">Carregando resultados…</p>';
   }
@@ -1952,7 +1957,8 @@
     document.getElementById('view-resultados').classList.remove('hidden');
     document.getElementById('scores-grid').innerHTML =
       '<p style="color:#94A3B8;font-size:.8rem;padding:.5rem 0">Carregando equipes…</p>';
-    document.getElementById('spinner').style.display = '';
+    var _sp2 = document.getElementById('spinner');
+    if (_sp2) _sp2.style.display = '';
 
     try {
       var r = await API.todasTurmas(nome, pin || '');
@@ -1968,7 +1974,7 @@
         '<div class="inline-state inline-state--error"><strong>Não foi possível carregar as equipes.</strong><span>' +
         (e.message || 'Tente novamente em alguns instantes.') + '</span></div>';
     } finally {
-      document.getElementById('spinner').style.display = 'none';
+      if (_sp2) _sp2.style.display = 'none';
     }
   }
 
@@ -1986,7 +1992,8 @@
 
     /* Mostra a equipe imediatamente — sem esperar a API */
     exibirTurmaImediato(id);
-    document.getElementById('spinner').style.display = '';
+    var _sp3 = document.getElementById('spinner');
+    if (_sp3) _sp3.style.display = '';
 
     try {
       var r = await API.turma(id, pin || '');
@@ -2004,7 +2011,7 @@
       document.getElementById('scores-grid').innerHTML =
         '<div class="inline-state inline-state--error"><strong>Não foi possível atualizar os resultados.</strong><span>Metodologia, documentos e feedback continuam disponíveis. Tente novamente em alguns instantes.</span></div>';
     } finally {
-      document.getElementById('spinner').style.display = 'none';
+      if (_sp3) _sp3.style.display = 'none';
     }
   }
 
