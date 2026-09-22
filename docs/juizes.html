@@ -484,6 +484,17 @@
       backdrop-filter:blur(12px);
     }
 
+    .judge-mobile-brand{
+      display:none;
+      align-items:center;
+      text-decoration:none;
+    }
+
+    .judge-mobile-brand img{
+      width:auto;
+      height:34px;
+    }
+
     .judge-shell .topbar__event{
       flex:1;
       display:flex;
@@ -530,6 +541,7 @@
     .judge-shell .topbar-avatar__name{color:#26384D}
     .judge-shell .topbar-avatar__role{color:#8492A4}
     .judge-shell .av-btn{color:#24364A}
+    .judge-shell .av-chevron{stroke:#8A97A7}
     .judge-shell #btn-sair{
       border-color:#D9E3EC!important;
       color:#43556C!important;
@@ -845,6 +857,7 @@
         min-height:60px;
         padding:.45rem .75rem;
       }
+      .judge-mobile-brand{display:flex}
       .judge-shell .topbar__event{display:none}
       .painel-wrap{padding:1.25rem 1rem 3rem}
       .judge-workspace-head{flex-direction:column;gap:.65rem}
@@ -881,6 +894,9 @@
 
 <div class="judge-stage">
 <header class="topbar">
+  <a href="juizes.html" class="topbar__brand judge-mobile-brand" aria-label="HUB Circuito">
+    <img src="logo-horizontal-escuro.svg" alt="HUB Circuito">
+  </a>
   <div class="topbar__event">
     <div class="judge-event-icon">
       <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 11h5M8 15h7"/></svg>
@@ -905,7 +921,7 @@
       <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
     </div>
     <h2>Acesso dos Juízes</h2>
-    <p class="login-sub">Entre com seu nome e PIN para acessar os formulários de avaliação e o chat.</p>
+    <p class="login-sub">Entre com seu nome e PIN para acessar as avaliações e os materiais de apoio.</p>
     <div class="field">
       <label>Nome</label>
       <input id="l-nome" type="text" placeholder="Seu nome completo" autocomplete="name">
