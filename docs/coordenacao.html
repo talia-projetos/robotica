@@ -264,25 +264,717 @@
     #view-cat .table-wrap{border-radius:10px}
     @media(max-width:850px){#view-coord{padding:1.25rem 1rem 3rem}.coord-summary{grid-template-columns:repeat(2,1fr)}.coord-toolbar{position:static}}
 
+    /* ── Coordenação v5: gestão do torneio ───────────────────── */
+    body{background:#EEF3F8}
+
+    .coord-shell{
+      min-height:100vh;
+      display:flex;
+      background:#EEF3F8;
+    }
+
+    .coord-shell .app-sidebar{
+      position:sticky;
+      top:0;
+      height:100vh;
+      width:190px;
+      min-width:190px;
+      padding:.65rem .45rem .8rem;
+      background:#0C1521;
+      border-right:1px solid rgba(255,255,255,.055);
+      z-index:20;
+    }
+
+    .coord-shell .sidebar-brand{
+      min-height:74px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 0 .65rem;
+      padding:.65rem .75rem .85rem;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .coord-shell .sidebar-brand__img{
+      width:124px;
+      height:auto;
+      max-height:48px;
+      object-fit:contain;
+    }
+
+    .coord-shell .sidebar-item{
+      min-height:38px;
+      margin:.08rem .15rem;
+      padding:.58rem .72rem;
+      border-radius:8px;
+      color:rgba(255,255,255,.55);
+      font-size:.73rem;
+      font-weight:600;
+    }
+
+    .coord-shell .sidebar-item.ativo{
+      color:#B8DCF5;
+      background:rgba(80,143,203,.17);
+      box-shadow:inset 2px 0 0 #508FCB;
+    }
+
+    .coord-shell.sidebar-collapsed .app-sidebar{
+      width:58px;
+      min-width:58px;
+    }
+
+    .coord-shell.sidebar-collapsed .sidebar-brand__img{
+      width:30px;
+      height:30px;
+      object-fit:cover;
+      object-position:left;
+    }
+
+    .coord-stage{
+      flex:1;
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .coord-shell .topbar{
+      position:sticky;
+      top:0;
+      z-index:15;
+      min-height:66px;
+      display:flex;
+      align-items:center;
+      gap:1rem;
+      padding:.55rem 1.35rem;
+      background:rgba(255,255,255,.96);
+      border-bottom:1px solid #E3EAF1;
+      box-shadow:0 1px 0 rgba(15,23,42,.025);
+      backdrop-filter:blur(12px);
+    }
+
+    .coord-mobile-brand{
+      display:none;
+      align-items:center;
+      text-decoration:none;
+    }
+
+    .coord-mobile-brand img{
+      width:auto;
+      height:34px;
+    }
+
+    .coord-shell .topbar__event{
+      flex:1;
+      display:flex;
+      align-items:center;
+      gap:.65rem;
+      padding:0;
+      text-align:left;
+    }
+
+    .coord-event-icon{
+      width:34px;
+      height:34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      border-radius:9px;
+      background:#F2EEFC;
+      color:#7157C7;
+    }
+
+    .coord-event-icon svg{
+      width:16px;
+      height:16px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:1.8;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .coord-shell .topbar__event-name{
+      color:#26384D;
+      font-size:.72rem;
+      font-weight:730;
+    }
+
+    .coord-shell .topbar__event-org{
+      margin-top:.05rem;
+      color:#8A97A7;
+      font-size:.59rem;
+    }
+
+    .coord-shell .topbar-avatar__name{color:#26384D}
+    .coord-shell .topbar-avatar__role{color:#8492A4}
+    .coord-shell .av-btn{color:#24364A}
+    .coord-shell .av-chevron{stroke:#8A97A7}
+
+    .coord-shell .app-main{
+      min-width:0;
+      background:#EEF3F8;
+    }
+
+    .coord-shell .container{
+      width:100%;
+      max-width:none;
+      margin:0;
+      padding:0;
+    }
+
+    #view-coord{
+      width:100%;
+      max-width:1180px;
+      margin:0 auto;
+      padding:1.8rem 2rem 3.6rem;
+    }
+
+    .coord-workspace-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:1.2rem;
+      margin-bottom:1.05rem!important;
+    }
+
+    .coord-workspace-kicker{
+      margin-bottom:.22rem;
+      color:#718096;
+      font-size:.68rem;
+      font-weight:600;
+    }
+
+    .coord-workspace-head h1{
+      margin:0;
+      color:#162237;
+      font-size:clamp(1.7rem,3vw,2rem);
+      line-height:1.08;
+      font-weight:780;
+      letter-spacing:-.04em;
+    }
+
+    .coord-workspace-sub{
+      margin:.34rem 0 0;
+      max-width:620px;
+      color:#78879A;
+      font-size:.72rem;
+      line-height:1.45;
+    }
+
+    .coord-head-actions{
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:.38rem;
+    }
+
+    .coord-head-link{
+      min-height:34px;
+      display:inline-flex;
+      align-items:center;
+      gap:.3rem;
+      padding:.42rem .64rem;
+      border:1px solid #D6E2EC;
+      border-radius:7px;
+      background:#fff;
+      color:#40556D;
+      font-size:.63rem;
+      font-weight:700;
+      text-decoration:none;
+    }
+
+    .coord-head-link:hover{
+      border-color:#BFD1E0;
+      color:#2F6FA8;
+    }
+
+    .coord-head-link--primary{
+      border-color:#C8E8E5;
+      background:#EAF8F7;
+      color:#287D78;
+    }
+
+    .coord-toolbar{
+      position:static;
+      z-index:auto;
+      display:flex;
+      align-items:center;
+      gap:.55rem;
+      margin-bottom:.9rem;
+      padding:.45rem .5rem;
+      border:1px solid #E0E8F0;
+      border-radius:9px;
+      background:#fff;
+      box-shadow:none;
+      backdrop-filter:none;
+    }
+
+    .tab-bar{
+      flex:1;
+      display:flex;
+      align-items:center;
+      gap:.12rem;
+      margin:0!important;
+      padding:0;
+      border:0!important;
+      overflow-x:auto;
+      scrollbar-width:none;
+    }
+
+    .tab-bar::-webkit-scrollbar{display:none}
+
+    .tab-btn{
+      min-height:33px;
+      flex-shrink:0;
+      padding:.4rem .58rem;
+      border:0;
+      border-radius:7px;
+      background:transparent;
+      color:#718096;
+      font-size:.62rem;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    .tab-btn.ativo{
+      background:#EDF5FC;
+      color:#2F6FA8;
+    }
+
+    .tab-btn--steam{
+      color:#7157C7;
+    }
+
+    .tab-btn--steam.ativo{
+      background:#F2EEFC;
+      color:#7157C7;
+    }
+
+    #filtro-busca{
+      width:190px;
+      min-width:190px!important;
+      min-height:34px;
+      padding:.42rem .65rem;
+      border:1px solid #DDE6EE;
+      border-radius:7px;
+      background:#F8FAFC;
+      color:#34475D;
+      font-size:.65rem;
+    }
+
+    .coord-logout{
+      display:none!important;
+    }
+
+    .coord-section-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      margin:.2rem 0 .52rem;
+    }
+
+    .coord-section-title{
+      color:#5F6F83;
+      font-size:.61rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .coord-section-note{
+      color:#98A4B2;
+      font-size:.59rem;
+    }
+
+    .coord-summary{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.58rem;
+      margin:0 0 1rem;
+    }
+
+    .summary-chip{
+      min-height:68px;
+      display:flex;
+      align-items:center;
+      gap:.45rem;
+      padding:.7rem .8rem;
+      border:1px solid #E1E8F0;
+      border-radius:9px;
+      background:#fff;
+      color:#69798D;
+      font-size:.62rem;
+      box-shadow:none;
+    }
+
+    .summary-chip strong{
+      color:#1D2B3E!important;
+      font-size:1rem!important;
+      line-height:1!important;
+    }
+
+    .summary-chip--alert{
+      border-color:#F0E1BE;
+      background:#FFFDF8;
+      color:#86621C;
+    }
+
+    .summary-chip--ok{
+      border-color:#D7E9DE;
+      background:#F8FCFA;
+      color:#347554;
+    }
+
+    .summary-chip__dot{
+      width:6px;
+      height:6px;
+    }
+
+    .eq-cards{
+      display:flex;
+      flex-direction:column;
+      gap:.42rem;
+    }
+
+    .eq-card{
+      border:1px solid #E1E8F0!important;
+      border-radius:9px!important;
+      background:#fff;
+      box-shadow:none!important;
+      overflow:hidden;
+    }
+
+    .eq-card__header{
+      min-height:58px;
+      gap:.75rem;
+      padding:.68rem .8rem;
+    }
+
+    .eq-card__header:hover{
+      background:#FAFCFE;
+    }
+
+    .eq-card__pos{
+      min-width:26px;
+      color:#94A0AE;
+      font-size:.67rem;
+    }
+
+    .eq-card__id{
+      color:#26374B;
+      font-size:.72rem;
+      font-weight:730;
+    }
+
+    .eq-card__nome{
+      margin-top:.04rem;
+      color:#8A97A8;
+      font-size:.58rem;
+    }
+
+    .aval-badge{
+      padding:.2rem .42rem;
+      font-size:.56rem;
+      border-radius:999px;
+    }
+
+    .status-pill{
+      padding:.2rem .44rem;
+      font-size:.56rem;
+      border-radius:999px;
+    }
+
+    .eq-card__scores{
+      gap:.72rem;
+    }
+
+    .eq-score-mini{
+      min-width:38px;
+    }
+
+    .eq-score-mini__val{
+      color:#31445A;
+      font-size:.72rem;
+    }
+
+    .eq-score-mini__label{
+      color:#96A2B1;
+      font-size:.52rem;
+    }
+
+    .eq-score-total{
+      min-width:48px;
+      padding-left:.75rem;
+      border-left:1px solid #E6EBF0;
+      color:#23364C;
+      font-size:.82rem;
+    }
+
+    .eq-card__arrow{
+      color:#9DA9B7;
+      font-size:.62rem;
+    }
+
+    .eq-card__body{
+      padding:.85rem;
+      border-top:1px solid #E7EDF3;
+      background:#FBFCFE!important;
+    }
+
+    .detail-grid{
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:.42rem;
+      margin-bottom:.85rem;
+    }
+
+    .detail-score{
+      padding:.58rem .6rem;
+      border:1px solid #E6ECF2;
+      border-radius:8px;
+      background:#fff;
+    }
+
+    .detail-score__val{
+      color:#26384D;
+      font-size:1rem;
+    }
+
+    .detail-score__label{
+      color:#8996A6;
+      font-size:.53rem;
+    }
+
+    .detail-score__bar{
+      height:4px;
+      margin-top:.42rem;
+      background:#EEF2F6;
+    }
+
+    .comments-title{
+      margin:.8rem 0 .4rem;
+      color:#66768A;
+      font-size:.58rem;
+      letter-spacing:.075em;
+    }
+
+    .comments-cols{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.45rem;
+    }
+
+    .comment-block{
+      padding:.58rem .62rem;
+      border-radius:7px;
+      background:#fff;
+    }
+
+    .comment-block__cat,
+    .comment-tag{
+      font-size:.54rem;
+    }
+
+    .comment-text{
+      font-size:.62rem;
+      line-height:1.45;
+    }
+
+    .no-comment{
+      font-size:.61rem;
+    }
+
+    /* Categoria */
+    #view-cat .table-wrap{
+      border:1px solid #E1E8F0;
+      border-radius:9px;
+      background:#fff;
+      box-shadow:none;
+      overflow:hidden;
+    }
+
+    #view-cat table{
+      background:#fff;
+    }
+
+    #view-cat thead th{
+      padding:.58rem .68rem;
+      background:#F5F8FB;
+      color:#56677B;
+      border-bottom:1px solid #E1E8F0;
+      font-size:.59rem;
+      font-weight:800;
+      letter-spacing:.045em;
+    }
+
+    #view-cat tbody tr{
+      border-bottom:1px solid #EDF1F5;
+    }
+
+    #view-cat tbody tr:hover{
+      background:#FAFCFE;
+    }
+
+    #view-cat tbody td{
+      padding:.62rem .68rem;
+      color:#34465A;
+      font-size:.65rem;
+    }
+
+    .cat-comments-cell{
+      font-size:.61rem!important;
+    }
+
+    /* Indicadores */
+    .steam-kpis{
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:.5rem;
+      margin-bottom:.7rem;
+    }
+
+    .steam-kpi{
+      padding:.72rem .75rem;
+      border:1px solid #E1E8F0;
+      border-radius:9px;
+      box-shadow:none;
+    }
+
+    .steam-kpi--idx{
+      border-color:#E8DFC3;
+      background:#FFFDF8;
+    }
+
+    .steam-kpi__label{
+      font-size:.54rem;
+    }
+
+    .steam-kpi__val{
+      font-size:1rem;
+    }
+
+    .steam-kpi__unit{
+      font-size:.58rem;
+    }
+
+    .steam-kpi__sub{
+      min-height:28px;
+      font-size:.55rem;
+    }
+
+    .steam-matrix-wrap{
+      margin-bottom:.7rem;
+      border:1px solid #E1E8F0;
+      border-radius:9px;
+      box-shadow:none;
+    }
+
+    .steam-matrix-title{
+      padding:.68rem .75rem .52rem;
+      border-bottom:1px solid #E5EBF1;
+      color:#42546A;
+      font-size:.59rem;
+    }
+
+    .steam-matrix-desc{
+      font-size:.55rem;
+    }
+
+    .steam-mhdr{
+      background:#F7F9FC;
+    }
+
+    .steam-mhdr,
+    .steam-mrow{
+      padding:.34rem .7rem;
+    }
+
+    .steam-panel{
+      padding:.8rem .85rem;
+      border:1px solid #E1E8F0;
+      border-radius:9px;
+      box-shadow:none;
+    }
+
+    .steam-section-title{
+      color:#56687D;
+      font-size:.58rem;
+    }
+
+    .steam-panel-sub{
+      font-size:.57rem;
+    }
+
+    .bloom-label,
+    .bloom-count{
+      font-size:.61rem;
+    }
+
+    .bloom-note{
+      font-size:.54rem;
+    }
+
+    .login-wrap{
+      max-width:390px;
+      margin:4rem auto;
+    }
+
+    .login-card{
+      padding:1.65rem 1.75rem;
+      border-radius:11px;
+      border-color:#E0E8F0;
+      box-shadow:0 12px 34px rgba(15,23,42,.07);
+    }
+
+    .login-card h2{font-size:1.05rem}
+    .login-card p{font-size:.73rem}
+
+    @media(max-width:980px){
+      .coord-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .detail-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .comments-cols{grid-template-columns:1fr}
+      .steam-kpis{grid-template-columns:repeat(3,minmax(0,1fr))}
+    }
+
+    @media(max-width:700px){
+      .coord-shell{display:block}
+      .coord-shell .app-sidebar{
+        position:fixed;
+        top:60px;
+        height:calc(100vh - 60px);
+        width:min(82vw,280px);
+        min-width:min(82vw,280px);
+      }
+      .coord-shell .sidebar-brand{display:none}
+      .coord-shell .topbar{
+        min-height:60px;
+        padding:.45rem .75rem;
+      }
+      .coord-mobile-brand{display:flex}
+      .coord-shell .topbar__event{display:none}
+      #view-coord{padding:1.25rem 1rem 3rem}
+      .coord-workspace-head{flex-direction:column;gap:.65rem}
+      .coord-head-actions{justify-content:flex-start}
+      .coord-toolbar{align-items:stretch;flex-direction:column}
+      #filtro-busca{width:100%;min-width:0!important}
+      .coord-summary{grid-template-columns:1fr 1fr}
+      .eq-score-mini{display:none}
+      .eq-card__header{gap:.48rem}
+      .detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .steam-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .steam-lower{grid-template-columns:1fr}
+    }
+
   </style>
 </head>
 <body>
 
-<header class="topbar">
-  <a href="index.html" class="topbar__brand"><img src="logo.svg" alt="HUB Circuito"></a>
-  <div class="topbar__event">
-    <div class="topbar__event-name">Torneio Interno de Rob&#xF3;tica</div>
-    <div class="topbar__event-org">Escola SESI Reitor Miguel Calmon</div>
-  </div>
-  <div class="topbar__badge">
-    <span id="badge-coord" class="text-sm"></span>
-    <span class="spinner" id="spinner" style="display:none"></span>
-  </div>
-</header>
-
-<div class="app-body">
+<div class="app-body coord-shell">
 
 <nav class="app-sidebar">
+  <a href="index.html" class="sidebar-brand" aria-label="HUB Circuito">
+    <img src="logo-horizontal.svg" alt="HUB Circuito" class="sidebar-brand__img">
+  </a>
   <a href="index.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg> Início</a>
   <a href="arena.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg> Arena</a>
   <a href="turma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1.5 13.5c0-2.5 2-4 4-4"/><circle cx="11" cy="5.5" r="2"/><path d="M10 13.5c0-2 1.5-3.5 3.5-3.5"/></svg> Minha Turma</a>
@@ -292,6 +984,26 @@
   <a href="ranking.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13V9M8 13V6M13 13V3"/></svg> Ranking</a>
   <a href="cronograma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="13" height="10.5" rx="1.5"/><path d="M1.5 7.5h13M5.5 1.5v3M10.5 1.5v3"/></svg> Cronograma</a>
 </nav>
+
+<div class="coord-stage">
+<header class="topbar">
+  <a href="index.html" class="topbar__brand coord-mobile-brand" aria-label="HUB Circuito">
+    <img src="logo-horizontal-escuro.svg" alt="HUB Circuito">
+  </a>
+  <div class="topbar__event">
+    <div class="coord-event-icon">
+      <svg viewBox="0 0 24 24"><path d="M4 19h16M5 16V8h4v8M10 16V4h4v12M15 16v-6h4v6"/></svg>
+    </div>
+    <div>
+      <div class="topbar__event-name">Torneio Interno de Robótica</div>
+      <div class="topbar__event-org">Escola SESI Reitor Miguel Calmon</div>
+    </div>
+  </div>
+  <div class="topbar__badge">
+    <span id="badge-coord" class="text-sm"></span>
+    <span class="spinner" id="spinner" style="display:none"></span>
+  </div>
+</header>
 
 <main class="app-main">
 
@@ -321,6 +1033,19 @@
   <!-- ── PAINEL DA COORDENAÇÃO ─────────────────────────────────── -->
   <div id="view-coord" class="hidden">
 
+    <header class="workspace-head coord-workspace-head">
+      <div class="workspace-head__copy">
+        <div class="coord-workspace-kicker">Coordenação</div>
+        <h1>Gestão do torneio</h1>
+        <p class="coord-workspace-sub">Acompanhe equipes, avaliações, pendências e indicadores em um único espaço operacional.</p>
+      </div>
+      <div class="coord-head-actions">
+        <a class="coord-head-link" href="cronograma.html">Cronograma</a>
+        <a class="coord-head-link" href="deliberacao.html">Deliberação</a>
+        <a class="coord-head-link coord-head-link--primary" href="relatorio.html">Fichas PDF</a>
+      </div>
+    </header>
+
     <div class="coord-toolbar">
       <div class="tab-bar" id="tab-bar" style="border:none;margin:0">
         <button class="tab-btn ativo" onclick="mudarTab('todas')">Todas as turmas</button>
@@ -331,14 +1056,22 @@
       </div>
       <input id="filtro-busca" type="search" placeholder="Buscar equipe…" oninput="filtrar()" style="min-width:160px">
       <div class="coord-logout">
-        <a href="relatorio.html" class="btn btn-sm" style="background:#50CCC6;color:#0D3D3A;font-weight:700;border:none;text-decoration:none;padding:.35rem .85rem;border-radius:8px;font-size:.8rem">Fichas PDF</a>
         <button class="btn btn-outline btn-sm" id="btn-sair">Sair</button>
       </div>
     </div>
 
     <!-- Vista: todas as turmas com accordion -->
     <div id="view-todas">
+      <div class="coord-section-head">
+        <div class="coord-section-title">Visão geral</div>
+        <div class="coord-section-note">Situação atual das avaliações.</div>
+      </div>
       <div class="coord-summary" id="coord-summary"></div>
+
+      <div class="coord-section-head">
+        <div class="coord-section-title">Equipes</div>
+        <div class="coord-section-note">Clique em uma equipe para consultar notas e feedback.</div>
+      </div>
       <div class="eq-cards" id="lista-cards"></div>
     </div>
 
@@ -374,12 +1107,13 @@
 </div>
 
 </main>
+</div><!-- /coord-stage -->
 </div><!-- /app-body -->
 
 <div id="toast"></div>
 <script src="js/api.js"></script>
-<script src="js/sidebar-roles.js?v=2"></script>
-<script src="js/product-ui.js?v=2"></script>
+<script src="js/sidebar-roles.js?v=3"></script>
+<script src="js/product-ui.js?v=4"></script>
 <script>
   const SK_NOME = 'coord_nome';
   const SK_PIN  = 'coord_pin';
@@ -388,13 +1122,13 @@
   let tabAtual = 'todas';
 
   const NOMES_MAP = {
-    TUR01:'6° A · Cyber Panter',       TUR02:'6° B · Liga do Choque',
-    TUR03:'6° C · Alpha Tech',         TUR04:'6° D · Pheonics Mecanics',
-    TUR05:'6° E · TecShark',           TUR06:'7° A · Hoppin Robots',
-    TUR07:'7° B · Bivoltx',            TUR08:'7° C · Ecoshift',
-    TUR09:'7° D · Pantera Lego Team',  TUR10:'7° E · Império das Onças',
-    TUR11:'7° F · Poseidon',           TUR12:'7° G · Arara Azul',
-    TUR13:'7° H · Nexos'
+    TUR01:'6º A · Cyber Panter',       TUR02:'6º B · Liga do Choque',
+    TUR03:'6º C · Alpha Tech',         TUR04:'6º D · Pheonics Mecanics',
+    TUR05:'6º E · TecShark',           TUR06:'7º A · Hoppin Robots',
+    TUR07:'7º B · Bivoltx',            TUR08:'7º C · Ecoshift',
+    TUR09:'7º D · Pantera Lego Team',  TUR10:'7º E · Império das Onças',
+    TUR11:'7º F · Poseidon',           TUR12:'7º G · Arara Azul',
+    TUR13:'7º H · Nexos'
   };
 
   const CAT_MAP = {
