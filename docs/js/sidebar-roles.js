@@ -276,6 +276,59 @@
       /* Adapta acessos rápidos para professor */
       adaptarAcessosProfessor();
 
+      /* Tira de status da equipe (professor home) */
+      if (!document.getElementById('prof-strip')) {
+        var profCss = document.createElement('style');
+        profCss.textContent =
+          '.prof-strip{background:#162438;border-bottom:1px solid rgba(255,255,255,.06)}' +
+          '.prof-strip-inner{max-width:1100px;margin:0 auto;padding:.7rem 2rem;display:flex;align-items:center;gap:2.5rem;flex-wrap:wrap}' +
+          '.prof-stat{display:flex;flex-direction:column;gap:.04rem}' +
+          '.prof-stat__label{font-size:.58rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:rgba(255,255,255,.38)}' +
+          '.prof-stat__val{font-size:.88rem;font-weight:800;color:#fff}' +
+          '.prof-strip-cta{margin-left:auto;font-size:.73rem;font-weight:700;color:#50CCC6;text-decoration:none;white-space:nowrap}' +
+          '.prof-strip-cta:hover{text-decoration:underline}';
+        document.head.appendChild(profCss);
+
+        var strip = document.createElement('div');
+        strip.className = 'prof-strip';
+        strip.id = 'prof-strip';
+        strip.innerHTML =
+          '<div class="prof-strip-inner">' +
+            '<div class="prof-stat"><span class="prof-stat__label">Posição geral</span><span class="prof-stat__val" id="ps-rank">...</span></div>' +
+            '<div class="prof-stat"><span class="prof-stat__label">Avaliações</span><span class="prof-stat__val" id="ps-status">...</span></div>' +
+            '<div class="prof-stat"><span class="prof-stat__label">Turma</span><span class="prof-stat__val">' + (turmaId || '') + '</span></div>' +
+            '<a href="turma.html" class="prof-strip-cta">Ver minha turma →</a>' +
+          '</div>';
+        hero.insertAdjacentElement('afterend', strip);
+
+        /* Preenche com dados da API */
+        var tId  = turmaId;
+        var tPin = localStorage.getItem('turma_pin') || '';
+
+        if (typeof API !== 'undefined') {
+          API.ranking().then(function(r) {
+            var el = document.getElementById('ps-rank');
+            if (!el) return;
+            if (!r || !r.ok || !r.equipes) { el.textContent = '—'; return; }
+            var idx = r.equipes.findIndex(function(e) { return e.id === tId; });
+            el.textContent = idx >= 0 ? (idx + 1) + 'º de ' + r.equipes.length : '—';
+          }).catch(function() {
+            var el = document.getElementById('ps-rank');
+            if (el) el.textContent = '—';
+          });
+
+          API.turma(tId, tPin).then(function(r) {
+            var el = document.getElementById('ps-status');
+            if (!el) return;
+            if (!r || !r.ok || !r.scores) { el.textContent = '—'; return; }
+            el.textContent = r.scores.status || '—';
+          }).catch(function() {
+            var el = document.getElementById('ps-status');
+            if (el) el.textContent = '—';
+          });
+        }
+      }
+
       cta = 'Ver desempenho da turma'; ctaHref = 'turma.html';
 
     } else {
