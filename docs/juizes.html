@@ -254,8 +254,7 @@
       if (r.ok) {
         // atualiza categoria se a API devolver
         document.getElementById('juiz-cat').textContent = r.categoria || 'Geral';
-        document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
-        configurarWorkspaceJuiz(r.categoria || '');
+        aplicarContextoCategoria(r.categoria || '');
         return;
       }
       // só desloga se a API explicitamente negar (não em erros de rede)
@@ -287,44 +286,49 @@
     }
   }
 
-  function normalizarCategoriaJuiz(cat) {
-    var c = String(cat || '').toLowerCase();
-    if (c.indexOf('coord') >= 0) return 'coord';
-    if (c.indexOf('projeto') >= 0 || c.indexOf('inova') >= 0) return 'projeto';
-    if (c.indexOf('design') >= 0) return 'design';
-    if (c.indexOf('core') >= 0 || c.indexOf('valor') >= 0) return 'core';
-    if (c.indexOf('arena') >= 0 || c.indexOf('desafio') >= 0 || c.indexOf('robô') >= 0 || c.indexOf('robo') >= 0) return 'arena';
+  function normalizarCategoria(cat) {
+    var s = String(cat || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    if (s.indexOf('coord') >= 0) return 'coord';
+    if (s.indexOf('projeto') >= 0 || s.indexOf('inov') >= 0) return 'projeto';
+    if (s.indexOf('design') >= 0) return 'design';
+    if (s.indexOf('core') >= 0 || s.indexOf('valor') >= 0) return 'core';
+    if (s.indexOf('arena') >= 0 || s.indexOf('desafio') >= 0 || (s.indexOf('robo') >= 0 && s.indexOf('design') < 0)) return 'desafio';
     return '';
   }
 
-  function configurarWorkspaceJuiz(cat) {
-    var key = normalizarCategoriaJuiz(cat);
-    var cards = Array.prototype.slice.call(document.querySelectorAll('.form-card[data-cat]'));
-    var isCoord = key === 'coord' || !!localStorage.getItem('coord_nome');
-
-    document.body.classList.toggle('is-coordination', isCoord);
-
-    cards.forEach(function(card) {
-      card.classList.remove('is-assigned');
-      card.style.display = '';
+  function aplicarContextoCategoria(cat) {
+    var key = normalizarCategoria(cat);
+    var rows = Array.prototype.slice.call(document.querySelectorAll('.eval-row[data-cat]'));
+    rows.forEach(function(row) {
+      row.classList.remove('is-assigned');
+      var status = row.querySelector('.eval-status');
+      if (status) status.textContent = 'Disponível';
     });
 
-    if (isCoord || !key) {
-      document.getElementById('judge-area-value').textContent = isCoord ? 'Coordenação · visão completa' : (cat || 'Geral');
-      document.getElementById('judge-area-note').textContent = isCoord ? 'Acesso a todas as categorias e à deliberação.' : 'Todas as categorias permanecem disponíveis.';
+    var sub = document.getElementById('judge-workspace-sub');
+    var note = document.getElementById('judge-task-note');
+    var mode = document.getElementById('judge-mode');
+
+    if (key === 'coord' || localStorage.getItem('coord_nome')) {
+      if (sub) sub.textContent = 'Visão completa das categorias de avaliação e acesso às rubricas.';
+      if (note) note.textContent = 'Coordenação possui visão completa das categorias.';
+      if (mode) mode.textContent = 'Visão da coordenação';
       return;
     }
 
-    var assigned = cards.find(function(card) { return card.getAttribute('data-cat') === key; });
+    var assigned = key ? document.querySelector('.eval-row[data-cat="' + key + '"]') : null;
     if (assigned) {
       assigned.classList.add('is-assigned');
-      cards.forEach(function(card) {
-        if (card !== assigned) card.style.display = 'none';
-      });
-      document.getElementById('judge-area-note').textContent = 'Somente a categoria atribuída ao seu perfil é exibida.';
+      var st = assigned.querySelector('.eval-status');
+      if (st) st.textContent = 'Sua área';
+      if (sub) sub.textContent = 'Sua área está destacada. Abra a avaliação quando estiver pronto.';
+      if (note) note.textContent = 'Sua área atribuída está destacada abaixo.';
+      if (mode) mode.textContent = 'Área atribuída';
+    } else {
+      if (sub) sub.textContent = 'Acesse as rubricas e selecione a atividade que você precisa avaliar.';
+      if (note) note.textContent = 'Selecione a categoria correspondente à sua atuação.';
+      if (mode) mode.textContent = 'Área de trabalho';
     }
-
-    document.getElementById('judge-area-value').textContent = cat || 'Categoria atribuída';
   }
 
   function mostrarPainel(r) {
@@ -332,12 +336,10 @@
     document.getElementById('view-painel').style.display = '';
     document.getElementById('juiz-nome').textContent = r.nome;
     document.getElementById('juiz-cat').textContent  = r.categoria || 'Geral';
-    document.getElementById('juiz-nome-top').textContent = r.nome || 'Juiz';
-    document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
     document.getElementById('badge-juiz').textContent = r.nome;
     document.getElementById('btn-sair').style.display = '';
     document.getElementById('jh-ini').textContent = (r.nome || 'J').trim()[0].toUpperCase();
-    configurarWorkspaceJuiz(r.categoria || '');
+    aplicarContextoCategoria(r.categoria || '');
   }
 
   function sair() {
