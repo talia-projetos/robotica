@@ -584,25 +584,666 @@
     @media (max-width: 420px) {
       .scores-cats-grid { grid-template-columns: 1fr 1fr; }
     }
+
+    /* ── Minha Turma v5: shell e dashboard final ─────────────── */
+    body{background:#EEF3F8}
+
+    .team-shell{
+      min-height:100vh;
+      display:flex;
+      background:#EEF3F8;
+    }
+
+    .team-shell .app-sidebar{
+      position:sticky;
+      top:0;
+      height:100vh;
+      width:190px;
+      min-width:190px;
+      padding:.65rem .45rem .8rem;
+      background:#0C1521;
+      border-right:1px solid rgba(255,255,255,.055);
+      z-index:20;
+    }
+
+    .team-shell .sidebar-brand{
+      min-height:74px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 0 .65rem;
+      padding:.65rem .75rem .85rem;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .team-shell .sidebar-brand__img{
+      width:124px;
+      height:auto;
+      max-height:48px;
+      object-fit:contain;
+    }
+
+    .team-shell .sidebar-item{
+      min-height:38px;
+      margin:.08rem .15rem;
+      padding:.58rem .72rem;
+      border-radius:8px;
+      color:rgba(255,255,255,.55);
+      font-size:.73rem;
+      font-weight:600;
+    }
+
+    .team-shell .sidebar-item.ativo{
+      color:#B8DCF5;
+      background:rgba(80,143,203,.17);
+      box-shadow:inset 2px 0 0 #508FCB;
+    }
+
+    .team-shell.sidebar-collapsed .app-sidebar{
+      width:58px;
+      min-width:58px;
+    }
+
+    .team-shell.sidebar-collapsed .sidebar-brand__img{
+      width:30px;
+      height:30px;
+      object-fit:cover;
+      object-position:left;
+    }
+
+    .team-stage{
+      flex:1;
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .team-shell .topbar{
+      position:sticky;
+      top:0;
+      z-index:15;
+      min-height:66px;
+      display:flex;
+      align-items:center;
+      gap:1rem;
+      padding:.55rem 1.35rem;
+      background:rgba(255,255,255,.96);
+      border-bottom:1px solid #E3EAF1;
+      box-shadow:0 1px 0 rgba(15,23,42,.025);
+      backdrop-filter:blur(12px);
+    }
+
+    .team-mobile-brand{
+      display:none;
+      align-items:center;
+      text-decoration:none;
+    }
+
+    .team-mobile-brand img{
+      width:auto;
+      height:34px;
+    }
+
+    .team-shell .topbar__event{
+      flex:1;
+      display:flex;
+      align-items:center;
+      gap:.65rem;
+      padding:0;
+      text-align:left;
+    }
+
+    .team-event-icon{
+      width:34px;
+      height:34px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      border-radius:9px;
+      background:#EAF8F2;
+      color:#229A68;
+    }
+
+    .team-event-icon svg{
+      width:16px;
+      height:16px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:1.8;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    .team-shell .topbar__event-name{
+      color:#26384D;
+      font-size:.72rem;
+      font-weight:730;
+    }
+
+    .team-shell .topbar__event-org{
+      margin-top:.05rem;
+      color:#8A97A7;
+      font-size:.59rem;
+    }
+
+    .team-shell .topbar-avatar__name{color:#26384D}
+    .team-shell .topbar-avatar__role{color:#8492A4}
+    .team-shell .av-btn{color:#24364A}
+    .team-shell .av-chevron{stroke:#8A97A7}
+
+    .team-shell .app-main{
+      min-width:0;
+      background:#EEF3F8;
+    }
+
+    .team-shell .container{
+      width:100%;
+      max-width:1120px;
+      margin:0 auto;
+      padding:1.8rem 2rem 3.6rem;
+    }
+
+    .team-workspace-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:1rem;
+      margin-bottom:1rem;
+    }
+
+    .team-workspace-kicker{
+      margin-bottom:.22rem;
+      color:#718096;
+      font-size:.68rem;
+      font-weight:600;
+    }
+
+    .team-workspace-head h1{
+      margin:0;
+      color:#162237;
+      font-size:clamp(1.65rem,3vw,1.95rem);
+      line-height:1.08;
+      font-weight:780;
+      letter-spacing:-.04em;
+    }
+
+    .team-workspace-sub{
+      margin:.34rem 0 0;
+      color:#78879A;
+      font-size:.72rem;
+      line-height:1.45;
+    }
+
+    .team-head-link{
+      min-height:34px;
+      display:inline-flex;
+      align-items:center;
+      gap:.35rem;
+      padding:.42rem .66rem;
+      border:1px solid #D6E2EC;
+      border-radius:7px;
+      background:#fff;
+      color:#40556D;
+      font-size:.65rem;
+      font-weight:700;
+      text-decoration:none;
+    }
+
+    .team-head-link:hover{
+      border-color:#BFD1E0;
+      color:#2F6FA8;
+    }
+
+    .turma-logout{display:none!important}
+
+    .eq-header{
+      min-height:104px;
+      margin-bottom:.7rem;
+      padding:1rem 1.1rem;
+      display:flex;
+      align-items:center;
+      gap:.95rem;
+      border:1px solid #DDE7F0;
+      border-radius:11px;
+      background:#fff;
+      color:#172236;
+      box-shadow:0 4px 14px rgba(15,23,42,.025);
+    }
+
+    .eq-logo{
+      width:58px;
+      height:58px;
+      border:1px solid #DCE5EE;
+      border-radius:12px;
+      background:#F7FAFC;
+    }
+
+    .eq-header__id{
+      color:#172236;
+      font-size:1.16rem;
+      font-weight:770;
+      letter-spacing:-.025em;
+    }
+
+    .eq-header__nome{
+      margin-top:.18rem;
+      color:#7F8DA0;
+      font-size:.66rem;
+      font-weight:600;
+      opacity:1;
+      letter-spacing:.01em;
+    }
+
+    .eq-header__status{
+      margin-left:auto;
+    }
+
+    .status-pill{
+      border-radius:999px;
+      padding:.28rem .58rem;
+      font-size:.59rem;
+      font-weight:750;
+    }
+
+    .team-actionbar{
+      display:flex;
+      align-items:center;
+      gap:.35rem;
+      margin:0 0 .85rem;
+      padding:0;
+      border:0;
+      background:transparent;
+    }
+
+    .team-actionbar a{
+      min-height:31px;
+      display:inline-flex;
+      align-items:center;
+      padding:.36rem .58rem;
+      border:1px solid #DCE5ED;
+      border-radius:7px;
+      background:#fff;
+      color:#56687D;
+      font-size:.61rem;
+      font-weight:700;
+      text-decoration:none;
+    }
+
+    .team-actionbar a:hover{
+      border-color:#C5D5E3;
+      color:#2F6FA8;
+      background:#FBFDFF;
+    }
+
+    .coord-team-picker{
+      margin:.3rem 0 .8rem!important;
+      border-radius:9px!important;
+      border-color:#DDE6EE!important;
+      box-shadow:none!important;
+      background:#fff!important;
+    }
+
+    .turma-tabs{
+      margin:.2rem 0 1rem;
+      padding:0;
+      gap:.15rem;
+      border:0;
+      border-bottom:1px solid #DDE5ED;
+    }
+
+    .ttab{
+      min-height:38px;
+      padding:.48rem .68rem;
+      margin-bottom:-1px;
+      border-bottom:2px solid transparent;
+      color:#758397;
+      font-size:.67rem;
+      font-weight:700;
+    }
+
+    .ttab.ativo{
+      border-bottom-color:#3979B8;
+      color:#21364C;
+    }
+
+    .ttab:hover:not(.ativo){
+      color:#3979B8;
+    }
+
+    .team-summary-grid{
+      grid-template-columns:minmax(0,1fr) 270px;
+      gap:.8rem;
+    }
+
+    .team-section-kicker{
+      margin-bottom:.5rem;
+      color:#5F6F83;
+      font-size:.61rem;
+      font-weight:800;
+      letter-spacing:.08em;
+    }
+
+    .scores-grid{
+      gap:.65rem;
+      margin-bottom:0;
+    }
+
+    .score-card{
+      border:1px solid #E1E8F0;
+      border-radius:9px;
+      padding:.8rem .9rem;
+      box-shadow:none;
+    }
+
+    .score-card.total-card{
+      padding:.95rem 1rem;
+      border-color:#E8DFC3;
+      border-left:3px solid #CCB650;
+      background:#FFFDF8;
+    }
+
+    .score-card__label{
+      margin-bottom:.36rem;
+      color:#718096;
+      font-size:.59rem;
+      letter-spacing:.075em;
+    }
+
+    .score-card__val{
+      color:#203047;
+      font-size:1.48rem;
+    }
+
+    .score-card.total-card .score-card__val{
+      color:#8B7218;
+      font-size:1.75rem;
+    }
+
+    .score-card__max{
+      color:#8A97A7;
+      font-size:.62rem;
+    }
+
+    .scores-cats-grid{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.55rem;
+    }
+
+    .score-card__bar-track{
+      height:4px;
+      background:#EEF2F6;
+    }
+
+    .team-feedback-preview{
+      min-height:100%;
+      padding:.9rem;
+      border:1px solid #E1E8F0;
+      border-radius:9px;
+      background:#fff;
+      box-shadow:none;
+    }
+
+    .feedback-preview-icon{
+      width:36px;
+      height:36px;
+      margin-bottom:.65rem;
+      border-radius:8px;
+      background:#F2F6FA;
+    }
+
+    .feedback-preview-title{
+      font-size:.72rem;
+    }
+
+    .feedback-preview-text{
+      margin:.28rem 0 .8rem;
+      font-size:.62rem;
+      line-height:1.45;
+    }
+
+    .feedback-preview-link{
+      color:#3979B8;
+      font-size:.62rem;
+    }
+
+    #ranking-row{
+      margin-bottom:.75rem;
+    }
+
+    #ranking-badges{
+      gap:.38rem;
+    }
+
+    .rank-badge{
+      padding:.25rem .48rem;
+      border-radius:6px;
+      background:#F7F9FC;
+    }
+
+    .rank-badge__pos{
+      font-size:.85rem;
+    }
+
+    .rank-badge__label{
+      font-size:.58rem;
+    }
+
+    .rank-badge--geral{
+      background:#172236;
+    }
+
+    .met-intro{
+      margin-bottom:.7rem;
+      padding:.9rem 1rem;
+      border-radius:9px;
+      border-color:#E0E8F0;
+      background:#fff;
+      color:#66778B;
+      font-size:.72rem;
+      line-height:1.55;
+    }
+
+    .met-grid{
+      display:flex;
+      flex-direction:column;
+      gap:.42rem;
+      margin-bottom:1rem;
+    }
+
+    .met-card{
+      display:grid;
+      grid-template-columns:150px 180px minmax(0,1fr) 150px;
+      align-items:center;
+      gap:.7rem;
+      min-height:66px;
+      padding:.7rem .82rem;
+      border:1px solid #E1E8F0;
+      border-left-width:3px;
+      border-top-width:1px!important;
+      border-radius:9px;
+      background:#fff;
+    }
+
+    .met-card__label{
+      margin:0;
+      font-size:.56rem;
+      letter-spacing:.07em;
+    }
+
+    .met-card__titulo{
+      margin:0;
+      color:#24364B;
+      font-size:.71rem;
+    }
+
+    .met-card__desc{
+      color:#7C8A9B;
+      font-size:.61rem;
+      line-height:1.4;
+    }
+
+    .met-card__pts{
+      margin:0;
+      color:#697A8E;
+      font-size:.6rem;
+      text-align:right;
+    }
+
+    .doc-group{
+      margin-bottom:1rem;
+    }
+
+    .doc-group__label{
+      margin-bottom:.45rem;
+      padding-bottom:.35rem;
+      color:#7A899B;
+      font-size:.57rem;
+    }
+
+    .doc-item{
+      min-height:58px;
+      margin-bottom:.32rem;
+      padding:.65rem .72rem;
+      border:1px solid #E1E8F0;
+      border-radius:9px;
+      box-shadow:none;
+    }
+
+    .doc-item:hover{
+      border-color:#C7D8E7;
+      box-shadow:none;
+    }
+
+    .doc-name{
+      font-size:.7rem;
+    }
+
+    .doc-meta,
+    .doc-action{
+      font-size:.59rem;
+    }
+
+    .cat-accordion{
+      margin-bottom:.42rem;
+      border-color:#E1E8F0;
+      border-radius:9px;
+    }
+
+    .cat-accordion:hover{
+      box-shadow:none;
+    }
+
+    .cat-accordion__header{
+      min-height:52px;
+      padding:.68rem .82rem;
+      background:#fff;
+      color:#26374B;
+      font-size:.7rem;
+    }
+
+    .cat-accordion__header:hover{
+      background:#FAFCFE;
+    }
+
+    .cat-accordion__count{
+      font-size:.6rem;
+    }
+
+    .cat-accordion__body{
+      padding:.8rem .9rem;
+      border-top-color:#E8EDF2;
+    }
+
+    .comment-item{
+      padding:.6rem 0;
+    }
+
+    .comment-item__juiz,
+    .comment-tag{
+      font-size:.56rem;
+    }
+
+    .comment-text{
+      font-size:.68rem;
+      line-height:1.5;
+    }
+
+    .comment-bom,
+    .comment-ref{
+      padding:.55rem .65rem;
+    }
+
+    .login-wrap{
+      max-width:390px;
+      margin:4rem auto;
+    }
+
+    .login-card{
+      padding:1.65rem 1.75rem;
+      border-radius:11px;
+      border-color:#E0E8F0;
+      box-shadow:0 12px 34px rgba(15,23,42,.07);
+    }
+
+    .login-card h2{
+      font-size:1.05rem;
+    }
+
+    .login-card p{
+      font-size:.73rem;
+    }
+
+    @media(max-width:980px){
+      .team-summary-grid{grid-template-columns:1fr}
+      .scores-cats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .met-card{grid-template-columns:120px 160px minmax(0,1fr)}
+      .met-card__pts{grid-column:3;text-align:left}
+    }
+
+    @media(max-width:700px){
+      .team-shell{display:block}
+      .team-shell .app-sidebar{
+        position:fixed;
+        top:60px;
+        height:calc(100vh · 60px);
+        width:min(82vw,280px);
+        min-width:min(82vw,280px);
+      }
+      .team-shell .sidebar-brand{display:none}
+      .team-shell .topbar{
+        min-height:60px;
+        padding:.45rem .75rem;
+      }
+      .team-mobile-brand{display:flex}
+      .team-shell .topbar__event{display:none}
+      .team-shell .container{padding:1.25rem 1rem 3rem}
+      .team-workspace-head{flex-direction:column;gap:.6rem}
+      .team-head-link{align-self:flex-start}
+      .eq-header{align-items:flex-start}
+      .eq-header__status{margin-left:0}
+      .team-actionbar{overflow-x:auto;scrollbar-width:none}
+      .team-actionbar::-webkit-scrollbar{display:none}
+      .team-actionbar a{white-space:nowrap}
+      .scores-cats-grid{grid-template-columns:1fr 1fr}
+      .met-card{display:block}
+      .met-card__label,.met-card__titulo,.met-card__desc,.met-card__pts{margin-bottom:.28rem;text-align:left}
+    }
+
+    @media(max-width:430px){
+      .scores-cats-grid{grid-template-columns:1fr}
+    }
+
   </style>
 </head>
 <body>
 
-<header class="topbar">
-  <a href="index.html" class="topbar__brand"><img src="logo.svg" alt="HUB Circuito"></a>
-  <div class="topbar__event">
-    <div class="topbar__event-name">Torneio Interno de Rob&#xF3;tica</div>
-    <div class="topbar__event-org">Escola SESI Reitor Miguel Calmon</div>
-  </div>
-  <div class="topbar__badge">
-    <span id="badge-turma" class="text-sm"></span>
-    <span class="spinner" id="spinner" style="display:none"></span>
-  </div>
-</header>
-
-<div class="app-body">
+<div class="app-body team-shell">
 
 <nav class="app-sidebar">
+  <a href="turma.html" class="sidebar-brand" aria-label="HUB Circuito">
+    <img src="logo-horizontal.svg" alt="HUB Circuito" class="sidebar-brand__img">
+  </a>
   <a href="index.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg> Início</a>
   <a href="arena.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg> Arena</a>
   <a href="turma.html" class="sidebar-item ativo"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1.5 13.5c0-2.5 2-4 4-4"/><circle cx="11" cy="5.5" r="2"/><path d="M10 13.5c0-2 1.5-3.5 3.5-3.5"/></svg> Minha Turma</a>
@@ -612,6 +1253,26 @@
   <a href="ranking.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13V9M8 13V6M13 13V3"/></svg> Ranking</a>
   <a href="cronograma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="13" height="10.5" rx="1.5"/><path d="M1.5 7.5h13M5.5 1.5v3M10.5 1.5v3"/></svg> Cronograma</a>
 </nav>
+
+<div class="team-stage">
+<header class="topbar">
+  <a href="turma.html" class="topbar__brand team-mobile-brand" aria-label="HUB Circuito">
+    <img src="logo-horizontal-escuro.svg" alt="HUB Circuito">
+  </a>
+  <div class="topbar__event">
+    <div class="team-event-icon">
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2M17 4a4 4 0 0 1 0 7"/></svg>
+    </div>
+    <div>
+      <div class="topbar__event-name">Torneio Interno de Robótica</div>
+      <div class="topbar__event-org">Escola SESI Reitor Miguel Calmon</div>
+    </div>
+  </div>
+  <div class="topbar__badge">
+    <span id="badge-turma" class="text-sm"></span>
+    <span class="spinner" id="spinner" style="display:none"></span>
+  </div>
+</header>
 
 <main class="app-main">
 
@@ -639,6 +1300,17 @@
 
   <!-- ── RESULTADOS ─────────────────────────────────────────────── -->
   <div id="view-resultados" class="hidden">
+
+    <header class="team-workspace-head">
+      <div>
+        <div class="team-workspace-kicker">Acompanhamento pedagógico</div>
+        <h1>Minha Turma</h1>
+        <p class="team-workspace-sub">Resultados, metodologia, documentos e feedback da equipe em um único espaço.</p>
+      </div>
+      <a class="team-head-link" data-team-agenda href="cronograma.html">Agenda da equipe
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </header>
 
     <div class="turma-logout">
       <div id="logout-info" style="display:none"></div>
@@ -799,12 +1471,13 @@
 </div>
 
 </main>
+</div><!-- /team-stage -->
 </div><!-- /app-body -->
 
 <div id="toast"></div>
 <script src="js/api.js"></script>
-<script src="js/sidebar-roles.js?v=2"></script>
-<script src="js/product-ui.js?v=2"></script>
+<script src="js/sidebar-roles.js?v=3"></script>
+<script src="js/product-ui.js?v=4"></script>
 <script>
   const STORAGE_KEY_ID  = 'turma_id';
   const STORAGE_KEY_PIN = 'turma_pin';
@@ -891,7 +1564,7 @@
         : '<div class="score-card__max score-card__waiting">Aguardando avaliação</div>';
       return '<div class="score-card" style="border-top:2px solid ' + c.color + '">'
         + '<div class="score-card__label">' + c.label + '</div>'
-        + '<div class="score-card__val' + (semAvaliacao ? ' score-card__val--pending' : '') + '">' + fmt(val) + '</div>'
+        + '<div class="score-card__val' + (semAvaliacao ? ' score-card__val--pending' : '') + '">' + (semAvaliacao ? '—' : fmt(val)) + '</div>'
         + maxLine
         + '<div class="score-card__bar-track" style="margin-top:.625rem"><div class="score-card__bar-fill" style="width:' + pct + '%;background:' + c.color + '"></div></div>'
         + '</div>';
@@ -970,7 +1643,7 @@
 
     var eq = data.equipe || {};
     var raw        = nomesMap[eq.id] || eq.nome || eq.id;
-    var partes     = raw.split(' - ');
+    var partes     = raw.split(/\s+[·-]\s+/);
     var nomeExibido = partes.length > 1 ? partes[1].trim() : raw;
     var turmaSigla  = partes.length > 1 ? partes[0].trim() : '';
 
@@ -1002,7 +1675,7 @@
 
       var catBadges = cats.map(function(cat) {
         var sorted = all.slice().sort(function(a, b) {
-          return (b[cat.campo] || 0) - (a[cat.campo] || 0);
+          return (b[cat.campo] || 0) · (a[cat.campo] || 0);
         });
         var pos = sorted.findIndex(function(e) { return e.id === eq.id; }) + 1;
         return '<span class="rank-badge" style="border-left:3px solid ' + cat.cor + '">'
@@ -1098,13 +1771,13 @@
   });
 
   var nomesMap = {
-    TUR01:'6° A - Cyber Panter', TUR02:'6° B - Liga do Choque',
-    TUR03:'6° C - Alpha Tech',   TUR04:'6° D - Pheonics Mecanics',
-    TUR05:'6° E - TecShark',     TUR06:'7° A - Hoppin Robots',
-    TUR07:'7° B - Bivoltx',      TUR08:'7° C - Ecoshift',
-    TUR09:'7° D - Pantera Lego Team', TUR10:'7° E - Império das Onças',
-    TUR11:'7° F - Poseidon',     TUR12:'7° G - Arara Azul',
-    TUR13:'7° H - Nexos'
+    TUR01:'6º A · Cyber Panter', TUR02:'6º B · Liga do Choque',
+    TUR03:'6º C · Alpha Tech',   TUR04:'6º D · Pheonics Mecanics',
+    TUR05:'6º E · TecShark',     TUR06:'7º A · Hoppin Robots',
+    TUR07:'7º B · Bivoltx',      TUR08:'7º C · Ecoshift',
+    TUR09:'7º D · Pantera Lego Team', TUR10:'7º E · Império das Onças',
+    TUR11:'7º F · Poseidon',     TUR12:'7º G · Arara Azul',
+    TUR13:'7º H · Nexos'
   };
 
   async function carregarEquipes() {
@@ -1115,7 +1788,7 @@
         sel.innerHTML = '<option value="">— selecione —</option>' +
           r.equipes.map(function(e) {
             var rawN  = nomesMap[e.id] || e.nome || e.id;
-            var psN   = rawN.split(' - ');
+            var psN   = rawN.split(/\s+[·-]\s+/);
             var nome  = psN.length > 1 ? psN[1].trim() : rawN;
             var tSig  = psN.length > 1 ? psN[0].trim() : '';
             var label = (tSig ? tSig + ' · ' : '') + nome + (e.tutor ? ' (' + e.tutor + ')' : '');
@@ -1134,7 +1807,7 @@
     document.getElementById('view-login').classList.add('hidden');
     document.getElementById('view-resultados').classList.remove('hidden');
     var raw    = nomesMap[id] || id;
-    var partes = raw.split(' - ');
+    var partes = raw.split(/\s+[·-]\s+/);
     var nome   = partes.length > 1 ? partes[1].trim() : raw;
     var sigla  = partes.length > 1 ? partes[0].trim() : '';
     document.getElementById('eq-id').textContent   = nome;
