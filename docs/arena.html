@@ -903,10 +903,59 @@
     renderFase(fase);
   }
 
-  function toggleFaseConfig() {
+  var _rankingEquipes = []; /* cache do ranking para seed automático */
+
+  async function toggleFaseConfig() {
     FASE_CONFIG = !FASE_CONFIG;
     document.getElementById('btn-fase-config').classList.toggle('ativo', FASE_CONFIG);
+
+    if (FASE_CONFIG && _rankingEquipes.length === 0) {
+      /* Busca ranking e auto-semeia */
+      try {
+        var r = await API.ranking();
+        if (r && r.ok && Array.isArray(r.equipes)) {
+          _rankingEquipes = r.equipes
+            .filter(function(e) { return e.id; })
+            .sort(function(a, b) { return Number(b.total || 0) - Number(a.total || 0) });
+          autoSeedFases(_rankingEquipes);
+        }
+      } catch(_) {}
+    }
+
     renderFase(FASE_ATUAL);
+  }
+
+  function autoSeedFases(eq, forcar) {
+    /* Semeia cada fase com as top-N equipes do ranking,
+       usando o chaveamento clássico: 1xN, 2x(N-1), ... */
+    var config = { oitavas: 16, quartas: 8, semis: 4, final: 2 };
+    Object.keys(config).forEach(function(fase) {
+      var top  = eq.slice(0, config[fase]);
+      var n    = top.length / 2;
+      if (!forcar) {
+        var jaSemeada = faseDados[fase].some(function(p) { return p.eqA || p.eqB; });
+        if (jaSemeada) return;
+      }
+      for (var i = 0; i < n; i++) {
+        faseDados[fase][i].eqA = (top[i]                    || {}).id || '';
+        faseDados[fase][i].eqB = (top[top.length - 1 - i]   || {}).id || '';
+      }
+    });
+    salvarFaseLocal();
+  }
+
+  async function ressemearFase() {
+    try {
+      var r = await API.ranking();
+      if (r && r.ok && Array.isArray(r.equipes)) {
+        _rankingEquipes = r.equipes
+          .filter(function(e) { return e.id; })
+          .sort(function(a, b) { return Number(b.total || 0) - Number(a.total || 0) });
+        autoSeedFases(_rankingEquipes, true);
+        renderFase(FASE_ATUAL);
+        salvarFaseRemoto();
+      }
+    } catch(_) {}
   }
 
   function nomeEquipe(id) {
@@ -932,7 +981,9 @@
       }).join('');
       opts = '<option value="">— Selecionar equipe —</option>' + opts;
 
-      var html = '<p class="fase-label">' + def.label + ' · selecione as equipes de cada confronto</p>'
+      var html = '<p class="fase-label">' + def.label + ' · chaveamento gerado pelo ranking'
+        + ' <button onclick="ressemearFase()" style="font-size:.68rem;padding:.2rem .55rem;border:1px solid rgba(255,255,255,.25);border-radius:5px;background:rgba(255,255,255,.1);color:inherit;cursor:pointer;margin-left:.4rem">Atualizar do ranking</button>'
+        + '</p>'
         + '<div class="bracket-grid">';
       partidas.forEach(function(p, i) {
         html += '<div class="match-card">'
