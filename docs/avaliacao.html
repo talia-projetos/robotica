@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avaliação — HUB Circuito</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="css/styles.css?v=8">
+  <script>window.API_URL='https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';</script>
+  <style>
+    body { background: #F0F4F8; }
+
+    /* ── Contentor ───────────────────────────────────────────── */
+    .av-wrap { max-width: 780px; margin: 0 auto; padding: 1.6rem 1.25rem 4rem; }
+
+    /* ── Cabeçalho de categoria ─────────────────────────────── */
+    .av-head {
+      display: flex; align-items: center; gap: 1rem;
+      border-radius: 16px; padding: 1.1rem 1.3rem;
+      margin-bottom: 1.5rem; color: #fff;
+    }
+    .av-head__icon {
+      width: 46px; height: 46px; border-radius: 13px;
+      background: rgba(255,255,255,.18);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .av-head__icon svg { width: 22px; height: 22px; fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .av-head__cat  { font-size: .72rem; font-weight: 700; opacity: .72; text-transform: uppercase; letter-spacing: .08em; }
+    .av-head__nome { font-size: 1.15rem; font-weight: 900; letter-spacing: -.02em; }
+    .av-head__pts  { margin-left: auto; font-size: .78rem; font-weight: 700; opacity: .75; white-space: nowrap; }
+
+    /* ── Escala de referência ───────────────────────────────── */
+    .escala-bar {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem;
+      margin-bottom: 1.25rem;
+    }
+    .escala-item {
+      border: 1.5px solid; border-radius: 10px;
+      padding: .55rem .7rem; font-size: .78rem;
+    }
+    .escala-item__num { font-size: 1.2rem; font-weight: 900; line-height: 1; display: block; }
+    .escala-item__nome { font-weight: 800; font-size: .75rem; display: block; margin-top: .1rem; }
+    .escala-item__desc { font-size: .65rem; color: #64748B; margin-top: .15rem; }
+    .ei1 { border-color: #E57373; background: #FFF5F5; }
+    .ei1 .escala-item__num { color: #C62828; }
+    .ei2 { border-color: #FFB74D; background: #FFFCF5; }
+    .ei2 .escala-item__num { color: #E65100; }
+    .ei3 { border-color: #66BB6A; background: #F5FFF5; }
+    .ei3 .escala-item__num { color: #2E7D32; }
+    .ei4 { border-color: #42A5F5; background: #F0F9FF; }
+    .ei4 .escala-item__num { color: #1565C0; }
+
+    /* ── Seleção de equipe ──────────────────────────────────── */
+    .eq-selector {
+      background: #fff; border: 1px solid #E2E8F0; border-radius: 14px;
+      padding: 1rem 1.2rem; margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .eq-selector label { font-size: .8rem; font-weight: 700; color: #374151; white-space: nowrap; }
+    .eq-selector select {
+      flex: 1; padding: .55rem .8rem;
+      border: 1.5px solid #D9E2EC; border-radius: 9px;
+      font-family: inherit; font-size: .88rem;
+      background: #F8FAFC; color: #0F172A; cursor: pointer;
+    }
+    .eq-selector select:focus { outline: none; border-color: var(--azul); }
+
+    /* ── Bloco de critérios ─────────────────────────────────── */
+    .bloco-card {
+      background: #fff; border: 1px solid #E2E8F0; border-radius: 14px;
+      overflow: hidden; margin-bottom: 1rem;
+    }
+    .bloco-head {
+      padding: .6rem 1rem; font-size: .72rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .06em; color: #fff;
+    }
+    .criterio-row {
+      display: grid; grid-template-columns: minmax(0,1fr) auto;
+      align-items: center; gap: 1rem;
+      padding: .9rem 1rem;
+      border-top: 1px solid #F1F5F9;
+    }
+    .criterio-row:first-of-type { border-top: none; }
+    .criterio-cod  { font-size: .68rem; font-weight: 800; color: #94A3B8; margin-bottom: .2rem; }
+    .criterio-nome { font-size: .9rem; font-weight: 700; color: #0F172A; }
+    .criterio-desc { font-size: .75rem; color: #64748B; margin-top: .2rem; line-height: 1.45; }
+
+    /* ── Selector de nota 1-4 ───────────────────────────────── */
+    .score-sel { display: flex; gap: .35rem; flex-shrink: 0; }
+    .score-btn {
+      width: 38px; height: 38px; border-radius: 9px;
+      border: 2px solid #D9E2EC; background: #F8FAFC;
+      font-size: .88rem; font-weight: 800; color: #94A3B8;
+      cursor: pointer; transition: border-color .12s, background .12s, color .12s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .score-btn:hover { border-color: #94A3B8; color: #475569; }
+    .score-btn.ativo {
+      color: #fff;
+      border-color: transparent;
+    }
+
+    /* ── Soma progressiva ───────────────────────────────────── */
+    .total-bar {
+      background: #fff; border: 1px solid #E2E8F0; border-radius: 14px;
+      padding: 1rem 1.2rem; margin-bottom: 1.25rem;
+      display: flex; align-items: center; gap: 1.25rem;
+    }
+    .total-bar__label { font-size: .82rem; color: #64748B; font-weight: 600; flex: 1; }
+    .total-bar__val   { font-size: 1.8rem; font-weight: 900; color: #0F172A; line-height: 1; }
+    .total-bar__max   { font-size: .78rem; color: #94A3B8; font-weight: 600; }
+
+    /* ── Observações ────────────────────────────────────────── */
+    .obs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; margin-bottom: 1.25rem; }
+    .obs-card { background: #fff; border: 1px solid #E2E8F0; border-radius: 14px; padding: 1rem; }
+    .obs-card__label { font-size: .72rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; color: #64748B; margin-bottom: .6rem; }
+    .obs-card textarea {
+      width: 100%; box-sizing: border-box;
+      border: 1.5px solid #E2E8F0; border-radius: 9px;
+      font-family: inherit; font-size: .84rem; color: #1e293b;
+      padding: .55rem .7rem; resize: vertical; min-height: 88px;
+      line-height: 1.5; background: #F8FAFC;
+    }
+    .obs-card textarea:focus { outline: none; border-color: var(--azul); background: #fff; }
+
+    /* ── Botão enviar ───────────────────────────────────────── */
+    .av-footer {
+      position: sticky; bottom: 0;
+      background: rgba(240,244,248,.92); backdrop-filter: blur(8px);
+      padding: .9rem 0; display: flex; align-items: center; gap: 1rem;
+    }
+    .av-footer__info { font-size: .78rem; color: #64748B; flex: 1; }
+    #btn-enviar {
+      min-width: 160px; padding: .7rem 1.4rem;
+      border-radius: 10px; border: none;
+      font-family: inherit; font-size: .9rem; font-weight: 800;
+      color: #fff; cursor: pointer; transition: opacity .15s, box-shadow .15s;
+    }
+    #btn-enviar:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ── Sucesso ────────────────────────────────────────────── */
+    .av-sucesso {
+      display: none; text-align: center;
+      background: #fff; border: 1px solid #E2E8F0; border-radius: 20px;
+      padding: 3rem 2rem; margin-top: 2rem;
+    }
+    .av-sucesso__icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: #ECFDF5; margin: 0 auto 1rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .av-sucesso__icon svg { width: 28px; height: 28px; stroke: #059669; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .av-sucesso__title { font-size: 1.25rem; font-weight: 900; color: #0F172A; margin-bottom: .4rem; }
+    .av-sucesso__sub   { font-size: .88rem; color: #64748B; margin-bottom: 1.5rem; }
+
+    @media (max-width: 600px) {
+      .escala-bar { grid-template-columns: 1fr 1fr; }
+      .obs-grid   { grid-template-columns: 1fr; }
+      .criterio-row { grid-template-columns: 1fr; }
+      .score-sel { margin-top: .4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topbar">
+  <a href="index.html" class="topbar__brand"><img src="logo.svg" alt="HUB Circuito"></a>
+  <div class="topbar__event">
+    <div class="topbar__event-name">Torneio Interno de Robótica</div>
+    <div class="topbar__event-org">Escola SESI Reitor Miguel Calmon</div>
+  </div>
+  <div class="topbar__badge">
+    <span id="badge-juiz" class="text-sm"></span>
+    <span class="spinner" id="spinner" style="display:none"></span>
+  </div>
+</header>
+
+<div class="app-body">
+
+<nav class="app-sidebar">
+  <a href="index.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg> Início</a>
+  <a href="arena.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg> Arena</a>
+  <a href="juizes.html" class="sidebar-item ativo"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11.5" rx="1.5"/><path d="M6 2.5a2 2 0 014 0"/><path d="M5.5 7.5h5M5.5 10.5h3"/></svg> Juízes</a>
+  <a href="ranking.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13V9M8 13V6M13 13V3"/></svg> Ranking</a>
+  <div class="sidebar-sep"></div>
+  <a href="rubricas.html" target="_blank" class="sidebar-item">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="1.5" width="10" height="13" rx="1.5"/><path d="M5.5 5.5h5M5.5 8h3"/></svg> Rubricas PDF
+  </a>
+</nav>
+
+<main class="app-main">
+<div class="av-wrap">
+
+  <!-- ── Cabeçalho da categoria ── -->
+  <div class="av-head" id="av-head">
+    <div class="av-head__icon" id="av-head-icon">
+      <svg viewBox="0 0 22 22"><path d="M11 2L3 7v8l8 5 8-5V7z"/><path d="M11 12V7"/><circle cx="11" cy="14" r="1"/></svg>
+    </div>
+    <div>
+      <div class="av-head__cat">Rubrica de Avaliação</div>
+      <div class="av-head__nome" id="av-head-nome">Carregando…</div>
+    </div>
+    <div class="av-head__pts" id="av-head-pts"></div>
+  </div>
+
+  <!-- Escala de referência -->
+  <div class="escala-bar">
+    <div class="escala-item ei1"><span class="escala-item__num">1</span><span class="escala-item__nome">Iniciante</span><span class="escala-item__desc">Sem evidências suficientes</span></div>
+    <div class="escala-item ei2"><span class="escala-item__num">2</span><span class="escala-item__nome">Em desenvolvimento</span><span class="escala-item__desc">Ideias presentes, incompletas</span></div>
+    <div class="escala-item ei3"><span class="escala-item__num">3</span><span class="escala-item__nome">Finalizado</span><span class="escala-item__desc">Atendeu bem ao critério</span></div>
+    <div class="escala-item ei4"><span class="escala-item__num">4</span><span class="escala-item__nome">Excedente</span><span class="escala-item__desc">Foi além do esperado</span></div>
+  </div>
+
+  <!-- Seleção de equipe -->
+  <div class="eq-selector">
+    <label for="sel-equipe">Equipe avaliada</label>
+    <select id="sel-equipe">
+      <option value="">— Selecione a equipe —</option>
+      <option value="TUR01">6° A — Cyber Panter</option>
+      <option value="TUR02">6° B — Liga do Choque</option>
+      <option value="TUR03">6° C — Alpha Tech</option>
+      <option value="TUR04">6° D — Pheonics Mecanics</option>
+      <option value="TUR05">6° E — TecShark</option>
+      <option value="TUR06">7° A — Hoppin Robots</option>
+      <option value="TUR07">7° B — Bivoltx</option>
+      <option value="TUR08">7° C — Ecoshift</option>
+      <option value="TUR09">7° D — Pantera Lego Team</option>
+      <option value="TUR10">7° E — Império das Onças</option>
+      <option value="TUR11">7° F — Poseidon</option>
+      <option value="TUR12">7° G — Arara Azul</option>
+      <option value="TUR13">7° H — Nexos</option>
+    </select>
+  </div>
+
+  <!-- Critérios (gerados por JS) -->
+  <div id="criterios-wrap"></div>
+
+  <!-- Soma -->
+  <div class="total-bar">
+    <div class="total-bar__label">Pontuação total<br><span style="font-size:.72rem;color:#94A3B8">Em dúvida entre dois níveis, marque sempre o menor</span></div>
+    <div>
+      <span class="total-bar__val" id="total-val">0</span>
+      <span class="total-bar__max" id="total-max"> / 40</span>
+    </div>
+  </div>
+
+  <!-- Observações -->
+  <div class="obs-grid">
+    <div class="obs-card">
+      <div class="obs-card__label">Bom trabalho — pontos fortes</div>
+      <textarea id="obs-bom" placeholder="O que a equipe fez bem…"></textarea>
+    </div>
+    <div class="obs-card">
+      <div class="obs-card__label">Reflitam sobre — oportunidades de melhoria</div>
+      <textarea id="obs-mel" placeholder="O que pode melhorar…"></textarea>
+    </div>
+  </div>
+
+  <!-- Footer fixo -->
+  <div class="av-footer">
+    <div class="av-footer__info" id="av-footer-info">Preencha todos os critérios e selecione a equipe.</div>
+    <button id="btn-enviar" disabled onclick="enviar()">Enviar avaliação</button>
+  </div>
+
+  <!-- Sucesso -->
+  <div class="av-sucesso" id="av-sucesso">
+    <div class="av-sucesso__icon">
+      <svg viewBox="0 0 28 28"><polyline points="4,14 10,20 24,8"/></svg>
+    </div>
+    <div class="av-sucesso__title">Avaliação registrada</div>
+    <div class="av-sucesso__sub" id="sucesso-sub">Pontuação enviada com sucesso.</div>
+    <button class="btn btn-primary" onclick="novaAvaliacao()">Avaliar outra equipe</button>
+  </div>
+
+</div>
+</main>
+</div>
+
+<div id="toast"></div>
+<script src="js/api.js"></script>
+<script>
+
+/* ─── Dados das rubricas ─────────────────────────────────────── */
+var RUBRICAS = {
+  projeto: {
+    titulo: 'Projeto de Inovação',
+    cor: '#6A1B9A', corLight: '#EDE7F6', corDark: '#4A148C',
+    icon: '<path d="M11 2L3 7v8l8 5 8-5V7z"/><circle cx="11" cy="11" r="2.5"/>',
+    blocos: [
+      { label: 'Identificar', criterios: [
+        { cod:'P1', nome:'Escolha do local', desc:'A equipe selecionou um local real de Salvador ou Região Metropolitana e justificou a escolha' },
+        { cod:'P2', nome:'Identificação do problema', desc:'Problema claro, específico e relacionado ao equilíbrio ambiental' }
+      ]},
+      { label: 'Planejar e Pesquisar', criterios: [
+        { cod:'P3', nome:'Evidências e pesquisa', desc:'Fotos, mapas, dados, entrevistas ou observações do local/problema' },
+        { cod:'P4', nome:'Causas e consequências', desc:'Explicação das causas do problema, quem é afetado e quais os impactos' }
+      ]},
+      { label: 'Criar / Prototipar', criterios: [
+        { cod:'P5', nome:'Solução inovadora', desc:'Solução ligada diretamente ao problema e ao local escolhido; demonstra criatividade' },
+        { cod:'P6', nome:'Protótipo ou demonstração', desc:'Maquete, robô, app, mapa ou outra forma concreta de representação da solução' }
+      ]},
+      { label: 'Testar e Melhorar', criterios: [
+        { cod:'P7', nome:'Validação da ideia', desc:'Apresentação externa da solução e registro de feedback recebido' },
+        { cod:'P8', nome:'Melhorias realizadas', desc:'Ajustes na solução após testes, críticas ou novas descobertas' }
+      ]},
+      { label: 'Comunicar e Impactar', criterios: [
+        { cod:'P9', nome:'Impacto ambiental e social', desc:'Benefícios claros ao ambiente, à comunidade e aos seres vivos do local' },
+        { cod:'P10', nome:'Comunicação da equipe', desc:'Clareza, participação de todos os membros e domínio do tema na apresentação' }
+      ]}
+    ]
+  },
+  design: {
+    titulo: 'Design do Robô',
+    cor: '#BF360C', corLight: '#FBE9E7', corDark: '#8D2608',
+    icon: '<rect x="4" y="8" width="14" height="10" rx="2"/><path d="M8 8V6a3 3 0 016 0v2"/><circle cx="9" cy="13" r="1"/><circle cx="13" cy="13" r="1"/>',
+    blocos: [
+      { label: 'Identificar', criterios: [
+        { cod:'D1', nome:'Compreensão do desafio', desc:'Domínio das regras, objetivos e limites do torneio' },
+        { cod:'D2', nome:'Estratégia de missões', desc:'Priorização das missões escolhidas com justificativas claras' }
+      ]},
+      { label: 'Planejar', criterios: [
+        { cod:'D3', nome:'Planejamento mecânico', desc:'Decisões de formato, tamanho e estrutura do robô documentadas' },
+        { cod:'D4', nome:'Planejamento da programação', desc:'Mapeamento de movimentos, sensores e sequências antes de codificar' }
+      ]},
+      { label: 'Criar / Construir', criterios: [
+        { cod:'D5', nome:'Construção do robô', desc:'Estabilidade, adequação mecânica e qualidade da construção' },
+        { cod:'D6', nome:'Anexos, mecanismos e programação', desc:'Ferramentas/acessórios do robô e qualidade do código desenvolvido' }
+      ]},
+      { label: 'Testar e Melhorar', criterios: [
+        { cod:'D7', nome:'Testes realizados', desc:'Observação sistemática de erros e registro dos resultados dos testes' },
+        { cod:'D8', nome:'Melhorias no robô e no código', desc:'Ajustes concretos realizados a partir dos testes e observações' }
+      ]},
+      { label: 'Comunicar e Demonstrar', criterios: [
+        { cod:'D9', nome:'Explicação técnica', desc:'A equipe explica com clareza as escolhas mecânicas e de programação' },
+        { cod:'D10', nome:'Desempenho no desafio prático', desc:'Execução real das missões na arena — consistência e resultado' }
+      ]}
+    ]
+  },
+  core: {
+    titulo: 'Core Values',
+    cor: '#1B5E20', corLight: '#E8F5E9', corDark: '#145218',
+    icon: '<circle cx="8" cy="6" r="2.5"/><circle cx="14" cy="6" r="2.5"/><path d="M3 16c0-3 2.2-5 5-5h6c2.8 0 5 2 5 5"/>',
+    blocos: [
+      { label: 'Identificar', criterios: [
+        { cod:'C1', nome:'Descoberta', desc:'Curiosidade, vontade de aprender e compreensão do processo como um todo' },
+        { cod:'C2', nome:'Reconhecimento dos desafios', desc:'Identificação de dificuldades no projeto, no robô ou nas relações do grupo' }
+      ]},
+      { label: 'Planejar em Equipe', criterios: [
+        { cod:'C3', nome:'Trabalho em equipe', desc:'Colaboração efetiva, divisão justa de tarefas e apoio mútuo entre os membros' },
+        { cod:'C4', nome:'Inclusão e respeito', desc:'Espaço garantido para que todos participem e contribuam com suas ideias' }
+      ]},
+      { label: 'Criar Juntos', criterios: [
+        { cod:'C5', nome:'Criatividade coletiva', desc:'Uso das ideias de todos os membros para construir soluções em conjunto' },
+        { cod:'C6', nome:'Cooperação na solução de problemas', desc:'Resolução colaborativa de dificuldades técnicas e interpessoais' }
+      ]},
+      { label: 'Aprender com os Erros', criterios: [
+        { cod:'C7', nome:'Persistência', desc:'Esforço contínuo diante de erros, falhas e limitações do projeto' },
+        { cod:'C8', nome:'Aprendizagem com feedback', desc:'Abertura a sugestões externas e uso crítico e construtivo delas' }
+      ]},
+      { label: 'Coopertition®', criterios: [
+        { cod:'C9', nome:'Gracious Professionalism®', desc:'Respeito, ética e boa convivência com outras equipes e com os organizadores' },
+        { cod:'C10', nome:'Impacto e identidade da equipe', desc:'Entusiasmo, orgulho da equipe e comprometimento com a comunidade' }
+      ]}
+    ]
+  }
+};
+
+/* ─── Estado ─────────────────────────────────────────────────── */
+var CAT  = '';
+var DEF  = null;
+var NOTAS = {};   // cod -> 1|2|3|4
+
+/* ─── Init ───────────────────────────────────────────────────── */
+(function init() {
+  if (!Sessao.logado()) {
+    location.href = 'juizes.html';
+    return;
+  }
+  document.getElementById('badge-juiz').textContent = Sessao.juiz;
+
+  CAT = new URLSearchParams(location.search).get('cat') || '';
+  DEF = RUBRICAS[CAT];
+
+  if (!DEF) {
+    document.getElementById('av-head-nome').textContent = 'Categoria inválida';
+    return;
+  }
+
+  /* Cabeçalho */
+  var head = document.getElementById('av-head');
+  head.style.background = 'linear-gradient(135deg,' + DEF.cor + ' 0%,' + DEF.corDark + ' 100%)';
+  document.getElementById('av-head-nome').textContent = DEF.titulo;
+  document.getElementById('av-head-pts').textContent  = '10 critérios · até 40 pts';
+  document.getElementById('av-head-icon').querySelector('svg').innerHTML = DEF.icon;
+
+  /* Botão enviar */
+  var btn = document.getElementById('btn-enviar');
+  btn.style.background = DEF.cor;
+
+  /* Render critérios */
+  renderCriterios();
+})();
+
+function renderCriterios() {
+  var wrap = document.getElementById('criterios-wrap');
+  var html = '';
+
+  DEF.blocos.forEach(function(bloco) {
+    html += '<div class="bloco-card">'
+      + '<div class="bloco-head" style="background:' + DEF.cor + '">' + bloco.label + '</div>';
+
+    bloco.criterios.forEach(function(c) {
+      html += '<div class="criterio-row">'
+        + '<div>'
+        + '<div class="criterio-cod">' + c.cod + '</div>'
+        + '<div class="criterio-nome">' + c.nome + '</div>'
+        + '<div class="criterio-desc">' + c.desc + '</div>'
+        + '</div>'
+        + '<div class="score-sel" id="sel-' + c.cod + '">';
+      [1,2,3,4].forEach(function(n) {
+        html += '<button class="score-btn" data-cod="' + c.cod + '" data-val="' + n + '" onclick="marcar(this)">' + n + '</button>';
+      });
+      html += '</div></div>';
+    });
+    html += '</div>';
+  });
+
+  wrap.innerHTML = html;
+  atualizarTotal();
+}
+
+function marcar(btn) {
+  var cod = btn.dataset.cod;
+  var val = Number(btn.dataset.val);
+  NOTAS[cod] = val;
+
+  /* Atualiza visuais do grupo */
+  var grupo = document.getElementById('sel-' + cod).querySelectorAll('.score-btn');
+  grupo.forEach(function(b) {
+    var active = Number(b.dataset.val) === val;
+    b.classList.toggle('ativo', active);
+    if (active) {
+      b.style.background = DEF.cor;
+    } else {
+      b.style.background = '';
+    }
+  });
+
+  atualizarTotal();
+  verificarPronto();
+}
+
+function atualizarTotal() {
+  var soma = 0;
+  Object.values(NOTAS).forEach(function(v) { soma += v; });
+  document.getElementById('total-val').textContent = soma;
+}
+
+function verificarPronto() {
+  var totalCriterios = 0;
+  DEF.blocos.forEach(function(b) { totalCriterios += b.criterios.length; });
+  var preenchidos = Object.keys(NOTAS).length;
+  var equipe      = document.getElementById('sel-equipe').value;
+
+  var btn  = document.getElementById('btn-enviar');
+  var info = document.getElementById('av-footer-info');
+
+  if (!equipe) {
+    info.textContent = 'Selecione a equipe antes de enviar.';
+    btn.disabled = true;
+  } else if (preenchidos < totalCriterios) {
+    info.textContent = preenchidos + ' de ' + totalCriterios + ' critérios preenchidos.';
+    btn.disabled = true;
+  } else {
+    info.textContent = 'Todos os critérios preenchidos. Pronto para enviar.';
+    btn.disabled = false;
+  }
+}
+
+document.getElementById('sel-equipe').addEventListener('change', verificarPronto);
+
+async function enviar() {
+  var equipe = document.getElementById('sel-equipe').value;
+  if (!equipe) { toast('Selecione a equipe.', 'err'); return; }
+
+  /* Monta array ordenado de notas */
+  var ordemCods = [];
+  DEF.blocos.forEach(function(b) {
+    b.criterios.forEach(function(c) { ordemCods.push(c.cod); });
+  });
+  var notasArr = ordemCods.map(function(cod) { return NOTAS[cod] || 0; });
+
+  var btn = document.getElementById('btn-enviar');
+  btn.disabled = true; btn.textContent = 'Enviando…';
+  document.getElementById('spinner').style.display = '';
+
+  try {
+    var obsB = document.getElementById('obs-bom').value.trim();
+    var obsM = document.getElementById('obs-mel').value.trim();
+
+    var r = await API.salvarRubrica(Sessao.juiz, Sessao.pin, CAT, equipe, notasArr);
+    if (!r.ok) throw new Error(r.erro || 'Erro desconhecido');
+
+    /* Envia comentários se preenchidos */
+    if (obsB) API.comentar(Sessao.juiz, Sessao.pin, '[BOM] ' + obsB, CAT).catch(function(){});
+    if (obsM) API.comentar(Sessao.juiz, Sessao.pin, '[MEL] ' + obsM, CAT).catch(function(){});
+
+    /* Mostra sucesso */
+    document.getElementById('criterios-wrap').style.display = 'none';
+    document.querySelector('.escala-bar').style.display      = 'none';
+    document.querySelector('.eq-selector').style.display    = 'none';
+    document.querySelector('.total-bar').style.display      = 'none';
+    document.querySelector('.obs-grid').style.display       = 'none';
+    document.querySelector('.av-footer').style.display      = 'none';
+
+    var soma = notasArr.reduce(function(a,b){return a+b;}, 0);
+    document.getElementById('sucesso-sub').textContent =
+      'Pontuação de ' + soma + ' pts registrada para ' + document.getElementById('sel-equipe').selectedOptions[0].text + '.';
+    document.getElementById('av-sucesso').style.display = 'block';
+
+  } catch(e) {
+    toast('Erro ao enviar: ' + e.message, 'err');
+    btn.disabled = false;
+    btn.textContent = 'Enviar avaliação';
+  } finally {
+    document.getElementById('spinner').style.display = 'none';
+  }
+}
+
+function novaAvaliacao() {
+  /* Reseta estado */
+  NOTAS = {};
+  document.getElementById('sel-equipe').value = '';
+  document.getElementById('obs-bom').value    = '';
+  document.getElementById('obs-mel').value    = '';
+  document.getElementById('av-sucesso').style.display = 'none';
+
+  ['criterios-wrap','.escala-bar','.eq-selector','.total-bar','.obs-grid','.av-footer'].forEach(function(s) {
+    var el = s.startsWith('.') ? document.querySelector(s) : document.getElementById(s);
+    if (el) el.style.display = '';
+  });
+
+  renderCriterios();
+  verificarPronto();
+}
+</script>
+</body>
+</html>

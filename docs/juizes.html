@@ -1197,16 +1197,15 @@
 <script src="js/sidebar-roles.js?v=5"></script>
 <script src="js/product-ui.js?v=5"></script>
 <script>
-  const FORMS = {
-    desafio: 'https://forms.gle/6zZxqCMxTdndWUh58',
-    projeto: 'https://forms.gle/MpUiT3ALTPMVGNbH6',
-    design:  'https://forms.gle/fG5bdL1uS2e5dqia9',
-    core:    'https://forms.gle/fWaSW9m89ADv7nQ38'
-  };
-  document.getElementById('link-desafio').href = FORMS.desafio;
-  document.getElementById('link-projeto').href = FORMS.projeto;
-  document.getElementById('link-design').href  = FORMS.design;
-  document.getElementById('link-core').href    = FORMS.core;
+  document.getElementById('link-desafio').href   = 'arena.html';
+  document.getElementById('link-projeto').href   = 'avaliacao.html?cat=projeto';
+  document.getElementById('link-design').href    = 'avaliacao.html?cat=design';
+  document.getElementById('link-core').href      = 'avaliacao.html?cat=core';
+  /* Remove target _blank nos links internos */
+  ['link-desafio','link-projeto','link-design','link-core'].forEach(function(id) {
+    document.getElementById(id).removeAttribute('target');
+    document.getElementById(id).removeAttribute('rel');
+  });
 
   document.getElementById('l-pin').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') entrar();
