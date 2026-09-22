@@ -380,7 +380,7 @@
     }
   </style>
   <script>
-    window.API_URL = 'https://script.google.com/macros/s/AKfycbzqHVhITbTv6_v4PWRlZHniO8x7qqshjXU9BNbIP55TOgShvmXIPPYF2dm3kU2HJIf0/exec';
+    window.API_URL = 'https://script.google.com/macros/s/AKfycbzeWkuxSTKNSJejbTW_hoLhcc5R2pKwujUGSgztDuBl8HMqPo7OOximMdcYh4sx6kg-/exec';
   </script>
 </head>
 <body>
@@ -529,7 +529,7 @@
     });
   }
 
-  /* Login */
+  /* Login — chamadas em paralelo para reduzir latência */
   async function tentarLogin() {
     var id  = document.getElementById('f-id').value.trim();
     var pin = document.getElementById('f-pin').value.trim();
@@ -540,40 +540,38 @@
 
     setLoading(true);
     try {
-      /* Juiz / coordenação */
-      try {
-        var r = await API.verificarJuiz(id, pin);
-        if (r.ok) {
-          setSuccess();
-          if (r.coordenador) {
-            limparSessoesDePapel();
-            CoordAuth.set(id, pin);
-            /* Coordenação também usa as áreas de avaliação sem novo login. */
-            Sessao.set(id, pin);
-            setTimeout(function () { location.replace('index.html'); }, 600);
-          } else {
-            limparSessoesDePapel();
-            Sessao.set(id, pin);
-            setTimeout(function () { location.replace('juizes.html'); }, 600);
-          }
-          return;
-        }
-      } catch (_) {}
+      var resultados = await Promise.allSettled([
+        API.verificarJuiz(id, pin),
+        API.turma(id.toUpperCase(), pin)
+      ]);
 
-      /* Turma / professores */
-      try {
-        var t = await API.turma(id.toUpperCase(), pin);
-        if (t.ok) {
-          setSuccess();
-          limparSessoesDePapel();
-          localStorage.setItem('turma_id',  id.toUpperCase());
-          localStorage.setItem('turma_pin', pin);
-          setTimeout(function () { location.replace('turma.html'); }, 600);
-          return;
-        }
-      } catch (_) {}
+      var juizRes  = resultados[0];
+      var turmaRes = resultados[1];
 
-      /* Falha: exibe erro no campo PIN (causa mais comum após ID correto) */
+      if (juizRes.status === 'fulfilled' && juizRes.value && juizRes.value.ok) {
+        var r = juizRes.value;
+        setSuccess();
+        limparSessoesDePapel();
+        if (r.coordenador) {
+          CoordAuth.set(id, pin);
+          Sessao.set(id, pin);
+          setTimeout(function () { location.replace('index.html'); }, 600);
+        } else {
+          Sessao.set(id, pin);
+          setTimeout(function () { location.replace('juizes.html'); }, 600);
+        }
+        return;
+      }
+
+      if (turmaRes.status === 'fulfilled' && turmaRes.value && turmaRes.value.ok) {
+        setSuccess();
+        limparSessoesDePapel();
+        localStorage.setItem('turma_id',  id.toUpperCase());
+        localStorage.setItem('turma_pin', pin);
+        setTimeout(function () { location.replace('turma.html'); }, 600);
+        return;
+      }
+
       fieldError('err-pin', 'Identificação ou PIN incorretos.');
       pinInput.focus();
       pinInput.select();
