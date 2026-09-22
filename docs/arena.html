@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="css/styles.css?v=6">
+  <link rel="stylesheet" href="css/styles.css?v=7">
   <style>
     /* ── Paleta da Arena — grafite azulado ───────────────────── */
     :root {
@@ -15,7 +15,7 @@
       --ar-border:   rgba(255,255,255,.07);
       --ar-border2:  rgba(255,255,255,.12);
       --ar-text:     #E0EAFA;
-      --ar-muted:    rgba(200,218,240,.38);
+      --ar-muted:    rgba(210,225,242,.62);
       --ar-gold:     #F2C94C;
       --ar-teal:     #4DC9C3;
       --ar-blue:     #508FCB;
@@ -23,9 +23,19 @@
       --ar-amber:    #F59E0B;
     }
 
+    html,
     body {
       background: var(--ar-bg);
       color: var(--ar-text);
+    }
+
+    .app-body,
+    .app-main {
+      background: var(--ar-bg) !important;
+    }
+
+    .app-main {
+      min-height: calc(100vh - 68px);
     }
 
     /* Tema claro */
@@ -41,6 +51,8 @@
       --ar-teal:     #0D9488;
     }
     body.claro .topbar { background: var(--marinho); }
+    body.claro .app-body,
+    body.claro .app-main { background: var(--ar-bg) !important; }
 
     /* ── Container ───────────────────────────────────────────── */
     .container { max-width: 1280px; }
@@ -583,8 +595,8 @@
 
 <div id="toast"></div>
 <script src="js/api.js"></script>
-<script src="js/sidebar-roles.js"></script>
-<script src="js/product-ui.js"></script>
+<script src="js/sidebar-roles.js?v=2"></script>
+<script src="js/product-ui.js?v=2"></script>
 <script>
   /* ── Utilitários de visualização ──────────────────────────── */
   function alternarTema() {

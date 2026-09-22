@@ -5,296 +5,304 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="css/styles.css?v=6">
+  <link rel="stylesheet" href="css/styles.css?v=7">
   <style>
-    body { background: #F0F4F8; }
+    body { background:#F4F7FB; }
 
-    /* ── Hero ────────────────────────────────────────────────── */
     .hub-hero {
-      background: #fff;
-      border-bottom: 1px solid #E2EBF4;
-      padding: 2rem 0 1.75rem;
+      background: transparent;
+      border: 0;
+      padding: 2rem 0 .7rem;
     }
     .hub-hero-inner {
-      max-width: 1100px;
+      max-width: 1180px;
       margin: 0 auto;
       padding: 0 2rem;
-      display: flex;
-      align-items: center;
-      gap: 2rem;
+      display: block;
     }
-    .hero-text { flex: 1; }
-
-    /* eyebrow: sidebar-roles.js sobrescreve o textContent */
+    .hero-heading {
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:2rem;
+      margin-bottom:1.15rem;
+    }
+    .hero-text { min-width:0; }
     .hero-eyebrow {
-      font-size: .7rem;
-      font-weight: 700;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: #508FCB;
-      margin-bottom: .5rem;
+      font-size:.66rem;
+      font-weight:800;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+      color:#3979B8;
+      margin-bottom:.38rem;
     }
-
-    /* h1: sidebar-roles.js injeta "Olá, [nome]!" */
     .hub-hero h1 {
-      font-size: 2rem;
-      font-weight: 900;
-      color: #0F1F33;
-      letter-spacing: -.04em;
-      line-height: 1.1;
-      margin: 0 0 .45rem;
+      margin:0;
+      color:#172236;
+      font-size:clamp(1.7rem,3vw,2.15rem);
+      line-height:1.08;
+      font-weight:760;
+      letter-spacing:-.045em;
     }
-    .hero-accent {
-      color: #508FCB;
-    }
-
+    .hero-accent { color:#172236; }
     .hero-date {
-      font-size: .78rem;
-      color: #7A8FA6;
-      margin-bottom: .9rem;
+      flex-shrink:0;
+      padding-top:.18rem;
+      color:#738297;
+      font-size:.72rem;
+      line-height:1.45;
+      text-align:right;
+    }
+    .hero-stats { display:none; }
+    .hero-cta-btn { display:none !important; }
+
+    .hero-dashboard {
+      display:grid;
+      grid-template-columns:minmax(0,1.55fr) minmax(270px,.85fr);
+      gap:.9rem;
+    }
+    .home-feature {
+      min-height:190px;
+      position:relative;
+      overflow:hidden;
+      display:flex;
+      align-items:flex-end;
+      padding:1.45rem 1.55rem;
+      border-radius:14px;
+      text-decoration:none;
+      background:
+        radial-gradient(circle at 80% 35%, rgba(80,204,198,.18), transparent 24%),
+        radial-gradient(circle at 65% 80%, rgba(80,143,203,.22), transparent 30%),
+        linear-gradient(135deg,#10243B 0%,#173B61 58%,#1C5076 100%);
+      border:1px solid rgba(255,255,255,.06);
+      box-shadow:0 12px 32px rgba(20,45,75,.12);
+    }
+    .home-feature::before {
+      content:'';
+      position:absolute;
+      inset:0;
+      opacity:.5;
+      background-image:
+        linear-gradient(90deg,transparent 24%,rgba(255,255,255,.05) 25%,rgba(255,255,255,.05) 26%,transparent 27%,transparent 74%,rgba(255,255,255,.04) 75%,rgba(255,255,255,.04) 76%,transparent 77%),
+        linear-gradient(transparent 24%,rgba(255,255,255,.04) 25%,rgba(255,255,255,.04) 26%,transparent 27%,transparent 74%,rgba(255,255,255,.035) 75%,rgba(255,255,255,.035) 76%,transparent 77%);
+      background-size:64px 64px;
+      mask-image:linear-gradient(to left,#000,transparent 80%);
+      pointer-events:none;
+    }
+    .home-feature::after {
+      content:'';
+      position:absolute;
+      right:42px;
+      top:31px;
+      width:86px;
+      height:86px;
+      border:2px solid rgba(117,207,231,.28);
+      border-radius:50%;
+      box-shadow:
+        0 0 0 18px rgba(80,143,203,.06),
+        58px 38px 0 -35px rgba(80,204,198,.8),
+        -44px 58px 0 -36px rgba(80,143,203,.85);
+    }
+    .home-feature__copy { position:relative; z-index:1; }
+    .home-feature__kicker {
+      margin-bottom:.38rem;
+      font-size:.63rem;
+      font-weight:750;
+      text-transform:uppercase;
+      letter-spacing:.11em;
+      color:#84DCD6;
+    }
+    .home-feature__title {
+      max-width:420px;
+      color:#fff;
+      font-size:1.28rem;
+      line-height:1.18;
+      font-weight:730;
+      letter-spacing:-.025em;
+    }
+    .home-feature__sub {
+      margin-top:.42rem;
+      color:rgba(230,240,250,.66);
+      font-size:.74rem;
+      line-height:1.45;
     }
 
-    /* div vazio usado pelo sidebar-roles.js para injetar CTA */
-    .hero-stats { display: flex; gap: .5rem; flex-wrap: wrap; }
-
-    /* ── Card do torneio (lado direito do hero) ─────────────── */
     .hero-event-card {
-      flex-shrink: 0;
-      width: 240px;
-      background: #F7FAFF;
-      border: 1px solid #D8E8F8;
-      border-radius: 14px;
-      padding: 1.25rem 1.5rem;
+      width:auto;
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      padding:1.35rem 1.45rem;
+      border:1px solid #E0E8F1;
+      border-radius:14px;
+      background:#fff;
+      box-shadow:0 5px 18px rgba(15,23,42,.035);
     }
     .hero-event-label {
-      font-size: .65rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-      color: #508FCB;
-      margin-bottom: .5rem;
+      margin-bottom:.45rem;
+      color:#8390A2;
+      font-size:.61rem;
+      font-weight:800;
+      letter-spacing:.09em;
+      text-transform:uppercase;
     }
     .hero-event-name {
-      font-size: .9rem;
-      font-weight: 800;
-      color: #0F1F33;
-      line-height: 1.3;
-      margin-bottom: .3rem;
+      margin-bottom:.25rem;
+      color:#182438;
+      font-size:.94rem;
+      line-height:1.3;
+      font-weight:750;
     }
     .hero-event-org {
-      font-size: .75rem;
-      color: #64748B;
-      margin-bottom: .9rem;
+      margin-bottom:1rem;
+      color:#728196;
+      font-size:.72rem;
     }
     .hero-event-link {
-      display: inline-flex;
-      align-items: center;
-      gap: .3rem;
-      font-size: .75rem;
-      font-weight: 700;
-      color: #508FCB;
-      text-decoration: none;
+      align-self:flex-start;
+      display:inline-flex;
+      align-items:center;
+      gap:.3rem;
+      padding:.48rem .7rem;
+      border-radius:8px;
+      background:#EDF5FC;
+      color:#3979B8;
+      font-size:.7rem;
+      font-weight:750;
+      text-decoration:none;
     }
-    .hero-event-link:hover { text-decoration: underline; }
-    .hero-event-link svg {
-      width: 13px; height: 13px;
-      fill: none; stroke: currentColor;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-    }
+    .hero-event-link:hover { background:#E4F0FA; text-decoration:none; }
+    .hero-event-link svg { width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2; }
 
-    /* ── Main layout ─────────────────────────────────────────── */
     .hub-main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 1.75rem 2rem 5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.75rem;
+      max-width:1180px;
+      margin:0 auto;
+      padding:1.1rem 2rem 3rem;
+      display:flex;
+      flex-direction:column;
+      gap:1.55rem;
     }
-
-    /* ── Seção genérica ──────────────────────────────────────── */
-    .home-section {}
     .home-section-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: .85rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:.65rem;
     }
     .home-section-title {
-      font-size: .7rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      color: #64748B;
+      color:#617086;
+      font-size:.64rem;
+      font-weight:800;
+      letter-spacing:.095em;
+      text-transform:uppercase;
     }
     .home-section-link {
-      font-size: .75rem;
-      font-weight: 600;
-      color: #508FCB;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: .25rem;
+      display:inline-flex;
+      align-items:center;
+      gap:.2rem;
+      color:#3979B8;
+      font-size:.69rem;
+      font-weight:700;
+      text-decoration:none;
     }
-    .home-section-link svg {
-      width: 12px; height: 12px;
-      fill: none; stroke: currentColor;
-      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
-    }
-    .home-section-link:hover { text-decoration: underline; }
+    .home-section-link:hover { text-decoration:underline; }
+    .home-section-link svg { width:11px;height:11px;fill:none;stroke:currentColor;stroke-width:2; }
 
-    /* ── Acessos rápidos ─────────────────────────────────────── */
     .acessos-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: .85rem;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:.65rem;
     }
     .acesso {
-      display: flex;
-      align-items: center;
-      gap: .85rem;
-      padding: 1rem 1.25rem;
-      border-radius: 14px;
-      text-decoration: none;
-      border: 1px solid transparent;
-      transition: transform .15s, box-shadow .15s;
+      display:flex;
+      align-items:center;
+      gap:.72rem;
+      min-height:76px;
+      padding:.88rem .95rem;
+      border:1px solid #E1E8F0 !important;
+      border-radius:11px !important;
+      background:#fff !important;
+      box-shadow:none !important;
+      color:inherit;
+      text-decoration:none;
+      transition:border-color .15s,transform .15s,box-shadow .15s;
     }
     .acesso:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(15,23,42,.09);
+      transform:translateY(-1px);
+      border-color:#C8D7E6 !important;
+      box-shadow:0 8px 20px rgba(15,23,42,.045) !important;
     }
     .acesso__icon {
-      width: 42px; height: 42px;
-      border-radius: 11px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
+      width:36px;height:36px;
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;
+      border-radius:9px;
     }
-    .acesso__icon svg {
-      width: 20px; height: 20px;
-      fill: none; stroke-width: 1.8;
-      stroke-linecap: round; stroke-linejoin: round;
-    }
-    .acesso__body { min-width: 0; }
-    .acesso__name {
-      font-size: .85rem;
-      font-weight: 800;
-      color: #0F1F33;
-      white-space: nowrap;
-      margin-bottom: .1rem;
-    }
-    .acesso__desc {
-      font-size: .7rem;
-      color: #7A8FA6;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    .acesso__icon svg { width:18px;height:18px; }
+    .acesso--arena .acesso__icon { background:#EAF3FD; color:#3979B8; }
+    .acesso--turma .acesso__icon { background:#EAF8F2; color:#229A68; }
+    .acesso--juizes .acesso__icon { background:#FFF2E8; color:#D4772C; }
+    .acesso--coord .acesso__icon { background:#F2EEFC; color:#7656C8; }
+    .acesso__icon svg { stroke:currentColor !important; }
+    .acesso__name { color:#172236;font-size:.78rem;font-weight:730;margin-bottom:.08rem;white-space:nowrap; }
+    .acesso__desc { color:#8290A2;font-size:.65rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
 
-    /* Cards brancos — só o ícone tem cor de destaque */
-    .acesso--arena, .acesso--turma, .acesso--juizes, .acesso--coord {
-      background: #fff;
-      border-color: #E2EBF4;
-    }
-    .acesso--arena  .acesso__icon { background: #EFF6FF; }
-    .acesso--arena  .acesso__icon svg { stroke: #2563EB; }
-
-    .acesso--turma  .acesso__icon { background: #F0FDF4; }
-    .acesso--turma  .acesso__icon svg { stroke: #16A34A; }
-
-    .acesso--juizes .acesso__icon { background: #FFF7ED; }
-    .acesso--juizes .acesso__icon svg { stroke: #C7641A; }
-
-    .acesso--coord  .acesso__icon { background: #F5F3FF; }
-    .acesso--coord  .acesso__icon svg { stroke: #7C3AED; }
-
-    /* ── Próximas atividades ─────────────────────────────────── */
     .atividades-list {
-      background: #fff;
-      border: 1px solid #E2EBF4;
-      border-radius: 14px;
-      overflow: hidden;
+      overflow:hidden;
+      border:1px solid #E1E8F0;
+      border-radius:11px;
+      background:#fff;
+      box-shadow:none;
     }
     .atividade {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-      padding: .9rem 1.25rem;
-      border-bottom: 1px solid #F1F5F9;
+      display:grid;
+      grid-template-columns:62px 8px minmax(0,1fr);
+      align-items:center;
+      gap:.75rem;
+      padding:.7rem .95rem;
+      border-bottom:1px solid #EEF2F6;
     }
-    .atividade:last-child { border-bottom: none; }
+    .atividade:last-child { border-bottom:0; }
     .ativ-time {
-      font-size: .78rem;
-      font-weight: 700;
-      color: #508FCB;
-      width: 3rem;
-      flex-shrink: 0;
-      font-variant-numeric: tabular-nums;
+      width:auto;
+      color:#365E82;
+      font-size:.7rem;
+      font-weight:750;
+      font-variant-numeric:tabular-nums;
     }
-    .ativ-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: #E2EBF4;
-      flex-shrink: 0;
-    }
-    .ativ-nome {
-      font-size: .84rem;
-      font-weight: 600;
-      color: #0F1F33;
-    }
-    .ativ-local {
-      font-size: .72rem;
-      color: #7A8FA6;
-    }
+    .ativ-dot { width:6px;height:6px;border-radius:50%;background:#9DB5C9; }
+    .ativ-nome { color:#243247;font-size:.76rem;font-weight:680; }
+    .ativ-local { color:#8A97A8;font-size:.65rem;margin-top:.05rem; }
 
-    /* ── hero-cta-btn (injetado pelo sidebar-roles.js) ───────── */
-    .hero-cta-btn {
-      display: inline-flex;
-      align-items: center;
-      font-size: .8rem;
-      font-weight: 700;
-      color: #508FCB;
-      text-decoration: none;
-      padding: .35rem .85rem;
-      border: 1.5px solid #BFDBFE;
-      border-radius: 8px;
-      background: #EFF6FF;
-      margin-top: .1rem;
-    }
-    .hero-cta-btn:hover { background: #DBEAFE; }
-
-    /* ── Responsivo ──────────────────────────────────────────── */
-    @media (max-width: 900px) {
-      .acessos-grid { grid-template-columns: repeat(2, 1fr); }
-      .hero-event-card { width: 200px; }
-    }
-    @media (max-width: 640px) {
-      .hub-hero-inner { flex-direction: column; gap: 1.25rem; }
-      .hero-event-card { width: 100%; }
-      .acessos-grid { grid-template-columns: repeat(2, 1fr); }
-      .hub-main { padding: 1.25rem 1rem 5rem; }
-      .hub-hero { padding: 1.5rem 0; }
-    }
-    @media (max-width: 400px) {
-      .acessos-grid { grid-template-columns: 1fr; }
-    }
-
-    /* ── Footer ──────────────────────────────────────────────── */
     .hub-footer {
-      position: fixed; bottom: 0; left: 0; right: 0; z-index: 90;
-      background: #fff; border-top: 1px solid #E2EBF4;
-      padding: .6rem 2rem;
+      position:static;
+      border-top:1px solid #E5EBF2;
+      background:#F7F9FC;
+      padding:.7rem 2rem;
     }
     .hub-footer__inner {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
+      max-width:1180px;
+      margin:0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
     }
-    .footer-brand { font-size: .68rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #1A3A52; }
-    .footer-sub { font-size: .65rem; color: #94A3B8; text-transform: uppercase; letter-spacing: .07em; }
-    .hub-footer__center { font-size: .72rem; color: #64748B; font-style: italic; }
-    .hub-footer__right { font-size: .65rem; color: #94A3B8; }
-    @media (max-width: 700px) {
-      .hub-footer__inner { justify-content: center; }
-      .hub-footer__left, .hub-footer__right { display: none; }
+    .footer-brand { color:#27374A;font-size:.62rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }
+    .footer-sub,.hub-footer__center,.hub-footer__right { color:#95A0AF;font-size:.61rem; }
+    .hub-footer__center { font-style:normal; }
+
+    @media (max-width:900px) {
+      .hero-dashboard { grid-template-columns:1fr; }
+      .acessos-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width:700px) {
+      .hub-hero-inner,.hub-main { padding-left:1rem;padding-right:1rem; }
+      .hero-heading { flex-direction:column;gap:.5rem; }
+      .hero-date { text-align:left; }
+      .home-feature { min-height:160px; }
+      .acessos-grid { grid-template-columns:1fr; }
+      .hub-footer__inner { justify-content:center; }
+      .hub-footer__left,.hub-footer__right { display:none; }
     }
   </style>
   <script>
@@ -336,20 +344,33 @@
 <!-- Hero -->
 <div class="hub-hero">
   <div class="hub-hero-inner">
-    <div class="hero-text">
-      <div class="hero-eyebrow">Bem-vindo ao HUB Circuito</div>
-      <h1>Ol&aacute;!</h1>
+    <div class="hero-heading">
+      <div class="hero-text">
+        <div class="hero-eyebrow">Bem-vindo ao HUB Circuito</div>
+        <h1>Ol&aacute;!</h1>
+        <div class="hero-stats"></div>
+      </div>
       <div class="hero-date" id="hero-date"></div>
-      <div class="hero-stats"></div>
     </div>
-    <div class="hero-event-card">
-      <div class="hero-event-label">Torneio atual</div>
-      <div class="hero-event-name">Torneio Interno de Rob&oacute;tica</div>
-      <div class="hero-event-org">Escola SESI Reitor Miguel Calmon</div>
-      <a href="cronograma.html" class="hero-event-link">
-        Ver detalhes
-        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+
+    <div class="hero-dashboard">
+      <a class="home-feature" href="coordenacao.html">
+        <div class="home-feature__copy">
+          <div class="home-feature__kicker">Rob&oacute;tica educacional</div>
+          <div class="home-feature__title">Tecnologia, aprendizagem e competi&ccedil;&atilde;o em um s&oacute; ambiente.</div>
+          <div class="home-feature__sub">Acompanhe equipes, avalia&ccedil;&otilde;es e opera&ccedil;&atilde;o do torneio.</div>
+        </div>
       </a>
+
+      <div class="hero-event-card">
+        <div class="hero-event-label">Torneio atual</div>
+        <div class="hero-event-name">Torneio Interno de Rob&oacute;tica</div>
+        <div class="hero-event-org">Escola SESI Reitor Miguel Calmon</div>
+        <a href="cronograma.html" class="hero-event-link">
+          Ver detalhes
+          <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
     </div>
   </div>
 </div>
@@ -485,8 +506,8 @@
 
 <div id="toast"></div>
 <script src="js/api.js"></script>
-<script src="js/sidebar-roles.js"></script>
-<script src="js/product-ui.js"></script>
+<script src="js/sidebar-roles.js?v=2"></script>
+<script src="js/product-ui.js?v=2"></script>
 <script>
   /* Data em português */
   (function () {
