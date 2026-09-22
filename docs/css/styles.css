@@ -1890,3 +1890,92 @@ a, button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
     text-align: center;
   }
 }
+
+
+/* ── Final polish: team states, coordinator switcher, brand sizing ── */
+.sidebar-brand__img {
+  height: 52px;
+  max-width: 92px;
+}
+.app-body.sidebar-collapsed .sidebar-brand__img {
+  height: 32px;
+  width: 32px;
+  max-width: 32px;
+}
+
+.inline-state {
+  display: flex;
+  flex-direction: column;
+  gap: .22rem;
+  padding: 1rem 1.05rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--muted);
+  font-size: .79rem;
+  line-height: 1.45;
+}
+.inline-state strong {
+  color: var(--ink);
+  font-size: .82rem;
+}
+.inline-state--error {
+  border-color: #F0D7D7;
+  background: #FFF9F9;
+}
+.inline-state--error strong { color: #9E3D3D; }
+
+.coord-team-picker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: .85rem 0 .2rem;
+  padding: .78rem .9rem;
+  border: 1px solid #DCE7F0;
+  border-radius: 10px;
+  background: #F7FAFD;
+}
+.coord-team-picker__label {
+  color: #284C6A;
+  font-size: .75rem;
+  font-weight: 750;
+}
+.coord-team-picker__hint {
+  margin-top: .1rem;
+  color: #7B8B9D;
+  font-size: .67rem;
+}
+.coord-team-picker select {
+  min-width: 245px;
+  min-height: 38px;
+  padding: .45rem .72rem;
+  border: 1px solid #CBD9E5;
+  border-radius: 8px;
+  background: #fff;
+  color: #33465B;
+  font: 600 .76rem/1.2 inherit;
+}
+
+.page-turma .doc-item--unavailable {
+  opacity: 1 !important;
+  pointer-events: none;
+  background: #F8FAFC !important;
+  border-color: var(--line) !important;
+}
+.page-turma .doc-item--unavailable .doc-name { color: #64748B; }
+
+@media (max-width: 700px) {
+  .sidebar-brand__img {
+    height: 48px;
+    max-width: 88px;
+  }
+  .coord-team-picker {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .coord-team-picker select {
+    width: 100%;
+    min-width: 0;
+  }
+}
