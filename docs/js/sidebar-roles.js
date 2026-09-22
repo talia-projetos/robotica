@@ -21,6 +21,9 @@
   };
   var DEFAULT_ROUTE = { professor:'turma.html', juiz:'juizes.html', coord:'index.html' };
 
+  var topbarBrand = document.querySelector('.topbar__brand');
+  if (topbarBrand && role) topbarBrand.href = DEFAULT_ROUTE[role];
+
   if (role && currentFile !== 'login.html' && ALLOWED[role] && ALLOWED[role].indexOf(currentFile) === -1) {
     location.replace(DEFAULT_ROUTE[role]);
     return;
@@ -106,6 +109,8 @@
     if (!afterEl) return;
     var a = document.createElement('a');
     a.href = 'rubricas.html';
+    a.target = '_blank';
+    a.rel = 'noopener';
     a.className = 'sidebar-item' + (currentFile === 'rubricas.html' ? ' ativo' : '');
     a.innerHTML =
       '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
@@ -236,10 +241,10 @@
     var sidebar = document.querySelector('.app-sidebar');
     if (!sidebar || sidebar.querySelector('.sidebar-brand')) return;
     var a   = document.createElement('a');
-    a.href  = 'index.html';
+    a.href  = DEFAULT_ROUTE[role] || 'index.html';
     a.className = 'sidebar-brand';
     var img = document.createElement('img');
-    img.src = 'logo.svg';
+    img.src = 'logo-claro.svg';
     img.alt = 'HUB Circuito';
     img.className = 'sidebar-brand__img';
     a.appendChild(img);
