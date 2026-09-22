@@ -772,6 +772,28 @@ tbody td { padding: .7rem 1rem; vertical-align: middle; }
 .app-body.sidebar-collapsed .sidebar-toggle svg { transform: rotate(180deg); }
 .app-body.sidebar-collapsed .sidebar-toggle-label { display: none; }
 
+/* ── Logo do topo da sidebar ─────────────────────────────────── */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: .9rem .75rem .75rem;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  margin-bottom: .3rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.sidebar-brand__img {
+  height: 40px;
+  max-width: 148px;
+  object-fit: contain;
+  transition: height .2s cubic-bezier(.4,0,.2,1), max-width .2s cubic-bezier(.4,0,.2,1), opacity .15s;
+}
+.app-body.sidebar-collapsed .sidebar-brand__img {
+  height: 26px;
+  max-width: 26px;
+}
+
 .sidebar-item {
   display: flex;
   align-items: center;

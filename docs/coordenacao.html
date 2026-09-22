@@ -636,11 +636,19 @@
     }
   });
 
+  function exibirCoordImediato(nome) {
+    document.getElementById('view-login').classList.add('hidden');
+    document.getElementById('view-coord').classList.remove('hidden');
+    document.getElementById('badge-coord').textContent = nome;
+    document.getElementById('lista-cards').innerHTML =
+      '<p style="color:var(--texto-sm);font-size:.85rem;padding:.5rem 0">Carregando equipes…</p>';
+  }
+
   async function entrar(nome, pin) {
     document.getElementById('spinner').style.display = '';
     try {
       const r = await API.todasTurmas(nome, pin);
-      if (!r.ok) { sair(); toast(r.erro || 'Erro ao carregar.', 'err'); return; }
+      if (!r.ok) { sair(); toast(r.erro || 'Credenciais inválidas.', 'err'); return; }
       dadosEquipes = r.equipes || [];
       document.getElementById('view-login').classList.add('hidden');
       document.getElementById('view-coord').classList.remove('hidden');
@@ -648,7 +656,9 @@
       renderTodas(dadosEquipes);
       renderSummary();
     } catch(e) {
-      toast('Erro: ' + e.message, 'err');
+      document.getElementById('lista-cards').innerHTML =
+        '<p style="color:var(--coral);font-size:.85rem;padding:.5rem 0">Sem conexão. Verifique a internet e tente novamente.</p>';
+      toast('Sem conexão: ' + e.message, 'err');
     } finally {
       document.getElementById('spinner').style.display = 'none';
     }
@@ -658,8 +668,7 @@
     const nome = localStorage.getItem(SK_NOME);
     const pin  = localStorage.getItem(SK_PIN);
     if (!nome) return;
-    document.getElementById('l-nome').value = nome;
-    document.getElementById('view-login').classList.add('hidden'); // sessão já existe, não exibe formulário
+    exibirCoordImediato(nome);
     await entrar(nome, pin || '');
   }
 

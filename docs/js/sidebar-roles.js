@@ -180,6 +180,21 @@
     TUR13:'7° H - Nexos'
   };
 
+  /* ── Logo no topo da sidebar ────────────────────────── */
+  function addSidebarBrand() {
+    var sidebar = document.querySelector('.app-sidebar');
+    if (!sidebar || sidebar.querySelector('.sidebar-brand')) return;
+    var a   = document.createElement('a');
+    a.href  = 'index.html';
+    a.className = 'sidebar-brand';
+    var img = document.createElement('img');
+    img.src = 'logo.svg';
+    img.alt = 'HUB Circuito';
+    img.className = 'sidebar-brand__img';
+    a.appendChild(img);
+    sidebar.insertBefore(a, sidebar.firstChild);
+  }
+
   /* ── Toggle da sidebar ───────────────────────────────── */
   function addSidebarToggle() {
     var sidebar = document.querySelector('.app-sidebar');
@@ -299,11 +314,13 @@
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
+      addSidebarBrand();
       buildAvatar();
       buildGreeting();
       addSidebarToggle();
     });
   } else {
+    addSidebarBrand();
     buildAvatar();
     buildGreeting();
     addSidebarToggle();

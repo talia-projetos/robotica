@@ -6,21 +6,21 @@
   <title>HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/styles.css?v=5">
-  <script>
-    window.API_URL = 'https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';
-  </script>
   <style>
-    /* ── Variáveis locais da Arena ─────────────────────────────── */
+    /* ── Paleta da Arena — grafite azulado ───────────────────── */
     :root {
-      --ar-bg:      #0A1628;
-      --ar-bg2:     #0D1F38;
-      --ar-surface: #0F2444;
-      --ar-border:  #1E3A5F;
-      --ar-text:    #E8F0FE;
-      --ar-muted:   rgba(232,240,254,.45);
-      --ar-gold:    #F2C94C;
-      --ar-gold-bg: rgba(242,201,76,.14);
-      --ar-head:    #12355B;
+      --ar-bg:       #0C1420;
+      --ar-surface:  #111D2E;
+      --ar-surface2: #162236;
+      --ar-border:   rgba(255,255,255,.07);
+      --ar-border2:  rgba(255,255,255,.12);
+      --ar-text:     #E0EAFA;
+      --ar-muted:    rgba(200,218,240,.38);
+      --ar-gold:     #F2C94C;
+      --ar-teal:     #4DC9C3;
+      --ar-blue:     #508FCB;
+      --ar-red:      #EF4444;
+      --ar-amber:    #F59E0B;
     }
 
     body {
@@ -28,185 +28,181 @@
       color: var(--ar-text);
     }
 
+    /* Tema claro */
     body.claro {
-      --ar-bg:      #F3F6FA;
-      --ar-bg2:     #FFFFFF;
-      --ar-surface: #FFFFFF;
-      --ar-border:  #D9E2EC;
-      --ar-text:    #243447;
-      --ar-muted:   #6B7A90;
-      --ar-gold:    #B7791F;
-      --ar-gold-bg: #FFF9E6;
-      --ar-head:    #12355B;
+      --ar-bg:       #F0F4F8;
+      --ar-surface:  #FFFFFF;
+      --ar-surface2: #F7FAFC;
+      --ar-border:   rgba(0,0,0,.07);
+      --ar-border2:  rgba(0,0,0,.12);
+      --ar-text:     #1A2B3C;
+      --ar-muted:    #7A8FA6;
+      --ar-gold:     #B7791F;
+      --ar-teal:     #0D9488;
     }
-
     body.claro .topbar { background: var(--marinho); }
 
-    /* ── Container: largura expandida — local a esta página ─────── */
+    /* ── Container ───────────────────────────────────────────── */
     .container { max-width: 1280px; }
 
-    /* ── Cabeçalho da página ────────────────────────────────────── */
+    /* ── Cabeçalho ───────────────────────────────────────────── */
     .arena-header {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: .85rem;
       margin: 1.5rem 0 1.25rem;
-      flex-wrap: wrap;
     }
-
     .arena-titulo {
-      font-size: 1.65rem;
-      font-weight: 700;
+      font-size: 1.3rem;
+      font-weight: 800;
       color: var(--ar-text);
-      letter-spacing: -.4px;
-      line-height: 1.2;
+      letter-spacing: -.03em;
     }
-
-    /* ── Controles utilitários (Grande / Claro / Tela cheia) ─────── */
-    .arena-controles {
-      margin-left: auto;
-      display: flex;
-      gap: .2rem;
-      align-items: center;
-      background: rgba(255,255,255,.04);
-      border: 1px solid var(--ar-border);
-      border-radius: 10px;
-      padding: .3rem .4rem;
-    }
-
-    body.claro .arena-controles {
-      background: rgba(0,0,0,.03);
-    }
-
-    .arena-controles .btn-outline {
-      border: none;
-      background: transparent;
-      color: var(--ar-muted);
-      font-size: .78rem;
-      font-weight: 600;
-      padding: .3rem .65rem;
-      border-radius: 7px;
-      transition: background .15s, color .15s;
-    }
-
-    .arena-controles .btn-outline:hover {
-      background: rgba(255,255,255,.09);
-      color: var(--ar-text);
-      border: none;
-    }
-
-    body.claro .arena-controles .btn-outline:hover {
-      background: rgba(0,0,0,.07);
-    }
-
-    /* ── Indicador de sincronização ─────────────────────────────── */
     .arena-update {
-      font-size: .78rem;
+      font-size: .72rem;
       color: var(--ar-muted);
       display: inline-flex;
       align-items: center;
       gap: .35rem;
     }
-
     .arena-update:not(:empty)::before {
       content: '';
       display: inline-block;
-      width: 6px;
-      height: 6px;
+      width: 6px; height: 6px;
       border-radius: 50%;
-      background: #50CCC6;
+      background: var(--ar-teal);
       flex-shrink: 0;
     }
+    .arena-update.erro::before     { background: var(--ar-red); }
+    .arena-update.carregando::before { background: var(--ar-amber); }
 
-    .arena-update.erro::before     { background: #EB5757; }
-    .arena-update.carregando::before { background: #F2994A; }
-
-    /* Ocultar timestamp no Telão — público não precisa de metadado técnico */
-    body.modo-telao .arena-update,
-    :fullscreen .arena-update,
-    :-webkit-full-screen .arena-update { display: none !important; }
-
-    /* ── Cronômetro ─────────────────────────────────────────────── */
-    .cronometro {
+    /* ── Layout dois painéis ─────────────────────────────────── */
+    .arena-layout {
       display: grid;
-      grid-template-columns: auto 1fr auto;
-      grid-template-areas: "round display btns";
-      align-items: center;
-      gap: 0 1.75rem;
-      background: var(--ar-surface);
-      border: 1px solid var(--ar-border);
-      border-radius: var(--radius);
-      padding: 1rem 1.75rem;
-      margin-bottom: 1.25rem;
+      grid-template-columns: 1fr 220px;
+      gap: 1.25rem;
+      align-items: start;
     }
 
-    .crono-round {
-      grid-area: round;
-      font-size: .68rem;
+    /* ── Painel principal ────────────────────────────────────── */
+    .arena-main { display: flex; flex-direction: column; gap: 1rem; }
+
+    /* ── Cronômetro — protagonista ───────────────────────────── */
+    .cronometro {
+      background: var(--ar-surface);
+      border: 1px solid var(--ar-border);
+      border-radius: 16px;
+      padding: 2rem 2.5rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .35rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Halo de estado atrás do timer */
+    .cronometro::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: 50%;
+      transform: translateX(-50%);
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--crono-halo, rgba(80,143,203,.06)) 0%, transparent 70%);
+      pointer-events: none;
+      transition: background .5s;
+    }
+
+    .crono-eyebrow {
+      font-size: .65rem;
       font-weight: 800;
-      letter-spacing: .12em;
+      letter-spacing: .14em;
       text-transform: uppercase;
       color: var(--ar-muted);
-      white-space: nowrap;
+      position: relative;
+      z-index: 1;
     }
 
     .crono-display {
-      grid-area: display;
-      text-align: center;
-      font-size: 3.5rem;
+      font-size: clamp(4.5rem, 9vw, 7.5rem);
       font-weight: 900;
-      color: var(--ar-gold);
-      letter-spacing: .05em;
+      color: var(--ar-text);
+      letter-spacing: .04em;
       font-variant-numeric: tabular-nums;
-      min-width: 4.5ch;
-      transition: color .3s;
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+      transition: color .4s;
     }
 
-    .crono-display.urgente { color: #F2994A; }
-    .crono-display.acabou  { color: #EB5757; animation: pisca .5s infinite alternate; }
-    @keyframes pisca { from { opacity:1 } to { opacity:.2 } }
+    /* Estados do display */
+    .crono-display.urgente { color: var(--ar-amber); }
+    .crono-display.acabou  { color: var(--ar-red); animation: pisca .5s infinite alternate; }
+    @keyframes pisca { from { opacity: 1 } to { opacity: .25 } }
 
-    .crono-btns {
-      grid-area: btns;
-      display: flex;
-      gap: .5rem;
+    /* Indicador de estado textual */
+    .crono-estado {
+      display: inline-flex;
       align-items: center;
-      justify-content: flex-end;
-    }
-
-    /* Reset — substitui inline style, usando ID local */
-    #btn-crono-reset {
-      border-color: var(--ar-border);
+      gap: .4rem;
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .04em;
       color: var(--ar-muted);
+      position: relative;
+      z-index: 1;
+      margin-top: .1rem;
+    }
+    .crono-estado::before {
+      content: '';
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--ar-muted);
+      flex-shrink: 0;
+      transition: background .3s;
     }
 
-    #btn-crono-reset:hover {
-      border-color: var(--ar-text);
-      color: var(--ar-text);
-      background: transparent;
+    /* Estado: Em execução */
+    .cronometro.estado-rodando { --crono-halo: rgba(77,201,195,.07); }
+    .cronometro.estado-rodando .crono-estado { color: var(--ar-teal); }
+    .cronometro.estado-rodando .crono-estado::before {
+      background: var(--ar-teal);
+      animation: pulso 1.2s infinite;
+    }
+    @keyframes pulso {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .5; transform: scale(.7); }
     }
 
-    /* Select de round — substitui inline style */
-    #sel-round {
-      background: var(--ar-bg2);
-      color: var(--ar-text);
-      border: 1px solid var(--ar-border);
-      border-radius: 8px;
-      padding: .4rem .75rem;
-      font-family: inherit;
-      font-size: .83rem;
-      cursor: pointer;
-      outline: none;
-      transition: border-color .15s;
+    /* Estado: Pausado */
+    .cronometro.estado-pausado { --crono-halo: rgba(245,158,11,.05); }
+    .cronometro.estado-pausado .crono-estado { color: var(--ar-amber); }
+    .cronometro.estado-pausado .crono-estado::before { background: var(--ar-amber); }
+
+    /* Estado: Encerrado */
+    .cronometro.estado-encerrado { --crono-halo: rgba(239,68,68,.06); }
+    .cronometro.estado-encerrado .crono-estado { color: var(--ar-red); }
+    .cronometro.estado-encerrado .crono-estado::before { background: var(--ar-red); }
+
+    /* Estado: Pronto */
+    .cronometro.estado-pronto { --crono-halo: rgba(80,143,203,.05); }
+
+    /* ── Ranking ─────────────────────────────────────────────── */
+    .arena-ranking { }
+    .ranking-label {
+      font-size: .62rem; font-weight: 800;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--ar-muted);
+      margin-bottom: .65rem;
+      padding-left: .25rem;
     }
 
-    #sel-round:hover,
-    #sel-round:focus { border-color: var(--azul); }
-
-    /* ── Tabela / Ranking ───────────────────────────────────────── */
     .arena-wrap {
-      overflow-x: auto;
-      border-radius: var(--radius);
+      background: var(--ar-surface);
+      border: 1px solid var(--ar-border);
+      border-radius: 14px;
+      overflow: hidden;
     }
 
     .arena-table {
@@ -216,214 +212,260 @@
     }
 
     .arena-table thead th {
-      background: var(--ar-head);
-      color: rgba(255,255,255,.8);
-      padding: .85rem 1.25rem;
-      font-size: .82rem;
+      background: transparent;
+      color: var(--ar-muted);
+      padding: .65rem 1.1rem;
+      font-size: .62rem;
       font-weight: 700;
-      letter-spacing: .06em;
+      letter-spacing: .09em;
       text-transform: uppercase;
       text-align: center;
-      white-space: nowrap;
-      border-bottom: 2px solid var(--ar-border);
+      border-bottom: 1px solid var(--ar-border);
     }
-
     .arena-table thead th.th-equipe { text-align: left; }
 
     .arena-table tbody tr {
       border-bottom: 1px solid var(--ar-border);
-      transition: background .15s;
+      transition: background .12s;
     }
-
-    .arena-table tbody tr:nth-child(odd)  { background: var(--ar-bg);  }
-    .arena-table tbody tr:nth-child(even) { background: var(--ar-bg2); }
-    .arena-table tbody tr:hover           { background: var(--ar-surface); }
-    .arena-table tbody tr:last-child      { border-bottom: none; }
+    .arena-table tbody tr:last-child { border-bottom: none; }
+    .arena-table tbody tr:hover { background: var(--ar-surface2); }
 
     .arena-table td {
-      padding: .95rem 1.25rem;
+      padding: .8rem 1.1rem;
       text-align: center;
-      font-size: 1.15rem;
+      font-size: 1rem;
       color: var(--ar-text);
       font-variant-numeric: tabular-nums;
     }
-
     .arena-table td.td-equipe { text-align: left; }
 
     .arena-table td.td-equipe strong {
-      font-size: 1.15rem;
-      font-weight: 700;
+      font-size: 1rem; font-weight: 700;
+      display: block;
     }
-
     .arena-table td.td-equipe .text-sm {
+      font-size: .7rem;
       color: var(--ar-muted);
-      font-size: .78rem;
       font-variant-numeric: normal;
+      margin-top: .05rem;
+      display: block;
     }
 
-    /* Melhor round: fundo quase imperceptível + cor dourada */
-    .arena-table td.td-melhor-round {
-      background: rgba(242,201,76,.04);
-      color: var(--ar-gold);
-      font-weight: 700;
-    }
-    body.claro .arena-table td.td-melhor-round {
-      background: rgba(183,121,31,.06);
-    }
+    /* Melhor round: só a fonte fica dourada, sem fundo */
+    .arena-table td.td-melhor-round { color: var(--ar-gold); font-weight: 700; }
 
-    /* Coluna Melhor */
+    /* Coluna Melhor: número destacado */
     .arena-table td.td-melhor {
-      font-size: 1.35rem;
+      font-size: 1.15rem;
       font-weight: 800;
       color: var(--ar-gold);
     }
 
     .arena-table td.td-vazio { color: var(--ar-muted); }
 
-    /* ── Estado sem dados ───────────────────────────────────────── */
     .arena-vazio {
       text-align: center;
       padding: 4rem 1rem;
       color: var(--ar-muted);
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
 
-    /* ── Modo grande ────────────────────────────────────────────── */
-    body.grande .arena-table thead th       { font-size: 1rem;   padding: 1rem 1.5rem; }
-    body.grande .arena-table td             { font-size: 1.35rem; padding: 1rem 1.5rem; }
-    body.grande .arena-table td.td-equipe strong { font-size: 1.4rem; }
-    body.grande .arena-table td.td-melhor   { font-size: 1.6rem; }
-    body.grande .crono-display              { font-size: 5rem; }
+    /* ── Rail lateral ────────────────────────────────────────── */
+    .arena-rail {
+      background: var(--ar-surface);
+      border: 1px solid var(--ar-border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      position: sticky;
+      top: 88px;
+    }
 
-    /* ── Modo Telão — fullscreen ────────────────────────────────── */
+    .rail-section { display: flex; flex-direction: column; gap: .45rem; }
 
-    /* Ocultar administrativo: class JS + :fullscreen nativo (dupla garantia) */
+    .rail-label {
+      font-size: .6rem;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ar-muted);
+    }
+
+    .rail-sep {
+      height: 1px;
+      background: var(--ar-border);
+      margin: .1rem 0;
+    }
+
+    /* Select de round */
+    #sel-round {
+      width: 100%;
+      background: var(--ar-surface2);
+      color: var(--ar-text);
+      border: 1px solid var(--ar-border2);
+      border-radius: 8px;
+      padding: .5rem .75rem;
+      font-family: inherit;
+      font-size: .82rem;
+      cursor: pointer;
+      outline: none;
+      transition: border-color .15s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23608aaa' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right .65rem center;
+      padding-right: 2rem;
+    }
+    #sel-round:hover, #sel-round:focus { border-color: var(--ar-blue); }
+
+    /* Botões do cronômetro — no rail */
+    .crono-btns {
+      display: flex;
+      flex-direction: column;
+      gap: .45rem;
+    }
+
+    #btn-crono-toggle {
+      width: 100%;
+      padding: .6rem;
+      font-size: .85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .45rem;
+    }
+    #btn-crono-toggle svg { fill: none; stroke: currentColor; stroke-width: 2.2;
+                            stroke-linecap: round; stroke-linejoin: round; }
+
+    #btn-crono-reset {
+      width: 100%;
+      padding: .5rem;
+      font-size: .8rem;
+      color: var(--ar-muted);
+      border-color: var(--ar-border2);
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .4rem;
+    }
+    #btn-crono-reset:hover { color: var(--ar-text); border-color: var(--ar-text); background: transparent; }
+    #btn-crono-reset svg { fill: none; stroke: currentColor; stroke-width: 2.2;
+                           stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Botões de visualização */
+    .btn-view {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--ar-border2);
+      color: var(--ar-muted);
+      border-radius: 8px;
+      padding: .42rem .65rem;
+      font-family: inherit;
+      font-size: .77rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .14s, color .14s, border-color .14s;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .btn-view svg { fill: none; stroke: currentColor; stroke-width: 1.8;
+                    stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+    .btn-view:hover { background: var(--ar-surface2); color: var(--ar-text); border-color: var(--ar-border2); }
+
+    /* ── Modo grande ─────────────────────────────────────────── */
+    body.grande .arena-table td             { font-size: 1.2rem; padding: .95rem 1.1rem; }
+    body.grande .arena-table td.td-melhor   { font-size: 1.4rem; }
+    body.grande .arena-table thead th       { font-size: .7rem; }
+
+    /* ── Modo Telão — fullscreen ─────────────────────────────── */
     body.modo-telao .topbar,
     :fullscreen .topbar,
-    :-webkit-full-screen .topbar          { display: none !important; }
+    :-webkit-full-screen .topbar        { display: none !important; }
 
-    body.modo-telao .arena-controles,
-    :fullscreen .arena-controles,
-    :-webkit-full-screen .arena-controles { display: none !important; }
+    body.modo-telao .arena-rail,
+    :fullscreen .arena-rail,
+    :-webkit-full-screen .arena-rail    { display: none !important; }
 
-    body.modo-telao .crono-btns,
-    :fullscreen .crono-btns,
-    :-webkit-full-screen .crono-btns      { display: none !important; }
+    body.modo-telao .arena-update,
+    :fullscreen .arena-update           { display: none !important; }
 
-    /* Container: largura total, mínimo de margem */
     body.modo-telao .container {
       max-width: none;
-      width: 100%;
       padding: clamp(20px, 2.5vh, 40px) clamp(32px, 4vw, 80px);
-      display: grid;
-      grid-template-columns: 1fr auto;
-      grid-template-rows: auto auto;
-      grid-template-areas:
-        "header crono"
-        "table  table";
-      align-content: start;
-      align-items: center;
-      gap: clamp(.75rem, 1.5vh, 1.5rem) 2.5rem;
     }
 
     body.modo-telao .arena-header {
-      grid-area: header;
-      margin: 0;
-      align-self: center;
+      margin-bottom: 1rem;
+      gap: 1.5rem;
     }
 
-    /* Cronômetro: compacto, coluna à direita */
+    /* No telão: layout vira coluna única */
+    body.modo-telao .arena-layout {
+      grid-template-columns: 1fr;
+    }
+
+    /* Cronômetro no telão: compacto + horizontal (round | display | estado) */
     body.modo-telao .cronometro {
-      grid-area: crono;
-      align-self: center;
-      background: transparent;
-      border: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: .05rem;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: .85rem 2rem;
+      gap: 1.5rem;
+      border-radius: 12px;
     }
-
-    body.modo-telao .arena-wrap { grid-area: table; }
-
-    /* Tipografia do Telão */
-    body.modo-telao .arena-titulo {
-      font-size: clamp(1.4rem, 2.2vw, 2.2rem);
-      font-weight: 800;
-      letter-spacing: -.3px;
-    }
-
-    body.modo-telao .crono-round {
-      font-size: clamp(.7rem, 1vw, .95rem);
+    body.modo-telao .cronometro::before { display: none; }
+    body.modo-telao .crono-eyebrow {
+      font-size: clamp(.7rem, 1vw, 1rem);
       letter-spacing: .14em;
-      text-align: right;
+      order: -1;
     }
-
     body.modo-telao .crono-display {
-      font-size: clamp(4.5rem, 6vw, 7rem);
-      line-height: .95;
-      text-align: right;
-      min-width: unset;
+      font-size: clamp(3.5rem, 5.5vw, 6rem);
+      line-height: 1;
+      order: 0;
+    }
+    body.modo-telao .crono-estado {
+      font-size: clamp(.65rem, .9vw, .85rem);
+      order: 1;
     }
 
-    /* Tabela no Telão — protagonista da tela */
+    /* Tabela no Telão */
     body.modo-telao .arena-table thead th {
-      font-size: clamp(1rem, 1.25vw, 1.4rem);
-      padding: 1rem 1.5rem;
+      font-size: clamp(.8rem, 1.1vw, 1.1rem);
+      padding: .85rem 1.25rem;
     }
-
     body.modo-telao .arena-table td {
-      font-size: clamp(1.25rem, 1.6vw, 1.8rem);
-      padding: clamp(14px, 1.5vh, 22px) 1.5rem;
+      font-size: clamp(1.2rem, 1.6vw, 1.9rem);
+      padding: clamp(12px, 1.5vh, 20px) 1.25rem;
     }
-
     body.modo-telao .arena-table td.td-equipe strong {
-      font-size: clamp(1.35rem, 1.7vw, 2rem);
+      font-size: clamp(1.25rem, 1.7vw, 2rem);
     }
+    body.modo-telao .arena-table td.td-melhor { font-size: clamp(1.4rem, 1.9vw, 2.2rem); }
 
-    body.modo-telao .arena-table td.td-equipe .text-sm {
-      font-size: clamp(.72rem, .85vw, .9rem);
-    }
-
-    body.modo-telao .arena-table td.td-melhor {
-      font-size: clamp(1.5rem, 2vw, 2.2rem);
-    }
-
-    /* body.grande não deve duplicar escala no telão:
-       como body.modo-telao vem depois no cascade e tem
-       mesma especificidade, sobrepõe body.grande. */
-
-    /* ── Responsividade local ───────────────────────────────────── */
+    /* ── Responsividade ──────────────────────────────────────── */
     @media (max-width: 860px) {
-      .cronometro {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto auto;
-        grid-template-areas:
-          "round display"
-          "btns  btns";
-        gap: .75rem 1rem;
-        padding: .875rem 1.25rem;
-      }
-      .crono-display { text-align: right; }
+      .arena-layout { grid-template-columns: 1fr; }
+      .arena-rail   { position: static; flex-direction: row; flex-wrap: wrap; }
+      .rail-section { flex: 1; min-width: 140px; }
+      .crono-btns   { flex-direction: row; flex: 2; min-width: 200px; }
+      #btn-crono-toggle, #btn-crono-reset { width: auto; flex: 1; }
     }
-
-    @media (max-width: 580px) {
-      .cronometro {
-        grid-template-columns: 1fr;
-        grid-template-areas:
-          "display"
-          "round"
-          "btns";
-      }
-      .crono-display { text-align: center; font-size: 2.8rem; }
-      .crono-round   { text-align: center; }
-      .crono-btns    { justify-content: center; flex-wrap: wrap; }
-      .arena-controles { margin-left: 0; }
-      .arena-titulo  { font-size: 1.35rem; }
+    @media (max-width: 540px) {
+      .cronometro { padding: 1.5rem 1.25rem; }
+      .arena-rail { flex-direction: column; }
+      .crono-btns { flex-direction: column; }
+      #btn-crono-toggle, #btn-crono-reset { width: 100%; }
     }
   </style>
+  <script>window.API_URL = 'https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';</script>
 </head>
 <body>
 
@@ -434,7 +476,6 @@
     <div class="topbar__event-org">Escola SESI Reitor Miguel Calmon</div>
   </div>
   <div class="topbar__badge">
-    <span id="arena-update" class="arena-update"></span>
     <span class="spinner" id="spinner" style="display:none"></span>
   </div>
 </header>
@@ -442,56 +483,101 @@
 <div class="app-body">
 
 <nav class="app-sidebar">
-  <a href="index.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg> Início</a>
+  <a href="index.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg> In&iacute;cio</a>
   <a href="arena.html" class="sidebar-item ativo"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg> Arena</a>
   <a href="turma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1.5 13.5c0-2.5 2-4 4-4"/><circle cx="11" cy="5.5" r="2"/><path d="M10 13.5c0-2 1.5-3.5 3.5-3.5"/></svg> Minha Turma</a>
-  <a href="juizes.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11.5" rx="1.5"/><path d="M6 2.5a2 2 0 014 0"/><path d="M5.5 7.5h5M5.5 10.5h3"/></svg> Juízes</a>
-  <a href="coordenacao.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="2"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.6 3.6l1 1M11.4 11.4l1 1M3.6 12.4l1-1M11.4 4.6l1-1"/></svg> Coordenação</a>
+  <a href="juizes.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11.5" rx="1.5"/><path d="M6 2.5a2 2 0 014 0"/><path d="M5.5 7.5h5M5.5 10.5h3"/></svg> Ju&iacute;zes</a>
+  <a href="coordenacao.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="2"/><path d="M8 1.5v1.5M8 13v1.5M1.5 8H3M13 8h1.5M3.6 3.6l1 1M11.4 11.4l1 1M3.6 12.4l1-1M11.4 4.6l1-1"/></svg> Coordena&ccedil;&atilde;o</a>
   <div class="sidebar-sep"></div>
   <a href="ranking.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13V9M8 13V6M13 13V3"/></svg> Ranking</a>
   <a href="cronograma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="13" height="10.5" rx="1.5"/><path d="M1.5 7.5h13M5.5 1.5v3M10.5 1.5v3"/></svg> Cronograma</a>
 </nav>
 
 <main class="app-main">
-
 <div class="container">
 
+  <!-- Cabeçalho -->
   <div class="arena-header">
-    <span class="arena-titulo">Desafio do Robô</span>
-    <div class="arena-controles">
-      <button class="btn btn-outline btn-sm" id="btn-tamanho" onclick="alternarTamanho()">Grande</button>
-      <button class="btn btn-outline btn-sm" id="btn-tema"    onclick="alternarTema()">Claro</button>
-      <button class="btn btn-outline btn-sm"                  onclick="telaCheia()">Tela cheia</button>
-    </div>
+    <span class="arena-titulo">Desafio do Rob&ocirc;</span>
+    <span class="arena-update" id="arena-update"></span>
   </div>
 
-  <div class="cronometro">
-    <div class="crono-round" id="crono-round">Round 1</div>
-    <div class="crono-display" id="crono-display">2:30</div>
-    <div class="crono-btns">
-      <button class="btn btn-primary" id="btn-crono-toggle" onclick="cronoToggle()">▶ Iniciar</button>
-      <button class="btn btn-outline" id="btn-crono-reset"  onclick="cronoReset()">↺ Reset</button>
-      <select id="sel-round" onchange="trocarRound(this.value)">
-        <option value="R1">Round 1</option>
-        <option value="R2">Round 2</option>
-        <option value="R3">Round 3</option>
-      </select>
-    </div>
-  </div>
+  <!-- Layout dois painéis -->
+  <div class="arena-layout">
 
-  <div class="arena-wrap">
-    <table class="arena-table">
-      <thead id="arena-head">
-        <tr><th colspan="10" style="text-align:center;padding:2.5rem">
-          <span class="spinner"></span>
-        </th></tr>
-      </thead>
-      <tbody id="arena-body"></tbody>
-    </table>
-  </div>
+    <!-- Painel principal: timer + ranking -->
+    <div class="arena-main">
+
+      <!-- Cronômetro protagonista -->
+      <div class="cronometro estado-pronto" id="cronometro">
+        <div class="crono-eyebrow" id="crono-round">Round 1</div>
+        <div class="crono-display" id="crono-display">2:30</div>
+        <div class="crono-estado" id="crono-estado">Pronto para iniciar</div>
+      </div>
+
+      <!-- Ranking -->
+      <div class="arena-ranking">
+        <div class="ranking-label">Classifica&ccedil;&atilde;o de Arena</div>
+        <div class="arena-wrap">
+          <table class="arena-table">
+            <thead id="arena-head">
+              <tr><th colspan="10" style="text-align:center;padding:2.5rem">
+                <span class="spinner"></span>
+              </th></tr>
+            </thead>
+            <tbody id="arena-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Rail lateral: controles + visualização -->
+    <div class="arena-rail">
+
+      <div class="rail-section">
+        <div class="rail-label">Round</div>
+        <select id="sel-round" onchange="trocarRound(this.value)">
+          <option value="R1">Round 1</option>
+          <option value="R2">Round 2</option>
+          <option value="R3">Round 3</option>
+        </select>
+      </div>
+
+      <div class="crono-btns">
+        <button class="btn btn-primary" id="btn-crono-toggle" onclick="cronoToggle()">
+          <svg id="ico-toggle" width="14" height="14" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/></svg>
+          <span id="txt-toggle">Iniciar</span>
+        </button>
+        <button class="btn btn-outline" id="btn-crono-reset" onclick="cronoReset()">
+          <svg width="13" height="13" viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
+          Reset
+        </button>
+      </div>
+
+      <div class="rail-sep"></div>
+
+      <div class="rail-section">
+        <div class="rail-label">Visualiza&ccedil;&atilde;o</div>
+        <button class="btn-view" id="btn-tamanho" onclick="alternarTamanho()">
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          <span id="txt-tamanho">Grande</span>
+        </button>
+        <button class="btn-view" id="btn-tema" onclick="alternarTema()">
+          <svg width="14" height="14" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <span id="txt-tema">Claro</span>
+        </button>
+        <button class="btn-view" onclick="telaCheia()">
+          <svg width="14" height="14" viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+          Tela cheia
+        </button>
+      </div>
+
+    </div>
+
+  </div><!-- /arena-layout -->
 
 </div>
-
 </main>
 </div><!-- /app-body -->
 
@@ -499,14 +585,15 @@
 <script src="js/api.js"></script>
 <script src="js/sidebar-roles.js"></script>
 <script>
+  /* ── Utilitários de visualização ──────────────────────────── */
   function alternarTema() {
-    const claro = document.body.classList.toggle('claro');
-    document.getElementById('btn-tema').textContent = claro ? 'Escuro' : 'Claro';
+    var claro = document.body.classList.toggle('claro');
+    document.getElementById('txt-tema').textContent = claro ? 'Escuro' : 'Claro';
   }
 
   function alternarTamanho() {
-    const grande = document.body.classList.toggle('grande');
-    document.getElementById('btn-tamanho').textContent = grande ? 'Normal' : 'Grande';
+    var grande = document.body.classList.toggle('grande');
+    document.getElementById('txt-tamanho').textContent = grande ? 'Normal' : 'Grande';
   }
 
   function telaCheia() {
@@ -516,14 +603,13 @@
 
   function aplicarModoTelao(ativo) {
     document.body.classList.toggle('modo-telao', ativo);
-    // Manipulação direta garante ocultação independente de especificidade CSS
     var ocultar = ativo ? 'none' : '';
     var topbar    = document.querySelector('.topbar');
-    var controles = document.querySelector('.arena-controles');
-    var cronoBtns = document.querySelector('.crono-btns');
-    if (topbar)    topbar.style.display    = ocultar;
-    if (controles) controles.style.display = ocultar;
-    if (cronoBtns) cronoBtns.style.display = ocultar;
+    var rail      = document.querySelector('.arena-rail');
+    var upd       = document.getElementById('arena-update');
+    if (topbar) topbar.style.display = ocultar;
+    if (rail)   rail.style.display   = ocultar;
+    if (upd)    upd.style.display    = ativo ? 'none' : '';
   }
 
   document.addEventListener('fullscreenchange', function () {
@@ -533,21 +619,22 @@
     aplicarModoTelao(!!(document.fullscreenElement || document.webkitFullscreenElement));
   });
 
-  const nomesMap = {
-    TUR01:'6° A - Cyber Panter',      TUR02:'6° B - Liga do Choque',
-    TUR03:'6° C - Alpha Tech',         TUR04:'6° D - Pheonics Mecanics',
-    TUR05:'6° E - TecShark',           TUR06:'7° A - Hoppin Robots',
-    TUR07:'7° B - Bivoltx',            TUR08:'7° C - Ecoshift',
-    TUR09:'7° D - Pantera Lego Team',  TUR10:'7° E - Império das Onças',
-    TUR11:'7° F - Poseidon',           TUR12:'7° G - Arara Azul',
-    TUR13:'7° H - Nexos'
+  /* ── Ranking ──────────────────────────────────────────────── */
+  var nomesMap = {
+    TUR01:'6° A – Cyber Panter',      TUR02:'6° B – Liga do Choque',
+    TUR03:'6° C – Alpha Tech',         TUR04:'6° D – Pheonics Mecanics',
+    TUR05:'6° E – TecShark',           TUR06:'7° A – Hoppin Robots',
+    TUR07:'7° B – Bivoltx',            TUR08:'7° C – Ecoshift',
+    TUR09:'7° D – Pantera Lego Team',  TUR10:'7° E – Império das Onças',
+    TUR11:'7° F – Poseidon',           TUR12:'7° G – Arara Azul',
+    TUR13:'7° H – Nexos'
   };
 
   function renderArena(data) {
-    const equipes     = data.equipes     || [];
-    const roundsOrdem = data.roundsOrdem || [];
-    const head = document.getElementById('arena-head');
-    const body = document.getElementById('arena-body');
+    var equipes     = data.equipes     || [];
+    var roundsOrdem = data.roundsOrdem || [];
+    var head = document.getElementById('arena-head');
+    var body = document.getElementById('arena-body');
 
     if (!equipes.length) {
       head.innerHTML = '';
@@ -555,47 +642,52 @@
       return;
     }
 
-    head.innerHTML = `<tr>
-      <th style="width:52px">Pos.</th>
-      <th class="th-equipe">Equipe</th>
-      ${roundsOrdem.map(r => `<th>${r}</th>`).join('')}
-      <th>Melhor</th>
-    </tr>`;
+    head.innerHTML = '<tr>'
+      + '<th style="width:48px">Pos.</th>'
+      + '<th class="th-equipe">Equipe</th>'
+      + roundsOrdem.map(function(r) { return '<th>' + r + '</th>'; }).join('')
+      + '<th>Melhor</th>'
+      + '</tr>';
 
     body.innerHTML = equipes.map(function(e, i) {
-      const pos    = i + 1;
-      const posCls = pos === 1 ? 'pos-1' : pos === 2 ? 'pos-2' : pos === 3 ? 'pos-3' : 'pos-n';
+      var pos    = i + 1;
+      var posCls = pos === 1 ? 'pos-1' : pos === 2 ? 'pos-2' : pos === 3 ? 'pos-3' : 'pos-n';
+      var raw    = nomesMap[e.id] || e.nome || e.id;
+      var partes = raw.split(' – ');
+      var nomeEq = partes.length > 1 ? partes[1].trim() : raw;
+      var serie  = partes.length > 1 ? partes[0].trim() : '';
 
-      const cells = roundsOrdem.map(function(r) {
-        const pts = e.rounds[r];
+      var cells = roundsOrdem.map(function(r) {
+        var pts = e.rounds[r];
         if (pts === undefined) return '<td class="td-vazio">—</td>';
-        const isBest = pts === e.melhor;
-        return `<td class="${isBest ? 'td-melhor-round' : ''}">${pts}</td>`;
+        var isBest = pts === e.melhor;
+        return '<td class="' + (isBest ? 'td-melhor-round' : '') + '">' + pts + '</td>';
       }).join('');
 
-      return `<tr>
-        <td><span class="pos-badge ${posCls}">${pos}</span></td>
-        <td class="td-equipe">
-          <strong>${nomesMap[e.id] || e.nome || e.id}</strong><br>
-          <span class="text-sm">${e.id}</span>
-        </td>
-        ${cells}
-        <td class="td-melhor">${e.melhor}</td>
-      </tr>`;
+      return '<tr>'
+        + '<td><span class="pos-badge ' + posCls + '">' + pos + '</span></td>'
+        + '<td class="td-equipe">'
+          + '<strong>' + nomeEq + '</strong>'
+          + (serie ? '<span class="text-sm">' + serie + ' · ' + e.id + '</span>' : '<span class="text-sm">' + e.id + '</span>')
+        + '</td>'
+        + cells
+        + '<td class="td-melhor">' + e.melhor + '</td>'
+        + '</tr>';
     }).join('');
   }
 
-  let ultimaSync = null;
-  let relTimer   = null;
+  /* ── Sincronização ────────────────────────────────────────── */
+  var ultimaSync = null;
+  var relTimer   = null;
 
   function atualizarSync() {
     var el = document.getElementById('arena-update');
     if (!ultimaSync) return;
     el.classList.remove('erro', 'carregando');
     var seg = Math.round((Date.now() - ultimaSync) / 1000);
-    if (seg < 5)  el.textContent = 'Sincronizado agora';
+    if (seg < 5)       el.textContent = 'Sincronizado agora';
     else if (seg < 60) el.textContent = 'há ' + seg + ' s';
-    else          el.textContent = 'há ' + Math.round(seg / 60) + ' min';
+    else               el.textContent = 'há ' + Math.round(seg / 60) + ' min';
   }
 
   async function carregar() {
@@ -603,7 +695,7 @@
     upEl.classList.add('carregando');
     document.getElementById('spinner').style.display = '';
     try {
-      const r = await API.arena();
+      var r = await API.arena();
       if (!r.ok) throw new Error(r.erro || 'Erro');
       renderArena(r);
       ultimaSync = Date.now();
@@ -621,15 +713,15 @@
 
   iniciarPolling(carregar, 10000);
 
-  // ── Cronômetro ────────────────────────────────────────────────────
-  let cronoSeg = 150, cronoRodando = false, cronoTimer = null;
-  let roundAtual = 'R1';
-  const audioCtx = typeof AudioContext !== 'undefined' ? new AudioContext() : null;
+  /* ── Cronômetro ───────────────────────────────────────────── */
+  var cronoSeg = 150, cronoRodando = false, cronoTimer = null;
+  var roundAtual = 'R1';
+  var audioCtx = typeof AudioContext !== 'undefined' ? new AudioContext() : null;
 
   function beep(freq, dur, vol) {
     if (!audioCtx) return;
-    const osc  = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+    var osc  = audioCtx.createOscillator();
+    var gain = audioCtx.createGain();
     osc.connect(gain); gain.connect(audioCtx.destination);
     osc.frequency.value = freq;
     gain.gain.setValueAtTime(vol, audioCtx.currentTime);
@@ -637,8 +729,35 @@
     osc.start(); osc.stop(audioCtx.currentTime + dur);
   }
 
+  /* Estado visual do cronômetro */
+  var ESTADOS = {
+    pronto:    { cls: 'estado-pronto',    txt: 'Pronto para iniciar' },
+    rodando:   { cls: 'estado-rodando',   txt: 'Em execução' },
+    pausado:   { cls: 'estado-pausado',   txt: 'Pausado' },
+    encerrado: { cls: 'estado-encerrado', txt: 'Encerrado' }
+  };
+
+  function aplicarEstado(chave) {
+    var e   = ESTADOS[chave];
+    var box = document.getElementById('cronometro');
+    var txt = document.getElementById('crono-estado');
+    Object.values(ESTADOS).forEach(function(s) { box.classList.remove(s.cls); });
+    box.classList.add(e.cls);
+    txt.textContent = e.txt;
+  }
+
+  /* Ícone do botão Iniciar/Pausar/Continuar */
+  var SVG_PLAY  = '<polygon points="5 3 19 12 5 21 5 3" fill="currentColor" stroke="none"/>';
+  var SVG_PAUSE = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+  var SVG_RESET = '<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/>';
+
+  function setToggleBtn(icon, label) {
+    document.getElementById('ico-toggle').innerHTML = icon;
+    document.getElementById('txt-toggle').textContent = label;
+  }
+
   function cronoAtualizar() {
-    const el = document.getElementById('crono-display');
+    var el = document.getElementById('crono-display');
     el.textContent = Math.floor(cronoSeg / 60) + ':' + String(cronoSeg % 60).padStart(2, '0');
     el.classList.toggle('urgente', cronoSeg > 0 && cronoSeg <= 30);
     el.classList.toggle('acabou',  cronoSeg === 0);
@@ -646,16 +765,23 @@
 
   function trocarRound(val) {
     roundAtual = val;
+    clearInterval(cronoTimer);
+    cronoRodando = false;
+    cronoSeg = 150;
+    cronoAtualizar();
+    setToggleBtn(SVG_PLAY, 'Iniciar');
+    aplicarEstado('pronto');
     document.getElementById('crono-round').textContent = 'Round ' + val.replace('R', '');
-    cronoReset();
   }
 
   function cronoToggle() {
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     if (cronoSeg === 0) { cronoReset(); return; }
     cronoRodando = !cronoRodando;
-    document.getElementById('btn-crono-toggle').textContent = cronoRodando ? '⏸ Pausar' : '▶ Continuar';
+
     if (cronoRodando) {
+      setToggleBtn(SVG_PAUSE, 'Pausar');
+      aplicarEstado('rodando');
       cronoTimer = setInterval(function () {
         if (cronoSeg > 0) cronoSeg--;
         cronoAtualizar();
@@ -664,14 +790,17 @@
         if (cronoSeg === 0) {
           clearInterval(cronoTimer);
           cronoRodando = false;
-          document.getElementById('btn-crono-toggle').textContent = '↺ Reiniciar';
+          setToggleBtn(SVG_RESET, 'Reiniciar');
+          aplicarEstado('encerrado');
           beep(523, .08, .6);
-          setTimeout(() => beep(523, .08, .6), 150);
-          setTimeout(() => beep(784, .35, .7), 300);
+          setTimeout(function() { beep(523, .08, .6); }, 150);
+          setTimeout(function() { beep(784, .35, .7); }, 300);
         }
       }, 1000);
     } else {
       clearInterval(cronoTimer);
+      setToggleBtn(SVG_PLAY, 'Continuar');
+      aplicarEstado('pausado');
     }
   }
 
@@ -681,11 +810,14 @@
     cronoRodando = false;
     cronoSeg = 150;
     cronoAtualizar();
-    document.getElementById('btn-crono-toggle').textContent = '▶ Iniciar';
+    setToggleBtn(SVG_PLAY, 'Iniciar');
+    aplicarEstado('pronto');
     document.getElementById('crono-round').textContent = 'Round ' + roundAtual.replace('R', '');
   }
 
+  /* Init */
   document.getElementById('crono-round').textContent = 'Round 1';
+  cronoAtualizar();
 </script>
 </body>
 </html>
