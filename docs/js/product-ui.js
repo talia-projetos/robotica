@@ -356,7 +356,6 @@
     setupMobileNav();
 
     var page = currentPage();
-    if (page === 'juizes') enhanceJudges();
     if (page === 'coordenacao') enhanceCoordination();
     if (page === 'ranking') enhanceRanking();
     if (page === 'documentos') enhanceDocuments();
