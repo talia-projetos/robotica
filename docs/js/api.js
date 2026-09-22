@@ -48,7 +48,10 @@ const API = (function () {
       post({ action: 'comentario', juiz, pin, texto, categoria: categoria || '' }),
 
     votar: (juiz, pin, idEquipe, categoria, favor) =>
-      post({ action: 'voto', juiz, pin, idEquipe, categoria, favor })
+      post({ action: 'voto', juiz, pin, idEquipe, categoria, favor }),
+
+    chatReceber: (juiz) => get({ action: 'chat', juiz }),
+    chatEnviar:  (juiz, msg) => post({ action: 'chat_send', de: juiz, msg })
   };
 })();
 

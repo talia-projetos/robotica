@@ -816,6 +816,116 @@
       font-size:.63rem;
     }
 
+    /* ── Chat juízes ↔ coordenação ─────────────────────────────── */
+    .judge-chat-card{
+      margin-top:.65rem;
+      border:1px solid #E1E9F0;
+      border-radius:9px;
+      overflow:hidden;
+    }
+    .judge-chat-header{
+      padding:.52rem .72rem;
+      background:#F0F5FA;
+      border-bottom:1px solid #E1E9F0;
+      font-size:.62rem;
+      font-weight:700;
+      color:#3D5368;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      display:flex;
+      align-items:center;
+      gap:.4rem;
+    }
+    .judge-chat-header::before{
+      content:'';
+      width:6px;height:6px;
+      border-radius:50%;
+      background:#22C55E;
+      flex-shrink:0;
+    }
+    .judge-chat-msgs{
+      display:flex;
+      flex-direction:column;
+      gap:.35rem;
+      padding:.55rem .62rem;
+      max-height:200px;
+      overflow-y:auto;
+      background:#fff;
+      scroll-behavior:smooth;
+    }
+    .chat-bubble{
+      padding:.38rem .6rem;
+      border-radius:8px;
+      font-size:.68rem;
+      line-height:1.42;
+      max-width:88%;
+      word-break:break-word;
+    }
+    .chat-bubble--coord{
+      background:#EDF5FC;
+      color:#1A3A5C;
+      align-self:flex-start;
+      border-bottom-left-radius:2px;
+    }
+    .chat-bubble--juiz{
+      background:#12355B;
+      color:#fff;
+      align-self:flex-end;
+      border-bottom-right-radius:2px;
+    }
+    .chat-bubble__who{
+      font-size:.54rem;
+      font-weight:700;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      opacity:.6;
+      margin-bottom:.12rem;
+    }
+    .chat-bubble__time{
+      font-size:.54rem;
+      opacity:.45;
+      margin-top:.1rem;
+    }
+    .chat-empty-msg{
+      font-size:.68rem;
+      color:#94A3B8;
+      text-align:center;
+      padding:.7rem 0;
+      font-style:italic;
+    }
+    .judge-chat-input{
+      display:flex;
+      gap:.38rem;
+      padding:.5rem .62rem;
+      border-top:1px solid #E1E9F0;
+      background:#F7FAFC;
+    }
+    .judge-chat-input input{
+      flex:1;
+      padding:.38rem .58rem;
+      border:1px solid #D0DCE8;
+      border-radius:7px;
+      font-size:.7rem;
+      font-family:inherit;
+      outline:none;
+      background:#fff;
+      min-width:0;
+    }
+    .judge-chat-input input:focus{ border-color:#2F80ED; }
+    .judge-chat-input button{
+      padding:.38rem .75rem;
+      background:#12355B;
+      color:#fff;
+      border:none;
+      border-radius:7px;
+      font-size:.7rem;
+      font-weight:700;
+      cursor:pointer;
+      font-family:inherit;
+      flex-shrink:0;
+    }
+    .judge-chat-input button:disabled{ opacity:.5; cursor:default; }
+
     .judge-coord-only{
       margin-top:.85rem;
     }
@@ -1060,6 +1170,17 @@
         <strong>Fluxo de trabalho</strong>
         Consulte a rubrica antes da avaliação. O HUB destaca a categoria vinculada ao seu perfil e mantém os demais módulos fora do seu fluxo.
       </div>
+
+      <div class="judge-chat-card">
+        <div class="judge-chat-header">Chat com a Coordenação</div>
+        <div class="judge-chat-msgs" id="chat-msgs">
+          <div class="chat-empty-msg">Nenhuma mensagem ainda.</div>
+        </div>
+        <div class="judge-chat-input">
+          <input id="chat-input" type="text" placeholder="Mensagem para a coordenação…" maxlength="200" autocomplete="off">
+          <button id="chat-send" onclick="chatEnviar()">Enviar</button>
+        </div>
+      </div>
     </aside>
   </div>
 
@@ -1188,10 +1309,12 @@
     document.getElementById('btn-sair').style.display = '';
     document.getElementById('jh-ini').textContent = (r.nome || 'J').trim()[0].toUpperCase();
     configurarWorkspaceJuiz(r.categoria || '');
+    if (!_chatTimer) chatIniciar(r.nome);
   }
 
   function sair() {
     Sessao.clear();
+    if (_chatTimer) clearInterval(_chatTimer);
     document.getElementById('view-painel').style.display = 'none';
     document.getElementById('view-login').style.display  = '';
     document.getElementById('badge-juiz').textContent = '';
@@ -1200,6 +1323,63 @@
     document.getElementById('l-pin').value  = '';
   }
 
+  /* ── Chat juízes ↔ coordenação ──────────────────────────────── */
+  var _chatNome = '';
+  var _chatTimer = null;
+  var _chatUltimo = 0;
+
+  function chatIniciar(nome) {
+    _chatNome = nome;
+    chatCarregar();
+    _chatTimer = setInterval(chatCarregar, 8000);
+    document.getElementById('chat-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') chatEnviar();
+    });
+  }
+
+  async function chatCarregar() {
+    try {
+      const r = await API.chatReceber(_chatNome);
+      if (r && r.ok && Array.isArray(r.mensagens)) renderChat(r.mensagens);
+    } catch(_) {}
+  }
+
+  function renderChat(msgs) {
+    var box = document.getElementById('chat-msgs');
+    if (!box) return;
+    var atBottom = box.scrollHeight - box.scrollTop <= box.clientHeight + 24;
+    if (!msgs.length) {
+      box.innerHTML = '<div class="chat-empty-msg">Nenhuma mensagem ainda.</div>';
+      return;
+    }
+    box.innerHTML = msgs.map(function(m) {
+      var isJuiz = m.de !== 'Coordenação';
+      return '<div class="chat-bubble ' + (isJuiz ? 'chat-bubble--juiz' : 'chat-bubble--coord') + '">'
+        + '<div class="chat-bubble__who">' + (m.de || '?') + '</div>'
+        + '<div>' + (m.texto || '') + '</div>'
+        + (m.hora ? '<div class="chat-bubble__time">' + m.hora + '</div>' : '')
+        + '</div>';
+    }).join('');
+    if (atBottom) box.scrollTop = box.scrollHeight;
+  }
+
+  async function chatEnviar() {
+    var input = document.getElementById('chat-input');
+    var btn   = document.getElementById('chat-send');
+    var txt   = (input.value || '').trim();
+    if (!txt || !_chatNome) return;
+    input.value = '';
+    btn.disabled = true;
+    try {
+      await API.chatEnviar(_chatNome, txt);
+      await chatCarregar();
+    } catch(_) {
+      input.value = txt;
+    } finally {
+      btn.disabled = false;
+      input.focus();
+    }
+  }
 
 </script>
 </body>
