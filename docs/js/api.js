@@ -102,8 +102,13 @@ async function iniciarGateCoord(onSuccess) {
     try {
       const r = await API.verificarJuiz(CoordAuth.nome, CoordAuth.pin);
       if (r.ok && r.coordenador) { onSuccess(CoordAuth.nome); return; }
-    } catch(_) {}
-    CoordAuth.clear();
+      /* Servidor rejeitou explicitamente — pede login novamente */
+      CoordAuth.clear();
+    } catch(_) {
+      /* API indisponível — confia nas credenciais em cache */
+      onSuccess(CoordAuth.nome);
+      return;
+    }
   }
   _abrirGateCoord(onSuccess);
 }

@@ -496,22 +496,18 @@
     }
     .cronometro::before{display:none}
     .crono-eyebrow{justify-self:start;align-self:center;color:var(--ar-muted);font-size:.72rem;letter-spacing:.12em}
+    .crono-wrap{position:relative;width:250px;height:250px;margin:auto;display:grid;place-items:center}
+    .crono-ring-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
     .crono-display{
+      position:relative;
       width:250px;height:250px;
       display:grid;place-items:center;
-      margin:auto;
-      border:7px solid rgba(80,143,203,.28);
-      border-top-color:#49BFD6;
-      border-right-color:#4DC9C3;
       border-radius:50%;
       font-size:4.7rem;
       letter-spacing:.01em;
       background:radial-gradient(circle,rgba(255,255,255,.025),transparent 66%);
       box-shadow:0 0 0 1px rgba(255,255,255,.025),inset 0 0 36px rgba(0,0,0,.18);
     }
-    .cronometro.estado-rodando .crono-display{border-color:rgba(77,201,195,.28);border-top-color:#4DC9C3;border-right-color:#35D6CD}
-    .cronometro.estado-pausado .crono-display{border-color:rgba(245,158,11,.22);border-top-color:#F59E0B;border-right-color:#E7B24F}
-    .cronometro.estado-encerrado .crono-display{border-color:rgba(239,68,68,.2);border-top-color:#EF4444;border-right-color:#DF6570}
     .crono-estado{justify-self:end;max-width:120px;text-align:right;line-height:1.35}
     .ranking-label{margin:.15rem 0 .5rem;padding-left:.1rem}
     .arena-wrap{border-radius:12px}
@@ -578,7 +574,15 @@
       <!-- Cronômetro protagonista -->
       <div class="cronometro estado-pronto" id="cronometro">
         <div class="crono-eyebrow" id="crono-round">Round 1</div>
-        <div class="crono-display" id="crono-display">2:30</div>
+        <div class="crono-wrap" id="crono-wrap">
+          <svg class="crono-ring-svg" viewBox="0 0 250 250" aria-hidden="true">
+            <circle cx="125" cy="125" r="108" fill="none" stroke="rgba(80,143,203,.15)" stroke-width="8"/>
+            <circle id="crono-ring" cx="125" cy="125" r="108" fill="none" stroke="#4DC9C3" stroke-width="8"
+              stroke-dasharray="678.58" stroke-dashoffset="0"
+              stroke-linecap="round" transform="rotate(-90 125 125)"/>
+          </svg>
+          <div class="crono-display" id="crono-display">2:30</div>
+        </div>
         <div class="crono-estado" id="crono-estado">Pronto para iniciar</div>
       </div>
 
@@ -829,6 +833,12 @@
     el.textContent = Math.floor(cronoSeg / 60) + ':' + String(cronoSeg % 60).padStart(2, '0');
     el.classList.toggle('urgente', cronoSeg > 0 && cronoSeg <= 30);
     el.classList.toggle('acabou',  cronoSeg === 0);
+    var ring = document.getElementById('crono-ring');
+    if (ring) {
+      var pct = cronoSeg / 150;
+      ring.style.strokeDashoffset = (678.58 * (1 - pct)).toFixed(2);
+      ring.style.stroke = cronoSeg > 50 ? '#4DC9C3' : cronoSeg > 20 ? '#F59E0B' : '#EF4444';
+    }
   }
 
   function trocarRound(val) {
