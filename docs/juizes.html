@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="css/styles.css?v=7">
+  <link rel="stylesheet" href="css/styles.css?v=8">
   <script>window.API_URL='https://script.google.com/macros/s/AKfycbyYLpncuJ5NwWF9I_TvM6DTxojhDlrp_TWXG0PE6Ides3NwvdNjwPEf4jUiWDxWScc0/exec';</script>
   <style>
     body { background: #F0F4F8; }
@@ -114,6 +114,288 @@
     .acao-desc  { font-size: .77rem; color: #64748B; line-height: 1.45; flex: 1; }
 
     @media (max-width: 600px) { .form-grid, .acao-grid { grid-template-columns: 1fr; } }
+  
+
+    /* ── Workspace de avaliação v3 ───────────────────────────── */
+    #view-painel { min-height:calc(100vh - 68px); background:#F5F8FB; }
+    .painel-wrap {
+      max-width:1080px;
+      margin:0 auto;
+      padding:2.2rem 2.2rem 4.2rem;
+    }
+
+    .judge-workspace-head {
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:1.5rem;
+      margin-bottom:1.65rem;
+    }
+    .judge-workspace-kicker {
+      margin-bottom:.38rem;
+      color:#3979B8;
+      font-size:.64rem;
+      font-weight:800;
+      letter-spacing:.095em;
+      text-transform:uppercase;
+    }
+    .judge-workspace-head h1 {
+      margin:0;
+      color:#152238;
+      font-size:1.75rem;
+      line-height:1.08;
+      font-weight:780;
+      letter-spacing:-.045em;
+    }
+    .judge-workspace-sub {
+      margin:.38rem 0 0;
+      color:#6F8094;
+      font-size:.78rem;
+      line-height:1.45;
+    }
+    .judge-workspace-sub strong { color:#40536A; font-weight:700; }
+    .judge-head-actions {
+      display:flex;
+      align-items:center;
+      gap:.55rem;
+      flex-shrink:0;
+    }
+    .judge-head-link {
+      min-height:38px;
+      display:inline-flex;
+      align-items:center;
+      gap:.38rem;
+      padding:.55rem .78rem;
+      border:1px solid #D9E4EE;
+      border-radius:9px;
+      background:#fff;
+      color:#41556C;
+      font-size:.72rem;
+      font-weight:700;
+      text-decoration:none;
+      box-shadow:0 1px 2px rgba(15,23,42,.03);
+    }
+    .judge-head-link:hover { border-color:#BFD1E0; color:#2D6EA7; }
+
+    .judge-area-strip {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      margin-bottom:1.5rem;
+      padding:.72rem .9rem;
+      border:1px solid #DDE7F0;
+      border-radius:10px;
+      background:#fff;
+    }
+    .judge-area-copy { min-width:0; }
+    .judge-area-label {
+      color:#8795A7;
+      font-size:.59rem;
+      font-weight:800;
+      letter-spacing:.085em;
+      text-transform:uppercase;
+    }
+    .judge-area-value {
+      margin-top:.12rem;
+      color:#23364D;
+      font-size:.78rem;
+      font-weight:720;
+    }
+    .judge-area-note {
+      color:#8290A2;
+      font-size:.67rem;
+      text-align:right;
+    }
+
+    .sec-lbl {
+      margin:1.45rem 0 .58rem;
+      color:#7D8B9D;
+      font-size:.63rem;
+      font-weight:800;
+      letter-spacing:.09em;
+      text-transform:uppercase;
+    }
+
+    .print-banner {
+      min-height:70px;
+      display:flex;
+      align-items:center;
+      gap:.85rem;
+      margin-bottom:1.55rem;
+      padding:.86rem 1rem;
+      border:1px solid #DDE6EF;
+      border-radius:11px;
+      background:#fff;
+      box-shadow:none;
+      text-decoration:none;
+    }
+    .print-banner:hover {
+      border-color:#C4D5E5;
+      box-shadow:0 5px 15px rgba(15,23,42,.035);
+    }
+    .print-banner__icon {
+      width:38px;
+      height:38px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+      border-radius:9px;
+      background:#EAF3FB;
+    }
+    .print-banner__icon svg {
+      width:18px;
+      height:18px;
+      fill:none;
+      stroke:#3979B8;
+      stroke-width:1.8;
+    }
+    .print-banner__body { flex:1; min-width:0; }
+    .print-banner__title {
+      color:#17253A;
+      font-size:.82rem;
+      font-weight:730;
+    }
+    .print-banner__sub {
+      margin-top:.08rem;
+      color:#8190A3;
+      font-size:.67rem;
+    }
+    .print-banner__pill {
+      padding:.35rem .65rem;
+      border:1px solid #CFE0EF;
+      border-radius:8px;
+      background:#EEF6FC;
+      color:#2E70A8;
+      font-size:.67rem;
+      font-weight:700;
+      white-space:nowrap;
+    }
+
+    .form-grid {
+      width:min(100%,790px);
+      margin:0 auto 1.65rem;
+      display:flex;
+      flex-direction:column;
+      gap:.48rem;
+    }
+    .form-card {
+      width:100%;
+      min-height:70px;
+      display:flex;
+      align-items:center;
+      gap:.9rem;
+      padding:.8rem .9rem;
+      border:1px solid #DEE7EF;
+      border-radius:11px;
+      background:#fff;
+      color:inherit;
+      text-decoration:none;
+      box-shadow:none;
+      transition:border-color .15s,box-shadow .15s,transform .15s;
+    }
+    .form-card:hover {
+      transform:translateY(-1px);
+      border-color:#C5D6E5;
+      box-shadow:0 5px 16px rgba(15,23,42,.04);
+    }
+    .form-card.is-assigned {
+      border-color:#B9D3E8;
+      background:#FBFDFF;
+      box-shadow:inset 3px 0 0 #508FCB;
+    }
+    .fc-icon {
+      width:38px;
+      height:38px;
+      border-radius:9px;
+      flex-shrink:0;
+    }
+    .fc-body { min-width:0; flex:1; }
+    .fc-title-row {
+      display:flex;
+      align-items:center;
+      gap:.45rem;
+      min-width:0;
+    }
+    .fc-title {
+      color:#17253A;
+      font-size:.81rem;
+      font-weight:730;
+    }
+    .fc-desc {
+      margin-top:.08rem;
+      color:#7B8A9D;
+      font-size:.67rem;
+      line-height:1.35;
+    }
+    .fc-assigned {
+      display:none;
+      padding:.18rem .42rem;
+      border-radius:999px;
+      background:#E8F4FC;
+      color:#2D72AA;
+      font-size:.57rem;
+      font-weight:800;
+      white-space:nowrap;
+    }
+    .form-card.is-assigned .fc-assigned { display:inline-flex; }
+    .fc-cta {
+      min-width:128px;
+      width:auto;
+      padding:.43rem .72rem;
+      border:1px solid #DDE6EF;
+      border-radius:8px;
+      background:#F6F9FC !important;
+      color:#40546B !important;
+      font-size:.68rem;
+      font-weight:700;
+      text-align:center;
+      white-space:nowrap;
+    }
+    .form-card.is-assigned .fc-cta {
+      border-color:#BDD3E6;
+      background:#EEF6FC !important;
+      color:#2D70A8 !important;
+    }
+
+    .acao-grid { display:block; }
+    .acao-card {
+      display:flex;
+      flex-direction:row;
+      align-items:center;
+      gap:1rem;
+      min-height:78px;
+      padding:.92rem 1rem;
+      border:1px solid #DEE7EF;
+      border-radius:11px;
+      background:#fff;
+      box-shadow:none;
+    }
+    .acao-copy { min-width:0; flex:1; }
+    .acao-title { color:#17253A; font-size:.82rem; font-weight:730; }
+    .acao-desc { margin-top:.12rem; color:#7B8A9D; font-size:.67rem; line-height:1.4; }
+    .acao-card .btn { flex-shrink:0; }
+
+    .judge-coord-only { display:none; }
+    body.is-coordination .judge-coord-only { display:block; }
+
+    /* o antigo cartão de identidade permanece apenas como âncora para IDs */
+    .jh { display:none !important; }
+
+    @media (max-width:700px) {
+      .painel-wrap { padding:1.35rem 1rem 3.2rem; }
+      .judge-workspace-head { align-items:flex-start; flex-direction:column; }
+      .judge-head-actions { width:100%; }
+      .judge-head-link { flex:1; justify-content:center; }
+      .judge-area-strip { align-items:flex-start; flex-direction:column; }
+      .judge-area-note { text-align:left; }
+      .form-grid { width:100%; }
+      .form-card { align-items:flex-start; flex-wrap:wrap; }
+      .fc-cta { margin-left:47px; }
+      .acao-card { align-items:flex-start; flex-direction:column; }
+    }
+
   </style>
 </head>
 <body>
@@ -172,90 +454,106 @@
 <div id="view-painel" style="display:none">
 <div class="painel-wrap">
 
-  <!-- Header do juiz -->
-  <div class="jh">
+  <div class="jh" aria-hidden="true">
     <div class="jh-av" id="jh-ini">J</div>
-    <div style="flex:1">
+    <div>
       <div class="jh-nome" id="juiz-nome">—</div>
       <div class="jh-cat">Área: <span id="juiz-cat">—</span></div>
     </div>
-    <a href="index.html" class="btn btn-outline btn-sm"
-      style="border-color:#E2E8F0;color:#64748B;text-decoration:none">Início</a>
   </div>
 
+  <header class="judge-workspace-head">
+    <div>
+      <div class="judge-workspace-kicker">Workspace de avaliação</div>
+      <h1>Avaliações</h1>
+      <p class="judge-workspace-sub"><strong id="juiz-nome-top">—</strong> · <span id="juiz-cat-top">Área em validação</span> · selecione a próxima atividade.</p>
+    </div>
+    <div class="judge-head-actions">
+      <a class="judge-head-link" href="documentos.html">Documentos
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      </a>
+    </div>
+  </header>
 
-    <!-- Preparação -->
-    <div class="sec-lbl">Preparação</div>
-    <a href="rubricas.html" target="_blank" class="print-banner">
-      <div class="print-banner__icon">
-        <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+  <div class="judge-area-strip">
+    <div class="judge-area-copy">
+      <div class="judge-area-label">Área atribuída</div>
+      <div class="judge-area-value" id="judge-area-value">Carregando…</div>
+    </div>
+    <div class="judge-area-note" id="judge-area-note">As categorias disponíveis serão ajustadas ao seu perfil.</div>
+  </div>
+
+  <div class="sec-lbl">Preparação</div>
+  <a href="rubricas.html" target="_blank" rel="noopener" class="print-banner">
+    <div class="print-banner__icon">
+      <svg viewBox="0 0 24 24"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    </div>
+    <div class="print-banner__body">
+      <div class="print-banner__title">Rubricas de Avaliação</div>
+      <div class="print-banner__sub">Critérios completos para Projeto, Design, Core Values e Arena.</div>
+    </div>
+    <div class="print-banner__pill">Imprimir / PDF</div>
+  </a>
+
+  <div class="sec-lbl">Categorias</div>
+  <div class="form-grid">
+    <a id="link-desafio" data-cat="arena" href="#" target="_blank" rel="noopener" class="form-card">
+      <div class="fc-icon" style="background:#FFF4E9">
+        <svg viewBox="0 0 24 24" stroke="#F2994A"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
       </div>
-      <div class="print-banner__body">
-        <div class="print-banner__title">Rubricas de Avaliação</div>
-        <div class="print-banner__sub">Projeto · Design · Core Values · Arena · critérios completos</div>
+      <div class="fc-body">
+        <div class="fc-title-row"><div class="fc-title">Desafio do Robô</div><span class="fc-assigned">Sua categoria</span></div>
+        <div class="fc-desc">Missões da Arena, pontos e penalidades de cada round.</div>
       </div>
-      <div class="print-banner__pill">Imprimir / PDF</div>
+      <span class="fc-cta">Iniciar avaliação</span>
     </a>
 
-    <!-- Avaliações -->
-    <div class="sec-lbl">Avaliações</div>
-    <div class="form-grid">
-      <a id="link-desafio" href="#" target="_blank" class="form-card">
-        <div class="fc-icon" style="background:#FFF7ED">
-          <svg viewBox="0 0 24 24" stroke="#F2994A"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        </div>
-        <div class="fc-body">
-          <div class="fc-title">Desafio do Robô</div>
-          <div class="fc-desc">Missões da Arena: pontos e penalidades de cada round.</div>
-        </div>
-        <span class="fc-cta" style="background:#FFF7ED;color:#D97706">Iniciar avaliação</span>
-      </a>
+    <a id="link-projeto" data-cat="projeto" href="#" target="_blank" rel="noopener" class="form-card">
+      <div class="fc-icon" style="background:#F4EFFF">
+        <svg viewBox="0 0 24 24" stroke="#8E5BD9"><path d="M12 2a10 10 0 1 1 0 20A10 10 0 0 1 12 2z"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <div class="fc-body">
+        <div class="fc-title-row"><div class="fc-title">Projeto de Inovação</div><span class="fc-assigned">Sua categoria</span></div>
+        <div class="fc-desc">Problema identificado, solução proposta e impacto.</div>
+      </div>
+      <span class="fc-cta">Iniciar avaliação</span>
+    </a>
 
-      <a id="link-projeto" href="#" target="_blank" class="form-card">
-        <div class="fc-icon" style="background:#F5F0FF">
-          <svg viewBox="0 0 24 24" stroke="#8E5BD9"><path d="M12 2a10 10 0 1 1 0 20A10 10 0 0 1 12 2z"/><path d="M12 8v4l3 3"/></svg>
-        </div>
-        <div class="fc-body">
-          <div class="fc-title">Projeto de Inovação</div>
-          <div class="fc-desc">Problema identificado, solução proposta e impacto.</div>
-        </div>
-        <span class="fc-cta" style="background:#F5F0FF;color:#8E5BD9">Iniciar avaliação</span>
-      </a>
+    <a id="link-design" data-cat="design" href="#" target="_blank" rel="noopener" class="form-card">
+      <div class="fc-icon" style="background:#EAF3FD">
+        <svg viewBox="0 0 24 24" stroke="#2F80ED"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div class="fc-body">
+        <div class="fc-title-row"><div class="fc-title">Design do Robô</div><span class="fc-assigned">Sua categoria</span></div>
+        <div class="fc-desc">Estrutura, mecanismos e estratégia de programação.</div>
+      </div>
+      <span class="fc-cta">Iniciar avaliação</span>
+    </a>
 
-      <a id="link-design" href="#" target="_blank" class="form-card">
-        <div class="fc-icon" style="background:#EFF6FF">
-          <svg viewBox="0 0 24 24" stroke="#2F80ED"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-        </div>
-        <div class="fc-body">
-          <div class="fc-title">Design do Robô</div>
-          <div class="fc-desc">Estrutura, mecanismos e estratégia de programação.</div>
-        </div>
-        <span class="fc-cta" style="background:#EFF6FF;color:#2F80ED">Iniciar avaliação</span>
-      </a>
+    <a id="link-core" data-cat="core" href="#" target="_blank" rel="noopener" class="form-card">
+      <div class="fc-icon" style="background:#EAF8F1">
+        <svg viewBox="0 0 24 24" stroke="#27AE60"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div class="fc-body">
+        <div class="fc-title-row"><div class="fc-title">Core Values</div><span class="fc-assigned">Sua categoria</span></div>
+        <div class="fc-desc">Trabalho em equipe, inclusão, diversão e espírito.</div>
+      </div>
+      <span class="fc-cta">Iniciar avaliação</span>
+    </a>
+  </div>
 
-      <a id="link-core" href="#" target="_blank" class="form-card">
-        <div class="fc-icon" style="background:#F0FDF4">
-          <svg viewBox="0 0 24 24" stroke="#27AE60"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <div class="fc-body">
-          <div class="fc-title">Core Values</div>
-          <div class="fc-desc">Trabalho em equipe, inclusão, diversão e espírito.</div>
-        </div>
-        <span class="fc-cta" style="background:#F0FDF4;color:#27AE60">Iniciar avaliação</span>
-      </a>
-    </div>
-
-    <!-- Encerramento -->
-    <div class="sec-lbl">Encerramento</div>
+  <div class="judge-coord-only">
+    <div class="sec-lbl">Após as avaliações</div>
     <div class="acao-grid">
       <div class="acao-card">
-        <div class="acao-title">Sala de Deliberação</div>
-        <div class="acao-desc">Compare equipes, registre votos por categoria e veja ranking em tempo real.</div>
-        <a href="deliberacao.html" target="_blank" class="btn btn-primary btn-sm" style="align-self:flex-start">Abrir Deliberação →</a>
+        <div class="acao-copy">
+          <div class="acao-title">Sala de Deliberação</div>
+          <div class="acao-desc">Compare equipes, registre votos e acompanhe a classificação antes do encerramento.</div>
+        </div>
+        <a href="deliberacao.html" class="btn btn-primary btn-sm">Abrir Deliberação</a>
       </div>
     </div>
-
-
+  </div>
 
 </div><!-- /painel-wrap -->
 </div><!-- /view-painel -->
@@ -266,7 +564,7 @@
 <div id="toast"></div>
 <script src="js/api.js"></script>
 <script src="js/sidebar-roles.js?v=2"></script>
-<script src="js/product-ui.js?v=2"></script>
+<script src="js/product-ui.js?v=3"></script>
 <script>
   const FORMS = {
     desafio: 'https://forms.gle/6zZxqCMxTdndWUh58',
@@ -296,6 +594,8 @@
       if (r.ok) {
         // atualiza categoria se a API devolver
         document.getElementById('juiz-cat').textContent = r.categoria || 'Geral';
+        document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
+        configurarWorkspaceJuiz(r.categoria || '');
         return;
       }
       // só desloga se a API explicitamente negar (não em erros de rede)
@@ -327,14 +627,57 @@
     }
   }
 
+  function normalizarCategoriaJuiz(cat) {
+    var c = String(cat || '').toLowerCase();
+    if (c.indexOf('coord') >= 0) return 'coord';
+    if (c.indexOf('projeto') >= 0 || c.indexOf('inova') >= 0) return 'projeto';
+    if (c.indexOf('design') >= 0) return 'design';
+    if (c.indexOf('core') >= 0 || c.indexOf('valor') >= 0) return 'core';
+    if (c.indexOf('arena') >= 0 || c.indexOf('desafio') >= 0 || c.indexOf('robô') >= 0 || c.indexOf('robo') >= 0) return 'arena';
+    return '';
+  }
+
+  function configurarWorkspaceJuiz(cat) {
+    var key = normalizarCategoriaJuiz(cat);
+    var cards = Array.prototype.slice.call(document.querySelectorAll('.form-card[data-cat]'));
+    var isCoord = key === 'coord' || !!localStorage.getItem('coord_nome');
+
+    document.body.classList.toggle('is-coordination', isCoord);
+
+    cards.forEach(function(card) {
+      card.classList.remove('is-assigned');
+      card.style.display = '';
+    });
+
+    if (isCoord || !key) {
+      document.getElementById('judge-area-value').textContent = isCoord ? 'Coordenação · visão completa' : (cat || 'Geral');
+      document.getElementById('judge-area-note').textContent = isCoord ? 'Acesso a todas as categorias e à deliberação.' : 'Todas as categorias permanecem disponíveis.';
+      return;
+    }
+
+    var assigned = cards.find(function(card) { return card.getAttribute('data-cat') === key; });
+    if (assigned) {
+      assigned.classList.add('is-assigned');
+      cards.forEach(function(card) {
+        if (card !== assigned) card.style.display = 'none';
+      });
+      document.getElementById('judge-area-note').textContent = 'Somente a categoria atribuída ao seu perfil é exibida.';
+    }
+
+    document.getElementById('judge-area-value').textContent = cat || 'Categoria atribuída';
+  }
+
   function mostrarPainel(r) {
     document.getElementById('view-login').style.display  = 'none';
     document.getElementById('view-painel').style.display = '';
     document.getElementById('juiz-nome').textContent = r.nome;
     document.getElementById('juiz-cat').textContent  = r.categoria || 'Geral';
+    document.getElementById('juiz-nome-top').textContent = r.nome || 'Juiz';
+    document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
     document.getElementById('badge-juiz').textContent = r.nome;
     document.getElementById('btn-sair').style.display = '';
     document.getElementById('jh-ini').textContent = (r.nome || 'J').trim()[0].toUpperCase();
+    configurarWorkspaceJuiz(r.categoria || '');
   }
 
   function sair() {
