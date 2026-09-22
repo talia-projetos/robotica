@@ -471,6 +471,9 @@
 
 <script src="js/api.js"></script>
 <script>
+  /* Ping para aquecer o Apps Script antes do usuário clicar */
+  fetch(window.API_URL + '?action=config').catch(function(){});
+
   /* Redireciona se já estiver logado */
   (function () {
     if (localStorage.getItem('coord_nome') && localStorage.getItem('coord_pin')) { location.replace('index.html'); return; }
