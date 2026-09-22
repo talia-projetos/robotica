@@ -75,35 +75,30 @@
       text-transform: uppercase; letter-spacing: .06em; color: #fff;
     }
     .criterio-row {
-      display: block;
+      display: grid; grid-template-columns: minmax(0,1fr) auto;
+      align-items: center; gap: 1rem;
       padding: .9rem 1rem;
       border-top: 1px solid #F1F5F9;
     }
     .criterio-row:first-of-type { border-top: none; }
-    .criterio-header { display: flex; align-items: baseline; gap: .42rem; margin-bottom: .18rem; }
-    .criterio-cod  { font-size: .68rem; font-weight: 800; color: #94A3B8; flex-shrink: 0; }
-    .criterio-nome { font-size: .88rem; font-weight: 700; color: #0F172A; }
-    .criterio-desc { font-size: .72rem; color: #94A3B8; line-height: 1.45; margin-bottom: .6rem; }
+    .criterio-cod  { font-size: .68rem; font-weight: 800; color: #94A3B8; margin-bottom: .2rem; }
+    .criterio-nome { font-size: .9rem; font-weight: 700; color: #0F172A; }
+    .criterio-desc { font-size: .75rem; color: #64748B; margin-top: .2rem; line-height: 1.45; }
 
-    /* ── Selector de nota 1-4 (tiles visuais) ──────────────── */
-    .score-sel {
-      display: grid; grid-template-columns: repeat(4,1fr); gap: .38rem;
-    }
+    /* ── Selector de nota 1-4 ───────────────────────────────── */
+    .score-sel { display: flex; gap: .35rem; flex-shrink: 0; }
     .score-btn {
-      height: 60px; border-radius: 10px;
-      border: 2px solid #E2E8F0; background: #F8FAFC;
+      width: 38px; height: 38px; border-radius: 9px;
+      border: 2px solid #D9E2EC; background: #F8FAFC;
+      font-size: .88rem; font-weight: 800; color: #94A3B8;
       cursor: pointer; transition: border-color .12s, background .12s, color .12s;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 2px; padding: 0; width: 100%;
+      display: flex; align-items: center; justify-content: center;
     }
-    .score-btn__num { font-size: 1.3rem; font-weight: 900; line-height: 1; color: #CBD5E1; }
-    .score-btn__lbl { font-size: .56rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: #94A3B8; }
-    .score-btn:hover .score-btn__num { color: #64748B; }
-    .score-btn:hover .score-btn__lbl { color: #64748B; }
-    .score-btn.ativo { border-color: transparent; }
-    .score-btn.ativo .score-btn__num,
-    .score-btn.ativo .score-btn__lbl { color: #fff; }
+    .score-btn:hover { border-color: #94A3B8; color: #475569; }
+    .score-btn.ativo {
+      color: #fff;
+      border-color: transparent;
+    }
 
     /* ── Soma progressiva ───────────────────────────────────── */
     .total-bar {
@@ -161,8 +156,8 @@
     @media (max-width: 600px) {
       .escala-bar { grid-template-columns: 1fr 1fr; }
       .obs-grid   { grid-template-columns: 1fr; }
-      .score-btn  { height: 54px; }
-      .score-btn__num { font-size: 1.1rem; }
+      .criterio-row { grid-template-columns: 1fr; }
+      .score-sel { margin-top: .4rem; }
     }
 
     /* ── Arena: missões ─────────────────────────────────────────── */
@@ -177,39 +172,45 @@
       font-family: inherit; font-size: .88rem; background: #F8FAFC; color: #0F172A; cursor: pointer;
     }
     .missao-card {
-      background: #fff; border: 1px solid #E2E8F0; border-radius: 14px;
-      padding: .85rem 1rem; margin-bottom: .6rem;
-      display: grid; grid-template-columns: 56px minmax(0,1fr) auto;
-      align-items: flex-start; gap: .8rem;
+      background: #fff; border: 1.5px solid #E2E8F0; border-radius: 14px;
+      padding: .9rem 1rem; margin-bottom: .65rem;
+      display: grid; grid-template-columns: 70px minmax(0,1fr);
+      gap: .9rem; transition: border-color .15s;
     }
+    .missao-card:has(.missao-opt.ativo) { border-color: #93C5FD; }
     .missao-img {
-      width: 56px; height: 56px; border-radius: 8px;
+      width: 70px; height: 70px; border-radius: 10px;
       object-fit: contain; object-position: center;
-      background: #F1F5F9; flex-shrink: 0; padding: 2px;
+      background: #F1F5F9; flex-shrink: 0; padding: 3px;
     }
     .missao-badge {
-      width: 44px; height: 44px; border-radius: 11px;
+      width: 70px; height: 70px; border-radius: 10px;
       background: #EFF6FF; display: flex; flex-direction: column;
       align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .missao-badge__cod { font-size: .58rem; font-weight: 900; color: #1D4ED8; letter-spacing: .04em; }
+    .missao-badge__cod { font-size: .65rem; font-weight: 900; color: #1D4ED8; letter-spacing: .04em; }
     .missao-badge__cod-inline { font-size: .62rem; font-weight: 900; color: #1D4ED8; letter-spacing: .04em; margin-right: .2rem; }
-    .missao-nome { font-size: .88rem; font-weight: 700; color: #0F172A; }
-    .missao-desc { font-size: .72rem; color: #64748B; margin-top: .18rem; line-height: 1.4; }
-    .missao-restrito { font-size: .62rem; color: #D97706; font-weight: 700; margin-top: .2rem; }
-    .missao-opts { display: flex; flex-wrap: wrap; gap: .3rem; padding-top: .05rem; }
-    .missao-opt {
-      padding: .28rem .55rem; border-radius: 7px;
-      border: 2px solid #E2E8F0; background: #F8FAFC;
-      font-size: .78rem; font-weight: 800; color: #94A3B8;
-      cursor: pointer; transition: all .1s; white-space: nowrap;
+    .missao-nome { font-size: .9rem; font-weight: 800; color: #0F172A; margin-bottom: .18rem; }
+    .missao-desc { font-size: .7rem; color: #64748B; line-height: 1.4; margin-bottom: .5rem; }
+    .missao-restrito {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: .65rem; color: #B45309; font-weight: 700;
+      background: #FEF3C7; border-radius: 5px; padding: .15rem .45rem;
+      margin-bottom: .45rem;
     }
-    .missao-opt:hover { border-color: #93C5FD; color: #1D4ED8; }
+    .missao-opts { display: flex; flex-wrap: wrap; gap: .38rem; }
+    .missao-opt {
+      flex: 1; min-width: 46px;
+      padding: .52rem .4rem; border-radius: 9px;
+      border: 2px solid #E2E8F0; background: #F8FAFC;
+      font-size: .9rem; font-weight: 900; color: #64748B;
+      cursor: pointer; transition: all .12s; white-space: nowrap; text-align: center;
+    }
+    .missao-opt:hover { border-color: #93C5FD; color: #1D4ED8; background: #EFF6FF; }
     .missao-opt.ativo { color: #fff; border-color: transparent; background: #1D4ED8; }
     @media (max-width: 580px) {
-      .missao-card { grid-template-columns: 48px minmax(0,1fr); }
-      .missao-img { width: 48px; height: 48px; }
-      .missao-opts { grid-column: 1/-1; }
+      .missao-card { grid-template-columns: 58px minmax(0,1fr); }
+      .missao-img, .missao-badge { width: 58px; height: 58px; }
     }
   </style>
 </head>
@@ -524,8 +525,6 @@ var NOTAS = {};   // cod -> 1|2|3|4
   verificarDraft();
 })();
 
-var NIVEL_LABEL = ['', 'Iniciante', 'Em desenv.', 'Finalizado', 'Excedente'];
-
 function renderCriterios() {
   var wrap = document.getElementById('criterios-wrap');
   var html = '';
@@ -536,17 +535,14 @@ function renderCriterios() {
 
     bloco.criterios.forEach(function(c) {
       html += '<div class="criterio-row">'
-        + '<div class="criterio-header">'
-        + '<span class="criterio-cod">' + c.cod + '</span>'
-        + '<span class="criterio-nome">' + c.nome + '</span>'
-        + '</div>'
+        + '<div>'
+        + '<div class="criterio-cod">' + c.cod + '</div>'
+        + '<div class="criterio-nome">' + c.nome + '</div>'
         + '<div class="criterio-desc">' + c.desc + '</div>'
+        + '</div>'
         + '<div class="score-sel" id="sel-' + c.cod + '">';
       [1,2,3,4].forEach(function(n) {
-        html += '<button class="score-btn" data-cod="' + c.cod + '" data-val="' + n + '" onclick="marcar(this)">'
-          + '<span class="score-btn__num">' + n + '</span>'
-          + '<span class="score-btn__lbl">' + NIVEL_LABEL[n] + '</span>'
-          + '</button>';
+        html += '<button class="score-btn" data-cod="' + c.cod + '" data-val="' + n + '" onclick="marcar(this)">' + n + '</button>';
       });
       html += '</div></div>';
     });
