@@ -124,7 +124,10 @@
   function rename(href, label) {
     var el = document.querySelector('.app-sidebar .sidebar-item[href="' + href + '"]');
     if (!el) return;
-    var textNode = Array.prototype.slice.call(el.childNodes).find(function(n){ return n.nodeType === 3; });
+    /* Ignora text nodes só com whitespace (ex: quebra de linha antes do SVG) */
+    var textNode = Array.prototype.slice.call(el.childNodes).find(function(n){
+      return n.nodeType === 3 && n.nodeValue.trim() !== '';
+    });
     if (textNode) textNode.nodeValue = ' ' + label;
   }
 

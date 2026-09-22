@@ -35,7 +35,7 @@
         '<h1>Avaliações</h1>' +
         '<p class="workspace-sub" id="judge-workspace-sub">Acesse as rubricas e registre as avaliações da sua área.</p>' +
       '</div>' +
-      '<div class="workspace-actions">' + buttonLink('documentos.html', 'Documentos') + '</div>';
+      '<div class="workspace-actions"></div>';
 
     var first = wrap.querySelector('.jh');
     if (first) first.insertAdjacentElement('afterend', head);
