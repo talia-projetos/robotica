@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <style>html{visibility:hidden}</style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Avaliação — HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -238,6 +239,13 @@
 <main class="app-main">
 <div class="av-wrap">
 
+  <!-- Banner de rascunho offline -->
+  <div id="draft-banner" style="display:none;background:#FEF3C7;border:1px solid #F59E0B;border-radius:10px;padding:.6rem 1rem;margin-bottom:.75rem;align-items:center;gap:.75rem;font-size:.82rem;font-weight:600;color:#92400E;flex-wrap:wrap">
+    <span>Rascunho salvo — deseja restaurar?</span>
+    <button onclick="restaurarDraft()" style="background:#F59E0B;color:#fff;border:none;padding:.3rem .8rem;border-radius:6px;font-family:inherit;font-size:.8rem;font-weight:700;cursor:pointer">Restaurar</button>
+    <button onclick="descartarDraft()" style="background:none;border:1px solid #D97706;color:#92400E;padding:.3rem .7rem;border-radius:6px;font-family:inherit;font-size:.8rem;cursor:pointer">Descartar</button>
+  </div>
+
   <!-- ── Cabeçalho da categoria ── -->
   <div class="av-head" id="av-head">
     <div class="av-head__icon" id="av-head-icon">
@@ -469,6 +477,7 @@ var NOTAS = {};   // cod -> 1|2|3|4
 
   /* Render critérios */
   renderCriterios();
+  verificarDraft();
 })();
 
 function renderCriterios() {
@@ -499,6 +508,86 @@ function renderCriterios() {
   atualizarTotal();
 }
 
+/* ─── Draft offline ──────────────────────────────────────────── */
+function _draftKey() { return 'hub_draft_' + (CAT || 'arena'); }
+
+function salvarDraft() {
+  if (!CAT) return;
+  var equipe = (document.getElementById('sel-equipe') || {}).value || '';
+  var draft = { equipe: equipe, ts: Date.now() };
+  if (CAT === 'arena') {
+    draft.missaoNotas = MISSAO_NOTAS;
+    draft.round = ROUND_SEL;
+  } else {
+    draft.notas = NOTAS;
+    draft.obs = {
+      bom:      ((document.getElementById('obs-bom') || {}).value || ''),
+      melhorar: ((document.getElementById('obs-mel') || {}).value || '')
+    };
+  }
+  try { localStorage.setItem(_draftKey(), JSON.stringify(draft)); } catch(_) {}
+}
+
+function limparDraft() {
+  try { localStorage.removeItem(_draftKey()); } catch(_) {}
+}
+
+function verificarDraft() {
+  var raw; try { raw = localStorage.getItem(_draftKey()); } catch(_) { return; }
+  if (!raw) return;
+  var d; try { d = JSON.parse(raw); } catch(_) { limparDraft(); return; }
+  if (!d || Date.now() - (d.ts || 0) > 86400000) { limparDraft(); return; }
+  var banner = document.getElementById('draft-banner');
+  if (banner) { banner._draft = d; banner.style.display = 'flex'; }
+}
+
+function restaurarDraft() {
+  var banner = document.getElementById('draft-banner');
+  var d = banner && banner._draft;
+  if (!d) return;
+  banner.style.display = 'none';
+  if (d.equipe) {
+    var sel = document.getElementById('sel-equipe');
+    if (sel) { sel.value = d.equipe; sel.dispatchEvent(new Event('change')); }
+  }
+  if (CAT === 'arena') {
+    if (d.round) {
+      ROUND_SEL = d.round;
+      var rs = document.getElementById('sel-round-av');
+      if (rs) rs.value = d.round;
+    }
+    MISSAO_NOTAS = d.missaoNotas || {};
+    renderArena();
+    document.getElementById('total-val').textContent =
+      Object.values(MISSAO_NOTAS).reduce(function(a,b){return a+b;},0);
+  } else {
+    NOTAS = d.notas || {};
+    Object.keys(NOTAS).forEach(function(cod) {
+      var v = NOTAS[cod];
+      var g = document.getElementById('sel-' + cod);
+      if (!g) return;
+      g.querySelectorAll('.score-btn').forEach(function(b) {
+        b.classList.toggle('activo', Number(b.dataset.val) === v);
+      });
+    });
+    atualizarTotal();
+    if (d.obs) {
+      var obsB = document.getElementById('obs-bom');
+      var obsM = document.getElementById('obs-mel');
+      if (obsB) obsB.value = d.obs.bom || '';
+      if (obsM) obsM.value = d.obs.melhorar || '';
+    }
+  }
+  verificarPronto();
+  toast('Rascunho restaurado.', 'ok');
+}
+
+function descartarDraft() {
+  document.getElementById('draft-banner').style.display = 'none';
+  limparDraft();
+}
+/* ──────────────────────────────────────────────────────────────── */
+
 function marcar(btn) {
   var cod = btn.dataset.cod;
   var val = Number(btn.dataset.val);
@@ -518,6 +607,7 @@ function marcar(btn) {
 
   atualizarTotal();
   verificarPronto();
+  salvarDraft();
 }
 
 function atualizarTotal() {
@@ -553,6 +643,7 @@ function initArena() {
 
   document.getElementById('sel-equipe').addEventListener('change', verificarPronto);
   renderArena();
+  verificarDraft();
 }
 
 function renderArena() {
@@ -597,6 +688,7 @@ function marcarMissao(btn) {
   var total = Object.values(MISSAO_NOTAS).reduce(function(a,b){return a+b;}, 0);
   document.getElementById('total-val').textContent = total;
   verificarPronto();
+  salvarDraft();
 }
 
 function verificarPronto() {
@@ -662,12 +754,10 @@ async function enviar() {
     var obsB = document.getElementById('obs-bom').value.trim();
     var obsM = document.getElementById('obs-mel').value.trim();
 
-    var r = await API.salvarRubrica(Sessao.juiz, Sessao.pin, CAT, equipe, notasArr);
+    var r = await API.salvarRubrica(Sessao.juiz, Sessao.pin, CAT, equipe, notasArr, { bom: obsB, melhorar: obsM });
     if (!r.ok) throw new Error(r.erro || 'Erro desconhecido');
 
-    if (obsB) API.comentar(Sessao.juiz, Sessao.pin, '[BOM] ' + obsB, CAT).catch(function(){});
-    if (obsM) API.comentar(Sessao.juiz, Sessao.pin, '[MEL] ' + obsM, CAT).catch(function(){});
-
+    limparDraft();
     ocultarFormulario();
     var soma = notasArr.reduce(function(a,b){return a+b;}, 0);
     document.getElementById('sucesso-sub').textContent =
@@ -696,6 +786,7 @@ async function enviarArena() {
     var r = await API.salvarArena(Sessao.juiz, Sessao.pin, equipe, ROUND_SEL, MISSAO_NOTAS, 0);
     if (!r.ok) throw new Error(r.erro || 'Erro desconhecido');
 
+    limparDraft();
     ocultarFormulario();
     document.getElementById('sucesso-sub').textContent =
       ROUND_SEL + ' •' + total + ' pts registrados para ' + document.getElementById('sel-equipe').selectedOptions[0].text + '.';
@@ -711,6 +802,7 @@ async function enviarArena() {
 }
 
 function novaAvaliacao() {
+  limparDraft();
   document.getElementById('av-sucesso').style.display = 'none';
   document.getElementById('sel-equipe').value = '';
   document.getElementById('total-val').textContent = '0';

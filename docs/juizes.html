@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <style>html{visibility:hidden}</style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -1370,10 +1371,12 @@
     input.value = '';
     btn.disabled = true;
     try {
-      await API.chatEnviar(_chatNome, txt);
+      var r = await API.chatEnviar(_chatNome, txt);
+      if (r && !r.ok) throw new Error(r.erro || 'Erro ao enviar');
       await chatCarregar();
-    } catch(_) {
+    } catch(e) {
       input.value = txt;
+      toast('Chat: ' + e.message, 'err');
     } finally {
       btn.disabled = false;
       input.focus();

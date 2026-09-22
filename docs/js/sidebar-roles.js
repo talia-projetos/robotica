@@ -437,4 +437,5 @@
     buildGreeting();
     addSidebarToggle();
   }
+  document.documentElement.style.visibility = '';
 })();

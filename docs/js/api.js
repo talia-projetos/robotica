@@ -38,8 +38,8 @@ const API = (function () {
     verificarJuiz: (juiz, pin) => get({ action: 'auth', juiz, pin }),
     todasTurmas: (juiz, pin) => get({ action: 'coordenacao', juiz, pin }),
 
-    salvarRubrica: (juiz, pin, categoria, idEquipe, notas) =>
-      post({ action: 'rubrica', juiz, pin, categoria, idEquipe, notas }),
+    salvarRubrica: (juiz, pin, categoria, idEquipe, notas, obs) =>
+      post({ action: 'rubrica', juiz, pin, categoria, idEquipe, notas, obs: obs || {} }),
 
     salvarArena: (juiz, pin, idEquipe, round, missoes, penalidade) =>
       post({ action: 'arena', juiz, pin, idEquipe, round, missoes, penalidade: penalidade || 0 }),
