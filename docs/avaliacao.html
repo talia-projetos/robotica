@@ -262,19 +262,19 @@
     <label for="sel-equipe">Equipe avaliada</label>
     <select id="sel-equipe">
       <option value="">— Selecione a equipe —</option>
-      <option value="TUR01">6° A •Cyber Panter</option>
-      <option value="TUR02">6° B •Liga do Choque</option>
-      <option value="TUR03">6° C •Alpha Tech</option>
-      <option value="TUR04">6° D •Pheonics Mecanics</option>
-      <option value="TUR05">6° E •TecShark</option>
-      <option value="TUR06">7° A •Hoppin Robots</option>
-      <option value="TUR07">7° B •Bivoltx</option>
-      <option value="TUR08">7° C •Ecoshift</option>
-      <option value="TUR09">7° D •Pantera Lego Team</option>
-      <option value="TUR10">7° E •Império das Onças</option>
-      <option value="TUR11">7° F •Poseidon</option>
-      <option value="TUR12">7° G •Arara Azul</option>
-      <option value="TUR13">7° H •Nexos</option>
+      <option value="TUR01">6° A • Cyber Panter</option>
+      <option value="TUR02">6° B • Liga do Choque</option>
+      <option value="TUR03">6° C • Alpha Tech</option>
+      <option value="TUR04">6° D • Pheonics Mecanics</option>
+      <option value="TUR05">6° E • TecShark</option>
+      <option value="TUR06">7° A • Hoppin Robots</option>
+      <option value="TUR07">7° B • Bivoltx</option>
+      <option value="TUR08">7° C • Ecoshift</option>
+      <option value="TUR09">7° D • Pantera Lego Team</option>
+      <option value="TUR10">7° E • Império das Onças</option>
+      <option value="TUR11">7° F • Poseidon</option>
+      <option value="TUR12">7° G • Arara Azul</option>
+      <option value="TUR13">7° H • Nexos</option>
     </select>
   </div>
 
@@ -564,7 +564,7 @@ function renderArena() {
       + '<div>'
       + '<div class="missao-nome"><span class="missao-badge__cod-inline">' + m.cod + '</span> ' + m.nome + (marcado ? ' <span style="color:#22C55E;font-size:.7rem;font-weight:700">' + MISSAO_NOTAS[m.cod] + ' pts</span>' : '') + '</div>'
       + '<div class="missao-desc">' + m.desc + '</div>'
-      + (m.restrito ? '<div class="missao-restrito">Nao pontua se equipamentos tocarem o modelo ao fim do round</div>' : '')
+      + (m.restrito ? '<div class="missao-restrito"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:3px"><path d="M8 1L15 14H1z"/><line x1="8" y1="6" x2="8" y2="10"/><circle cx="8" cy="12.5" r=".5" fill="#D97706"/></svg>Não pontua se equipamentos tocarem o modelo ao fim do round</div>' : '')
       + '</div>'
       + '<div class="missao-opts">';
     m.opts.forEach(function(pts) {
@@ -692,7 +692,7 @@ async function enviarArena() {
   document.getElementById('spinner').style.display = '';
 
   try {
-    var r = await API.salvarArena(Sessao.juiz, Sessao.pin, equipe, ROUND_SEL, total, 0);
+    var r = await API.salvarArena(Sessao.juiz, Sessao.pin, equipe, ROUND_SEL, MISSAO_NOTAS, 0);
     if (!r.ok) throw new Error(r.erro || 'Erro desconhecido');
 
     ocultarFormulario();
