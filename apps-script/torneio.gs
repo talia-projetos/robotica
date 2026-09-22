@@ -1048,6 +1048,7 @@ function doGet(e) {
       case 'turma':       r = apiTurma_(p);         break;
       case 'coordenacao': r = apiTodasTurmas_(p);   break;
       case 'auth':        r = apiVerificarJuiz_(p); break;
+      case 'chat':        r = apiChatReceber_(p);   break;
       default:            r = { ok: false, erro: 'Ação desconhecida: ' + (p.action || '(vazia)') };
     }
     return jsonOut_(r, cb);
@@ -1072,6 +1073,7 @@ function doPost(e) {
       case 'rubrica':    r = apiSalvarRubrica_(body);    break;
       case 'arena':      r = apiSalvarArena_(body);      break;
       case 'comentario': r = apiSalvarComentario_(body); break;
+      case 'chat_send':  r = apiChatEnviar_(body);       break;
       case 'voto':       r = apiSalvarVoto_(body);       break;
       default:           r = { ok: false, erro: 'Ação desconhecida.' };
     }
@@ -1271,10 +1273,14 @@ function apiSalvarRubrica_(body) {
     aba = ss.insertSheet(nomeAba);
     const h = ['Carimbo de data/hora','ID_Equipe','Nome do Juiz','Validado'];
     for (let i = 1; i <= cfg.criterios; i++) h.push('Critério ' + i);
+    h.push('Bom Trabalho', 'Reflitam');
     aba.getRange(1,1,1,h.length).setValues([h]);
   }
   const linha = [new Date(), body.idEquipe, body.juiz, 'Sim'];
   body.notas.forEach(function(n){ linha.push(num_(n)); });
+  const obs = body.obs || {};
+  linha.push(String(obs.bom || '').trim());
+  linha.push(String(obs.melhorar || '').trim());
   aba.appendRow(linha);
   atualizarInterno_(ss);
   return { ok: true, mensagem: 'Rubrica salva.' };
@@ -1323,6 +1329,43 @@ function apiSalvarVoto_(body) {
   if (!aba) { aba = ss.insertSheet('HUB_DELIBERACAO_VOTOS'); aba.getRange(1,1,1,5).setValues([['Data_Hora','Juiz','ID_Equipe','Categoria','Aprovado']]); }
   aba.appendRow([new Date(), body.juiz, body.idEquipe, body.categoria, body.favor===true||body.favor==='true'?'Sim':'Não']);
   return { ok: true };
+}
+
+
+// ================================================================
+// API — CHAT (juizes.html)
+// ================================================================
+
+function apiChatEnviar_(body) {
+  const msg = String(body.msg || '').trim();
+  if (!msg) throw new Error('Mensagem vazia.');
+  const ss  = SpreadsheetApp.getActiveSpreadsheet();
+  let   aba = ss.getSheetByName('HUB_DELIBERACAO_CHAT');
+  if (!aba) {
+    aba = ss.insertSheet('HUB_DELIBERACAO_CHAT');
+    aba.getRange(1,1,1,3).setValues([['Data_Hora','De','Mensagem']]);
+  }
+  aba.appendRow([new Date(), String(body.de || '').trim(), msg]);
+  return { ok: true };
+}
+
+function apiChatReceber_(p) {
+  const ss  = SpreadsheetApp.getActiveSpreadsheet();
+  const aba = ss.getSheetByName('HUB_DELIBERACAO_CHAT');
+  if (!aba || aba.getLastRow() < 2) return { ok: true, mensagens: [] };
+  const dados = aba.getDataRange().getValues();
+  const cab   = dados[0];
+  const iTs  = achaCab_(cab, ['data hora','data_hora','timestamp','data'], 0);
+  const iDe  = achaCab_(cab, ['de','juiz','nome'], 1);
+  const iMsg = achaCab_(cab, ['mensagem','texto','msg'], 2);
+  const lista = dados.slice(1).filter(function(r){ return r[iMsg] !== ''; }).map(function(r){
+    return {
+      hora: r[iTs] instanceof Date ? r[iTs].toISOString() : String(r[iTs]),
+      de:   String(r[iDe]  || ''),
+      msg:  String(r[iMsg] || '')
+    };
+  });
+  return { ok: true, mensagens: lista };
 }
 
 
