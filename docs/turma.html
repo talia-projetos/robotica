@@ -912,7 +912,7 @@
     }
 
     .team-summary-grid{
-      grid-template-columns:minmax(0,1fr) 270px;
+      grid-template-columns:minmax(0,1fr);
       gap:.8rem;
     }
 
@@ -991,12 +991,12 @@
       margin-bottom:.45rem;
     }
     .donut-svg{
-      width:56px;
-      height:56px;
+      width:80px;
+      height:80px;
     }
     .total-card .donut-svg{
-      width:72px;
-      height:72px;
+      width:104px;
+      height:104px;
     }
     .donut-center{
       position:absolute;
@@ -1006,24 +1006,24 @@
       line-height:1;
     }
     .donut-val{
-      font-size:.8rem;
+      font-size:1rem;
       font-weight:800;
       color:#203047;
     }
     .total-card .donut-val{
-      font-size:1rem;
+      font-size:1.3rem;
       color:#8B7218;
     }
     .donut-val--pending{
       color:#B0BAC5;
     }
     .donut-sub{
-      font-size:.47rem;
+      font-size:.58rem;
       color:#94A3B8;
       margin-top:.12rem;
     }
     .donut-label{
-      font-size:.57rem;
+      font-size:.68rem;
       font-weight:700;
       color:#718096;
       text-transform:uppercase;
@@ -1031,10 +1031,10 @@
       margin-bottom:.1rem;
     }
     .total-card .donut-label{
-      font-size:.6rem;
+      font-size:.72rem;
     }
     .donut-meta{
-      font-size:.54rem;
+      font-size:.63rem;
       color:#94A3B8;
     }
     .donut-meta--waiting{
@@ -1411,15 +1411,6 @@
           <div class="team-section-kicker">Desempenho da equipe</div>
           <div class="scores-grid" id="scores-grid"></div>
         </div>
-        <aside class="team-feedback-preview">
-          <div class="team-section-kicker">Feedback dos Juízes</div>
-          <div class="feedback-preview-icon">
-            <svg viewBox="0 0 24 24"><path d="M5 4h14v12H8l-3 3z"/><path d="M9 9h6M9 12h4"/></svg>
-          </div>
-          <div class="feedback-preview-title">Comentários e devolutivas</div>
-          <div class="feedback-preview-text">Consulte os comentários recebidos por categoria conforme as avaliações forem concluídas.</div>
-          <button type="button" class="feedback-preview-link" onclick="mudarTTab('feedback')">Abrir feedback</button>
-        </aside>
       </div>
     </div>
 
