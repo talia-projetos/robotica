@@ -51,7 +51,10 @@ const API = (function () {
       post({ action: 'voto', juiz, pin, idEquipe, categoria, favor }),
 
     chatReceber: (juiz) => get({ action: 'chat', juiz }),
-    chatEnviar:  (juiz, msg) => post({ action: 'chat_send', de: juiz, msg })
+    chatEnviar:  (juiz, msg) => post({ action: 'chat_send', de: juiz, msg }),
+
+    faseFinal:       () => get({ action: 'fase_final' }),
+    faseFinalSalvar: (fases) => post({ action: 'fase_final_salvar', fases })
   };
 })();
 

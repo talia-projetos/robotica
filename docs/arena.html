@@ -503,6 +503,77 @@
       #btn-crono-toggle, #btn-crono-reset { width: 100%; }
     }
   
+    /* ── Fase Final / Bracket ───────────────────────────────────── */
+    .fase-nav{display:flex;gap:.3rem;margin-bottom:1rem;flex-wrap:wrap}
+    .fase-btn{
+      padding:.35rem .8rem;border:1px solid var(--ar-border2);border-radius:7px;
+      background:transparent;color:var(--ar-muted);font:.65rem/1 inherit;font-weight:700;
+      cursor:pointer;letter-spacing:.04em;text-transform:uppercase;transition:all .13s;
+    }
+    .fase-btn:hover{border-color:var(--ar-border);color:var(--ar-text)}
+    .fase-btn.ativo{background:#4DC9C3;border-color:#4DC9C3;color:#0a1e30}
+    body.claro .fase-btn{color:#6B7A90;border-color:#D9E4EE}
+    body.claro .fase-btn.ativo{background:#12355B;border-color:#12355B;color:#fff}
+    body.claro .fase-btn:hover{color:#12355B;border-color:#2F80ED}
+
+    .bracket-grid{display:flex;flex-direction:column;gap:.55rem}
+    .match-card{
+      display:grid;grid-template-columns:1fr 32px 1fr;
+      align-items:stretch;gap:0;
+      border:1px solid var(--ar-border2);border-radius:10px;overflow:hidden;
+    }
+    .match-side{
+      display:flex;flex-direction:column;justify-content:center;
+      padding:.6rem .75rem;gap:.25rem;background:var(--ar-surface);
+      transition:background .15s;
+    }
+    .match-side.vencedor{background:rgba(77,201,195,.1)}
+    body.claro .match-side.vencedor{background:#EDF9F7}
+    .match-side.perdedor{opacity:.5}
+    .match-side__nome{font-size:.73rem;font-weight:700;color:var(--ar-text)}
+    .match-side__sub{font-size:.6rem;color:var(--ar-muted)}
+    .match-vs{
+      display:flex;align-items:center;justify-content:center;
+      background:var(--ar-surface2);color:var(--ar-muted);
+      font-size:.6rem;font-weight:800;letter-spacing:.06em;
+      border-left:1px solid var(--ar-border2);border-right:1px solid var(--ar-border2);
+    }
+    .match-score-input{
+      width:48px;padding:.3rem .4rem;border:1px solid var(--ar-border2);border-radius:6px;
+      background:var(--ar-surface2);color:var(--ar-text);font:.85rem/1 inherit;
+      font-weight:700;text-align:center;outline:none;margin-top:.3rem;
+    }
+    .match-score-input:focus{border-color:#4DC9C3}
+    body.claro .match-score-input{background:#F0F6FC;color:#12355B;border-color:#D0DCE8}
+    .match-score-input::-webkit-outer-spin-button,
+    .match-score-input::-webkit-inner-spin-button{-webkit-appearance:none}
+    .match-winner-badge{
+      display:inline-flex;align-items:center;gap:.25rem;
+      font-size:.55rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;
+      color:#4DC9C3;margin-top:.15rem;
+    }
+    body.claro .match-winner-badge{color:#0D9488}
+    .fase-config-btn{
+      display:inline-flex;align-items:center;gap:.4rem;
+      padding:.38rem .75rem;border:1px solid var(--ar-border2);border-radius:7px;
+      background:transparent;color:var(--ar-muted);font:.65rem/1 inherit;font-weight:700;
+      cursor:pointer;margin-bottom:.85rem;
+    }
+    .fase-config-btn.ativo{border-color:#4DC9C3;color:#4DC9C3}
+    body.claro .fase-config-btn{color:#6B7A90;border-color:#D9E4EE}
+    body.claro .fase-config-btn.ativo{border-color:#2F80ED;color:#12355B}
+    .match-select{
+      width:100%;padding:.28rem .4rem;border:1px solid var(--ar-border2);border-radius:6px;
+      background:var(--ar-surface2);color:var(--ar-text);font:.7rem/1 inherit;outline:none;
+    }
+    body.claro .match-select{background:#F0F6FC;color:#12355B;border-color:#D0DCE8}
+    .fase-label{font-size:.68rem;color:var(--ar-muted);margin-bottom:.55rem;font-style:italic}
+    .fase-salvar-btn{
+      margin-top:.65rem;padding:.42rem 1rem;border:none;border-radius:7px;
+      background:#4DC9C3;color:#0a1e30;font:.7rem/1 inherit;font-weight:800;cursor:pointer;
+    }
+    body.claro .fase-salvar-btn{background:#12355B;color:#fff}
+
     /* ── Arena v3: central de controle ─────────────────────────── */
     .arena-header{margin:1.1rem 0 .9rem}
     .arena-titulo{font-size:1.18rem;font-weight:750;letter-spacing:-.025em}
@@ -594,6 +665,7 @@
   <div class="arena-tab-bar">
     <button class="arena-tab ativo" id="tab-crono" onclick="mudarAbaArena('crono')">Cronômetro</button>
     <button class="arena-tab" id="tab-ranking" onclick="mudarAbaArena('ranking')">Ranking</button>
+    <button class="arena-tab" id="tab-fasefinal" onclick="mudarAbaArena('fasefinal')">Fase Final</button>
   </div>
 
   <!-- Vista ranking-only -->
@@ -604,6 +676,21 @@
         <tbody id="arena-body-r"></tbody>
       </table>
     </div>
+  </div>
+
+  <!-- Fase Final / Bracket -->
+  <div id="view-fasefinal" class="hidden">
+    <div class="fase-nav">
+      <button class="fase-btn" id="fbtn-oitavas" onclick="mudarFase('oitavas')">Oitavas</button>
+      <button class="fase-btn" id="fbtn-quartas" onclick="mudarFase('quartas')">Quartas</button>
+      <button class="fase-btn ativo" id="fbtn-semis" onclick="mudarFase('semis')">Semis</button>
+      <button class="fase-btn" id="fbtn-final" onclick="mudarFase('final')">Final</button>
+    </div>
+    <button class="fase-config-btn" id="btn-fase-config" onclick="toggleFaseConfig()">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.42 1.42M11.54 11.54l1.41 1.41M3.05 12.95l1.42-1.42M11.54 4.46l1.41-1.41"/></svg>
+      Configurar partidas
+    </button>
+    <div id="fase-bracket"></div>
   </div>
 
   <!-- Layout dois painéis -->
@@ -746,9 +833,187 @@
   function mudarAbaArena(aba) {
     document.getElementById('tab-crono').classList.toggle('ativo', aba === 'crono');
     document.getElementById('tab-ranking').classList.toggle('ativo', aba === 'ranking');
+    document.getElementById('tab-fasefinal').classList.toggle('ativo', aba === 'fasefinal');
     document.getElementById('view-crono').classList.toggle('hidden', aba !== 'crono');
     document.getElementById('view-ranking-only').classList.toggle('hidden', aba !== 'ranking');
+    document.getElementById('view-fasefinal').classList.toggle('hidden', aba !== 'fasefinal');
   }
+
+  /* ══════════════════════════════════════════════════════════════
+     FASE FINAL — bracket eliminatório extraoficial
+  ══════════════════════════════════════════════════════════════ */
+  var FASE_ATUAL  = 'semis';
+  var FASE_CONFIG = false;
+
+  var FASES_DEF = {
+    oitavas: { label: 'Oitavas de Final', n: 8 },
+    quartas: { label: 'Quartas de Final', n: 4 },
+    semis:   { label: 'Semifinais',       n: 2 },
+    final:   { label: 'Final',            n: 1 }
+  };
+
+  /* Estado local — preenchido pelo servidor / localStorage */
+  var faseDados = {
+    oitavas: gerarPartidas(8),
+    quartas: gerarPartidas(4),
+    semis:   gerarPartidas(2),
+    final:   gerarPartidas(1)
+  };
+
+  function gerarPartidas(n) {
+    var arr = [];
+    for (var i = 0; i < n; i++)
+      arr.push({ eqA: '', eqB: '', ponA: null, ponB: null });
+    return arr;
+  }
+
+  function carregarFaseLocal() {
+    try {
+      var raw = localStorage.getItem('hub_fasefinal');
+      if (raw) faseDados = JSON.parse(raw);
+    } catch(_) {}
+  }
+
+  function salvarFaseLocal() {
+    try { localStorage.setItem('hub_fasefinal', JSON.stringify(faseDados)); } catch(_) {}
+  }
+
+  async function sincronizarFase() {
+    try {
+      const r = await API.faseFinal();
+      if (r && r.ok && r.fases) {
+        faseDados = r.fases;
+        salvarFaseLocal();
+        renderFase(FASE_ATUAL);
+      }
+    } catch(_) {}
+  }
+
+  async function salvarFaseRemoto() {
+    try {
+      await API.faseFinalSalvar(faseDados);
+    } catch(_) {}
+  }
+
+  function mudarFase(fase) {
+    FASE_ATUAL = fase;
+    Object.keys(FASES_DEF).forEach(function(k) {
+      document.getElementById('fbtn-' + k).classList.toggle('ativo', k === fase);
+    });
+    renderFase(fase);
+  }
+
+  function toggleFaseConfig() {
+    FASE_CONFIG = !FASE_CONFIG;
+    document.getElementById('btn-fase-config').classList.toggle('ativo', FASE_CONFIG);
+    renderFase(FASE_ATUAL);
+  }
+
+  function nomeEquipe(id) {
+    return nomesMap[id] || id;
+  }
+
+  function vencedor(p) {
+    if (p.ponA === null || p.ponB === null) return null;
+    var a = Number(p.ponA), b = Number(p.ponB);
+    if (a === b) return null;
+    return a > b ? 'A' : 'B';
+  }
+
+  function renderFase(fase) {
+    var partidas = faseDados[fase] || [];
+    var box      = document.getElementById('fase-bracket');
+    var def      = FASES_DEF[fase];
+
+    if (FASE_CONFIG) {
+      /* ── Modo configuração ── */
+      var opts = Object.keys(nomesMap).map(function(id) {
+        return '<option value="' + id + '">' + nomesMap[id] + '</option>';
+      }).join('');
+      opts = '<option value="">— Selecionar equipe —</option>' + opts;
+
+      var html = '<p class="fase-label">' + def.label + ' · selecione as equipes de cada confronto</p>'
+        + '<div class="bracket-grid">';
+      partidas.forEach(function(p, i) {
+        html += '<div class="match-card">'
+          + '<div class="match-side" style="gap:.35rem">'
+          + '<div class="match-side__sub">Equipe A</div>'
+          + '<select class="match-select" onchange="setEq(' + JSON.stringify(fase) + ',' + i + ',\'A\',this.value)">'
+          + opts.replace('value="' + p.eqA + '"', 'value="' + p.eqA + '" selected') + '</select>'
+          + '</div>'
+          + '<div class="match-vs">VS</div>'
+          + '<div class="match-side" style="gap:.35rem">'
+          + '<div class="match-side__sub">Equipe B</div>'
+          + '<select class="match-select" onchange="setEq(' + JSON.stringify(fase) + ',' + i + ',\'B\',this.value)">'
+          + opts.replace('value="' + p.eqB + '"', 'value="' + p.eqB + '" selected') + '</select>'
+          + '</div>'
+          + '</div>';
+      });
+      html += '</div>'
+        + '<button class="fase-salvar-btn" onclick="salvarFaseConfig()">Salvar configuração</button>';
+      box.innerHTML = html;
+      return;
+    }
+
+    /* ── Modo resultado ── */
+    var html = '<p class="fase-label">' + def.label + ' · extraoficial · peso 20%</p>'
+      + '<div class="bracket-grid">';
+
+    partidas.forEach(function(p, i) {
+      var v    = vencedor(p);
+      var nA   = p.eqA ? nomeEquipe(p.eqA) : 'A definir';
+      var nB   = p.eqB ? nomeEquipe(p.eqB) : 'A definir';
+      var clsA = v === 'A' ? ' vencedor' : v === 'B' ? ' perdedor' : '';
+      var clsB = v === 'B' ? ' vencedor' : v === 'A' ? ' perdedor' : '';
+
+      html += '<div class="match-card">'
+        + '<div class="match-side' + clsA + '">'
+        + '<div class="match-side__nome">' + nA + '</div>'
+        + (clsA === ' vencedor' ? '<div class="match-winner-badge">Vencedor</div>' : '')
+        + '<input type="number" min="0" max="9999" class="match-score-input" placeholder="pts"'
+        + ' value="' + (p.ponA !== null ? p.ponA : '') + '"'
+        + ' onchange="setPon(' + JSON.stringify(fase) + ',' + i + ',\'A\',this.value)">'
+        + '</div>'
+        + '<div class="match-vs">VS</div>'
+        + '<div class="match-side' + clsB + '">'
+        + '<div class="match-side__nome">' + nB + '</div>'
+        + (clsB === ' vencedor' ? '<div class="match-winner-badge">Vencedor</div>' : '')
+        + '<input type="number" min="0" max="9999" class="match-score-input" placeholder="pts"'
+        + ' value="' + (p.ponB !== null ? p.ponB : '') + '"'
+        + ' onchange="setPon(' + JSON.stringify(fase) + ',' + i + ',\'B\',this.value)">'
+        + '</div>'
+        + '</div>';
+    });
+    html += '</div>';
+    box.innerHTML = html;
+  }
+
+  function setEq(fase, idx, lado, val) {
+    if (lado === 'A') faseDados[fase][idx].eqA = val;
+    else              faseDados[fase][idx].eqB = val;
+  }
+
+  function setPon(fase, idx, lado, val) {
+    var n = val === '' ? null : Number(val);
+    if (lado === 'A') faseDados[fase][idx].ponA = n;
+    else              faseDados[fase][idx].ponB = n;
+    salvarFaseLocal();
+    salvarFaseRemoto();
+    renderFase(fase);
+  }
+
+  function salvarFaseConfig() {
+    salvarFaseLocal();
+    salvarFaseRemoto();
+    FASE_CONFIG = false;
+    document.getElementById('btn-fase-config').classList.remove('ativo');
+    renderFase(FASE_ATUAL);
+  }
+
+  /* init */
+  carregarFaseLocal();
+  renderFase(FASE_ATUAL);
+  setInterval(sincronizarFase, 15000);
 
   function renderArena(data) {
     var equipes     = data.equipes     || [];
