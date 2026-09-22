@@ -1026,8 +1026,9 @@
     renderScores(data.scores);
     renderComments(data.comentarios);
 
-    /* Volta para a aba Resumo ao recarregar dados */
-    mudarTTab('resumo');
+    /* Mantém a aba contextual solicitada pela URL quando houver */
+    var tabHash = (location.hash || '').replace('#','').toLowerCase();
+    mudarTTab(['resumo','metodologia','documentos','feedback'].indexOf(tabHash) !== -1 ? tabHash : 'resumo');
 
     /* Se houver comentários, destaca a aba Feedback */
     var temFeedback = data.comentarios && Object.values(data.comentarios).some(function(arr) {
@@ -1129,9 +1130,77 @@
       '<p style="color:#94A3B8;font-size:.8rem;padding:.5rem 0">Carregando resultados…</p>';
   }
 
+  function montarSeletorCoord(equipes, selecionada) {
+    var tabs = document.querySelector('.turma-tabs');
+    if (!tabs || !equipes || !equipes.length) return;
+    var bar = document.getElementById('coord-team-picker');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'coord-team-picker';
+      bar.className = 'coord-team-picker';
+      bar.innerHTML =
+        '<div><div class="coord-team-picker__label">Visualização da coordenação</div>' +
+        '<div class="coord-team-picker__hint">Consulte qualquer equipe sem trocar de sessão.</div></div>' +
+        '<select id="coord-team-select" aria-label="Selecionar equipe"></select>';
+      tabs.insertAdjacentElement('beforebegin', bar);
+    }
+
+    var select = document.getElementById('coord-team-select');
+    select.innerHTML = equipes.map(function(item) {
+      var eq = item.equipe || {};
+      var raw = nomesMap[eq.id] || eq.nome || eq.id || '';
+      return '<option value="' + (eq.id || '') + '"' + (eq.id === selecionada ? ' selected' : '') + '>' +
+        (eq.id || '') + ' · ' + raw + '</option>';
+    }).join('');
+
+    select.onchange = function() {
+      var id = this.value;
+      var item = equipes.find(function(x) { return x.equipe && x.equipe.id === id; });
+      if (!item) return;
+      var url = new URL(location.href);
+      url.searchParams.set('equipe', id);
+      history.replaceState(null, '', url.pathname + '?' + url.searchParams.toString() + location.hash);
+      mostrarResultados(item);
+      var agenda = document.querySelector('[data-team-agenda]');
+      if (agenda) agenda.href = 'cronograma.html?equipe=' + encodeURIComponent(id);
+    };
+  }
+
+  async function abrirComoCoordenacao(nome, pin) {
+    document.getElementById('view-login').classList.add('hidden');
+    document.getElementById('view-resultados').classList.remove('hidden');
+    document.getElementById('scores-grid').innerHTML =
+      '<p style="color:#94A3B8;font-size:.8rem;padding:.5rem 0">Carregando equipes…</p>';
+    document.getElementById('spinner').style.display = '';
+
+    try {
+      var r = await API.todasTurmas(nome, pin || '');
+      if (!r.ok || !r.equipes || !r.equipes.length) throw new Error(r.erro || 'Nenhuma equipe disponível.');
+      var requested = new URLSearchParams(location.search).get('equipe');
+      var item = r.equipes.find(function(x) { return x.equipe && x.equipe.id === requested; }) || r.equipes[0];
+      mostrarResultados(item);
+      montarSeletorCoord(r.equipes, item.equipe && item.equipe.id);
+      var agenda = document.querySelector('[data-team-agenda]');
+      if (agenda && item.equipe && item.equipe.id) agenda.href = 'cronograma.html?equipe=' + encodeURIComponent(item.equipe.id);
+    } catch(e) {
+      document.getElementById('scores-grid').innerHTML =
+        '<div class="inline-state inline-state--error"><strong>Não foi possível carregar as equipes.</strong><span>' +
+        (e.message || 'Tente novamente em alguns instantes.') + '</span></div>';
+    } finally {
+      document.getElementById('spinner').style.display = 'none';
+    }
+  }
+
   async function tentarResumir() {
     var id  = localStorage.getItem(STORAGE_KEY_ID);
     var pin = localStorage.getItem(STORAGE_KEY_PIN);
+    var coordNome = localStorage.getItem('coord_nome');
+    var coordPin  = localStorage.getItem('coord_pin');
+
+    if (!id && coordNome && coordPin) {
+      abrirComoCoordenacao(coordNome, coordPin);
+      return;
+    }
     if (!id) return;
 
     /* Mostra a equipe imediatamente — sem esperar a API */
@@ -1150,9 +1219,9 @@
         document.getElementById('view-login').classList.remove('hidden');
       }
     } catch(_) {
-      /* Erro de rede → mantém a tela de resultados aberta (dados básicos já visíveis) */
+      /* Falha localizada: preserva o portal e mantém conteúdo estático acessível */
       document.getElementById('scores-grid').innerHTML =
-        '<p style="color:#94A3B8;font-size:.8rem;padding:.5rem 0">Sem conexão. Tente novamente em alguns instantes.</p>';
+        '<div class="inline-state inline-state--error"><strong>Não foi possível atualizar os resultados.</strong><span>Metodologia, documentos e feedback continuam disponíveis. Tente novamente em alguns instantes.</span></div>';
     } finally {
       document.getElementById('spinner').style.display = 'none';
     }
