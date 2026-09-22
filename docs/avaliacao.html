@@ -6,7 +6,7 @@
   <title>Avaliação — HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/styles.css?v=8">
-  <script>window.API_URL='https://script.google.com/macros/s/AKfycbzqHVhITbTv6_v4PWRlZHniO8x7qqshjXU9BNbIP55TOgShvmXIPPYF2dm3kU2HJIf0/exec';</script>
+  <script>window.API_URL='https://script.google.com/macros/s/AKfycbzeWkuxSTKNSJejbTW_hoLhcc5R2pKwujUGSgztDuBl8HMqPo7OOximMdcYh4sx6kg-/exec';</script>
   <style>
     body { background: #F0F4F8; }
 
@@ -421,19 +421,58 @@ var RUBRICAS = {
 
 /* ─── Missões do Desafio do Robô ─────────────────────────────── */
 var MISSOES = [
-  { cod:'M00', nome:'Inspeção',               img:'img/missoes/00.png',      desc:'Robô e equipamentos cabem completamente nas áreas de lançamento',                             opts:[0,20] },
-  { cod:'M01', nome:'Escavação superficial',   img:'img/missoes/01.png',      desc:'Ausência de resíduos de solo no tapete; bônus se pincel não tocar o sítio',                   opts:[0,20,30,40,50] },
-  { cod:'M02', nome:'Revelação do mapa',       img:'img/missoes/02.png',      desc:'Seções superiores do solo totalmente limpas',                                                 opts:[0,25,50,75],       restrito:true },
-  { cod:'M03', nome:'Quem viveu aqui?',        img:'img/missoes/03.png',      desc:'Piso da estrutura completamente na vertical',                                                 opts:[0,30] },
-  { cod:'M04', nome:'Forja',                   img:'img/missoes/04.png',      desc:'Blocos de minério fora da forja; bônus por acertar o bloco com artefato fossilizado',         opts:[0,20,40,60,70] },
-  { cod:'M05', nome:'Levantamento de peso',    img:'img/missoes/05.png',      desc:'Pedra de moinho fora da sua base',                                                            opts:[0,30] },
-  { cod:'M06', nome:'Silo',                    img:'img/missoes/06.png',      desc:'Peças preservadas fora do silo (15 pts cada)',                                                opts:[0,15,30,45] },
-  { cod:'M07', nome:'O que está à venda?',     img:'img/missoes/m07.png',     desc:'Telhado e mercadoria totalmente levantados',                                                  opts:[0,15,30,45],       restrito:true },
-  { cod:'M08', nome:'Desequilíbrio da balança',img:'img/missoes/08.png',      desc:'Balança desequilibrada tocando o tapete; prato removido',                                    opts:[0,10,20,30],       restrito:true },
-  { cod:'M09', nome:'Operação de resgate',     img:'img/missoes/09.png',      desc:'Areia removida (alavanca passa da linha); navio levantado',                                   opts:[0,10,20,30] },
-  { cod:'M10', nome:'Reconstrução da estátua', img:'img/missoes/10.png',      desc:'Estátua completamente levantada',                                                             opts:[0,30],             restrito:true },
-  { cod:'M11', nome:'Fórum',                   img:'img/missoes/11.jpg',      desc:'Artefatos no tapete e dentro do fórum (5 pts por artefato, máx. 9)',                         opts:[0,5,10,15,20,25,30,35,40,45], restrito:true },
-  { cod:'DIS', nome:'Discos de Precisão',      img:'img/missoes/discos.png',  desc:'6 discos iniciais. Perde 1 a cada interrupção do robô fora da área de lançamento',           opts:[0,10,15,25,30,40,50] }
+  { cod:'M00', nome:'Inspeção',
+    img:'img/missoes/00.png',
+    desc:'O robô e todos os seus equipamentos cabem completamente dentro das duas áreas de lançamento ao mesmo tempo, sem ultrapassar as bordas. <strong>0</strong> = não cabe. <strong>20</strong> = cabe completamente.',
+    opts:[0,20] },
+  { cod:'M01', nome:'Escavação superficial',
+    img:'img/missoes/01.png',
+    desc:'Nenhum resíduo de solo (peças pretas) toca o tapete fora do sítio. <strong>+10 pts</strong> se o pincel do robô não tocar a área do sítio arqueológico durante todo o round. Pontos: 20 (limpo), 30 (limpo+pincel longe parcial), 40/50 (bônus completo).',
+    opts:[0,20,30,40,50] },
+  { cod:'M02', nome:'Revelação do mapa',
+    img:'img/missoes/02.png',
+    desc:'Contagem de seções superiores de solo completamente removidas e limpas: <strong>25 pts por seção</strong> (máx. 3 seções = 75 pts). Restrito: não pontua se qualquer equipamento do robô tocar o modelo ao fim do round.',
+    opts:[0,25,50,75], restrito:true },
+  { cod:'M03', nome:'Quem viveu aqui?',
+    img:'img/missoes/03.png',
+    desc:'O piso da estrutura está completamente na posição vertical (virado para cima). <strong>0</strong> = não está. <strong>30</strong> = completamente vertical.',
+    opts:[0,30] },
+  { cod:'M04', nome:'Forja',
+    img:'img/missoes/04.png',
+    desc:'Blocos de minério totalmente fora da forja: <strong>20 pts cada</strong> (máx. 2 = 40 pts). Bônus de <strong>+20 pts</strong> se o bloco com artefato fossilizado estiver totalmente fora e o artefato ainda acoplado (máx. 70 pts).',
+    opts:[0,20,40,60,70] },
+  { cod:'M05', nome:'Levantamento de peso',
+    img:'img/missoes/05.png',
+    desc:'A pedra de moinho está completamente fora de sua base de apoio. <strong>0</strong> = ainda na base. <strong>30</strong> = fora da base.',
+    opts:[0,30] },
+  { cod:'M06', nome:'Silo',
+    img:'img/missoes/06.png',
+    desc:'Peças preservadas totalmente fora do silo e no tapete: <strong>15 pts por peça</strong> (máx. 3 peças = 45 pts). Peças ainda dentro ou no ar = 0.',
+    opts:[0,15,30,45] },
+  { cod:'M07', nome:'O que está à venda?',
+    img:'img/missoes/m07.png',
+    desc:'<strong>15 pts</strong> se o telhado estiver completamente levantado. <strong>+15 pts</strong> se a mercadoria estiver completamente levantada. Restrito: não pontua se equipamentos tocarem o modelo ao fim do round.',
+    opts:[0,15,30,45], restrito:true },
+  { cod:'M08', nome:'Desequilíbrio da balança',
+    img:'img/missoes/08.png',
+    desc:'<strong>10 pts</strong> se a balança estiver desequilibrada e um lado tocar o tapete. <strong>+10 pts</strong> se o prato foi completamente removido. Restrito: não pontua se equipamentos tocarem o modelo ao fim do round.',
+    opts:[0,10,20,30], restrito:true },
+  { cod:'M09', nome:'Operação de resgate',
+    img:'img/missoes/09.png',
+    desc:'<strong>10 pts</strong> se a areia foi removida e a alavanca passou completamente da linha divisória. <strong>+10 pts</strong> se o navio estiver completamente levantado acima da superfície.',
+    opts:[0,10,20,30] },
+  { cod:'M10', nome:'Reconstrução da estátua',
+    img:'img/missoes/10.png',
+    desc:'A estátua está completamente levantada e em pé na plataforma. Restrito: não pontua se equipamentos tocarem o modelo ao fim do round. <strong>0</strong> = não levantada. <strong>30</strong> = completamente erguida.',
+    opts:[0,30], restrito:true },
+  { cod:'M11', nome:'Fórum',
+    img:'img/missoes/11.jpg',
+    desc:'Artefatos totalmente no tapete fora do fórum <strong>ou</strong> totalmente dentro do fórum: <strong>5 pts por artefato</strong>, máximo de 9 artefatos (45 pts). Artefatos no ar ou fora das zonas não pontuam. Restrito.',
+    opts:[0,5,10,15,20,25,30,35,40,45], restrito:true },
+  { cod:'DIS', nome:'Discos de Precisão',
+    img:'img/missoes/discos.png',
+    desc:'Começa com 6 discos. <strong>Perde 1 disco</strong> cada vez que o robô for interrompido fora da área de lançamento. Pontuação pelos discos restantes: 6=50 | 5=40 | 4=30 | 3=25 | 2=15 | 1=10 | 0=0.',
+    opts:[0,10,15,25,30,40,50] }
 ];
 
 var ROUND_SEL    = '';
