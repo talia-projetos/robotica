@@ -1206,7 +1206,7 @@
       .team-shell .app-sidebar{
         position:fixed;
         top:60px;
-        height:calc(100vh · 60px);
+        height:calc(100vh - 60px);
         width:min(82vw,280px);
         min-width:min(82vw,280px);
       }
@@ -1675,7 +1675,7 @@
 
       var catBadges = cats.map(function(cat) {
         var sorted = all.slice().sort(function(a, b) {
-          return (b[cat.campo] || 0) · (a[cat.campo] || 0);
+          return (b[cat.campo] || 0) - (a[cat.campo] || 0);
         });
         var pos = sorted.findIndex(function(e) { return e.id === eq.id; }) + 1;
         return '<span class="rank-badge" style="border-left:3px solid ' + cat.cor + '">'
