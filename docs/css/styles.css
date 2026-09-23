@@ -1318,11 +1318,11 @@ a, button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
   border-radius: 0;
   background: #F5F9FC;
   color: #526175;
-  padding: 1rem 1.15rem;
+  padding: .5rem 1.15rem;
+  line-height: 1.45;
 }
 .page-turma .met-grid {
   display: block;
-  max-width: 900px;
 }
 .page-turma .met-card {
   display: grid;
