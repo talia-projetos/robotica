@@ -250,13 +250,13 @@
     .missao-opt:hover { border-color: #93C5FD; color: #1D4ED8; background: #EFF6FF; }
     .missao-opt.ativo { color: #fff; border-color: transparent; background: #1D4ED8; }
     @media (max-width: 580px) {
-      /* Missão sem imagem — coluna de conteúdo ocupa tudo */
-      .missao-card { grid-template-columns: 1fr; gap: .55rem; padding: .85rem .9rem; }
-      .missao-img, .missao-badge { display: none; }
+      /* Imagem menor mas sempre visível */
+      .missao-card { grid-template-columns: 52px minmax(0,1fr); gap: .65rem; padding: .8rem .85rem; }
+      .missao-img, .missao-badge { width: 52px; height: 52px; }
       .missao-nome { font-size: .88rem; }
       .missao-desc { font-size: .72rem; }
 
-      /* Botões de opção: altura mínima 44px, texto maior */
+      /* Botões de opção: altura mínima 44px */
       .missao-opt {
         min-height: 44px; padding: .6rem .35rem;
         font-size: .88rem; border-radius: 8px;
