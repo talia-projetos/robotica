@@ -1313,7 +1313,6 @@ a, button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 .page-turma .scores-cats-grid { gap: .75rem; }
 
 .page-turma .met-intro {
-  max-width: 820px;
   border: 0;
   border-left: 3px solid #9FC2DE;
   border-radius: 0;
@@ -1921,7 +1920,7 @@ a, button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 /* ── Final polish: team states, coordinator switcher, brand sizing ── */
 .sidebar-brand__img {
   height: 52px;
-  max-width: 92px;
+  max-width: 168px;
 }
 .app-body.sidebar-collapsed .sidebar-brand__img {
   height: 32px;

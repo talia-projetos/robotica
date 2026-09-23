@@ -10,6 +10,10 @@
   <style>
     body { background: #F0F4F8; }
 
+    .topbar__event{flex:1;display:flex;align-items:center;gap:.65rem;padding:0;text-align:left}
+    .av-event-icon{width:46px;height:46px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:11px;background:#EDF5FC;color:#3979B8}
+    .av-event-icon svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
     /* ── Contentor ───────────────────────────────────────────── */
     .av-wrap { max-width: 780px; margin: 0 auto; padding: 1.6rem 1.25rem 4rem; }
 
@@ -219,8 +223,13 @@
 <header class="topbar">
   <a href="index.html" class="topbar__brand"><img src="logo.svg" alt="HUB Circuito"></a>
   <div class="topbar__event">
-    <div class="topbar__event-name">Torneio Interno de Robótica</div>
-    <div class="topbar__event-org">Escola SESI Reitor Miguel Calmon</div>
+    <div class="av-event-icon">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M9 4a3 3 0 0 1 6 0"/><path d="M8 11h8M8 15h5"/></svg>
+    </div>
+    <div>
+      <div class="topbar__event-name">Torneio Interno de Robótica</div>
+      <div class="topbar__event-org">Escola SESI Reitor Miguel Calmon</div>
+    </div>
   </div>
   <div class="topbar__badge">
     <span id="badge-juiz" class="text-sm"></span>
