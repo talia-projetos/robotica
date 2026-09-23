@@ -1000,7 +1000,24 @@
       .judge-help{grid-column:1 / -1}
     }
 
+    /* ── Sidebar toggle (mobile) ────────────────────────────────── */
+    .sidebar-toggle{
+      display:none;
+      width:40px;height:40px;
+      align-items:center;justify-content:center;
+      border:none;background:transparent;cursor:pointer;
+      border-radius:9px;color:#3D5167;flex-shrink:0;
+    }
+    .sidebar-toggle:hover{background:#EDF1F6}
+    .sidebar-toggle svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;stroke-linecap:round;fill:none}
+    .sidebar-overlay{
+      display:none;position:fixed;inset:0;z-index:14;
+      background:rgba(15,23,42,.35);backdrop-filter:blur(2px);
+    }
+    .sidebar-overlay.aberto{display:block}
+
     @media(max-width:700px){
+      .sidebar-toggle{display:flex}
       .judge-shell{display:block}
       .judge-shell .app-sidebar{
         position:fixed;
@@ -1008,12 +1025,13 @@
         height:calc(100vh - 60px);
         width:min(82vw,280px);
         min-width:min(82vw,280px);
+        transform:translateX(-110%);
+        transition:transform .22s ease;
+        z-index:15;
       }
+      .judge-shell .app-sidebar.aberto{transform:translateX(0)}
       .judge-shell .sidebar-brand{display:none}
-      .judge-shell .topbar{
-        min-height:60px;
-        padding:.45rem .75rem;
-      }
+      .judge-shell .topbar{min-height:60px;padding:.45rem .75rem;gap:.55rem}
       .judge-mobile-brand{display:flex}
       .judge-shell .topbar__event{display:none}
       .painel-wrap{padding:1.25rem 1rem 3rem}
@@ -1024,9 +1042,32 @@
       .judge-area-note{text-align:left}
       .judge-support{display:block}
       .judge-support-card{margin-bottom:.65rem}
-      .form-card{display:grid;grid-template-columns:36px minmax(0,1fr);gap:.68rem}
-      .fc-cta{grid-column:2;justify-self:start}
+      .sala-progress-card{margin-bottom:.65rem}
+
+      /* Cards de categoria — empilhados, toque fácil */
+      .form-card{
+        display:flex;flex-direction:column;align-items:flex-start;
+        padding:.9rem 1rem;min-height:72px;gap:.45rem;
+      }
+      .fc-body{width:100%}
+      .fc-title{font-size:.92rem}
+      .fc-desc{font-size:.78rem}
+      .fc-cta{
+        align-self:stretch;text-align:center;
+        width:100%;box-sizing:border-box;
+        padding:.7rem 1rem;font-size:.82rem;
+        min-height:44px;display:flex;align-items:center;justify-content:center;
+        border-radius:9px;margin-top:.1rem;
+      }
+
       .acao-card{align-items:flex-start;flex-direction:column}
+
+      /* Chat */
+      .judge-chat-input button{min-height:40px;padding:.5rem .9rem}
+      .judge-chat-input input{font-size:.82rem}
+
+      /* Login */
+      .judge-login-card{padding:1.75rem 1.25rem}
     }
 
   </style>
@@ -1050,7 +1091,12 @@
 </nav>
 
 <div class="judge-stage">
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="fecharSidebar()"></div>
+
 <header class="topbar">
+  <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()" aria-label="Menu">
+    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
   <a href="juizes.html" class="topbar__brand judge-mobile-brand" aria-label="HUB Circuito">
     <img src="logo-horizontal-escuro.svg" alt="HUB Circuito">
   </a>
@@ -1249,6 +1295,26 @@
 <script src="js/sidebar-roles.js?v=6"></script>
 <script src="js/product-ui.js?v=5"></script>
 <script>
+  /* ── Sidebar mobile toggle ──────────────────────────────────── */
+  function toggleSidebar() {
+    var sb = document.querySelector('.app-sidebar');
+    var ov = document.getElementById('sidebar-overlay');
+    var aberto = sb.classList.toggle('aberto');
+    ov.classList.toggle('aberto', aberto);
+    document.body.style.overflow = aberto ? 'hidden' : '';
+  }
+  function fecharSidebar() {
+    var sb = document.querySelector('.app-sidebar');
+    var ov = document.getElementById('sidebar-overlay');
+    sb.classList.remove('aberto');
+    ov.classList.remove('aberto');
+    document.body.style.overflow = '';
+  }
+  /* Fecha sidebar ao clicar em link */
+  document.querySelectorAll('.app-sidebar .sidebar-item').forEach(function(a) {
+    a.addEventListener('click', fecharSidebar);
+  });
+
   document.getElementById('link-desafio').href   = 'avaliacao.html?cat=arena';
   document.getElementById('link-projeto').href   = 'avaliacao.html?cat=projeto';
   document.getElementById('link-design').href    = 'avaliacao.html?cat=design';

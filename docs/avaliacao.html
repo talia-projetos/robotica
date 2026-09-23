@@ -157,11 +157,48 @@
     .av-sucesso__title { font-size: 1.25rem; font-weight: 900; color: #0F172A; margin-bottom: .4rem; }
     .av-sucesso__sub   { font-size: .88rem; color: #64748B; margin-bottom: 1.5rem; }
 
+    /* ── Mobile ────────────────────────────────────────────────── */
     @media (max-width: 600px) {
-      .escala-bar { grid-template-columns: 1fr 1fr; }
-      .obs-grid   { grid-template-columns: 1fr; }
-      .criterio-row { grid-template-columns: 1fr; }
-      .score-sel { margin-top: .4rem; }
+      .av-wrap { padding: 1rem .75rem 6rem; }
+
+      /* Escala de referência: 2 colunas */
+      .escala-bar { grid-template-columns: 1fr 1fr; gap: .4rem; }
+      .escala-item { padding: .5rem .6rem; }
+      .escala-item__desc { display: none; }
+
+      /* Rubrica: critério empilha */
+      .criterio-row { grid-template-columns: 1fr; gap: .5rem; padding: .85rem .75rem; }
+      .criterio-cod { font-size: .72rem; }
+      .criterio-nome { font-size: .95rem; }
+      .criterio-desc { font-size: .78rem; }
+
+      /* Botões de nota — 48px para toque fácil */
+      .score-sel { margin-top: .2rem; gap: .45rem; }
+      .score-btn { width: 48px; height: 48px; border-radius: 10px; font-size: .95rem; }
+
+      /* Observações */
+      .obs-grid { grid-template-columns: 1fr; }
+      .obs-card textarea { min-height: 64px; }
+
+      /* Seleção de equipe */
+      .eq-selector { padding: .75rem .9rem; }
+      .eq-selector select { font-size: .9rem; min-height: 44px; }
+
+      /* Seção cabeçalho */
+      .av-section { padding: .55rem .75rem; font-size: .72rem; }
+
+      /* Cabeçalho de categoria */
+      .av-head { padding: .9rem 1rem; border-radius: 12px; }
+      .av-head__nome { font-size: 1rem; }
+
+      /* Footer: empilha info + botão */
+      .av-footer { flex-direction: column; align-items: stretch; gap: .5rem; padding: .75rem; }
+      .av-footer__info { font-size: .75rem; text-align: center; }
+      #btn-enviar { width: 100%; min-width: unset; padding: .9rem; font-size: .95rem; border-radius: 10px; }
+
+      /* Round selector */
+      .round-selector { flex-direction: column; align-items: flex-start; gap: .5rem; padding: .75rem .9rem; }
+      .round-selector select { width: 100%; min-height: 44px; }
     }
 
     /* ── Arena: missões ─────────────────────────────────────────── */
@@ -213,8 +250,17 @@
     .missao-opt:hover { border-color: #93C5FD; color: #1D4ED8; background: #EFF6FF; }
     .missao-opt.ativo { color: #fff; border-color: transparent; background: #1D4ED8; }
     @media (max-width: 580px) {
-      .missao-card { grid-template-columns: 58px minmax(0,1fr); }
-      .missao-img, .missao-badge { width: 58px; height: 58px; }
+      /* Missão sem imagem — coluna de conteúdo ocupa tudo */
+      .missao-card { grid-template-columns: 1fr; gap: .55rem; padding: .85rem .9rem; }
+      .missao-img, .missao-badge { display: none; }
+      .missao-nome { font-size: .88rem; }
+      .missao-desc { font-size: .72rem; }
+
+      /* Botões de opção: altura mínima 44px, texto maior */
+      .missao-opt {
+        min-height: 44px; padding: .6rem .35rem;
+        font-size: .88rem; border-radius: 8px;
+      }
     }
   </style>
 </head>
