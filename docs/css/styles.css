@@ -1326,7 +1326,7 @@ a, button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 }
 .page-turma .met-card {
   display: grid;
-  grid-template-columns: 150px minmax(170px, 220px) 1fr auto;
+  grid-template-columns: 150px 200px 1fr auto;
   align-items: start;
   gap: 1rem;
   border: 0 !important;
