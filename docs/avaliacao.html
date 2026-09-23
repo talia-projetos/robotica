@@ -35,7 +35,7 @@
 
     /* ── Escala de referência ───────────────────────────────── */
     .escala-bar {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: .5rem;
       margin-bottom: 1.25rem;
     }
     .escala-item {
@@ -161,8 +161,8 @@
     @media (max-width: 600px) {
       .av-wrap { padding: 1rem .75rem 6rem; }
 
-      /* Escala de referência: 2 colunas */
-      .escala-bar { grid-template-columns: 1fr 1fr; gap: .4rem; }
+      /* Escala de referência: mínimo 2 por linha */
+      .escala-bar { gap: .4rem; }
       .escala-item { padding: .5rem .6rem; }
       .escala-item__desc { display: none; }
 
