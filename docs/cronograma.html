@@ -807,6 +807,62 @@
       font-size:.63rem!important;
     }
 
+    /* ── Agenda detalhada por equipe ────────────────────────── */
+    .det-section{
+      margin-top:.75rem;
+      border:1px solid #E1E8F0;
+      border-radius:9px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .det-header,.det-row{
+      display:grid;
+      grid-template-columns:160px repeat(4,minmax(0,1fr));
+      border-bottom:1px solid #EEF3F9;
+    }
+    .det-row:last-child{ border-bottom:none }
+    .det-row:hover{ background:#F5F9FF }
+    .det-header{
+      background:#F7F9FC;
+      border-bottom:1.5px solid #E1E8F0;
+    }
+    .det-header > div{
+      padding:.42rem .7rem;
+      font-size:.54rem; font-weight:800; text-transform:uppercase;
+      letter-spacing:.07em; color:#8A97A7;
+      border-right:1px solid #EEF3F9;
+    }
+    .det-header > div:last-child{ border-right:none }
+    .det-team{
+      padding:.55rem .72rem;
+      border-right:1.5px solid #E9EEF3;
+      display:flex; flex-direction:column; justify-content:center;
+    }
+    .det-team__id{ font-size:.72rem; font-weight:800; color:#26374B; letter-spacing:.01em; }
+    .det-team__nome{ font-size:.6rem; color:#8794A4; margin-top:.05rem; }
+    .det-slot{
+      padding:.5rem .68rem;
+      border-right:1px solid #EEF3F9;
+      display:flex; flex-direction:column; justify-content:center;
+      position:relative;
+    }
+    .det-slot:last-child{ border-right:none }
+    .det-slot::before{
+      content:'';
+      position:absolute; left:0; top:0; bottom:0; width:2.5px;
+    }
+    .det-slot--sala::before{ background:#7967C9 }
+    .det-slot--r1::before{ background:#3B82F6 }
+    .det-slot--r2::before{ background:#0284C7 }
+    .det-slot--r3::before{ background:#0369A1 }
+    .det-time{
+      font-size:.67rem; font-weight:800; color:#26374B;
+      font-variant-numeric:tabular-nums;
+    }
+    .det-place{
+      font-size:.58rem; color:#8794A4; margin-top:.06rem;
+    }
+
     /* ── Print header ────────────────────────────────────────── */
     .print-header{ display:none }
 
@@ -870,12 +926,28 @@
       .ic__label{ font-size:.58rem }
       .ic__val  { font-size:.8rem }
       .ic__sub  { font-size:.58rem }
+
+      /* Agenda detalhada */
+      .det-section{ margin-top:.5rem; border-radius:6px; overflow:visible }
+      .det-header,.det-row{
+        grid-template-columns:140px repeat(4,minmax(0,1fr));
+        border-bottom:1px solid #DDE6EE;
+      }
+      .det-header > div{ padding:.28rem .5rem; font-size:.48rem }
+      .det-team{ padding:.28rem .5rem }
+      .det-team__id{ font-size:.62rem }
+      .det-team__nome{ font-size:.52rem }
+      .det-slot{ padding:.28rem .5rem }
+      .det-time{ font-size:.59rem }
+      .det-place{ font-size:.5rem }
+      .det-row{ page-break-inside:avoid }
     }
 
     @media(max-width:900px){
       .schedule-team{grid-template-columns:145px 1fr}
       .schedule-team__items{grid-template-columns:repeat(2,minmax(0,1fr))}
       .info-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .det-header,.det-row{ grid-template-columns:120px repeat(4,minmax(0,1fr)) }
     }
 
     @media(max-width:700px){
@@ -914,6 +986,8 @@
       .schedule-slot__place{text-align:right}
       .info-row{grid-template-columns:1fr}
       .gantt .g-axis{ top:0 }
+      .det-section{ overflow-x:auto }
+      .det-header,.det-row{ min-width:580px }
     }
 
   </style>
@@ -1192,6 +1266,43 @@
   </div><!-- /gantt -->
   </div><!-- /gantt-card -->
 
+  <!-- Agenda detalhada por equipe -->
+  <div class="det-section">
+    <div class="det-header">
+      <div class="det-col-team">Equipe</div>
+      <div class="det-col">Avalia&ccedil;&atilde;o em Sala</div>
+      <div class="det-col">Round 1 &middot; Arena</div>
+      <div class="det-col">Round 2 &middot; Arena</div>
+      <div class="det-col">Round 3 &middot; Arena</div>
+    </div>
+
+    <div class="det-row" data-sala="sala1"><div class="det-team"><div class="det-team__id">TUR01</div><div class="det-team__nome">6&deg; A &middot; Cyber Panter</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:20&ndash;08:35</div><div class="det-place">Sala 1</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:30&ndash;07:35</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:10&ndash;09:15</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:15&ndash;10:20</div><div class="det-place">Arena B</div></div></div>
+
+    <div class="det-row" data-sala="sala1"><div class="det-team"><div class="det-team__id">TUR02</div><div class="det-team__nome">6&deg; B &middot; Liga do Choque</div></div><div class="det-slot det-slot--sala"><div class="det-time">09:35&ndash;09:50</div><div class="det-place">Sala 1</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:35&ndash;07:40</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:00&ndash;09:05</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:05&ndash;10:10</div><div class="det-place">Arena A</div></div></div>
+
+    <div class="det-row" data-sala="sala2"><div class="det-team"><div class="det-team__id">TUR03</div><div class="det-team__nome">6&deg; C &middot; Alpha Tech</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:50&ndash;09:05</div><div class="det-place">Sala 2</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:40&ndash;07:45</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:20&ndash;09:25</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:00&ndash;10:05</div><div class="det-place">Arena B</div></div></div>
+
+    <div class="det-row" data-sala="sala1"><div class="det-team"><div class="det-team__id">TUR04</div><div class="det-team__nome">6&deg; D &middot; Pheonics Mecanics</div></div><div class="det-slot det-slot--sala"><div class="det-time">09:05&ndash;09:20</div><div class="det-place">Sala 1</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:45&ndash;07:50</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r2"><div class="det-time">08:55&ndash;09:00</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:10&ndash;10:15</div><div class="det-place">Arena B</div></div></div>
+
+    <div class="det-row" data-sala="sala1"><div class="det-team"><div class="det-team__id">TUR05</div><div class="det-team__nome">6&deg; E &middot; TecShark</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:50&ndash;09:05</div><div class="det-place">Sala 1</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:50&ndash;07:55</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:15&ndash;09:20</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:20&ndash;10:25</div><div class="det-place">Arena B</div></div></div>
+
+    <div class="det-row" data-sala="sala2"><div class="det-team"><div class="det-team__id">TUR06</div><div class="det-team__nome">7&deg; A &middot; Hoppin Robots</div></div><div class="det-slot det-slot--sala"><div class="det-time">09:30&ndash;09:45</div><div class="det-place">Sala 2</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:55&ndash;08:00</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:05&ndash;09:10</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r3"><div class="det-time">09:55&ndash;10:00</div><div class="det-place">Arena A</div></div></div>
+
+    <div class="det-row" data-sala="sala1"><div class="det-team"><div class="det-team__id">TUR07</div><div class="det-team__nome">7&deg; B &middot; Bivoltx</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:05&ndash;08:20</div><div class="det-place">Sala 1</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:55&ndash;08:00</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r2"><div class="det-time">08:50&ndash;08:55</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:25&ndash;10:30</div><div class="det-place">Arena A</div></div></div>
+
+    <div class="det-row" data-sala="sala2"><div class="det-team"><div class="det-team__id">TUR08</div><div class="det-team__nome">7&deg; C &middot; Ecoshift</div></div><div class="det-slot det-slot--sala"><div class="det-time">09:10&ndash;09:25</div><div class="det-place">Sala 2</div></div><div class="det-slot det-slot--r1"><div class="det-time">08:00&ndash;08:05</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:00&ndash;09:05</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:15&ndash;10:20</div><div class="det-place">Arena A</div></div></div>
+
+    <div class="det-row" data-sala="sala1"><div class="det-team"><div class="det-team__id">TUR09</div><div class="det-team__nome">7&deg; D &middot; Pantera Lego Team</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:35&ndash;08:50</div><div class="det-place">Sala 1</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:30&ndash;07:35</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:15&ndash;09:20</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:00&ndash;10:05</div><div class="det-place">Arena A</div></div></div>
+
+    <div class="det-row" data-sala="sala2"><div class="det-team"><div class="det-team__id">TUR10</div><div class="det-team__nome">7&deg; E &middot; Imp&eacute;rio das On&ccedil;as</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:35&ndash;08:50</div><div class="det-place">Sala 2</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:35&ndash;07:40</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:05&ndash;09:10</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:10&ndash;10:15</div><div class="det-place">Arena A</div></div></div>
+
+    <div class="det-row" data-sala="sala1"><div class="det-team"><div class="det-team__id">TUR11</div><div class="det-team__nome">7&deg; F &middot; Poseidon</div></div><div class="det-slot det-slot--sala"><div class="det-time">09:20&ndash;09:35</div><div class="det-place">Sala 1</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:40&ndash;07:45</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r2"><div class="det-time">08:55&ndash;09:00</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:20&ndash;10:25</div><div class="det-place">Arena A</div></div></div>
+
+    <div class="det-row" data-sala="sala2"><div class="det-team"><div class="det-team__id">TUR12</div><div class="det-team__nome">7&deg; G &middot; Arara Azul</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:20&ndash;08:35</div><div class="det-place">Sala 2</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:45&ndash;07:50</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:10&ndash;09:15</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r3"><div class="det-time">09:55&ndash;10:00</div><div class="det-place">Arena A</div></div></div>
+
+    <div class="det-row" data-sala="sala2"><div class="det-team"><div class="det-team__id">TUR13</div><div class="det-team__nome">7&deg; H &middot; Nexos</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:05&ndash;08:20</div><div class="det-place">Sala 2</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:50&ndash;07:55</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r2"><div class="det-time">08:50&ndash;08:55</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:05&ndash;10:10</div><div class="det-place">Arena B</div></div></div>
+  </div>
+
   <!-- Cards de resumo -->
   <div class="info-row">
     <div class="ic">
@@ -1233,6 +1344,9 @@
       this.classList.add('active');
       var sala = this.dataset.sala;
       document.querySelectorAll('.g-row[data-sala], .g-phase[data-sala]').forEach(function (el) {
+        el.style.display = (sala === 'all' || el.dataset.sala === sala) ? '' : 'none';
+      });
+      document.querySelectorAll('.det-row[data-sala]').forEach(function (el) {
         el.style.display = (sala === 'all' || el.dataset.sala === sala) ? '' : 'none';
       });
       filtrarBusca(); /* reaplica busca sobre o subconjunto visível */
