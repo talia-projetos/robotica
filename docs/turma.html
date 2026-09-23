@@ -1739,9 +1739,7 @@
               + '<div class="comment-tag ref">Reflitam sobre...</div>'
               + '<div class="comment-text">' + item.reflitam + '</div>'
               + '</div>');
-            var juizLine = item.juiz
-              ? '<div class="comment-item__juiz">Juiz: ' + item.juiz + '</div>'
-              : '';
+            var juizLine = '';
             return '<div class="comment-item">' + juizLine + partes.join('') + '</div>';
           }).join('');
 
