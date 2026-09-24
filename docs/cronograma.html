@@ -1090,9 +1090,7 @@
     </div>
   </div>
 
-  <!-- Nível 3: Agenda detalhada -->
-  <div class="gantt-card">
-  <div class="gantt">
+  <!-- gantt removido --><div class="gantt" style="display:none">
 
     <!-- Eixo de tempo (sticky top) -->
     <div class="g-axis">
@@ -1263,8 +1261,7 @@
       </div>
     </div>
 
-  </div><!-- /gantt -->
-  </div><!-- /gantt-card -->
+  </div><!-- /gantt (hidden) -->
 
   <!-- Agenda detalhada por equipe -->
   <div class="det-section">
@@ -1342,33 +1339,18 @@
     btn.addEventListener('click', function () {
       document.querySelectorAll('.filter-sala').forEach(function (b) { b.classList.remove('active'); });
       this.classList.add('active');
-      var sala = this.dataset.sala;
-      document.querySelectorAll('.g-row[data-sala], .g-phase[data-sala]').forEach(function (el) {
-        el.style.display = (sala === 'all' || el.dataset.sala === sala) ? '' : 'none';
-      });
-      document.querySelectorAll('.det-row[data-sala]').forEach(function (el) {
-        el.style.display = (sala === 'all' || el.dataset.sala === sala) ? '' : 'none';
-      });
-      filtrarBusca(); /* reaplica busca sobre o subconjunto visível */
+      filtrarBusca();
     });
   });
 
-  /* ── Busca por equipe ────────────────────────────────────── */
+  /* ── Busca + filtro por sala ─────────────────────────────── */
   function filtrarBusca() {
     var q = document.getElementById('search-equipe').value.toLowerCase().trim();
-    var salaAtiva = document.querySelector('.filter-sala.active').dataset.sala;
-    document.querySelectorAll('.g-row').forEach(function (row) {
-      var salaOk = salaAtiva === 'all' || row.dataset.sala === salaAtiva;
-      var buscaOk = !q || (row.dataset.equipe || '').toLowerCase().includes(q);
+    var sala = document.querySelector('.filter-sala.active').dataset.sala;
+    document.querySelectorAll('.det-row').forEach(function (row) {
+      var salaOk = sala === 'all' || row.dataset.sala === sala;
+      var buscaOk = !q || (row.textContent || '').toLowerCase().includes(q);
       row.style.display = (salaOk && buscaOk) ? '' : 'none';
-    });
-    /* mostra/oculta separadores quando todas as linhas da sala somem */
-    ['sala1', 'sala2'].forEach(function (s) {
-      var phase = document.querySelector('.g-phase[data-sala="' + s + '"]');
-      if (!phase) return;
-      var alguma = Array.from(document.querySelectorAll('.g-row[data-sala="' + s + '"]'))
-                       .some(function (r) { return r.style.display !== 'none'; });
-      phase.style.display = alguma ? '' : 'none';
     });
   }
 
