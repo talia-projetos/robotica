@@ -335,10 +335,77 @@
     });
   }
 
+  var COMP_CSS_ID = 'comp-sel-styles';
+  var COMP_LABELS = { 'FLL': 'FLL', 'OBR': 'OBR', 'Steam Racing': 'Steam' };
+  var COMP_COLORS = { 'FLL': '#3979B8', 'OBR': '#27AE60', 'Steam Racing': '#8E5BD9' };
+
+  function setupCompSelector() {
+    var topbar = document.querySelector('.topbar');
+    if (!topbar || document.querySelector('.comp-sel')) return;
+    if (typeof Comp === 'undefined') return;
+
+    if (!document.getElementById(COMP_CSS_ID)) {
+      var st = document.createElement('style');
+      st.id = COMP_CSS_ID;
+      st.textContent = [
+        '.comp-sel{display:flex;align-items:center;margin-left:.5rem;position:relative}',
+        '.comp-chip{font-size:.64rem;font-weight:800;letter-spacing:.06em;padding:.22rem .62rem;border-radius:20px;border:none;cursor:pointer;transition:opacity .15s;color:#fff;line-height:1.3;white-space:nowrap}',
+        '.comp-chip:hover{opacity:.85}',
+        '.comp-drop{position:fixed;z-index:9998;background:#fff;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,.18);padding:.3rem;min-width:140px;display:none}',
+        '.comp-drop.open{display:block}',
+        '.comp-opt{display:block;width:100%;text-align:left;padding:.48rem .75rem;border:none;border-radius:7px;font-family:inherit;font-size:.78rem;font-weight:700;cursor:pointer;background:none;color:#26374B;transition:background .1s}',
+        '.comp-opt:hover{background:#F0F4F9}',
+        '.comp-opt.ativo{color:#fff}'
+      ].join('');
+      document.head.appendChild(st);
+    }
+
+    var cur = Comp.val;
+    var chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'comp-sel comp-chip';
+    chip.style.background = COMP_COLORS[cur] || '#3979B8';
+    chip.textContent = COMP_LABELS[cur] || cur;
+    chip.setAttribute('aria-haspopup', 'true');
+    chip.setAttribute('aria-label', 'Competição: ' + cur);
+
+    var actions = topbar.querySelector('.topbar__actions') || topbar;
+    actions.insertBefore(chip, actions.firstChild);
+
+    var drop = document.createElement('div');
+    drop.className = 'comp-drop';
+    drop.setAttribute('role', 'menu');
+    Comp.LISTA.forEach(function(c) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'comp-opt' + (c === cur ? ' ativo' : '');
+      if (c === cur) btn.style.background = COMP_COLORS[c];
+      btn.textContent = c;
+      btn.setAttribute('role', 'menuitem');
+      btn.addEventListener('click', function() {
+        Comp.set(c);
+        drop.classList.remove('open');
+        location.reload();
+      });
+      drop.appendChild(btn);
+    });
+    document.body.appendChild(drop);
+
+    chip.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var r = chip.getBoundingClientRect();
+      drop.style.top = (r.bottom + 6) + 'px';
+      drop.style.left = r.left + 'px';
+      drop.classList.toggle('open');
+    });
+    document.addEventListener('click', function() { drop.classList.remove('open'); });
+  }
+
   function init() {
     addPageClass();
     markCurrentNavigation();
     setupMobileNav();
+    setupCompSelector();
 
     var page = currentPage();
     if (page === 'coordenacao') enhanceCoordination();

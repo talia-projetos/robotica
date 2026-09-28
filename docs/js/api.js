@@ -3,6 +3,18 @@
  * Defina window.API_URL antes de carregar este script.
  */
 
+// ── Competição ativa ─────────────────────────────────────────────
+const Comp = {
+  LISTA: ['FLL', 'OBR', 'Steam Racing'],
+  get val()  { return localStorage.getItem('torneio_comp') || 'FLL'; },
+  set(c)     { localStorage.setItem('torneio_comp', c); },
+  clear()    { localStorage.removeItem('torneio_comp'); },
+  detectar(competicao) {
+    if (competicao && this.LISTA.indexOf(competicao) >= 0) this.set(competicao);
+  }
+};
+
+
 const API = (function () {
   function url() {
     if (!window.API_URL) throw new Error('window.API_URL não foi configurado.');
@@ -10,18 +22,20 @@ const API = (function () {
   }
 
   async function get(params) {
-    const qs = new URLSearchParams(params).toString();
+    const p = Object.assign({ comp: Comp.val }, params);
+    const qs = new URLSearchParams(p).toString();
     const res = await fetch(url() + '?' + qs, { redirect: 'follow' });
     if (!res.ok) throw new Error('Erro HTTP ' + res.status);
     return res.json();
   }
 
   async function post(body) {
+    const b = Object.assign({ comp: Comp.val }, body);
     const res = await fetch(url(), {
       method: 'POST',
       redirect: 'manual',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(body)
+      body: JSON.stringify(b)
     });
     // Google Apps Script redireciona POST com 302 — opaqueredirect = aceito
     if (res.type === 'opaqueredirect' || res.status === 0) return { ok: true };
@@ -30,16 +44,17 @@ const API = (function () {
   }
 
   return {
-    ranking:     () => get({ action: 'ranking' }),
-    equipes:     () => get({ action: 'equipes' }),
-    deliberacao: () => get({ action: 'deliberacao' }),
-    config:      () => get({ action: 'config' }),
-    arena:       () => get({ action: 'arena' }),
-    categorias:  (cat) => get({ action: 'categorias', categoria: cat || '' }),
-    turma:       (id, pin) => get({ action: 'turma', id, pin }),
+    ranking:      () => get({ action: 'ranking' }),
+    equipes:      () => get({ action: 'equipes' }),
+    deliberacao:  () => get({ action: 'deliberacao' }),
+    config:       () => get({ action: 'config' }),
+    arena:        () => get({ action: 'arena' }),
+    categorias:   (cat) => get({ action: 'categorias', categoria: cat || '' }),
+    turma:        (id, pin) => get({ action: 'turma', id, pin }),
     login:        (juiz, pin) => get({ action: 'login', juiz, pin }),
-    verificarJuiz: (juiz, pin) => get({ action: 'auth', juiz, pin }),
-    todasTurmas: (juiz, pin) => get({ action: 'coordenacao', juiz, pin }),
+    verificarJuiz:(juiz, pin) => get({ action: 'auth', juiz, pin }),
+    todasTurmas:  (juiz, pin) => get({ action: 'coordenacao', juiz, pin }),
+    competicoes:  () => get({ action: 'competicoes' }),
 
     salvarRubrica: (juiz, pin, categoria, idEquipe, notas, obs) =>
       post({ action: 'rubrica', juiz, pin, categoria, idEquipe, notas, obs: obs || {} }),
