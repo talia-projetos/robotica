@@ -63,6 +63,33 @@ const T = Object.freeze({
 });
 
 
+const COMPS = Object.freeze(['FLL', 'OBR', 'Steam Racing']);
+
+/** Retorna o slug normalizado da competição ('FLL', 'OBR' ou 'Steam Racing'). */
+function normComp_(comp) {
+  const c = norm_(comp || '');
+  if (c === 'obr') return 'OBR';
+  if (c.indexOf('steam') >= 0) return 'Steam Racing';
+  return 'FLL';
+}
+
+/** Retorna os nomes de abas de resultado para cada competição. */
+function abasComp_(comp) {
+  const c = normComp_(comp);
+  if (c === 'OBR') return {
+    CONFIG: T.ABAS.CONFIG, EQUIPES: T.ABAS.EQUIPES, TAMPINHAS: T.ABAS.TAMPINHAS,
+    BASE: 'BASE_OBR', RANKING: 'RANKING_OBR', RANK_CAT: 'RANKING_CAT_OBR',
+    STATUS: 'STATUS_OBR', DIAG: 'DIAGNOSTICO_OBR', PAINEL: 'PAINEL_OBR'
+  };
+  if (c === 'Steam Racing') return {
+    CONFIG: T.ABAS.CONFIG, EQUIPES: T.ABAS.EQUIPES, TAMPINHAS: T.ABAS.TAMPINHAS,
+    BASE: 'BASE_STEAM', RANKING: 'RANKING_STEAM', RANK_CAT: 'RANKING_CAT_STEAM',
+    STATUS: 'STATUS_STEAM', DIAG: 'DIAGNOSTICO_STEAM', PAINEL: 'PAINEL_STEAM'
+  };
+  return Object.assign({}, T.ABAS); // FLL: nomes originais
+}
+
+
 // ================================================================
 // MENU E GATILHOS
 // ================================================================
@@ -70,14 +97,18 @@ const T = Object.freeze({
 function onOpen() {
   SpreadsheetApp.getUi()
     .createMenu('🏆 Torneio')
-    .addItem('Instalar / atualizar',     'TORNEIO_instalar')
-    .addItem('Recalcular resultados',    'TORNEIO_atualizar')
+    .addItem('Instalar / atualizar (todas)',  'TORNEIO_instalar')
+    .addItem('Recalcular todas as competições','TORNEIO_atualizar')
     .addSeparator()
-    .addItem('Ver Painel',               'TORNEIO_abrirPainel')
-    .addItem('Ver Ranking',              'TORNEIO_abrirRanking')
-    .addItem('Ver Diagnóstico',          'TORNEIO_abrirDiagnostico')
+    .addItem('Recalcular FLL',           'TORNEIO_atualizarFLL')
+    .addItem('Recalcular OBR',           'TORNEIO_atualizarOBR')
+    .addItem('Recalcular Steam Racing',  'TORNEIO_atualizarSteam')
     .addSeparator()
-    .addItem('Corrigir nomes de equipes', 'TORNEIO_corrigirNomes')
+    .addItem('Ver Painel FLL',           'TORNEIO_abrirPainel')
+    .addItem('Ver Painel OBR',           'TORNEIO_abrirPainelOBR')
+    .addItem('Ver Painel Steam Racing',  'TORNEIO_abrirPainelSteam')
+    .addSeparator()
+    .addItem('Corrigir nomes de equipes','TORNEIO_corrigirNomes')
     .addItem('Reinstalar gatilho Forms', 'TORNEIO_instalarGatilho')
     .addToUi();
 }
@@ -94,11 +125,11 @@ function TORNEIO_instalar() {
     criarAbaEquipes_(ss);
     criarAbaTampinhas_(ss);
     const pinCriado = criarAbaHubJuizes_(ss);
-    atualizarInterno_(ss);
+    COMPS.forEach(function(comp) { atualizarInterno_(ss, comp); });
     instalarGatilho_(ss);
     const msg = pinCriado
       ? 'Sistema instalado! Coordenação criada → Nome: "Coordenação"  PIN: ' + pinCriado
-      : 'Sistema instalado e resultados calculados.';
+      : 'Sistema instalado e resultados calculados (FLL + OBR + Steam Racing).';
     ss.toast(msg, '🏆 Torneio', 12);
   } finally {
     lock.releaseLock();
@@ -126,32 +157,57 @@ function TORNEIO_atualizar() {
   const lock = LockService.getDocumentLock();
   if (!lock.tryLock(30000)) return;
   try {
-    atualizarInterno_(SpreadsheetApp.getActiveSpreadsheet());
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    COMPS.forEach(function(comp) { atualizarInterno_(ss, comp); });
   } finally {
     lock.releaseLock();
   }
 }
+
+function TORNEIO_atualizarFLL()   { const l = LockService.getDocumentLock(); if (!l.tryLock(30000)) return; try { atualizarInterno_(SpreadsheetApp.getActiveSpreadsheet(), 'FLL');           } finally { l.releaseLock(); } }
+function TORNEIO_atualizarOBR()   { const l = LockService.getDocumentLock(); if (!l.tryLock(30000)) return; try { atualizarInterno_(SpreadsheetApp.getActiveSpreadsheet(), 'OBR');           } finally { l.releaseLock(); } }
+function TORNEIO_atualizarSteam() { const l = LockService.getDocumentLock(); if (!l.tryLock(30000)) return; try { atualizarInterno_(SpreadsheetApp.getActiveSpreadsheet(), 'Steam Racing'); } finally { l.releaseLock(); } }
 
 function TORNEIO_corrigirNomes() {
   const ss  = SpreadsheetApp.getActiveSpreadsheet();
   const aba = ss.getSheetByName(T.ABAS.EQUIPES);
   if (!aba) { SpreadsheetApp.getUi().alert('Aba EQUIPES não encontrada.'); return; }
 
-  // Nomes corretos: [ID, Nome_Equipe, Tutor]
+  // [ID, Nome_Equipe, Tutor, Competicao]
   const corretos = [
-    ['TUR01', '6° A - Cyber Panter',       'Éverton'],
-    ['TUR02', '6° B - Liga do Choque',      'Izabela'],
-    ['TUR03', '6° C - Alpha Tech',          'Patrícia'],
-    ['TUR04', '6° D - Pheonics Mecanics',   'Moaci'],
-    ['TUR05', '6° E - TecShark',            'Yulo'],
-    ['TUR06', '7° A - Hoppin Robots',       'João'],
-    ['TUR07', '7° B - Bivoltx',             'Joseli'],
-    ['TUR08', '7° C - Ecoshift',            'Ana Claudia'],
-    ['TUR09', '7° D - Pantera Lego Team',   'Diego Lopes'],
-    ['TUR10', '7° E - Império das Onças',   'Fabiana'],
-    ['TUR11', '7° F - Poseidon',            'Marilia'],
-    ['TUR12', '7° G - Arara Azul',          'Reinalda'],
-    ['TUR13', '7° H - Nexos',               'Rute']
+    ['TUR01', '6° A - Cyber Panter',      'Éverton',    'FLL'],
+    ['TUR02', '6° B - Liga do Choque',    'Izabela',    'FLL'],
+    ['TUR03', '6° C - Alpha Tech',        'Patrícia',   'FLL'],
+    ['TUR04', '6° D - Pheonics Mecanics', 'Moaci',      'FLL'],
+    ['TUR05', '6° E - TecShark',          'Yulo',       'FLL'],
+    ['TUR06', '7° A - Hoppin Robots',     'João',       'FLL'],
+    ['TUR07', '7° B - Bivoltx',           'Joseli',     'FLL'],
+    ['TUR08', '7° C - Ecoshift',          'Ana Claudia','FLL'],
+    ['TUR09', '7° D - Pantera Lego Team', 'Diego Lopes','FLL'],
+    ['TUR10', '7° E - Império das Onças', 'Fabiana',    'FLL'],
+    ['TUR11', '7° F - Poseidon',          'Marilia',    'FLL'],
+    ['TUR12', '7° G - Arara Azul',        'Reinalda',   'FLL'],
+    ['TUR13', '7° H - Nexos',             'Rute',       'FLL'],
+    ['TUR14', '8° A',                     '',           'OBR'],
+    ['TUR15', '8° B',                     '',           'OBR'],
+    ['TUR16', '8° C',                     '',           'OBR'],
+    ['TUR17', '8° D',                     '',           'OBR'],
+    ['TUR18', '8° E',                     '',           'OBR'],
+    ['TUR19', '8° F',                     '',           'OBR'],
+    ['TUR20', '8° G',                     '',           'OBR'],
+    ['TUR21', '8° H',                     '',           'OBR'],
+    ['TUR22', '8° I',                     '',           'OBR'],
+    ['TUR23', '8° J',                     '',           'OBR'],
+    ['TUR24', '9° A',                     '',           'Steam Racing'],
+    ['TUR25', '9° B',                     '',           'Steam Racing'],
+    ['TUR26', '9° C',                     '',           'Steam Racing'],
+    ['TUR27', '9° D',                     '',           'Steam Racing'],
+    ['TUR28', '9° E',                     '',           'Steam Racing'],
+    ['TUR29', '9° F',                     '',           'Steam Racing'],
+    ['TUR30', '9° G',                     '',           'Steam Racing'],
+    ['TUR31', '9° H',                     '',           'Steam Racing'],
+    ['TUR32', '9° I',                     '',           'Steam Racing'],
+    ['TUR33', '9° J',                     '',           'Steam Racing']
   ];
 
   const dados = aba.getDataRange().getValues();
@@ -159,18 +215,27 @@ function TORNEIO_corrigirNomes() {
   const iId   = achaCab_(cab, ['id equipe','id_equipe','id'], 0);
   const iNome = achaCab_(cab, ['nome equipe','nome_equipe','turma'], 1);
   const iTutor= achaCab_(cab, ['tutor','professor'], 3);
+  const iComp = achaCab_(cab, ['competicao','competição'], -1);
+
+  const existentes = {};
+  dados.slice(1).forEach(function(r, i) {
+    const id = String(r[iId] || '').trim().toUpperCase();
+    if (id) existentes[id] = i + 2;
+  });
 
   corretos.forEach(function(c) {
-    for (var i = 1; i < dados.length; i++) {
-      if (String(dados[i][iId]).trim().toUpperCase() === c[0]) {
-        aba.getRange(i + 1, iNome + 1).setValue(c[1]);
-        aba.getRange(i + 1, iTutor + 1).setValue(c[2]);
-        break;
-      }
+    const id = c[0];
+    if (existentes[id]) {
+      const linha = existentes[id];
+      aba.getRange(linha, iNome + 1).setValue(c[1]);
+      if (c[2]) aba.getRange(linha, iTutor + 1).setValue(c[2]);
+      if (iComp >= 0) aba.getRange(linha, iComp + 1).setValue(c[3]);
+    } else {
+      aba.appendRow([id, c[1], '', c[2], '', '', c[3]]);
     }
   });
 
-  SpreadsheetApp.getActiveSpreadsheet().toast('Nomes corrigidos com sucesso!', 'Torneio', 5);
+  SpreadsheetApp.getActiveSpreadsheet().toast('Equipes atualizadas: FLL (TUR01–13) · OBR (TUR14–23) · Steam Racing (TUR24–33)', 'Torneio', 8);
 }
 
 function TORNEIO_instalarGatilho() {
@@ -179,7 +244,10 @@ function TORNEIO_instalarGatilho() {
 }
 
 function TORNEIO_aoEnviarForm(e) {
-  try { TORNEIO_atualizar(); } catch (err) { console.error(err); }
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    COMPS.forEach(function(comp) { try { atualizarInterno_(ss, comp); } catch(err) { console.error(comp, err); } });
+  } catch (err) { console.error(err); }
 }
 
 function onEdit(e) {
@@ -192,9 +260,11 @@ function onEdit(e) {
   }
 }
 
-function TORNEIO_abrirPainel()      { ativarAba_(T.ABAS.PAINEL);   }
-function TORNEIO_abrirRanking()     { ativarAba_(T.ABAS.RANKING);  }
-function TORNEIO_abrirDiagnostico() { ativarAba_(T.ABAS.DIAG);     }
+function TORNEIO_abrirPainel()      { ativarAba_(T.ABAS.PAINEL);              }
+function TORNEIO_abrirRanking()     { ativarAba_(T.ABAS.RANKING);             }
+function TORNEIO_abrirDiagnostico() { ativarAba_(T.ABAS.DIAG);                }
+function TORNEIO_abrirPainelOBR()   { ativarAba_(abasComp_('OBR').PAINEL);    }
+function TORNEIO_abrirPainelSteam() { ativarAba_(abasComp_('Steam Racing').PAINEL); }
 
 
 // ================================================================
@@ -219,10 +289,18 @@ function criarAbaConfig_(ss) {
     ['Critérios por Rubrica',        10,              'Número de critérios com nota 1–4 em cada Form de rubrica.'],
     ['Juízes Esperados por Rubrica', 3,               'Avaliações esperadas por equipe em cada categoria.'],
     ['Rounds Esperados Arena',       3,               'O sistema usa o melhor round entre todos os válidos.'],
-    ['Aba Form Arena',               'FORM_ARENA',    '← Nome exato da aba de respostas do Form da Arena.'],
-    ['Aba Form Projeto',             'FORM_PROJETO',  '← Nome exato da aba de respostas do Form de Projeto.'],
-    ['Aba Form Design',              'FORM_DESIGN',   '← Nome exato da aba de respostas do Form de Design.'],
-    ['Aba Form Core',                'FORM_CORE',     '← Nome exato da aba de respostas do Form de Core Values.']
+    ['Aba Form Arena',               'FORM_ARENA',         '← FLL: Nome exato da aba de respostas do Form da Arena.'],
+    ['Aba Form Projeto',             'FORM_PROJETO',       '← FLL: Nome exato da aba de respostas do Form de Projeto.'],
+    ['Aba Form Design',              'FORM_DESIGN',        '← FLL: Nome exato da aba de respostas do Form de Design.'],
+    ['Aba Form Core',                'FORM_CORE',          '← FLL: Nome exato da aba de respostas do Form de Core Values.'],
+    ['Aba Form Arena OBR',           'FORM_ARENA_OBR',     '← OBR: Nome exato da aba de respostas do Form da Arena.'],
+    ['Aba Form Projeto OBR',         'FORM_PROJETO_OBR',   '← OBR: Nome exato da aba de respostas do Form de Projeto.'],
+    ['Aba Form Design OBR',          'FORM_DESIGN_OBR',    '← OBR: Nome exato da aba de respostas do Form de Design.'],
+    ['Aba Form Core OBR',            'FORM_CORE_OBR',      '← OBR: Nome exato da aba de respostas do Form de Core Values.'],
+    ['Aba Form Arena Steam',         'FORM_ARENA_STEAM',   '← Steam Racing: Nome exato da aba de respostas do Form da Arena.'],
+    ['Aba Form Projeto Steam',       'FORM_PROJETO_STEAM', '← Steam Racing: Nome exato da aba de respostas do Form de Projeto.'],
+    ['Aba Form Design Steam',        'FORM_DESIGN_STEAM',  '← Steam Racing: Nome exato da aba de respostas do Form de Design.'],
+    ['Aba Form Core Steam',          'FORM_CORE_STEAM',    '← Steam Racing: Nome exato da aba de respostas do Form de Core Values.']
   ];
 
   if (aba.getLastRow() === 0) {
@@ -247,24 +325,29 @@ function criarAbaEquipes_(ss) {
   let aba = ss.getSheetByName(T.ABAS.EQUIPES);
   if (!aba) {
     aba = ss.insertSheet(T.ABAS.EQUIPES);
-    aba.getRange(1, 1, 1, 6).setValues([['ID_Equipe', 'Nome_Equipe', 'Turno', 'Tutor', 'Qtde_Alunos', 'PIN']]);
-    aba.getRange(1, 1, 1, 6).setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
+    aba.getRange(1, 1, 1, 7).setValues([['ID_Equipe', 'Nome_Equipe', 'Turno', 'Tutor', 'Qtde_Alunos', 'PIN', 'Competicao']]);
+    aba.getRange(1, 1, 1, 7).setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
     aba.setColumnWidth(1, 110);
     aba.setColumnWidth(2, 240);
     aba.setColumnWidth(3, 120);
     aba.setColumnWidth(4, 200);
     aba.setColumnWidth(5, 120);
     aba.setColumnWidth(6, 100);
+    aba.setColumnWidth(7, 140);
     aba.setFrozenRows(1);
   } else {
-    // Adiciona coluna PIN se ainda não existir
     const cab = aba.getRange(1, 1, 1, aba.getLastColumn()).getValues()[0];
     const temPin = cab.some(function(h) { return norm_(String(h)) === 'pin' || norm_(String(h)) === 'senha'; });
     if (!temPin) {
       const col = aba.getLastColumn() + 1;
-      aba.getRange(1, col).setValue('PIN')
-        .setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
+      aba.getRange(1, col).setValue('PIN').setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
       aba.setColumnWidth(col, 100);
+    }
+    const temComp = cab.some(function(h) { return norm_(String(h)).indexOf('competicao') >= 0 || norm_(String(h)).indexOf('competição') >= 0; });
+    if (!temComp) {
+      const col = aba.getLastColumn() + 1;
+      aba.getRange(1, col).setValue('Competicao').setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
+      aba.setColumnWidth(col, 140);
     }
   }
 }
@@ -295,11 +378,12 @@ function instalarGatilho_(ss) {
 // MOTOR PRINCIPAL DE ATUALIZAÇÃO
 // ================================================================
 
-function atualizarInterno_(ss) {
+function atualizarInterno_(ss, comp) {
   const inicio = new Date();
   const diag   = [];
-  const cfg    = lerConfig_(ss, diag);
-  const eq     = lerEquipes_(ss, cfg, diag);
+  const abas   = abasComp_(comp);
+  const cfg    = lerConfig_(ss, diag, comp);
+  const eq     = lerEquipes_(ss, cfg, diag, comp);
   const arena  = lerArena_(ss, cfg, eq, diag);
   const proj   = lerRubrica_(ss, cfg.abaProj,  T.CAT.PROJETO, cfg, eq, diag);
   const desig  = lerRubrica_(ss, cfg.abaDes,   T.CAT.DESIGN,  cfg, eq, diag);
@@ -307,12 +391,12 @@ function atualizarInterno_(ss) {
   const tamp   = lerTampinhas_(ss, cfg, eq, diag);
   const dados  = calcularResultados_(eq, arena, [proj, desig, core], tamp, cfg);
 
-  escreverBase_(ss, dados);
-  escreverRanking_(ss, dados);
-  escreverRankingCat_(ss, dados, cfg);
-  escreverStatus_(ss, dados, cfg);
-  escreverDiag_(ss, diag, cfg, inicio);
-  escreverPainel_(ss, dados, cfg);
+  escreverBase_(ss, dados, abas);
+  escreverRanking_(ss, dados, abas);
+  escreverRankingCat_(ss, dados, cfg, abas);
+  escreverStatus_(ss, dados, cfg, abas);
+  escreverDiag_(ss, diag, cfg, inicio, abas);
+  escreverPainel_(ss, dados, cfg, abas);
   ordenarAbas_(ss);
 }
 
@@ -321,7 +405,7 @@ function atualizarInterno_(ss) {
 // LEITURA DA CONFIGURAÇÃO
 // ================================================================
 
-function lerConfig_(ss, diag) {
+function lerConfig_(ss, diag, comp) {
   const aba  = ss.getSheetByName(T.ABAS.CONFIG);
   const mapa = {};
 
@@ -350,13 +434,27 @@ function lerConfig_(ss, diag) {
     maxRub:      n('Pontuação Máxima Rubricas', 40),
     metaKg:      n('Meta Tampinhas kg/aluno', 0.5),
     criterios:   Math.max(1, Math.round(n('Critérios por Rubrica', 10))),
-    juizes:      Math.max(1, Math.round(n('Juízes Esperados por Rubrica', 3))),
+    juizes:      Math.max(1, Math.round(n('Juízes Esperados por Rubrica', 1))),
     rounds:      Math.max(1, Math.round(n('Rounds Esperados Arena', 3))),
-    abaArena:    s('Aba Form Arena', 'FORM_ARENA'),
+    abaArena:    s('Aba Form Arena',   'FORM_ARENA'),
     abaProj:     s('Aba Form Projeto', 'FORM_PROJETO'),
-    abaDes:      s('Aba Form Design', 'FORM_DESIGN'),
-    abaCore:     s('Aba Form Core', 'FORM_CORE')
+    abaDes:      s('Aba Form Design',  'FORM_DESIGN'),
+    abaCore:     s('Aba Form Core',    'FORM_CORE')
   };
+
+  // Sobrescreve form sheets de acordo com a competição
+  const c = normComp_(comp);
+  if (c === 'OBR') {
+    cfg.abaArena = s('Aba Form Arena OBR',   'FORM_ARENA_OBR');
+    cfg.abaProj  = s('Aba Form Projeto OBR', 'FORM_PROJETO_OBR');
+    cfg.abaDes   = s('Aba Form Design OBR',  'FORM_DESIGN_OBR');
+    cfg.abaCore  = s('Aba Form Core OBR',    'FORM_CORE_OBR');
+  } else if (c === 'Steam Racing') {
+    cfg.abaArena = s('Aba Form Arena Steam',   'FORM_ARENA_STEAM');
+    cfg.abaProj  = s('Aba Form Projeto Steam', 'FORM_PROJETO_STEAM');
+    cfg.abaDes   = s('Aba Form Design Steam',  'FORM_DESIGN_STEAM');
+    cfg.abaCore  = s('Aba Form Core Steam',    'FORM_CORE_STEAM');
+  }
 
   const soma = cfg.pArena + cfg.pProj + cfg.pDes + cfg.pCore + cfg.pTamp;
   if (Math.abs(soma - 1) > 0.001) {
@@ -374,7 +472,7 @@ function lerConfig_(ss, diag) {
 // LEITURA DE EQUIPES
 // ================================================================
 
-function lerEquipes_(ss, cfg, diag) {
+function lerEquipes_(ss, cfg, diag, comp) {
   const aba = ss.getSheetByName(T.ABAS.EQUIPES);
   if (!aba || aba.getLastRow() < 2) {
     diag.push({ nivel: 'ATENÇÃO', cat: 'EQUIPES', msg: 'Cadastro de equipes vazio.' });
@@ -389,6 +487,8 @@ function lerEquipes_(ss, cfg, diag) {
   const iTutor= achaCab_(cab, ['tutor', 'professor', 'orientador'], 3);
   const iQtd  = achaCab_(cab, ['qtde alunos', 'qtd alunos', 'quantidade alunos', 'alunos'], 4);
   const iPin  = achaCab_(cab, ['pin', 'senha'], -1);
+  const iComp = achaCab_(cab, ['competicao', 'competição'], -1);
+  const compFiltro = comp ? normComp_(comp) : null;
 
   const lista   = [];
   const porId   = {};
@@ -400,13 +500,17 @@ function lerEquipes_(ss, cfg, diag) {
     if (!id) { diag.push({ nivel: 'ATENÇÃO', cat: 'EQUIPES', msg: 'Linha ' + (i + 2) + ' sem ID.' }); return; }
     if (porId[id]) { diag.push({ nivel: 'ERRO', cat: 'EQUIPES', msg: 'ID duplicado: ' + id }); return; }
 
+    const compEq = iComp >= 0 ? normComp_(String(r[iComp] || '')) : 'FLL';
+    if (compFiltro && compEq !== compFiltro) return;
+
     const eq = {
-      id:    id,
-      nome:  String(r[iNome] || id).trim(),
-      turno: String(r[iTurno] || '').trim(),
-      tutor: String(r[iTutor] || '').trim(),
-      alunos: Math.max(0, num_(r[iQtd])),
-      pin:   iPin >= 0 ? String(r[iPin] || '').trim() : ''
+      id:         id,
+      nome:       String(r[iNome] || id).trim(),
+      turno:      String(r[iTurno] || '').trim(),
+      tutor:      String(r[iTutor] || '').trim(),
+      alunos:     Math.max(0, num_(r[iQtd])),
+      pin:        iPin >= 0 ? String(r[iPin] || '').trim() : '',
+      competicao: compEq
     };
 
     lista.push(eq);
@@ -465,8 +569,8 @@ function apiTurma_(p) {
   if (!id) return { ok: false, erro: 'ID da equipe obrigatório.' };
   const ss   = SpreadsheetApp.getActiveSpreadsheet();
   const diag = [];
-  const cfg  = lerConfig_(ss, diag);
-  const eq   = lerEquipes_(ss, cfg, diag);
+  const cfg  = lerConfig_(ss, diag, p.comp);
+  const eq   = lerEquipes_(ss, cfg, diag); // sem filtro de comp: busca pela equipe em todas
   const equipe = eq.porId[id];
   if (!equipe) return { ok: false, erro: 'Equipe não encontrada.' };
   if (equipe.pin) {
@@ -474,7 +578,8 @@ function apiTurma_(p) {
     if (equipe.pin !== pin) return { ok: false, erro: 'PIN incorreto.' };
   }
   var scores = null;
-  const abaBase = ss.getSheetByName(T.ABAS.BASE);
+  const compEq = equipe.competicao || 'FLL';
+  const abaBase = ss.getSheetByName(abasComp_(compEq).BASE);
   if (abaBase && abaBase.getLastRow() >= 2) {
     const dados = abaBase.getDataRange().getValues();
     const idx = {};
@@ -492,13 +597,14 @@ function apiTurma_(p) {
       total:   num_(g(row,'Total')),      status:     String(g(row,'Status') || '')
     };
   }
+  const cfgEq = lerConfig_(ss, [], compEq);
   const comentarios = {};
-  comentarios[T.CAT.PROJETO] = lerComentariosRubrica_(ss, cfg.abaProj,  id, eq);
-  comentarios[T.CAT.DESIGN]  = lerComentariosRubrica_(ss, cfg.abaDes,   id, eq);
-  comentarios[T.CAT.CORE]    = lerComentariosRubrica_(ss, cfg.abaCore,  id, eq);
+  comentarios[T.CAT.PROJETO] = lerComentariosRubrica_(ss, cfgEq.abaProj, id, eq);
+  comentarios[T.CAT.DESIGN]  = lerComentariosRubrica_(ss, cfgEq.abaDes,  id, eq);
+  comentarios[T.CAT.CORE]    = lerComentariosRubrica_(ss, cfgEq.abaCore, id, eq);
   return {
     ok: true,
-    equipe: { id: equipe.id, nome: equipe.nome, turno: equipe.turno, tutor: equipe.tutor },
+    equipe: { id: equipe.id, nome: equipe.nome, turno: equipe.turno, tutor: equipe.tutor, competicao: equipe.competicao },
     scores: scores,
     comentarios: comentarios
   };
@@ -558,10 +664,11 @@ function apiTodasTurmas_(p) {
   if (!auth.coordenador) return { ok: false, erro: 'Acesso restrito à coordenação.' };
   const ss   = SpreadsheetApp.getActiveSpreadsheet();
   const diag = [];
-  const cfg  = lerConfig_(ss, diag);
-  const eq   = lerEquipes_(ss, cfg, diag);
+  const comp = p.comp || 'FLL';
+  const cfg  = lerConfig_(ss, diag, comp);
+  const eq   = lerEquipes_(ss, cfg, diag, comp);
   const scoresMap = {};
-  const abaBase = ss.getSheetByName(T.ABAS.BASE);
+  const abaBase = ss.getSheetByName(abasComp_(comp).BASE);
   if (abaBase && abaBase.getLastRow() >= 2) {
     const dados = abaBase.getDataRange().getValues();
     const idx = {};
@@ -900,7 +1007,8 @@ function calcularResultados_(eq, arena, rubricas, tamp, cfg) {
 // ESCRITA DOS RESULTADOS
 // ================================================================
 
-function escreverBase_(ss, dados) {
+function escreverBase_(ss, dados, abas) {
+  abas = abas || T.ABAS;
   const agora = new Date();
   const cab = [
     'ID', 'Nome', 'Turno', 'Tutor', 'Alunos',
@@ -923,7 +1031,7 @@ function escreverBase_(ss, dados) {
     x.posArena, x.posProj, x.posDes, x.posCore, x.posTamp, agora
   ]; });
 
-  const aba = escTabela_(ss, T.ABAS.BASE, cab, rows, T.CORES.MARINHO);
+  const aba = escTabela_(ss, abas.BASE, cab, rows, T.CORES.MARINHO);
   if (rows.length) {
     aba.getRange(2, 6, rows.length, 2).setNumberFormat('0.00');
     aba.getRange(2, 9, rows.length, 2).setNumberFormat('0.00');
@@ -941,14 +1049,15 @@ function escreverBase_(ss, dados) {
   }
 }
 
-function escreverRanking_(ss, dados) {
+function escreverRanking_(ss, dados, abas) {
+  abas = abas || T.ABAS;
   const cab = ['Pos', 'ID', 'Equipe', 'Turno', 'Tutor', 'Arena_20', 'Proj_20', 'Des_20', 'Core_20', 'Tamp_20', 'Total'];
   const rows = dados.rankingGeral.map(function(r) {
     const x = r.item;
     return [r.pos, x.id, x.nome, x.turno, x.tutor,
       arred_(x.arena20,2), arred_(x.proj20,2), arred_(x.des20,2), arred_(x.core20,2), arred_(x.tamp20,2), arred_(x.total,2)];
   });
-  const aba = escTabela_(ss, T.ABAS.RANKING, cab, rows, T.CORES.MARINHO);
+  const aba = escTabela_(ss, abas.RANKING, cab, rows, T.CORES.MARINHO);
   if (rows.length > 0) {
     aba.getRange(2, 6, rows.length, 6).setNumberFormat('0.00');
     const hl = [[T.CORES.AMARELO_CLARO], ['#EDEDED'], ['#FCE5CD']];
@@ -958,7 +1067,8 @@ function escreverRanking_(ss, dados) {
   }
 }
 
-function escreverRankingCat_(ss, dados, cfg) {
+function escreverRankingCat_(ss, dados, cfg, abas) {
+  abas = abas || T.ABAS;
   const cab  = ['Categoria', 'Pos', 'ID', 'Equipe', 'Nota_Bruta', 'Maximo', 'Parcela_20', 'Qtd'];
   const rows = [];
 
@@ -978,10 +1088,11 @@ function escreverRankingCat_(ss, dados, cfg) {
   add(T.CAT.CORE,    'Core',  'coreBruta',  'core20',  'coreJuizes');
   add(T.CAT.TAMP,    'Tamp',  'tampBruta',  'tamp20',  'tampPes');
 
-  escTabela_(ss, T.ABAS.RANK_CAT, cab, rows, T.CORES.MARINHO);
+  escTabela_(ss, abas.RANK_CAT, cab, rows, T.CORES.MARINHO);
 }
 
-function escreverStatus_(ss, dados, cfg) {
+function escreverStatus_(ss, dados, cfg, abas) {
+  abas = abas || T.ABAS;
   const cab = [
     'ID', 'Equipe', 'Status',
     'Rounds', 'Arena_OK',
@@ -1000,7 +1111,7 @@ function escreverStatus_(ss, dados, cfg) {
     x.tampPes,     ok(x.tampPes, 1)
   ]; });
 
-  const aba = escTabela_(ss, T.ABAS.STATUS, cab, rows, T.CORES.MARINHO);
+  const aba = escTabela_(ss, abas.STATUS, cab, rows, T.CORES.MARINHO);
   if (rows.length) {
     const colunasCerto = [5,7,9,11,13];
     const regras = [];
@@ -1013,11 +1124,12 @@ function escreverStatus_(ss, dados, cfg) {
   }
 }
 
-function escreverDiag_(ss, diag, cfg, inicio) {
+function escreverDiag_(ss, diag, cfg, inicio, abas) {
+  abas = abas || T.ABAS;
   const cab  = ['Nível', 'Categoria', 'Mensagem'];
   const rows = diag.map(function(d) { return [d.nivel, d.cat, d.msg]; });
   rows.push(['INFO', 'SISTEMA', 'Versão: ' + T.VERSAO + ' | Tempo: ' + (new Date() - inicio) + 'ms']);
-  const aba = escTabela_(ss, T.ABAS.DIAG, cab, rows, T.CORES.MARINHO);
+  const aba = escTabela_(ss, abas.DIAG, cab, rows, T.CORES.MARINHO);
   if (rows.length) {
     const r = aba.getRange(2, 1, rows.length, 1);
     aba.setConditionalFormatRules([
@@ -1028,8 +1140,9 @@ function escreverDiag_(ss, diag, cfg, inicio) {
   }
 }
 
-function escreverPainel_(ss, dados, cfg) {
-  let aba = ss.getSheetByName(T.ABAS.PAINEL);
+function escreverPainel_(ss, dados, cfg, abas) {
+  abas = abas || T.ABAS;
+  let aba = ss.getSheetByName(abas.PAINEL);
   if (!aba) aba = ss.insertSheet(T.ABAS.PAINEL);
   aba.clearContents();
   aba.clearFormats();
@@ -1079,8 +1192,15 @@ function escreverPainel_(ss, dados, cfg) {
 }
 
 function ordenarAbas_(ss) {
-  const ordem = [T.ABAS.PAINEL, T.ABAS.RANKING, T.ABAS.RANK_CAT, T.ABAS.STATUS,
-                 T.ABAS.BASE, T.ABAS.CONFIG, T.ABAS.EQUIPES, T.ABAS.TAMPINHAS, T.ABAS.DIAG];
+  const ordem = [
+    T.ABAS.PAINEL, 'PAINEL_OBR', 'PAINEL_STEAM',
+    T.ABAS.RANKING, 'RANKING_OBR', 'RANKING_STEAM',
+    T.ABAS.RANK_CAT, 'RANKING_CAT_OBR', 'RANKING_CAT_STEAM',
+    T.ABAS.STATUS, 'STATUS_OBR', 'STATUS_STEAM',
+    T.ABAS.BASE, 'BASE_OBR', 'BASE_STEAM',
+    T.ABAS.CONFIG, T.ABAS.EQUIPES, T.ABAS.TAMPINHAS,
+    T.ABAS.DIAG, 'DIAGNOSTICO_OBR', 'DIAGNOSTICO_STEAM'
+  ];
   ordem.forEach(function(nome, i) {
     const aba = ss.getSheetByName(nome);
     if (aba) { ss.setActiveSheet(aba); ss.moveActiveSheet(i + 1); }
@@ -1098,18 +1218,19 @@ function doGet(e) {
   try {
     let r;
     switch (p.action) {
-      case 'ranking':     r = apiRanking_();        break;
-      case 'equipes':     r = apiEquipes_();        break;
-      case 'deliberacao': r = apiDeliberacao_();    break;
-      case 'config':      r = apiConfig_();         break;
-      case 'arena':       r = apiArenaDetalhe_();   break;
-      case 'turma':       r = apiTurma_(p);         break;
-      case 'coordenacao': r = apiTodasTurmas_(p);   break;
-      case 'auth':        r = apiVerificarJuiz_(p); break;
-      case 'login':       r = apiLogin_(p);         break;
-      case 'chat':        r = apiChatReceber_(p);   break;
-      case 'abas':        r = apiListarAbas_();     break;
-      default:            r = { ok: false, erro: 'Ação desconhecida: ' + (p.action || '(vazia)') };
+      case 'ranking':        r = apiRanking_(p);        break;
+      case 'equipes':        r = apiEquipes_(p);        break;
+      case 'deliberacao':    r = apiDeliberacao_();     break;
+      case 'config':         r = apiConfig_();          break;
+      case 'arena':          r = apiArenaDetalhe_(p);   break;
+      case 'turma':          r = apiTurma_(p);          break;
+      case 'coordenacao':    r = apiTodasTurmas_(p);    break;
+      case 'auth':           r = apiVerificarJuiz_(p);  break;
+      case 'login':          r = apiLogin_(p);          break;
+      case 'chat':           r = apiChatReceber_(p);    break;
+      case 'abas':           r = apiListarAbas_();      break;
+      case 'competicoes':    r = apiCompetitions_();    break;
+      default:               r = { ok: false, erro: 'Ação desconhecida: ' + (p.action || '(vazia)') };
     }
     return jsonOut_(r, cb);
   } catch (err) {
@@ -1176,11 +1297,17 @@ function autenticarJuiz_(nome, pin) {
 // API — LEITURA
 // ================================================================
 
-function apiArenaDetalhe_() {
+function apiCompetitions_() {
+  return { ok: true, competicoes: COMPS };
+}
+
+function apiArenaDetalhe_(p) {
+  p = p || {};
   const ss   = SpreadsheetApp.getActiveSpreadsheet();
   const diag = [];
-  const cfg  = lerConfig_(ss, diag);
-  const eq   = lerEquipes_(ss, cfg, diag);
+  const comp = p.comp || 'FLL';
+  const cfg  = lerConfig_(ss, diag, comp);
+  const eq   = lerEquipes_(ss, cfg, diag, comp);
   const aba  = ss.getSheetByName(cfg.abaArena);
   if (!aba || aba.getLastRow() < 2) return { ok: true, equipes: [], roundsOrdem: [] };
 
@@ -1240,9 +1367,11 @@ function apiArenaDetalhe_() {
   return { ok: true, equipes: equipes, roundsOrdem: roundsOrdem };
 }
 
-function apiRanking_() {
-  const ss  = SpreadsheetApp.getActiveSpreadsheet();
-  const aba = ss.getSheetByName(T.ABAS.BASE);
+function apiRanking_(p) {
+  p = p || {};
+  const ss   = SpreadsheetApp.getActiveSpreadsheet();
+  const abas = abasComp_(p.comp);
+  const aba  = ss.getSheetByName(abas.BASE);
   if (!aba || aba.getLastRow() < 2) return { ok: true, equipes: [] };
   const dados = aba.getDataRange().getValues();
   const idx   = {};
@@ -1261,24 +1390,15 @@ function apiRanking_() {
   return { ok: true, equipes: equipes, atualizado: new Date().toISOString() };
 }
 
-function apiEquipes_() {
-  const ss  = SpreadsheetApp.getActiveSpreadsheet();
-  const aba = ss.getSheetByName(T.ABAS.EQUIPES);
-  if (!aba || aba.getLastRow() < 2) return { ok: true, equipes: [] };
-  const dados = aba.getDataRange().getValues();
-  const cab   = dados[0];
-  const iId   = achaCab_(cab, ['id equipe','id_equipe','id'], 0);
-  const iNome = achaCab_(cab, ['nome equipe','nome_equipe','turma'], 1);
-  const iTurno= achaCab_(cab, ['turno'], 2);
-  const iTutor= achaCab_(cab, ['tutor'], 3);
-  const iQtd  = achaCab_(cab, ['qtde','qtd','alunos'], 4);
-  const lista = dados.slice(1).filter(function(r){ return r[iId]; }).map(function(r){ return {
-    id: String(r[iId]||'').trim().toUpperCase(),
-    nome: String(r[iNome]||'').trim(),
-    turno: String(r[iTurno]||'').trim(),
-    tutor: String(r[iTutor]||'').trim(),
-    alunos: num_(r[iQtd])
-  }; });
+function apiEquipes_(p) {
+  p = p || {};
+  const ss   = SpreadsheetApp.getActiveSpreadsheet();
+  const diag = [];
+  const cfg  = lerConfig_(ss, diag, p.comp);
+  const eq   = lerEquipes_(ss, cfg, diag, p.comp);
+  const lista = eq.lista.map(function(e) {
+    return { id: e.id, nome: e.nome, turno: e.turno, tutor: e.tutor, alunos: e.alunos, competicao: e.competicao };
+  });
   return { ok: true, equipes: lista };
 }
 
@@ -1316,7 +1436,7 @@ function lerAbaHub_(ss, nome) {
 
 function apiSalvarRubrica_(body) {
   const ss  = SpreadsheetApp.getActiveSpreadsheet();
-  const cfg = lerConfig_(ss, []);
+  const cfg = lerConfig_(ss, [], body.comp);
   if (!body.categoria || !body.idEquipe || !Array.isArray(body.notas)) throw new Error('Campos obrigatórios ausentes.');
   if (body.notas.length !== cfg.criterios) throw new Error('Esperadas ' + cfg.criterios + ' notas; recebidas: ' + body.notas.length + '.');
   body.notas.forEach(function(n,i){ const v=num_(n); if(v<1||v>4) throw new Error('Nota '+(i+1)+' inválida (1–4): '+n); });
@@ -1344,13 +1464,13 @@ function apiSalvarRubrica_(body) {
   linha.push(String(obs.bom || '').trim());
   linha.push(String(obs.melhorar || '').trim());
   aba.appendRow(linha);
-  atualizarInterno_(ss);
+  atualizarInterno_(ss, body.comp);
   return { ok: true, mensagem: 'Rubrica salva.' };
 }
 
 function apiSalvarArena_(body) {
   const ss  = SpreadsheetApp.getActiveSpreadsheet();
-  const cfg = lerConfig_(ss, []);
+  const cfg = lerConfig_(ss, [], body.comp);
   if (!body.idEquipe || !body.round || !body.missoes) throw new Error('Campos obrigatórios ausentes.');
 
   let aba = ss.getSheetByName(cfg.abaArena);
@@ -1384,7 +1504,7 @@ function apiSalvarArena_(body) {
   set('Validado', 'Sim');
   Object.keys(body.missoes).forEach(function(m){ set(m, num_(body.missoes[m])); });
   aba.appendRow(linha);
-  atualizarInterno_(ss);
+  atualizarInterno_(ss, body.comp);
   return { ok: true, mensagem: 'Arena salva.' };
 }
 
