@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Avaliação — HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="css/styles.css?v=8">
+  <link rel="stylesheet" href="css/styles.css?v=11">
   <script>window.API_URL='https://script.google.com/macros/s/AKfycbw1LcYfQMOw72Xz4GPgzD_UmSvkXFWq-sYSh3lZUadqPC0mrLmPB6wPCssNUwBa8UaZ/exec';</script>
   <style>
     body { background: #F0F4F8; }
@@ -395,6 +395,47 @@
 <script src="js/api.js"></script>
 <script>
 
+/* ─── Rubrica de Engenharia — Steam Racing ───────────────────── */
+var RUBRICA_ENGENHARIA = {
+  titulo: 'Projeto de Engenharia',
+  cor: '#C84B00', corLight: '#FFF3EE', corDark: '#8D3300',
+  icon: '<rect x="3" y="11" width="4" height="8" rx="1"/><rect x="9" y="7" width="4" height="12" rx="1"/><rect x="15" y="3" width="4" height="16" rx="1"/>',
+  escala: [
+    { num:'1', nome:'Iniciante',          desc:'Atende pouco aos critérios da categoria.' },
+    { num:'2', nome:'Em desenvolvimento', desc:'Atende parcialmente aos critérios da categoria.' },
+    { num:'3', nome:'Proficiente',        desc:'Atende bem aos critérios da categoria.' },
+    { num:'4', nome:'Avançado',           desc:'Atende plenamente aos critérios da categoria.' }
+  ],
+  blocos: [
+    { label: 'Construção e Aparência', criterios: [
+      { cod:'E1', nome:'Acabamento', desc:'O carro apresenta bom acabamento, com superfícies limpas, bem lixadas e sem partes soltas. A pintura está uniforme e bem aplicada.' },
+      { cod:'E2', nome:'Design', desc:'O visual do carro é organizado, criativo e funcional, com boa harmonia entre as peças. O uso das asas (dianteira e traseira) de LEGO está bem integrado ao conjunto.' },
+      { cod:'E3', nome:'Uso do LEGO', desc:'As asas dianteiras e traseiras são bem fixadas, alinhadas e firmes. As peças de LEGO foram usadas de forma criativa e funcional, sem comprometer a estrutura do carro.' }
+    ]},
+    { label: 'Estrutura e Funcionalidade', criterios: [
+      { cod:'E4', nome:'Design e Estrutura do Corpo', desc:'O corpo do carro está bem montado, com peças firmes, sem folgas e com um formato que favorece a aerodinâmica. O design é funcional e bem pensado.' },
+      { cod:'E5', nome:'Rodas e Tração', desc:'As rodas estão bem fixas, alinhadas e giram livremente. O material e o acabamento das rodas contribuem para um melhor desempenho na pista.' },
+      { cod:'E6', nome:'Estrutura e Fixação', desc:'Todas as peças estão bem encaixadas e firmes. O carro mantém sua estrutura durante o uso, sem partes que soltem ou se movimentem de forma inadequada.' },
+      { cod:'E7', nome:'Equilíbrio e Distribuição de Peso', desc:'O carro está bem equilibrado, com o peso distribuído de forma adequada, contribuindo para a estabilidade e o bom desempenho.' }
+    ]},
+    { label: 'Regras e Inovação', criterios: [
+      { cod:'E8', nome:'Conformidade com as Regras', desc:'O carro segue as regras do torneio interno STEM Racing, como dimensões, materiais permitidos e segurança.' },
+      { cod:'E9', nome:'Criatividade e Inovação', desc:'A equipe apresenta soluções criativas na construção do carro, no uso das peças e na pintura, demonstrando iniciativa e pensamento diferente.' },
+      { cod:'E10', nome:'Trabalho em Equipe e Apresentação', desc:'A equipe demonstra organização, colaboração e boa comunicação. O carro é apresentado de forma clara, com cuidado e entusiasmo.' }
+    ]}
+  ]
+};
+
+/* ─── Missões OBR — Arena ─────────────────────────────────────── */
+var MISSOES_OBR = [
+  { cod:'OBR1', nome:'Ladrilho inicial superado', desc:'O robô ultrapassa completamente o primeiro ladrilho. <strong>0</strong> = não superou. <strong>5</strong> = superou.', opts:[0,5] },
+  { cod:'OBR2', nome:'Lombada',                   desc:'O robô transpõe a lombada sem parar ou sair da pista. <strong>0</strong> = não transpôs. <strong>10</strong> = transpôs.', opts:[0,10] },
+  { cod:'OBR3', nome:'Portal',                    desc:'O robô passa completamente pelo portal sem derrubá-lo. <strong>0</strong> = não passou. <strong>5</strong> = passou.', opts:[0,5] },
+  { cod:'OBR4', nome:'Curva',                     desc:'O robô realiza a curva mantendo-se dentro dos limites da pista. <strong>0</strong> = saiu. <strong>10</strong> = concluiu.', opts:[0,10] },
+  { cod:'OBR5', nome:'Obstáculo',                 desc:'O robô desvia ou supera o obstáculo sem pará-lo ou derrubá-lo inadvertidamente. <strong>0</strong> = não superou. <strong>20</strong> = superou.', opts:[0,20] },
+  { cod:'OBR6', nome:'Gangorra',                  desc:'O robô sobe e desce a gangorra completamente. <strong>0</strong> = não completou. <strong>15</strong> = completou.', opts:[0,15] }
+];
+
 /* ─── Dados das rubricas ─────────────────────────────────────── */
 var RUBRICAS = {
   projeto: {
@@ -557,7 +598,7 @@ var NOTAS = {};   // cod -> 1|2|3|4
 
   if (CAT === 'arena') { initArena(); return; }
 
-  DEF = RUBRICAS[CAT];
+  DEF = (CAT === 'design' && Comp.val === 'Steam Racing') ? RUBRICA_ENGENHARIA : RUBRICAS[CAT];
 
   if (!DEF) {
     document.getElementById('av-head-nome').textContent = 'Categoria inválida';
@@ -570,6 +611,16 @@ var NOTAS = {};   // cod -> 1|2|3|4
   document.getElementById('av-head-nome').textContent = DEF.titulo;
   document.getElementById('av-head-pts').textContent  = '10 critérios · até 40 pts';
   document.getElementById('av-head-icon').querySelector('svg').innerHTML = DEF.icon;
+
+  /* Escala personalizada (ex: Projeto de Engenharia) */
+  if (DEF.escala) {
+    var escalas = document.querySelectorAll('.escala-item');
+    DEF.escala.forEach(function(e, i) {
+      if (!escalas[i]) return;
+      escalas[i].querySelector('.escala-item__nome').textContent = e.nome;
+      escalas[i].querySelector('.escala-item__desc').textContent = e.desc;
+    });
+  }
 
   /* Botão enviar */
   var btn = document.getElementById('btn-enviar');
@@ -717,15 +768,29 @@ function atualizarTotal() {
 }
 
 /* ── Arena init / render / envio ─────────────────────────────── */
+function missaoAtual() {
+  return Comp.val === 'OBR' ? MISSOES_OBR : MISSOES;
+}
+
 function initArena() {
+  var comp = Comp.val;
+  var isOBR   = comp === 'OBR';
+  var isFLL   = !isOBR;
+  var missoes = missaoAtual();
+  var maxPts  = isOBR ? 65 : 550;
+  var nomeCat = isOBR ? 'Arena OBR' : 'Desafio do Robô';
+  var nMiss   = missoes.length + ' missões · máx. ' + maxPts + ' pts';
+  var corBg   = isOBR ? '#1B5E20' : '#0D47A1';
+  var corBgDk = isOBR ? '#145218' : '#08306e';
+
   var head = document.getElementById('av-head');
-  head.style.background = 'linear-gradient(135deg,#0D47A1 0%,#08306e 100%)';
+  head.style.background = 'linear-gradient(135deg,' + corBg + ' 0%,' + corBgDk + ' 100%)';
   document.querySelector('.av-head__cat').textContent  = 'Ficha de Pontuação';
-  document.getElementById('av-head-nome').textContent  = 'Desafio do Robô';
-  document.getElementById('av-head-pts').textContent   = '13 missões •máx. 550 pts';
-  document.getElementById('total-max').textContent     = ' / 550';
+  document.getElementById('av-head-nome').textContent  = nomeCat;
+  document.getElementById('av-head-pts').textContent   = nMiss;
+  document.getElementById('total-max').textContent     = ' / ' + maxPts;
   document.querySelector('.total-bar__label').innerHTML = 'Pontuação total do round';
-  document.getElementById('btn-enviar').style.background = '#0D47A1';
+  document.getElementById('btn-enviar').style.background = corBg;
   document.getElementById('btn-enviar').textContent = 'Enviar pontuação';
 
   document.querySelector('.escala-bar').style.display = 'none';
@@ -754,7 +819,7 @@ function initArena() {
 function renderArena() {
   var wrap = document.getElementById('criterios-wrap');
   var html = '';
-  MISSOES.forEach(function(m) {
+  missaoAtual().forEach(function(m) {
     var marcado = MISSAO_NOTAS.hasOwnProperty(m.cod);
     html += '<div class="missao-card">'
       + (m.img ? '<img class="missao-img" src="' + m.img + '" alt="' + m.cod + '" loading="lazy">' : '<div class="missao-badge"><div class="missao-badge__cod">' + m.cod + '</div></div>')
@@ -804,7 +869,7 @@ function verificarPronto() {
   if (CAT === 'arena') {
     var round      = ROUND_SEL;
     var marcadas   = Object.keys(MISSAO_NOTAS).length;
-    var total      = MISSOES.length;
+    var total      = missaoAtual().length;
     if (!ARENA_SEL) { info.textContent = 'Selecione a arena.'; btn.disabled = true; }
     else if (!round)  { info.textContent = 'Selecione o round.'; btn.disabled = true; }
     else if (!equipe) { info.textContent = 'Selecione a equipe.'; btn.disabled = true; }

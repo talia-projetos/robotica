@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="css/styles.css?v=8">
+  <link rel="stylesheet" href="css/styles.css?v=11">
   <script>window.API_URL='https://script.google.com/macros/s/AKfycbw1LcYfQMOw72Xz4GPgzD_UmSvkXFWq-sYSh3lZUadqPC0mrLmPB6wPCssNUwBa8UaZ/exec';</script>
   <style>
     body { background: #F0F4F8; }
@@ -1335,25 +1335,39 @@
   if (Sessao.logado()) verificarSessao();
 
   async function verificarSessao() {
-    // mostra o painel imediatamente com os dados em cache
-    mostrarPainel({ nome: Sessao.juiz, categoria: '' });
+    var cachedOffline = {
+      nome:        Sessao.juiz,
+      categoria:   localStorage.getItem('hub_cat')   || '',
+      competicao:  localStorage.getItem('hub_comp')  || '',
+      coordenador: !!localStorage.getItem('hub_coord')
+    };
+    aplicarCompJuiz(cachedOffline);
+    mostrarPainel(cachedOffline);
     try {
       const r = await API.verificarJuiz(Sessao.juiz, Sessao.pin);
       if (r.ok) {
-        // atualiza categoria se a API devolver
-        document.getElementById('juiz-cat').textContent = r.categoria || 'Geral';
+        localStorage.setItem('hub_cat',   r.categoria   || '');
+        localStorage.setItem('hub_comp',  r.competicao  || '');
+        localStorage.setItem('hub_coord', r.coordenador ? '1' : '');
+        document.getElementById('juiz-cat').textContent     = r.categoria || 'Geral';
         document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
+        aplicarCompJuiz(r);
         configurarWorkspaceJuiz(r.categoria || '');
         iniciarSalaProgress(r.categoria || '');
         return;
       }
-      // só desloga se a API explicitamente negar (não em erros de rede)
       Sessao.clear();
       document.getElementById('view-painel').style.display = 'none';
       document.getElementById('view-login').style.display  = '';
     } catch(_) {
-      // erro de rede: mantém sessão, juiz continua logado
+      // erro de rede: mantém sessão, juiz continua logado com dados em cache
     }
+  }
+
+  /* Aplica competição ao Comp global: coordenação e juízes sem comp = livre */
+  function aplicarCompJuiz(r) {
+    if (r.coordenador) return;
+    if (r.competicao) Comp.set(r.competicao);
   }
 
   async function entrar() {
@@ -1368,8 +1382,24 @@
       const r = await API.verificarJuiz(nome, pin);
       if (!r.ok) { err.textContent = r.erro || 'Acesso negado.'; err.style.display = 'block'; return; }
       Sessao.set(r.nome, pin);
+      localStorage.setItem('hub_cat',  r.categoria   || '');
+      localStorage.setItem('hub_comp', r.competicao  || '');
+      localStorage.setItem('hub_coord', r.coordenador ? '1' : '');
+      aplicarCompJuiz(r);
       mostrarPainel(r);
     } catch(e) {
+      /* Fallback offline: se o nome e PIN batem com sessão anterior, entra */
+      if (Sessao.logado() && Sessao.juiz.toLowerCase() === nome.toLowerCase() && Sessao.pin === pin) {
+        var cached = {
+          nome:        Sessao.juiz,
+          categoria:   localStorage.getItem('hub_cat')  || '',
+          competicao:  localStorage.getItem('hub_comp') || '',
+          coordenador: !!localStorage.getItem('hub_coord')
+        };
+        aplicarCompJuiz(cached);
+        mostrarPainel(cached);
+        return;
+      }
       err.textContent = 'Erro de conexão. Tente novamente.'; err.style.display = 'block';
     } finally {
       btn.textContent = 'Entrar'; btn.disabled = false;
@@ -1392,6 +1422,16 @@
     var isCoord = key === 'coord' || !!localStorage.getItem('coord_nome');
 
     document.body.classList.toggle('is-coordination', isCoord);
+
+    /* Ajusta card de Design conforme competição */
+    var designCard = document.getElementById('link-design');
+    if (designCard) {
+      var isSteam = Comp.val === 'Steam Racing';
+      designCard.querySelector('.fc-title').textContent = isSteam ? 'Projeto de Engenharia' : 'Design do Robô';
+      designCard.querySelector('.fc-desc').textContent  = isSteam
+        ? 'Construção, acabamento e criatividade do carro STEM Racing.'
+        : 'Estrutura, mecanismos e estratégia de programação.';
+    }
 
     cards.forEach(function(card) {
       card.classList.remove('is-assigned');

@@ -140,7 +140,12 @@ function criarAbaHubJuizes_(ss) {
   let aba = ss.getSheetByName('HUB_JUIZES');
   if (!aba) {
     aba = ss.insertSheet('HUB_JUIZES');
-    aba.getRange(1,1,1,4).setValues([['Nome','PIN','Categoria','Ativo']]);
+    aba.getRange(1,1,1,5).setValues([['Nome','PIN','Categoria','Ativo','Competição']]);
+  } else {
+    // Garante coluna Competição se aba já existia
+    const cab = aba.getRange(1,1,1,aba.getLastColumn()).getValues()[0];
+    const temComp = cab.some(function(h){ return String(h).toLowerCase().indexOf('competi') >= 0; });
+    if (!temComp) aba.getRange(1, cab.length + 1).setValue('Competição');
   }
   // Verifica se já existe algum coordenador
   const dados = aba.getLastRow() > 1 ? aba.getDataRange().getValues() : [[]];
@@ -265,6 +270,173 @@ function TORNEIO_abrirRanking()     { ativarAba_(T.ABAS.RANKING);             }
 function TORNEIO_abrirDiagnostico() { ativarAba_(T.ABAS.DIAG);                }
 function TORNEIO_abrirPainelOBR()   { ativarAba_(abasComp_('OBR').PAINEL);    }
 function TORNEIO_abrirPainelSteam() { ativarAba_(abasComp_('Steam Racing').PAINEL); }
+
+function TORNEIO_criarCronograma() {
+  const ss   = SpreadsheetApp.getActiveSpreadsheet();
+  const NOME = 'CRONOGRAMA';
+  let aba = ss.getSheetByName(NOME);
+  if (aba) ss.deleteSheet(aba);
+  aba = ss.insertSheet(NOME);
+
+  const DADOS = [
+    ['Dia','Horário','Evento','Equipe','Nome Equipe','Atividade'],
+    // ── 08/10 · Steam Racing ──────────────────────────────────────
+    ['08/10','07:30','Steam Racing','TUR24','9° A','1. ROUND A'],
+    ['08/10','07:30','Steam Racing','TUR29','9° F','1. ROUND B'],
+    ['08/10','07:35','Steam Racing','TUR25','9° B','1. ROUND A'],
+    ['08/10','07:35','Steam Racing','TUR30','9° G','1. ROUND B'],
+    ['08/10','07:40','Steam Racing','TUR26','9° C','1. ROUND A'],
+    ['08/10','07:40','Steam Racing','TUR31','9° H','1. ROUND B'],
+    ['08/10','07:45','Steam Racing','TUR27','9° D','1. ROUND A'],
+    ['08/10','07:45','Steam Racing','TUR32','9° I','1. ROUND B'],
+    ['08/10','07:50','Steam Racing','TUR28','9° E','1. ROUND A'],
+    ['08/10','07:50','Steam Racing','TUR33','9° J','1. ROUND B'],
+    ['08/10','08:00','Steam Racing','TUR24','9° A','Sala A'],
+    ['08/10','08:00','Steam Racing','TUR29','9° F','Sala B'],
+    ['08/10','08:15','Steam Racing','TUR25','9° B','Sala A'],
+    ['08/10','08:15','Steam Racing','TUR30','9° G','Sala B'],
+    ['08/10','08:30','Steam Racing','TUR26','9° C','Sala A'],
+    ['08/10','08:30','Steam Racing','TUR31','9° H','Sala B'],
+    ['08/10','08:45','Steam Racing','TUR27','9° D','Sala A'],
+    ['08/10','08:45','Steam Racing','TUR32','9° I','Sala B'],
+    ['08/10','09:00','Steam Racing','TUR28','9° E','Sala A'],
+    ['08/10','09:00','Steam Racing','TUR33','9° J','Sala B'],
+    ['08/10','09:15','Steam Racing','TUR24','9° A','2. ROUND A'],
+    ['08/10','09:15','Steam Racing','TUR25','9° B','2. ROUND B'],
+    ['08/10','09:20','Steam Racing','TUR26','9° C','2. ROUND A'],
+    ['08/10','09:20','Steam Racing','TUR27','9° D','2. ROUND B'],
+    ['08/10','09:25','Steam Racing','TUR28','9° E','2. ROUND A'],
+    ['08/10','09:25','Steam Racing','TUR29','9° F','2. ROUND B'],
+    ['08/10','09:30','Steam Racing','TUR30','9° G','2. ROUND A'],
+    ['08/10','09:30','Steam Racing','TUR31','9° H','2. ROUND B'],
+    ['08/10','09:35','Steam Racing','TUR32','9° I','2. ROUND A'],
+    ['08/10','09:35','Steam Racing','TUR33','9° J','2. ROUND B'],
+    ['08/10','09:50','Steam Racing','TUR29','9° F','3. ROUND A'],
+    ['08/10','09:50','Steam Racing','TUR24','9° A','3. ROUND B'],
+    ['08/10','09:55','Steam Racing','TUR30','9° G','3. ROUND A'],
+    ['08/10','09:55','Steam Racing','TUR25','9° B','3. ROUND B'],
+    ['08/10','10:00','Steam Racing','TUR31','9° H','3. ROUND A'],
+    ['08/10','10:00','Steam Racing','TUR26','9° C','3. ROUND B'],
+    ['08/10','10:05','Steam Racing','TUR32','9° I','3. ROUND A'],
+    ['08/10','10:05','Steam Racing','TUR27','9° D','3. ROUND B'],
+    ['08/10','10:10','Steam Racing','TUR33','9° J','3. ROUND A'],
+    ['08/10','10:10','Steam Racing','TUR28','9° E','3. ROUND B'],
+    // ── 09/10 · OBR ──────────────────────────────────────────────
+    ['09/10','07:30','OBR','TUR14','8° A','1. ROUND A'],
+    ['09/10','07:30','OBR','TUR19','8° F','1. ROUND B'],
+    ['09/10','07:35','OBR','TUR15','8° B','1. ROUND A'],
+    ['09/10','07:35','OBR','TUR20','8° G','1. ROUND B'],
+    ['09/10','07:40','OBR','TUR16','8° C','1. ROUND A'],
+    ['09/10','07:40','OBR','TUR21','8° H','1. ROUND B'],
+    ['09/10','07:45','OBR','TUR17','8° D','1. ROUND A'],
+    ['09/10','07:45','OBR','TUR22','8° I','1. ROUND B'],
+    ['09/10','07:50','OBR','TUR18','8° E','1. ROUND A'],
+    ['09/10','07:50','OBR','TUR23','8° J','1. ROUND B'],
+    ['09/10','08:00','OBR','TUR14','8° A','Sala A'],
+    ['09/10','08:00','OBR','TUR19','8° F','Sala B'],
+    ['09/10','08:15','OBR','TUR15','8° B','Sala A'],
+    ['09/10','08:15','OBR','TUR20','8° G','Sala B'],
+    ['09/10','08:30','OBR','TUR16','8° C','Sala A'],
+    ['09/10','08:30','OBR','TUR21','8° H','Sala B'],
+    ['09/10','08:45','OBR','TUR17','8° D','Sala A'],
+    ['09/10','08:45','OBR','TUR22','8° I','Sala B'],
+    ['09/10','09:00','OBR','TUR18','8° E','Sala A'],
+    ['09/10','09:00','OBR','TUR23','8° J','Sala B'],
+    ['09/10','09:15','OBR','TUR14','8° A','2. ROUND A'],
+    ['09/10','09:15','OBR','TUR15','8° B','2. ROUND B'],
+    ['09/10','09:20','OBR','TUR16','8° C','2. ROUND A'],
+    ['09/10','09:20','OBR','TUR17','8° D','2. ROUND B'],
+    ['09/10','09:25','OBR','TUR18','8° E','2. ROUND A'],
+    ['09/10','09:25','OBR','TUR19','8° F','2. ROUND B'],
+    ['09/10','09:30','OBR','TUR20','8° G','2. ROUND A'],
+    ['09/10','09:30','OBR','TUR21','8° H','2. ROUND B'],
+    ['09/10','09:35','OBR','TUR22','8° I','2. ROUND A'],
+    ['09/10','09:35','OBR','TUR23','8° J','2. ROUND B'],
+    ['09/10','09:50','OBR','TUR19','8° F','3. ROUND A'],
+    ['09/10','09:50','OBR','TUR14','8° A','3. ROUND B'],
+    ['09/10','09:55','OBR','TUR20','8° G','3. ROUND A'],
+    ['09/10','09:55','OBR','TUR15','8° B','3. ROUND B'],
+    ['09/10','10:00','OBR','TUR21','8° H','3. ROUND A'],
+    ['09/10','10:00','OBR','TUR16','8° C','3. ROUND B'],
+    ['09/10','10:05','OBR','TUR22','8° I','3. ROUND A'],
+    ['09/10','10:05','OBR','TUR17','8° D','3. ROUND B'],
+    ['09/10','10:10','OBR','TUR23','8° J','3. ROUND A'],
+    ['09/10','10:10','OBR','TUR18','8° E','3. ROUND B'],
+    // ── 10/10 · FLL ──────────────────────────────────────────────
+    ['10/10','07:30','FLL','TUR01','6° A - Cyber Panter','1. ROUND A'],
+    ['10/10','07:30','FLL','TUR09','7° D - Pantera Lego Team','1. ROUND B'],
+    ['10/10','07:35','FLL','TUR02','6° B - Liga do Choque','1. ROUND A'],
+    ['10/10','07:35','FLL','TUR10','7° E - Imperio das Oncas','1. ROUND B'],
+    ['10/10','07:40','FLL','TUR03','6° C - Alpha Tech','1. ROUND A'],
+    ['10/10','07:40','FLL','TUR11','7° F - Poseidon','1. ROUND B'],
+    ['10/10','07:45','FLL','TUR04','6° D - Pheonics Mecanics','1. ROUND A'],
+    ['10/10','07:45','FLL','TUR12','7° G - Arara Azul','1. ROUND B'],
+    ['10/10','07:50','FLL','TUR05','6° E - TecShark','1. ROUND A'],
+    ['10/10','07:50','FLL','TUR13','7° H - Nexos','1. ROUND B'],
+    ['10/10','07:55','FLL','TUR06','7° A - Hoppin Robots','1. ROUND A'],
+    ['10/10','07:55','FLL','TUR07','7° B - Bivoltx','1. ROUND B'],
+    ['10/10','08:00','FLL','TUR08','7° C - Ecoshift','1. ROUND A'],
+    ['10/10','08:05','FLL','TUR07','7° B - Bivoltx','Sala A'],
+    ['10/10','08:05','FLL','TUR13','7° H - Nexos','Sala B'],
+    ['10/10','08:20','FLL','TUR01','6° A - Cyber Panter','Sala A'],
+    ['10/10','08:20','FLL','TUR12','7° G - Arara Azul','Sala B'],
+    ['10/10','08:35','FLL','TUR09','7° D - Pantera Lego Team','Sala A'],
+    ['10/10','08:35','FLL','TUR10','7° E - Imperio das Oncas','Sala B'],
+    ['10/10','08:50','FLL','TUR05','6° E - TecShark','Sala A'],
+    ['10/10','08:50','FLL','TUR03','6° C - Alpha Tech','Sala B'],
+    ['10/10','08:50','FLL','TUR07','7° B - Bivoltx','2. ROUND A'],
+    ['10/10','08:50','FLL','TUR13','7° H - Nexos','2. ROUND A'],
+    ['10/10','08:55','FLL','TUR11','7° F - Poseidon','2. ROUND A'],
+    ['10/10','08:55','FLL','TUR04','6° D - Pheonics Mecanics','2. ROUND B'],
+    ['10/10','09:00','FLL','TUR08','7° C - Ecoshift','2. ROUND A'],
+    ['10/10','09:00','FLL','TUR02','6° B - Liga do Choque','2. ROUND B'],
+    ['10/10','09:05','FLL','TUR04','6° D - Pheonics Mecanics','Sala A'],
+    ['10/10','09:05','FLL','TUR10','7° E - Imperio das Oncas','2. ROUND A'],
+    ['10/10','09:05','FLL','TUR06','7° A - Hoppin Robots','2. ROUND B'],
+    ['10/10','09:10','FLL','TUR01','6° A - Cyber Panter','2. ROUND A'],
+    ['10/10','09:10','FLL','TUR12','7° G - Arara Azul','2. ROUND B'],
+    ['10/10','09:10','FLL','TUR08','7° C - Ecoshift','Sala B'],
+    ['10/10','09:15','FLL','TUR05','6° E - TecShark','2. ROUND A'],
+    ['10/10','09:15','FLL','TUR09','7° D - Pantera Lego Team','2. ROUND B'],
+    ['10/10','09:20','FLL','TUR03','6° C - Alpha Tech','2. ROUND A'],
+    ['10/10','09:20','FLL','TUR11','7° F - Poseidon','Sala A'],
+    ['10/10','09:30','FLL','TUR06','7° A - Hoppin Robots','Sala B'],
+    ['10/10','09:35','FLL','TUR02','6° B - Liga do Choque','Sala A'],
+    ['10/10','09:55','FLL','TUR06','7° A - Hoppin Robots','3. ROUND A'],
+    ['10/10','09:55','FLL','TUR12','7° G - Arara Azul','3. ROUND A'],
+    ['10/10','10:00','FLL','TUR09','7° D - Pantera Lego Team','3. ROUND A'],
+    ['10/10','10:00','FLL','TUR03','6° C - Alpha Tech','3. ROUND B'],
+    ['10/10','10:05','FLL','TUR02','6° B - Liga do Choque','3. ROUND A'],
+    ['10/10','10:05','FLL','TUR13','7° H - Nexos','3. ROUND B'],
+    ['10/10','10:10','FLL','TUR10','7° E - Imperio das Oncas','3. ROUND A'],
+    ['10/10','10:10','FLL','TUR04','6° D - Pheonics Mecanics','3. ROUND B'],
+    ['10/10','10:15','FLL','TUR08','7° C - Ecoshift','3. ROUND A'],
+    ['10/10','10:15','FLL','TUR01','6° A - Cyber Panter','3. ROUND B'],
+    ['10/10','10:20','FLL','TUR11','7° F - Poseidon','3. ROUND A'],
+    ['10/10','10:20','FLL','TUR05','6° E - TecShark','3. ROUND B'],
+    ['10/10','10:25','FLL','TUR07','7° B - Bivoltx','3. ROUND A']
+  ];
+
+  aba.getRange(1, 1, DADOS.length, 6).setValues(DADOS);
+
+  // Cabeçalho
+  const cab = aba.getRange(1, 1, 1, 6);
+  cab.setFontWeight('bold');
+  cab.setBackground('#12355B');
+  cab.setFontColor('#FFFFFF');
+
+  // Faixas de cor por competição
+  const COR = { 'Steam Racing': '#EAD9F9', 'OBR': '#D4EDDA', 'FLL': '#D0E4F7' };
+  for (let i = 2; i <= DADOS.length; i++) {
+    const comp = DADOS[i - 1][2];
+    aba.getRange(i, 1, 1, 6).setBackground(COR[comp] || '#FFFFFF');
+  }
+
+  aba.setFrozenRows(1);
+  aba.autoResizeColumns(1, 6);
+  ss.setActiveSheet(aba);
+  SpreadsheetApp.getUi().alert('Aba CRONOGRAMA criada com ' + (DADOS.length - 1) + ' linhas.');
+}
 
 
 // ================================================================
@@ -621,7 +793,7 @@ function apiVerificarJuiz_(p) {
   if (!nome) return { ok: false, erro: 'Nome obrigatório.' };
   const ss  = SpreadsheetApp.getActiveSpreadsheet();
   const aba = ss.getSheetByName('HUB_JUIZES');
-  if (!aba || aba.getLastRow() < 2) return { ok: true, nome: nome, categoria: '', coordenador: false };
+  if (!aba || aba.getLastRow() < 2) return { ok: true, nome: nome, categoria: '', coordenador: false, competicao: '' };
   const dados = aba.getDataRange().getValues();
   for (var i = 1; i < dados.length; i++) {
     const n = String(dados[i][0] || '').trim().toLowerCase();
@@ -629,10 +801,11 @@ function apiVerificarJuiz_(p) {
     const p2    = String(dados[i][1] || '').trim();
     const cat   = String(dados[i][2] || '').trim();
     const ativo = dados[i][3] !== false && dados[i][3] !== 'Não';
+    const comp  = String(dados[i][4] || '').trim(); // coluna Competição (pode ser vazia)
     if (!ativo) return { ok: false, erro: 'Usuário inativo.' };
     if (p2 && p2 !== pin) return { ok: false, erro: 'PIN incorreto.' };
     const isCoord = norm_(cat).indexOf('coord') >= 0;
-    return { ok: true, nome: dados[i][0], categoria: cat, coordenador: isCoord };
+    return { ok: true, nome: dados[i][0], categoria: cat, coordenador: isCoord, competicao: comp };
   }
   return { ok: false, erro: 'Usuário não encontrado.' };
 }
@@ -1143,7 +1316,7 @@ function escreverDiag_(ss, diag, cfg, inicio, abas) {
 function escreverPainel_(ss, dados, cfg, abas) {
   abas = abas || T.ABAS;
   let aba = ss.getSheetByName(abas.PAINEL);
-  if (!aba) aba = ss.insertSheet(T.ABAS.PAINEL);
+  if (!aba) aba = ss.insertSheet(abas.PAINEL);
   aba.clearContents();
   aba.clearFormats();
   aba.setTabColor(T.CORES.MARINHO);
@@ -1201,9 +1374,11 @@ function ordenarAbas_(ss) {
     T.ABAS.CONFIG, T.ABAS.EQUIPES, T.ABAS.TAMPINHAS,
     T.ABAS.DIAG, 'DIAGNOSTICO_OBR', 'DIAGNOSTICO_STEAM'
   ];
-  ordem.forEach(function(nome, i) {
+  const existentes = ordem.filter(function(nome) { return ss.getSheetByName(nome); });
+  existentes.forEach(function(nome, i) {
     const aba = ss.getSheetByName(nome);
-    if (aba) { ss.setActiveSheet(aba); ss.moveActiveSheet(i + 1); }
+    ss.setActiveSheet(aba);
+    ss.moveActiveSheet(i + 1);
   });
 }
 
@@ -1275,7 +1450,7 @@ function autenticarJuiz_(nome, pin) {
   let aba   = ss.getSheetByName('HUB_JUIZES');
   if (!aba) {
     aba = ss.insertSheet('HUB_JUIZES');
-    aba.getRange(1,1,1,4).setValues([['Nome','PIN','Categoria','Ativo']]);
+    aba.getRange(1,1,1,5).setValues([['Nome','PIN','Categoria','Ativo','Competição']]);
     return; // primeira chamada: cria a aba e aceita
   }
   const dados = aba.getDataRange().getValues();
