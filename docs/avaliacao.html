@@ -10,9 +10,10 @@
   <style>
     body { background: #F0F4F8; }
 
-    .page-avaliacao .topbar__event{flex:1;display:flex;align-items:center;gap:.65rem;padding:0;text-align:left}
-    .av-event-icon{width:34px;height:34px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:9px;background:#EDF5FC;color:#3979B8}
-    .av-event-icon svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .page-avaliacao .topbar{display:flex;align-items:center;gap:1rem}
+    .page-avaliacao .topbar__event{flex:1;display:flex;align-items:center;gap:.65rem;padding:0;text-align:left;min-width:0}
+    .av-event-icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:8px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+    .av-event-icon svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
     /* ── Contentor ───────────────────────────────────────────── */
     .av-wrap { max-width: 780px; margin: 0 auto; padding: 1.6rem 1.25rem 4rem; }
@@ -289,7 +290,6 @@
   <a href="index.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg> Início</a>
   <a href="arena.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg> Arena</a>
   <a href="juizes.html" class="sidebar-item ativo"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11.5" rx="1.5"/><path d="M6 2.5a2 2 0 014 0"/><path d="M5.5 7.5h5M5.5 10.5h3"/></svg> Juízes</a>
-  <a href="ranking.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13V9M8 13V6M13 13V3"/></svg> Ranking</a>
   <div class="sidebar-sep"></div>
   <a href="rubricas.html" target="_blank" class="sidebar-item">
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="1.5" width="10" height="13" rx="1.5"/><path d="M5.5 5.5h5M5.5 8h3"/></svg> Rubricas PDF
