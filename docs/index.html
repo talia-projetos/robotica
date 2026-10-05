@@ -800,7 +800,7 @@
               </div>
 
               <div class="home-robot" aria-hidden="true">
-                <img src="img/robo-lego.png" alt="Robô LEGO Spike" style="width:min(180px,100%);height:auto;filter:drop-shadow(0 12px 24px rgba(0,0,0,.18))">
+                <img id="hero-robo-img" src="img/robo-lego.png" alt="Robô LEGO Spike" style="width:min(180px,100%);height:auto;filter:drop-shadow(0 12px 24px rgba(0,0,0,.18))">
               </div>
             </a>
 
@@ -958,6 +958,34 @@
     el.innerHTML = '<strong style="color:#5E6D80;font-weight:650">' + dias[d.getDay()] + '</strong><br>' +
       d.getDate() + ' de ' + meses[d.getMonth()] + ' de ' + d.getFullYear();
   })();
+
+  /* ── Imagem hero muda conforme competição selecionada ─────── */
+  var HERO_IMGS = {
+    'FLL':          'img/robo-lego.png',
+    'OBR':          'img/robo-obr.png',
+    'Steam Racing': 'img/robo-steam.png'
+  };
+  function atualizarHeroImg() {
+    var img = document.getElementById('hero-robo-img');
+    if (!img) return;
+    var src = HERO_IMGS[Comp.val] || HERO_IMGS['FLL'];
+    if (img.src.indexOf(src) < 0) {
+      img.style.opacity = '0';
+      img.style.transition = 'opacity .25s';
+      setTimeout(function() {
+        img.src = src;
+        img.style.opacity = '1';
+      }, 180);
+    }
+  }
+  /* Roda ao carregar e sempre que Comp mudar */
+  atualizarHeroImg();
+  var _compObserver = setInterval(function() {
+    if (window._lastHeroComp !== Comp.val) {
+      window._lastHeroComp = Comp.val;
+      atualizarHeroImg();
+    }
+  }, 400);
 </script>
 
 </body>
