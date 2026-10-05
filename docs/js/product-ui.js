@@ -361,16 +361,28 @@
     }
 
     var cur = Comp.val;
+    /* Juiz com competição fixa não pode trocar */
+    var compFixa = localStorage.getItem('hub_comp') || '';
+    var isCoord  = !!localStorage.getItem('hub_coord');
+    var travado  = compFixa && !isCoord;
+
     var chip = document.createElement('button');
     chip.type = 'button';
     chip.className = 'comp-sel comp-chip';
     chip.style.background = COMP_COLORS[cur] || '#3979B8';
     chip.textContent = COMP_LABELS[cur] || cur;
-    chip.setAttribute('aria-haspopup', 'true');
+    if (travado) {
+      chip.style.cursor = 'default';
+      chip.setAttribute('title', 'Competição atribuída ao seu perfil');
+    } else {
+      chip.setAttribute('aria-haspopup', 'true');
+    }
     chip.setAttribute('aria-label', 'Competição: ' + cur);
 
     var actions = topbar.querySelector('.topbar__actions') || topbar;
     actions.insertBefore(chip, actions.firstChild);
+
+    if (travado) return; /* sem dropdown para juízes com competição fixa */
 
     var drop = document.createElement('div');
     drop.className = 'comp-drop';
