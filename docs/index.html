@@ -799,8 +799,8 @@
                 <div class="home-feature__sub">Acompanhe equipes, avaliações e a operação do torneio com clareza.</div>
               </div>
 
-              <div class="home-robot" aria-hidden="true" style="width:220px;max-width:100%;flex-shrink:0;display:flex;align-items:center;justify-content:center;">
-                <img id="hero-robo-img" src="img/robo-lego.png" alt="Robô LEGO Spike" style="width:100%;height:220px;object-fit:contain;filter:drop-shadow(0 12px 24px rgba(0,0,0,.18))">
+              <div class="home-robot" aria-hidden="true">
+                <img id="hero-robo-img" src="img/robo-lego.png" alt="Robô LEGO Spike" style="width:min(180px,100%);height:auto;filter:drop-shadow(0 12px 24px rgba(0,0,0,.18));transition:transform .25s,opacity .25s;transform-origin:center center;">
               </div>
             </a>
 
@@ -965,15 +965,45 @@
     'OBR':          'img/robo-obr.png',
     'Steam Racing': 'img/robo-steam.png'
   };
+  var _fllH = 0; // altura de referência capturada do FLL
   function atualizarHeroImg() {
     var img = document.getElementById('hero-robo-img');
     if (!img) return;
-    var src = HERO_IMGS[Comp.val] || HERO_IMGS['FLL'];
-    if (img.src.indexOf(src) < 0) {
-      img.style.opacity = '0';
-      img.style.transition = 'opacity .25s';
-      setTimeout(function() { img.src = src; img.style.opacity = '1'; }, 180);
-    }
+    var comp = Comp.val || 'FLL';
+    var src  = HERO_IMGS[comp] || HERO_IMGS['FLL'];
+    if (img.src.indexOf(src) >= 0) return; // já correto
+    img.style.opacity = '0';
+    setTimeout(function() {
+      img.src = src;
+      if (comp === 'FLL') {
+        img.style.width  = 'min(180px,100%)';
+        img.style.height = 'auto';
+      } else {
+        /* usa altura do FLL como referência; se ainda não capturada, captura agora */
+        if (!_fllH) {
+          var tmp = new Image();
+          tmp.onload = function() {
+            /* calcula altura renderizada do FLL a partir de sua proporção e largura atual */
+            var w = Math.min(180, img.parentElement ? img.parentElement.offsetWidth : 180);
+            _fllH = Math.round(tmp.naturalHeight * w / tmp.naturalWidth);
+            img.style.height = _fllH + 'px';
+            img.style.width  = 'auto';
+          };
+          tmp.src = HERO_IMGS['FLL'];
+        } else {
+          img.style.height = _fllH + 'px';
+          img.style.width  = 'auto';
+        }
+      }
+      img.style.opacity = '1';
+    }, 180);
+  }
+  /* Captura altura do FLL logo que a imagem atual carrega */
+  var _imgEl = document.getElementById('hero-robo-img');
+  if (_imgEl) {
+    (_imgEl.complete ? function() {
+      _fllH = _imgEl.offsetHeight || 0;
+    } : (_imgEl.onload = function() { _fllH = _imgEl.offsetHeight || 0; }))();
   }
   /* Roda ao carregar e sempre que Comp mudar */
   atualizarHeroImg();
