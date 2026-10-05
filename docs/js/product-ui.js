@@ -404,6 +404,9 @@
     document.body.appendChild(drop);
 
     chip.addEventListener('click', function(e) {
+      var compNow  = localStorage.getItem('hub_comp') || '';
+      var coordNow = !!localStorage.getItem('hub_coord');
+      if (compNow && !coordNow) { drop.classList.remove('open'); return; }
       e.stopPropagation();
       var r = chip.getBoundingClientRect();
       drop.style.top = (r.bottom + 6) + 'px';

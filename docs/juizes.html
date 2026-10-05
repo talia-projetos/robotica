@@ -1433,6 +1433,20 @@
         : 'Estrutura, mecanismos e estratégia de programação.';
     }
 
+    /* Ajusta card de Desafio do Robô conforme competição */
+    var desafioCard = document.getElementById('link-desafio');
+    if (desafioCard) {
+      var compVal = Comp.val;
+      var desafioTitulo = compVal === 'Steam Racing' ? 'Pista Racing'
+                        : compVal === 'OBR'          ? 'Arena de Resgate'
+                        :                             'Desafio do Robô';
+      var desafioDesc   = compVal === 'Steam Racing' ? 'Pontuação de missões e desempenho na pista.'
+                        : compVal === 'OBR'          ? 'Missões de resgate, pontos e penalidades de cada round.'
+                        :                             'Missões da Arena, pontos e penalidades de cada round.';
+      desafioCard.querySelector('.fc-title').textContent = desafioTitulo;
+      desafioCard.querySelector('.fc-desc').textContent  = desafioDesc;
+    }
+
     cards.forEach(function(card) {
       card.classList.remove('is-assigned');
       card.style.display = '';

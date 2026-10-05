@@ -775,10 +775,13 @@ function missaoAtual() {
 function initArena() {
   var comp = Comp.val;
   var isOBR   = comp === 'OBR';
-  var isFLL   = !isOBR;
+  var isSteam = comp === 'Steam Racing';
+  var isFLL   = !isOBR && !isSteam;
   var missoes = missaoAtual();
   var maxPts  = isOBR ? 65 : 550;
-  var nomeCat = isOBR ? 'Arena OBR' : 'Desafio do Robô';
+  var nomeCat = isOBR   ? 'Arena de Resgate'
+              : isSteam ? 'Pista Racing'
+              :           'Desafio do Robô';
   var nMiss   = missoes.length + ' missões · máx. ' + maxPts + ' pts';
   var corBg   = isOBR ? '#1B5E20' : '#0D47A1';
   var corBgDk = isOBR ? '#145218' : '#08306e';
