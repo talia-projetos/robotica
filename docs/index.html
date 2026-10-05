@@ -959,6 +959,19 @@
       d.getDate() + ' de ' + meses[d.getMonth()] + ' de ' + d.getFullYear();
   })();
 
+  /* ── Banner hero muda cor conforme competição ─────────────── */
+  var BANNER_BG = {
+    'FLL':          'radial-gradient(circle at 83% 30%,rgba(74,196,222,.23),transparent 25%),linear-gradient(135deg,#10243B 0%,#183A5E 64%,#1A4F75 100%)',
+    'OBR':          'radial-gradient(circle at 83% 30%,rgba(0,200,100,.18),transparent 25%),linear-gradient(135deg,#0A2918 0%,#0D4A26 64%,#0F5C30 100%)',
+    'Steam Racing': 'radial-gradient(circle at 83% 30%,rgba(220,80,60,.22),transparent 25%),linear-gradient(135deg,#2A0A08 0%,#5C1210 64%,#731614 100%)'
+  };
+  (function() {
+    var feat = document.querySelector('.home-feature');
+    if (!feat) return;
+    var bg = BANNER_BG[Comp.val] || BANNER_BG['FLL'];
+    feat.style.background = bg;
+  })();
+
   /* ── Imagem hero muda conforme competição selecionada ─────── */
   var HERO_IMGS = {
     'FLL':          'img/robo-lego.png',
