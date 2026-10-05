@@ -961,21 +961,24 @@
 
   /* ── Imagem hero muda conforme competição selecionada ─────── */
   var HERO_IMGS = {
-    'FLL':          'img/robo-lego.png',
-    'OBR':          'img/robo-obr.png',
-    'Steam Racing': 'img/robo-steam.png'
+    'FLL':          { src: 'img/robo-lego.png',  w: 'min(180px,100%)' },
+    'OBR':          { src: 'img/robo-obr.png',   w: 'min(260px,100%)' },
+    'Steam Racing': { src: 'img/robo-steam.png', w: 'min(260px,100%)' }
   };
   function atualizarHeroImg() {
     var img = document.getElementById('hero-robo-img');
     if (!img) return;
-    var src = HERO_IMGS[Comp.val] || HERO_IMGS['FLL'];
-    if (img.src.indexOf(src) < 0) {
+    var cfg = HERO_IMGS[Comp.val] || HERO_IMGS['FLL'];
+    if (img.src.indexOf(cfg.src) < 0) {
       img.style.opacity = '0';
       img.style.transition = 'opacity .25s';
       setTimeout(function() {
-        img.src = src;
+        img.src = cfg.src;
+        img.style.width = cfg.w;
         img.style.opacity = '1';
       }, 180);
+    } else {
+      img.style.width = cfg.w;
     }
   }
   /* Roda ao carregar e sempre que Comp mudar */
