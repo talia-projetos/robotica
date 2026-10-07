@@ -1293,7 +1293,7 @@
 <div id="toast"></div>
 <script src="js/api.js"></script>
 <script src="js/sidebar-roles.js?v=6"></script>
-<script src="js/product-ui.js?v=8"></script>
+<script src="js/product-ui.js?v=9"></script>
 <script>
   /* ── Sidebar mobile toggle ──────────────────────────────────── */
   function toggleSidebar() {
@@ -1352,6 +1352,7 @@
         document.getElementById('juiz-cat').textContent     = r.categoria || 'Geral';
         document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
         aplicarCompJuiz(r);
+        travarChipComp();
         configurarWorkspaceJuiz(r.categoria || '');
         iniciarSalaProgress(r.categoria || '');
         return;
@@ -1470,13 +1471,7 @@
     document.getElementById('judge-area-value').textContent = cat || 'Categoria atribuída';
   }
 
-  function mostrarPainel(r) {
-    document.getElementById('view-login').style.display  = 'none';
-    document.getElementById('view-painel').style.display = '';
-    document.getElementById('juiz-nome').textContent = r.nome;
-    document.getElementById('juiz-cat').textContent  = r.categoria || 'Geral';
-
-    /* Trava o chip de competição se for juiz com competição fixa */
+  function travarChipComp() {
     var compFixa = localStorage.getItem('hub_comp') || '';
     var isCoord  = !!localStorage.getItem('hub_coord');
     if (compFixa && !isCoord) {
@@ -1485,6 +1480,14 @@
       if (chipEl) { chipEl.style.cursor = 'default'; chipEl.setAttribute('title', 'Competição atribuída ao seu perfil'); }
       if (dropEl) dropEl.remove();
     }
+  }
+
+  function mostrarPainel(r) {
+    document.getElementById('view-login').style.display  = 'none';
+    document.getElementById('view-painel').style.display = '';
+    document.getElementById('juiz-nome').textContent = r.nome;
+    document.getElementById('juiz-cat').textContent  = r.categoria || 'Geral';
+    travarChipComp();
     document.getElementById('juiz-nome-top').textContent = r.nome || 'Juiz';
     document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
     document.getElementById('badge-juiz').textContent = r.nome;
