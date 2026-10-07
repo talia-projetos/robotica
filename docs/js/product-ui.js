@@ -343,6 +343,8 @@
     var topbar = document.querySelector('.topbar');
     if (!topbar || document.querySelector('.comp-sel')) return;
     if (typeof Comp === 'undefined') return;
+    /* Sessão de turma: técnico não troca modalidade */
+    if (localStorage.getItem('turma_id') && !localStorage.getItem('hub_juiz') && !localStorage.getItem('coord_nome')) return;
 
     if (!document.getElementById(COMP_CSS_ID)) {
       var st = document.createElement('style');
