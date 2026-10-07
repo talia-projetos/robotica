@@ -1475,6 +1475,16 @@
     document.getElementById('view-painel').style.display = '';
     document.getElementById('juiz-nome').textContent = r.nome;
     document.getElementById('juiz-cat').textContent  = r.categoria || 'Geral';
+
+    /* Trava o chip de competição se for juiz com competição fixa */
+    var compFixa = localStorage.getItem('hub_comp') || '';
+    var isCoord  = !!localStorage.getItem('hub_coord');
+    if (compFixa && !isCoord) {
+      var chipEl = document.querySelector('.comp-chip');
+      var dropEl = document.querySelector('.comp-drop');
+      if (chipEl) { chipEl.style.cursor = 'default'; chipEl.setAttribute('title', 'Competição atribuída ao seu perfil'); }
+      if (dropEl) dropEl.remove();
+    }
     document.getElementById('juiz-nome-top').textContent = r.nome || 'Juiz';
     document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
     document.getElementById('badge-juiz').textContent = r.nome;
