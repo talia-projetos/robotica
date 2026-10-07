@@ -343,9 +343,6 @@
     var topbar = document.querySelector('.topbar');
     if (!topbar || document.querySelector('.comp-sel')) return;
     if (typeof Comp === 'undefined') return;
-    /* Sessão de turma: técnico não troca modalidade */
-    if (localStorage.getItem('turma_id') && !localStorage.getItem('hub_juiz') && !localStorage.getItem('coord_nome')) return;
-
     if (!document.getElementById(COMP_CSS_ID)) {
       var st = document.createElement('style');
       st.id = COMP_CSS_ID;
@@ -363,10 +360,11 @@
     }
 
     var cur = Comp.val;
-    /* Juiz com competição fixa não pode trocar */
+    /* Juiz com competição fixa ou técnico de turma: chip visível mas sem dropdown */
     var compFixa = localStorage.getItem('hub_comp') || '';
     var isCoord  = !!localStorage.getItem('hub_coord');
-    var travado  = compFixa && !isCoord;
+    var isTurma  = !!localStorage.getItem('turma_id') && !localStorage.getItem('hub_juiz') && !localStorage.getItem('coord_nome');
+    var travado  = (compFixa && !isCoord) || isTurma;
 
     var chip = document.createElement('button');
     chip.type = 'button';
