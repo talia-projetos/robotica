@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
   <title>HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/styles.css?v=11">
@@ -1335,51 +1337,33 @@
   if (Sessao.logado()) verificarSessao();
 
   async function verificarSessao() {
-    var hubCat   = localStorage.getItem('hub_cat')   || '';
-    var hubComp  = localStorage.getItem('hub_comp')  || '';
-    var hubCoord = !!localStorage.getItem('hub_coord');
     var cachedOffline = {
       nome:        Sessao.juiz,
-      categoria:   hubCat,
-      competicao:  hubComp,
-      coordenador: hubCoord
+      categoria:   localStorage.getItem('hub_cat')   || '',
+      competicao:  localStorage.getItem('hub_comp')  || '',
+      coordenador: !!localStorage.getItem('hub_coord')
     };
-    /* Mostra painel imediatamente só quando há dados de categoria em cache.
-       Se hub_cat está vazio (sessão antiga ou primeiro uso), espera a API
-       para evitar mostrar 'Geral' como categoria quando o juiz tem uma atribuída. */
-    var temCache = !!(hubCat || hubCoord);
-    if (temCache) {
-      aplicarCompJuiz(cachedOffline);
-      mostrarPainel(cachedOffline);
-    }
+    aplicarCompJuiz(cachedOffline);
+    mostrarPainel(cachedOffline);
     try {
       const r = await API.verificarJuiz(Sessao.juiz, Sessao.pin);
       if (r.ok) {
         localStorage.setItem('hub_cat',   r.categoria   || '');
         localStorage.setItem('hub_comp',  r.competicao  || '');
         localStorage.setItem('hub_coord', r.coordenador ? '1' : '');
-        if (temCache) {
-          document.getElementById('juiz-cat').textContent     = r.categoria || 'Geral';
-          document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
-          aplicarCompJuiz(r);
-          travarChipComp();
-          configurarWorkspaceJuiz(r.categoria || '');
-          iniciarSalaProgress(r.categoria || '');
-        } else {
-          aplicarCompJuiz(r);
-          mostrarPainel(r);
-        }
+        document.getElementById('juiz-cat').textContent     = r.categoria || 'Geral';
+        document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
+        aplicarCompJuiz(r);
+        travarChipComp();
+        configurarWorkspaceJuiz(r.categoria || '');
+        iniciarSalaProgress(r.categoria || '');
         return;
       }
       Sessao.clear();
       document.getElementById('view-painel').style.display = 'none';
       document.getElementById('view-login').style.display  = '';
     } catch(_) {
-      // erro de rede: se o painel ainda não foi exibido, usa o cache (pode estar vazio)
-      if (!temCache) {
-        aplicarCompJuiz(cachedOffline);
-        mostrarPainel(cachedOffline);
-      }
+      // erro de rede: mantém sessão, juiz continua logado com dados em cache
     }
   }
 
