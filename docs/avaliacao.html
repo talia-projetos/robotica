@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
   <title>Avaliação — HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/styles.css?v=11">
@@ -426,14 +428,61 @@ var RUBRICA_ENGENHARIA = {
   ]
 };
 
-/* ─── Missões OBR — Arena ─────────────────────────────────────── */
+/* ─── Missões OBR — Arena de Resgate ─────────────────────────── */
 var MISSOES_OBR = [
-  { cod:'OBR1', nome:'Ladrilho inicial superado', desc:'O robô ultrapassa completamente o primeiro ladrilho. <strong>0</strong> = não superou. <strong>5</strong> = superou.', opts:[0,5] },
-  { cod:'OBR2', nome:'Lombada',                   desc:'O robô transpõe a lombada sem parar ou sair da pista. <strong>0</strong> = não transpôs. <strong>10</strong> = transpôs.', opts:[0,10] },
-  { cod:'OBR3', nome:'Portal',                    desc:'O robô passa completamente pelo portal sem derrubá-lo. <strong>0</strong> = não passou. <strong>5</strong> = passou.', opts:[0,5] },
-  { cod:'OBR4', nome:'Curva',                     desc:'O robô realiza a curva mantendo-se dentro dos limites da pista. <strong>0</strong> = saiu. <strong>10</strong> = concluiu.', opts:[0,10] },
-  { cod:'OBR5', nome:'Obstáculo',                 desc:'O robô desvia ou supera o obstáculo sem pará-lo ou derrubá-lo inadvertidamente. <strong>0</strong> = não superou. <strong>20</strong> = superou.', opts:[0,20] },
-  { cod:'OBR6', nome:'Gangorra',                  desc:'O robô sobe e desce a gangorra completamente. <strong>0</strong> = não completou. <strong>15</strong> = completou.', opts:[0,15] }
+  {
+    cod:'OBR1', nome:'Ladrilho inicial superado', pts: 5,
+    desc:'O robô ultrapassa completamente o ladrilho de saída. <strong>0</strong> = não superou. <strong>5</strong> = superou.',
+    opts:[0,5],
+    svg:'<line x1="3" y1="50" x2="57" y2="50" stroke="#CBD5E1" stroke-width="1.5"/>'
+      + '<rect x="14" y="42" width="32" height="8" rx="2" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2"/>'
+      + '<line x1="22" y1="42" x2="22" y2="50" stroke="#93C5FD" stroke-width="1.2"/>'
+      + '<line x1="30" y1="42" x2="30" y2="50" stroke="#93C5FD" stroke-width="1.2"/>'
+      + '<line x1="38" y1="42" x2="38" y2="50" stroke="#93C5FD" stroke-width="1.2"/>'
+      + '<path d="M28 14 L28 36 M24 32 L28 36 L32 32" stroke="#3B82F6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>'
+  },
+  {
+    cod:'OBR2', nome:'Lombada', pts: 10,
+    desc:'O robô transpõe a lombada sem parar ou sair da faixa. <strong>0</strong> = não transpôs. <strong>10</strong> = transpôs.',
+    opts:[0,10],
+    svg:'<line x1="3" y1="50" x2="57" y2="50" stroke="#CBD5E1" stroke-width="1.5"/>'
+      + '<path d="M8,50 Q30,24 52,50" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2"/>'
+  },
+  {
+    cod:'OBR3', nome:'Portal', pts: 5,
+    desc:'O robô passa completamente pelo portal sem derrubá-lo. <strong>0</strong> = não passou / derrubou. <strong>5</strong> = passou.',
+    opts:[0,5],
+    svg:'<line x1="3" y1="50" x2="57" y2="50" stroke="#CBD5E1" stroke-width="1.5"/>'
+      + '<rect x="10" y="22" width="8" height="28" rx="2" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2"/>'
+      + '<rect x="42" y="22" width="8" height="28" rx="2" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2"/>'
+      + '<rect x="8" y="17" width="44" height="8" rx="2" fill="#93C5FD" stroke="#3B82F6" stroke-width="2"/>'
+  },
+  {
+    cod:'OBR4', nome:'Curva', pts: 10,
+    desc:'O robô realiza a curva mantendo-se dentro dos limites da faixa. <strong>0</strong> = saiu da faixa. <strong>10</strong> = concluiu.',
+    opts:[0,10],
+    svg:'<path d="M12,52 L12,16 Q12,8 20,8 L52,8" fill="none" stroke="#3B82F6" stroke-width="3" stroke-linecap="round"/>'
+      + '<path d="M46,3 L52,8 L46,13" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+      + '<path d="M20,52 L20,24 Q20,16 28,16 L52,16" fill="none" stroke="#CBD5E1" stroke-width="2.5" stroke-dasharray="5,3" stroke-linecap="round"/>'
+  },
+  {
+    cod:'OBR5', nome:'Obstáculo', pts: 20,
+    desc:'O robô ultrapassa ou contorna o obstáculo sem derrubá-lo. <strong>0</strong> = não superou. <strong>20</strong> = superou.',
+    opts:[0,20],
+    svg:'<line x1="3" y1="50" x2="57" y2="50" stroke="#CBD5E1" stroke-width="1.5"/>'
+      + '<rect x="20" y="24" width="20" height="26" rx="2" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2"/>'
+      + '<line x1="20" y1="32" x2="40" y2="32" stroke="#93C5FD" stroke-width="1.2"/>'
+      + '<line x1="20" y1="40" x2="40" y2="40" stroke="#93C5FD" stroke-width="1.2"/>'
+      + '<line x1="30" y1="24" x2="30" y2="50" stroke="#93C5FD" stroke-width="1.2"/>'
+  },
+  {
+    cod:'OBR6', nome:'Gangorra', pts: 15,
+    desc:'O robô sobe e desce a gangorra completamente, tocando o chão nos dois lados. <strong>0</strong> = não completou. <strong>15</strong> = completou.',
+    opts:[0,15],
+    svg:'<line x1="3" y1="52" x2="57" y2="52" stroke="#CBD5E1" stroke-width="1.5"/>'
+      + '<polygon points="30,52 23,52 30,44 37,52" fill="#E2E8F0" stroke="#475569" stroke-width="1.8"/>'
+      + '<rect x="7" y="40" width="46" height="5" rx="2.5" transform="rotate(10,30,42.5)" fill="#DBEAFE" stroke="#3B82F6" stroke-width="2"/>'
+  }
 ];
 
 /* ─── Dados das rubricas ─────────────────────────────────────── */
@@ -825,7 +874,11 @@ function renderArena() {
   missaoAtual().forEach(function(m) {
     var marcado = MISSAO_NOTAS.hasOwnProperty(m.cod);
     html += '<div class="missao-card">'
-      + (m.img ? '<img class="missao-img" src="' + m.img + '" alt="' + m.cod + '" loading="lazy">' : '<div class="missao-badge"><div class="missao-badge__cod">' + m.cod + '</div></div>')
+      + (m.svg
+          ? '<div class="missao-badge"><svg viewBox="0 0 60 60" width="54" height="54" fill="none" stroke-linecap="round" stroke-linejoin="round">' + m.svg + '</svg></div>'
+          : m.img
+              ? '<img class="missao-img" src="' + m.img + '" alt="' + m.cod + '" loading="lazy">'
+              : '<div class="missao-badge"><div class="missao-badge__cod">' + m.cod + '</div></div>')
       + '<div>'
       + '<div class="missao-nome"><span class="missao-badge__cod-inline">' + m.cod + '</span> ' + m.nome + (marcado ? ' <span style="color:#22C55E;font-size:.7rem;font-weight:700">' + MISSAO_NOTAS[m.cod] + ' pts</span>' : '') + '</div>'
       + '<div class="missao-desc">' + m.desc + '</div>'
