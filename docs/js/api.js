@@ -62,6 +62,9 @@ const API = (function () {
     salvarArena: (juiz, pin, idEquipe, round, missoes, penalidade, arena) =>
       post({ action: 'arena', juiz, pin, idEquipe, round, missoes, penalidade: penalidade || 0, arena: arena || '' }),
 
+    salvarPista: (juiz, pin, idEquipe, corridas) =>
+      post({ action: 'pista', juiz, pin, idEquipe, corridas }),
+
     comentar: (juiz, pin, texto, categoria) =>
       post({ action: 'comentario', juiz, pin, texto, categoria: categoria || '' }),
 

@@ -265,6 +265,68 @@
         font-size: .88rem; border-radius: 8px;
       }
     }
+
+    /* ── Pista Racing ───────────────────────────────────────────── */
+    .corrida-card {
+      background: #fff; border: 1.5px solid #E2E8F0; border-radius: 14px;
+      padding: 1rem 1.1rem; margin-bottom: .65rem;
+    }
+    .corrida-card.invalida { background: #FFF8F8; border-color: #FECACA; }
+    .corrida-head {
+      display: flex; align-items: center; gap: .75rem; margin-bottom: .85rem;
+    }
+    .corrida-num {
+      font-size: .88rem; font-weight: 800; color: #0F172A; flex: 1;
+    }
+    .corrida-raia {
+      display: inline-block; background: #EFF6FF; color: #1D4ED8;
+      border-radius: 6px; padding: .1rem .45rem;
+      font-size: .7rem; font-weight: 800; letter-spacing: .04em; margin-left: .35rem;
+    }
+    .corrida-status {
+      padding: .38rem .65rem; border: 1.5px solid #D9E2EC; border-radius: 8px;
+      font-family: inherit; font-size: .8rem; font-weight: 700; background: #F8FAFC;
+      color: #374151; cursor: pointer;
+    }
+    .corrida-status:focus { outline: none; border-color: #C0392B; }
+    .corrida-tempos {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: .65rem;
+    }
+    .tempo-field label {
+      display: block; font-size: .7rem; font-weight: 700;
+      color: #64748B; margin-bottom: .3rem; text-transform: uppercase; letter-spacing: .04em;
+    }
+    .tempo-input {
+      width: 100%; padding: .55rem .7rem; border: 1.5px solid #D9E2EC; border-radius: 9px;
+      font-family: inherit; font-size: 1rem; font-weight: 700; color: #0F172A;
+      background: #F8FAFC; box-sizing: border-box;
+    }
+    .tempo-input:focus { outline: none; border-color: #C0392B; background: #fff; }
+    .tempo-efetivo {
+      padding: .55rem .7rem; border-radius: 9px;
+      background: #F0FDF4; border: 1.5px solid #BBF7D0;
+      font-size: 1rem; font-weight: 900; color: #15803D;
+      min-height: 42px; display: flex; align-items: center;
+    }
+    .tempo-efetivo.negativo { background: #FFF5F5; border-color: #FED7D7; color: #9B1C1C; }
+    .corrida-invalida {
+      padding: .5rem .75rem; background: #FEF2F2; border-radius: 9px;
+      font-size: .82rem; color: #991B1B; font-weight: 600;
+    }
+    .pista-indicadores {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: .6rem; margin-top: 1rem;
+    }
+    .indicador-item {
+      background: #fff; border: 1px solid #E2E8F0; border-radius: 12px;
+      padding: .75rem 1rem;
+    }
+    .ind-label { font-size: .67rem; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .25rem; }
+    .ind-val   { font-size: 1.05rem; font-weight: 900; color: #0F172A; }
+    @media (max-width: 580px) {
+      .corrida-tempos { grid-template-columns: 1fr 1fr; }
+      .pista-indicadores { grid-template-columns: 1fr 1fr; }
+    }
   </style>
 </head>
 <body class="page-avaliacao">
@@ -630,6 +692,14 @@ var ROUND_SEL    = '';
 var ARENA_SEL    = '';
 var MISSAO_NOTAS = {};
 
+/* ─── Estado Pista Racing ────────────────────────────────────── */
+var PISTA_CORRIDAS = [
+  { raia:'A', num:1, total:'', reacao:'', situacao:'valida' },
+  { raia:'A', num:2, total:'', reacao:'', situacao:'valida' },
+  { raia:'B', num:3, total:'', reacao:'', situacao:'valida' },
+  { raia:'B', num:4, total:'', reacao:'', situacao:'valida' }
+];
+
 /* ─── Estado ─────────────────────────────────────────────────── */
 var CAT  = '';
 var DEF  = null;
@@ -715,7 +785,9 @@ function salvarDraft() {
   if (!CAT) return;
   var equipe = (document.getElementById('sel-equipe') || {}).value || '';
   var draft = { equipe: equipe, ts: Date.now() };
-  if (CAT === 'arena') {
+  if (CAT === 'arena' && Comp.val === 'Steam Racing') {
+    draft.pistaCorridas = PISTA_CORRIDAS;
+  } else if (CAT === 'arena') {
     draft.missaoNotas = MISSAO_NOTAS;
     draft.round = ROUND_SEL;
   } else {
@@ -750,7 +822,10 @@ function restaurarDraft() {
     var sel = document.getElementById('sel-equipe');
     if (sel) { sel.value = d.equipe; sel.dispatchEvent(new Event('change')); }
   }
-  if (CAT === 'arena') {
+  if (CAT === 'arena' && Comp.val === 'Steam Racing') {
+    if (d.pistaCorridas) PISTA_CORRIDAS = d.pistaCorridas;
+    renderPista();
+  } else if (CAT === 'arena') {
     if (d.round) {
       ROUND_SEL = d.round;
       var rs = document.getElementById('sel-round-av');
@@ -826,6 +901,9 @@ function initArena() {
   var isOBR   = comp === 'OBR';
   var isSteam = comp === 'Steam Racing';
   var isFLL   = !isOBR && !isSteam;
+
+  if (isSteam) { initPista(); return; }
+
   var missoes = missaoAtual();
   var maxPts  = isOBR ? 65 : 550;
   var nomeCat = isOBR   ? 'Arena de Resgate'
@@ -895,6 +973,163 @@ function renderArena() {
   wrap.innerHTML = html;
 }
 
+/* ── Pista Racing ────────────────────────────────────────────── */
+function initPista() {
+  var head = document.getElementById('av-head');
+  head.style.background = 'linear-gradient(135deg,#7B0D0D 0%,#C0392B 100%)';
+  document.querySelector('.av-head__cat').textContent = 'Ficha de Tempo';
+  document.getElementById('av-head-nome').textContent = 'Pista Racing';
+  document.getElementById('av-head-pts').textContent  = '4 corridas · 2 por raia';
+
+  document.querySelector('.escala-bar').style.display = 'none';
+  document.querySelector('.obs-grid').style.display   = 'none';
+
+  document.querySelector('.total-bar__label').innerHTML = 'Melhor tempo efetivo';
+  document.getElementById('total-val').textContent = '—';
+  document.getElementById('total-max').textContent = '';
+
+  document.getElementById('btn-enviar').style.background = '#C0392B';
+  document.getElementById('btn-enviar').textContent = 'Registrar tempos';
+
+  document.getElementById('sel-equipe').addEventListener('change', verificarPronto);
+  renderPista();
+  verificarDraft();
+}
+
+function renderPista() {
+  var wrap = document.getElementById('criterios-wrap');
+  var html = '';
+
+  PISTA_CORRIDAS.forEach(function(c, i) {
+    var invalida = c.situacao === 'falsa_largada' || c.situacao === 'dnf';
+    var ef = (!invalida && c.total !== '' && c.reacao !== '')
+      ? (parseFloat(c.total) - parseFloat(c.reacao)) : NaN;
+    var efTxt = isNaN(ef) ? '—' : ef >= 0 ? ef.toFixed(2) : '—';
+    var efNeg = !isNaN(ef) && ef < 0;
+
+    html += '<div class="corrida-card' + (invalida ? ' invalida' : '') + '">'
+      + '<div class="corrida-head">'
+      + '<div class="corrida-num">Corrida ' + c.num + '<span class="corrida-raia">Raia ' + c.raia + '</span></div>'
+      + '<select class="corrida-status" data-idx="' + i + '" onchange="mudarStatusCorrida(this)">'
+      + '<option value="valida"'         + (c.situacao === 'valida'         ? ' selected' : '') + '>Válida</option>'
+      + '<option value="falsa_largada"'  + (c.situacao === 'falsa_largada'  ? ' selected' : '') + '>Falsa Largada</option>'
+      + '<option value="dnf"'            + (c.situacao === 'dnf'            ? ' selected' : '') + '>DNF</option>'
+      + '</select></div>';
+
+    if (invalida) {
+      html += '<div class="corrida-invalida">'
+        + (c.situacao === 'falsa_largada' ? 'Corrida invalidada — falsa largada. Nenhum tempo é atribuído.' : 'DNF — carro não concluiu o percurso.')
+        + '</div>';
+    } else {
+      html += '<div class="corrida-tempos">'
+        + '<div class="tempo-field"><label>Tempo Total (s)</label>'
+        + '<input class="tempo-input" type="number" min="0" step="0.01" placeholder="0.00"'
+        + ' data-idx="' + i + '" data-campo="total" value="' + c.total + '"'
+        + ' oninput="atualizarTempoCorrida(this)"></div>'
+        + '<div class="tempo-field"><label>Tempo de Reação (s)</label>'
+        + '<input class="tempo-input" type="number" min="0" step="0.01" placeholder="0.00"'
+        + ' data-idx="' + i + '" data-campo="reacao" value="' + c.reacao + '"'
+        + ' oninput="atualizarTempoCorrida(this)"></div>'
+        + '<div class="tempo-field"><label>Tempo Efetivo (s)</label>'
+        + '<div class="tempo-efetivo' + (efNeg ? ' negativo' : '') + '" id="ef-' + i + '">' + efTxt + '</div></div>'
+        + '</div>';
+    }
+    html += '</div>';
+  });
+
+  html += '<div class="pista-indicadores">'
+    + '<div class="indicador-item"><div class="ind-label">Melhor Efetivo</div><div class="ind-val" id="ind-melhor-ef">—</div></div>'
+    + '<div class="indicador-item"><div class="ind-label">Melhor Total</div><div class="ind-val" id="ind-melhor-tt">—</div></div>'
+    + '<div class="indicador-item"><div class="ind-label">Média Efetivos</div><div class="ind-val" id="ind-media-ef">—</div></div>'
+    + '<div class="indicador-item"><div class="ind-label">Média Reação</div><div class="ind-val" id="ind-media-rx">—</div></div>'
+    + '<div class="indicador-item"><div class="ind-label">Variação</div><div class="ind-val" id="ind-variacao">—</div></div>'
+    + '<div class="indicador-item"><div class="ind-label">Corridas Válidas</div><div class="ind-val" id="ind-validas">0 / 4</div></div>'
+    + '</div>';
+
+  wrap.innerHTML = html;
+  calcularIndicadores();
+}
+
+function mudarStatusCorrida(sel) {
+  var i = parseInt(sel.dataset.idx);
+  PISTA_CORRIDAS[i].situacao = sel.value;
+  if (sel.value !== 'valida') {
+    PISTA_CORRIDAS[i].total  = '';
+    PISTA_CORRIDAS[i].reacao = '';
+  }
+  renderPista();
+  verificarPronto();
+  salvarDraft();
+}
+
+function atualizarTempoCorrida(inp) {
+  var i = parseInt(inp.dataset.idx);
+  PISTA_CORRIDAS[i][inp.dataset.campo] = inp.value;
+  var c = PISTA_CORRIDAS[i];
+  var ef = (c.total !== '' && c.reacao !== '')
+    ? (parseFloat(c.total) - parseFloat(c.reacao)) : NaN;
+  var efEl = document.getElementById('ef-' + i);
+  if (efEl) {
+    efEl.textContent = isNaN(ef) ? '—' : ef >= 0 ? ef.toFixed(2) : '—';
+    efEl.classList.toggle('negativo', !isNaN(ef) && ef < 0);
+  }
+  calcularIndicadores();
+  verificarPronto();
+  salvarDraft();
+}
+
+function calcularIndicadores() {
+  var efetivos = [], totais = [], reacoes = [];
+  PISTA_CORRIDAS.forEach(function(c) {
+    if (c.situacao === 'valida' && c.total !== '' && c.reacao !== '') {
+      var ef = parseFloat(c.total) - parseFloat(c.reacao);
+      if (ef >= 0) {
+        efetivos.push(ef);
+        totais.push(parseFloat(c.total));
+        reacoes.push(parseFloat(c.reacao));
+      }
+    }
+  });
+  var v = efetivos.length;
+  var s = function(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; };
+  s('ind-melhor-ef', v > 0 ? Math.min.apply(null, efetivos).toFixed(2) + ' s' : '—');
+  s('ind-melhor-tt', totais.length > 0 ? Math.min.apply(null, totais).toFixed(2) + ' s' : '—');
+  s('ind-media-ef',  v > 0 ? (efetivos.reduce(function(a,b){return a+b;},0)/v).toFixed(2) + ' s' : '—');
+  s('ind-media-rx',  reacoes.length > 0 ? (reacoes.reduce(function(a,b){return a+b;},0)/reacoes.length).toFixed(2) + ' s' : '—');
+  if (v >= 2) {
+    var mx = Math.max.apply(null, efetivos), mn = Math.min.apply(null, efetivos);
+    s('ind-variacao', ((mx - mn) / mn * 100).toFixed(1) + '%');
+  } else {
+    s('ind-variacao', '—');
+  }
+  s('ind-validas', v + ' / 4');
+  var tvEl = document.getElementById('total-val');
+  if (tvEl) tvEl.textContent = v > 0 ? Math.min.apply(null, efetivos).toFixed(2) + ' s' : '—';
+}
+
+async function enviarPista() {
+  var equipe = document.getElementById('sel-equipe').value;
+  if (!equipe) return;
+  var btn = document.getElementById('btn-enviar');
+  btn.disabled = true; btn.textContent = 'Enviando…';
+  document.getElementById('spinner').style.display = '';
+  try {
+    var r = await API.salvarPista(Sessao.juiz, Sessao.pin, equipe, PISTA_CORRIDAS);
+    if (!r.ok) throw new Error(r.erro || 'Erro desconhecido');
+    limparDraft();
+    ocultarFormulario();
+    document.getElementById('sucesso-sub').textContent =
+      'Tempos registrados para ' + document.getElementById('sel-equipe').selectedOptions[0].text + '.';
+    document.getElementById('av-sucesso').style.display = 'block';
+  } catch(e) {
+    toast('Erro ao enviar: ' + e.message, 'err');
+    btn.disabled = false; btn.textContent = 'Registrar tempos';
+  } finally {
+    document.getElementById('spinner').style.display = 'none';
+  }
+}
+/* ─────────────────────────────────────────────────────────────── */
+
 function marcarMissao(btn) {
   var cod = btn.dataset.cod;
   var pts = Number(btn.dataset.pts);
@@ -921,6 +1156,17 @@ function verificarPronto() {
   var btn  = document.getElementById('btn-enviar');
   var info = document.getElementById('av-footer-info');
   var equipe = document.getElementById('sel-equipe').value;
+
+  if (CAT === 'arena' && Comp.val === 'Steam Racing') {
+    if (!equipe) { info.textContent = 'Selecione a equipe.'; btn.disabled = true; return; }
+    var temValida = PISTA_CORRIDAS.some(function(c) {
+      return c.situacao === 'valida' && c.total !== '' && c.reacao !== '' &&
+             (parseFloat(c.total) - parseFloat(c.reacao)) >= 0;
+    });
+    if (!temValida) { info.textContent = 'Registre pelo menos uma corrida válida com tempos.'; btn.disabled = true; return; }
+    info.textContent = 'Pronto para registrar.'; btn.disabled = false;
+    return;
+  }
 
   if (CAT === 'arena') {
     var round      = ROUND_SEL;
@@ -962,6 +1208,7 @@ function ocultarFormulario() {
 }
 
 async function enviar() {
+  if (CAT === 'arena' && Comp.val === 'Steam Racing') { await enviarPista(); return; }
   if (CAT === 'arena') { await enviarArena(); return; }
 
   var equipe = document.getElementById('sel-equipe').value;
@@ -1034,7 +1281,20 @@ function novaAvaliacao() {
   document.getElementById('sel-equipe').value = '';
   document.getElementById('total-val').textContent = '0';
 
-  if (CAT === 'arena') {
+  if (CAT === 'arena' && Comp.val === 'Steam Racing') {
+    PISTA_CORRIDAS = [
+      { raia:'A', num:1, total:'', reacao:'', situacao:'valida' },
+      { raia:'A', num:2, total:'', reacao:'', situacao:'valida' },
+      { raia:'B', num:3, total:'', reacao:'', situacao:'valida' },
+      { raia:'B', num:4, total:'', reacao:'', situacao:'valida' }
+    ];
+    document.getElementById('total-val').textContent = '—';
+    ['.eq-selector','#criterios-wrap','.total-bar','.av-footer'].forEach(function(s) {
+      var el = s.startsWith('#') ? document.getElementById(s.slice(1)) : document.querySelector(s);
+      if (el) el.style.display = '';
+    });
+    renderPista();
+  } else if (CAT === 'arena') {
     MISSAO_NOTAS = {};
     ROUND_SEL    = '';
     ARENA_SEL    = '';
