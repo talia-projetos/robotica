@@ -798,12 +798,13 @@ function apiVerificarJuiz_(p) {
   for (var i = 1; i < dados.length; i++) {
     const n = String(dados[i][0] || '').trim().toLowerCase();
     if (n !== nome.toLowerCase()) continue;
-    const p2    = String(dados[i][1] || '').trim();
+    const p2raw = String(dados[i][1] || '').trim();
+    const p2    = p2raw.replace(/^0+/, '') || '0'; // normaliza zeros à esquerda (ex: 219 == 0219)
     const cat   = String(dados[i][2] || '').trim();
     const ativo = dados[i][3] !== false && dados[i][3] !== 'Não';
     const comp  = String(dados[i][4] || '').trim(); // coluna Competição (pode ser vazia)
     if (!ativo) return { ok: false, erro: 'Usuário inativo.' };
-    if (p2 && p2 !== pin) return { ok: false, erro: 'PIN incorreto.' };
+    if (p2 && p2 !== pin.replace(/^0+/, '') && p2raw !== pin) return { ok: false, erro: 'PIN incorreto.' };
     const isCoord = norm_(cat).indexOf('coord') >= 0;
     return { ok: true, nome: dados[i][0], categoria: cat, coordenador: isCoord, competicao: comp };
   }
@@ -1628,16 +1629,52 @@ function apiSalvarRubrica_(body) {
   let aba = ss.getSheetByName(nomeAba);
   if (!aba) {
     aba = ss.insertSheet(nomeAba);
-    const h = ['Carimbo de data/hora','ID_Equipe','Nome do Juiz','Validado'];
+    const h = ['Carimbo de data/hora','Juiz Avaliador','Sala de Avaliação','Selecione a Equipe','Validado'];
     for (let i = 1; i <= cfg.criterios; i++) h.push('Critério ' + i);
     h.push('Bom Trabalho', 'Reflitam');
     aba.getRange(1,1,1,h.length).setValues([h]);
   }
-  const linha = [new Date(), body.idEquipe, body.juiz, 'Sim'];
-  body.notas.forEach(function(n){ linha.push(num_(n)); });
+
+  /* Mapeamento dinâmico por nome de coluna (compatível com Form e aba própria) */
+  const cab   = aba.getRange(1,1,1,aba.getLastColumn()).getValues()[0];
+  const linha = new Array(cab.length).fill('');
+  function set(nomes, val) {
+    const lista = Array.isArray(nomes) ? nomes : [nomes];
+    for (let k = 0; k < lista.length; k++) {
+      const alvo = String(lista[k]).toUpperCase();
+      for (let j = 0; j < cab.length; j++) {
+        if (String(cab[j]).toUpperCase() === alvo ||
+            String(cab[j]).toUpperCase().indexOf(alvo) === 0) {
+          linha[j] = val; return;
+        }
+      }
+    }
+  }
+
+  set(['Carimbo de data/hora','Timestamp'], new Date());
+  set(['Juiz Avaliador','Nome do Juiz','Juiz','Avaliador','E-mail'], body.juiz);
+  set(['Sala de Avaliação','Sala de Avaliacao','Sala'], categoriaReal);
+  set(['Selecione a Equipe','ID_Equipe','Equipe Avaliada','Turma'], body.idEquipe);
+  set(['Validado','Homologado'], 'Sim');
+
+  /* Detecta colunas de critério em ordem (ignora colunas já mapeadas e texto livre) */
+  const IGNORA = ['carimbo','timestamp','juiz','avaliador','sala','equipe','turma',
+                  'id_equipe','validado','homologado','bom trabalho','reflita',
+                  'observa','comentario','e mail','e-mail','email','identificar',
+                  'comunicar','planejar','desenvolver','refletir'];
+  const colsScore = [];
+  cab.forEach(function(h, i) {
+    if (linha[i] !== '' && linha[i] !== 0) return;
+    const hn = norm_(String(h || ''));
+    if (!h || IGNORA.some(function(t) { return hn.indexOf(t) >= 0; })) return;
+    colsScore.push(i);
+  });
+  body.notas.forEach(function(n, i) { if (colsScore[i] !== undefined) linha[colsScore[i]] = num_(n); });
+
   const obs = body.obs || {};
-  linha.push(String(obs.bom || '').trim());
-  linha.push(String(obs.melhorar || '').trim());
+  set(['Bom trabalho!','Bom Trabalho','Bom trabalho'], String(obs.bom || '').trim());
+  set(['Reflitam sobre','Reflitam','Reflita'], String(obs.melhorar || '').trim());
+
   aba.appendRow(linha);
   atualizarInterno_(ss, body.comp);
   return { ok: true, mensagem: 'Rubrica salva.' };

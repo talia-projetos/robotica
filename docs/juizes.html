@@ -1365,10 +1365,11 @@
     }
   }
 
-  /* Aplica competição ao Comp global: coordenação e juízes sem comp = livre */
+  /* Aplica competição ao Comp global: "Geral" ou coordenador sem comp = livre para trocar */
   function aplicarCompJuiz(r) {
+    if (!r.competicao || r.competicao === 'Geral') return;
     if (r.coordenador) return;
-    if (r.competicao) Comp.set(r.competicao);
+    Comp.set(r.competicao);
   }
 
   async function entrar() {
@@ -1420,7 +1421,7 @@
   function configurarWorkspaceJuiz(cat) {
     var key = normalizarCategoriaJuiz(cat);
     var cards = Array.prototype.slice.call(document.querySelectorAll('.form-card[data-cat]'));
-    var isCoord = key === 'coord' || !!localStorage.getItem('coord_nome');
+    var isCoord = key === 'coord' || !!localStorage.getItem('coord_nome') || localStorage.getItem('hub_comp') === 'Geral';
 
     document.body.classList.toggle('is-coordination', isCoord);
 
@@ -1474,7 +1475,7 @@
   function travarChipComp() {
     var compFixa = localStorage.getItem('hub_comp') || '';
     var isCoord  = !!localStorage.getItem('hub_coord');
-    if (compFixa && !isCoord) {
+    if (compFixa && compFixa !== 'Geral' && !isCoord) {
       var chipEl = document.querySelector('.comp-chip');
       var dropEl = document.querySelector('.comp-drop');
       if (chipEl) { chipEl.style.cursor = 'default'; chipEl.setAttribute('title', 'Competição atribuída ao seu perfil'); }

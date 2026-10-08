@@ -359,18 +359,22 @@
       document.head.appendChild(st);
     }
 
-    var cur = Comp.val;
+    var cur      = Comp.val;
     /* Juiz com competição fixa ou técnico de turma: chip visível mas sem dropdown */
-    var compFixa = localStorage.getItem('hub_comp') || '';
-    var isCoord  = !!localStorage.getItem('hub_coord');
-    var isTurma  = !!localStorage.getItem('turma_id') && !localStorage.getItem('hub_juiz') && !localStorage.getItem('coord_nome');
-    var travado  = (compFixa && !isCoord) || isTurma;
+    var compFixa  = localStorage.getItem('hub_comp') || '';
+    var compGeral = compFixa === 'Geral'; // "Geral" = livre para trocar como coordenador
+    var isCoord   = !!localStorage.getItem('hub_coord');
+    var isJuiz    = !!localStorage.getItem('hub_juiz') && !isCoord;
+    var isTurma   = !!localStorage.getItem('turma_id') && !localStorage.getItem('hub_juiz') && !localStorage.getItem('coord_nome');
+    var travado   = (compFixa && !isCoord && !compGeral) || isTurma || (isJuiz && !compGeral);
+    /* Usa hub_comp para exibição quando o juiz tem competição fixa — evita mostrar FLL antes da API responder */
+    var display   = (compFixa && travado) ? compFixa : cur;
 
     var chip = document.createElement('button');
     chip.type = 'button';
     chip.className = 'comp-sel comp-chip';
-    chip.style.background = COMP_COLORS[cur] || '#3979B8';
-    chip.textContent = COMP_LABELS[cur] || cur;
+    chip.style.background = COMP_COLORS[display] || '#3979B8';
+    chip.textContent = COMP_LABELS[display] || display;
     if (travado) {
       chip.style.cursor = 'default';
       chip.setAttribute('title', 'Competição atribuída ao seu perfil');
