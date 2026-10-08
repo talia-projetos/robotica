@@ -363,7 +363,7 @@
     /* Juiz com competição fixa ou técnico de turma: chip visível mas sem dropdown */
     var compFixa  = localStorage.getItem('hub_comp') || '';
     var compGeral = compFixa === 'Geral'; // "Geral" = livre para trocar como coordenador
-    var isCoord   = !!localStorage.getItem('hub_coord');
+    var isCoord   = !!localStorage.getItem('hub_coord') || !!localStorage.getItem('coord_nome');
     var isJuiz    = !!localStorage.getItem('hub_juiz') && !isCoord;
     var isTurma   = !!localStorage.getItem('turma_id') && !localStorage.getItem('hub_juiz') && !localStorage.getItem('coord_nome');
     var travado   = (compFixa && !isCoord && !compGeral) || isTurma || (isJuiz && !compGeral);
@@ -409,7 +409,7 @@
 
     chip.addEventListener('click', function(e) {
       var compNow  = localStorage.getItem('hub_comp') || '';
-      var coordNow = !!localStorage.getItem('hub_coord');
+      var coordNow = !!localStorage.getItem('hub_coord') || !!localStorage.getItem('coord_nome');
       if (compNow && !coordNow) { drop.classList.remove('open'); return; }
       e.stopPropagation();
       var r = chip.getBoundingClientRect();
