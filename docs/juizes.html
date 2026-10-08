@@ -1475,8 +1475,15 @@
   function travarChipComp() {
     var compFixa = localStorage.getItem('hub_comp') || '';
     var isCoord  = !!localStorage.getItem('hub_coord');
+    var chipEl   = document.querySelector('.comp-chip');
+    var LABELS   = { 'FLL': 'FLL', 'OBR': 'OBR', 'Steam Racing': 'SR' };
+    var COLORS   = { 'FLL': '#3979B8', 'OBR': '#00A651', 'Steam Racing': '#C0392B' };
+    /* Atualiza texto e cor do chip para refletir a competição do juiz após login */
+    if (compFixa && compFixa !== 'Geral' && chipEl) {
+      chipEl.textContent       = LABELS[compFixa] || compFixa;
+      chipEl.style.background  = COLORS[compFixa] || '#3979B8';
+    }
     if (compFixa && compFixa !== 'Geral' && !isCoord) {
-      var chipEl = document.querySelector('.comp-chip');
       var dropEl = document.querySelector('.comp-drop');
       if (chipEl) { chipEl.style.cursor = 'default'; chipEl.setAttribute('title', 'Competição atribuída ao seu perfil'); }
       if (dropEl) dropEl.remove();
