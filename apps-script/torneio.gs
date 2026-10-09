@@ -1092,21 +1092,20 @@ function lerTampinhas_(ss, cfg, eqAll, diag, eq) {
     const tara  = num_(r[iTara]);
     const liq   = (r[iLiq] !== '' && r[iLiq] !== null) ? num_(r[iLiq]) : Math.max(0, bruto - tara);
     const destaComp = Boolean(idEq && eqComp.porId[idEq]);  // pertence à comp atual?
-    const ok    = Boolean(idEq && liq >= 0);
 
+    // Linha de outra competição (ou ID não cadastrado): silenciosamente ignorada.
+    // Só reporta erro quando a equipe pertence à comp atual mas os dados estão inconsistentes.
+    if (!destaComp) return;
+
+    const ok = liq >= 0;
     if (!ok) {
-      const motivo = !idEq
-        ? 'ID "' + String(r[iEq] || '').trim() + '" não reconhecido na aba Equipes'
-        : 'peso líquido negativo (' + liq.toFixed(3) + ' kg)';
-      diag.push({ nivel: 'ATENÇÃO', cat: T.CAT.TAMP, msg: 'Pesagem inválida na linha ' + (ri + 2) + ': ' + motivo + '.' });
-    } else if (destaComp) {
+      diag.push({ nivel: 'ATENÇÃO', cat: T.CAT.TAMP, msg: 'Pesagem inválida na linha ' + (ri + 2) + ': peso líquido negativo (' + liq.toFixed(3) + ' kg).' });
+    } else {
       if (!res.porEquipe[idEq]) res.porEquipe[idEq] = { pesoTotal: 0, qtd: 0 };
       res.porEquipe[idEq].pesoTotal += liq;
       res.porEquipe[idEq].qtd++;
     }
-    if (destaComp || !ok) {
-      res.linhas.push({ data: r[iData], idEq: idEq || String(r[iEq] || ''), bruto: bruto, tara: tara, liq: liq, ok: ok && destaComp, linha: ri + 2 });
-    }
+    res.linhas.push({ data: r[iData], idEq: idEq, bruto: bruto, tara: tara, liq: liq, ok: ok, linha: ri + 2 });
   });
 
   Object.keys(res.porEquipe).forEach(function(id) {
