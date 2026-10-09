@@ -1431,6 +1431,34 @@
       .eq-profile__name { font-size: 1rem; }
     }
 
+    /* ── Feed unificado: profile + conteúdo num único card ──────── */
+    .turma-feed {
+      background:#fff;
+      border-radius:14px;
+      border:1px solid #DDE7F0;
+      box-shadow:0 4px 18px rgba(15,23,42,.04);
+      overflow:hidden;
+      margin-bottom:1rem;
+    }
+    /* dentro do feed, o eq-profile perde seu próprio card */
+    .turma-feed .eq-profile {
+      border:none!important;
+      box-shadow:none!important;
+      border-radius:0!important;
+      margin-bottom:0!important;
+      overflow:visible!important;
+    }
+    .turma-feed__content {
+      padding:0 1.25rem 1.5rem;
+      border-top:1px solid #E8EDF2;
+    }
+    .turma-feed .turma-tabs {
+      margin:.15rem 0 .9rem;
+    }
+    .turma-feed .coord-team-picker {
+      margin:-.1rem 0 .75rem!important;
+    }
+
   </style>
 </head>
 <body>
@@ -1515,6 +1543,9 @@
       <button id="btn-sair">Sair</button>
     </div>
 
+    <!-- Feed unificado: profile + abas + conteúdo num único card -->
+    <div class="turma-feed">
+
     <!-- Profile card da equipe -->
     <div class="eq-profile" id="eq-header">
       <div class="eq-profile__banner" id="eq-banner"></div>
@@ -1532,6 +1563,9 @@
         <div class="eq-profile__actions" id="eq-status"></div>
       </div>
     </div>
+
+    <!-- Conteúdo do feed (coord picker inserido aqui via JS, antes das abas) -->
+    <div class="turma-feed__content">
 
     <!-- Abas contextuais -->
     <div class="turma-tabs">
@@ -1662,6 +1696,9 @@
     <div class="ttab-panel" id="ttab-feedback">
       <div id="accordions"></div>
     </div>
+
+    </div><!-- /turma-feed__content -->
+    </div><!-- /turma-feed -->
 
   </div>
 
