@@ -353,15 +353,24 @@
 <nav class="app-sidebar">
   <a href="index.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg> Início</a>
   <a href="arena.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg> Arena</a>
+  <a href="turma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1.5 13.5c0-2.5 2-4 4-4"/><circle cx="11" cy="5.5" r="2"/><path d="M10 13.5c0-2 1.5-3.5 3.5-3.5"/></svg> Minha Turma</a>
   <a href="juizes.html" class="sidebar-item ativo"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11.5" rx="1.5"/><path d="M6 2.5a2 2 0 014 0"/><path d="M5.5 7.5h5M5.5 10.5h3"/></svg> Juízes</a>
+  <a href="coordenacao.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="5" r="2.5"/><path d="M1.5 14c0-2.8 2.2-5 5-5"/><path d="M11.5 2l.55 1.6H13.7l-1.4 1 .55 1.6-1.35-1-1.35 1 .55-1.6-1.4-1h1.65z"/></svg> Coordena&ccedil;&atilde;o</a>
   <div class="sidebar-sep"></div>
-  <a href="rubricas.html" target="_blank" class="sidebar-item">
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="1.5" width="10" height="13" rx="1.5"/><path d="M5.5 5.5h5M5.5 8h3"/></svg> Rubricas PDF
-  </a>
+  <a href="ranking.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13V9M8 13V6M13 13V3"/></svg> Ranking</a>
+  <a href="cronograma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="13" height="10.5" rx="1.5"/><path d="M1.5 7.5h13M5.5 1.5v3M10.5 1.5v3"/></svg> Cronograma</a>
 </nav>
 
 <main class="app-main">
 <div class="av-wrap">
+
+  <!-- Botão voltar -->
+  <div style="margin-bottom:.85rem">
+    <a onclick="history.back()" href="juizes.html" style="display:inline-flex;align-items:center;gap:.38rem;font-size:.78rem;font-weight:700;color:#41556C;text-decoration:none;padding:.38rem .8rem;border:1px solid #D9E4EE;border-radius:8px;background:#fff;cursor:pointer;transition:border-color .14s,color .14s" onmouseover="this.style.borderColor='#93C5FD';this.style.color='#2D6EA7'" onmouseout="this.style.borderColor='#D9E4EE';this.style.color='#41556C'">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12L6 8l4-4"/></svg>
+      Voltar
+    </a>
+  </div>
 
   <!-- Banner de rascunho offline -->
   <div id="draft-banner" style="display:none;background:#FEF3C7;border:1px solid #F59E0B;border-radius:10px;padding:.6rem 1rem;margin-bottom:.75rem;align-items:center;gap:.75rem;font-size:.82rem;font-weight:600;color:#92400E;flex-wrap:wrap">
@@ -444,6 +453,7 @@
 
 <div id="toast"></div>
 <script src="js/api.js"></script>
+<script src="js/sidebar-roles.js?v=6"></script>
 <script>
 
 /* ─── Rubrica de Engenharia — Steam Racing ───────────────────── */
