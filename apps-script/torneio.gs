@@ -629,6 +629,22 @@ function lerConfig_(ss, diag, comp) {
     cfg.abaArena = s('Aba Form Arena Steam',   'FORM_ARENA_STEAM');
     cfg.abaProj  = s('Aba Form Projeto Steam', 'FORM_PROJETO_STEAM');
     cfg.abaDes   = s('Aba Form Design Steam',  'FORM_ENGENHARIA_STEAM');
+    // Migração: valor legado FORM_DESIGN_STEAM → FORM_ENGENHARIA_STEAM
+    if (cfg.abaDes === 'FORM_DESIGN_STEAM') {
+      cfg.abaDes = 'FORM_ENGENHARIA_STEAM';
+      try {
+        var _cfgAba = ss.getSheetByName(T.ABAS.CONFIG);
+        if (_cfgAba) {
+          var _cfgV = _cfgAba.getDataRange().getValues();
+          for (var _ci = 1; _ci < _cfgV.length; _ci++) {
+            if (norm_(_cfgV[_ci][0]) === 'aba form design steam') {
+              _cfgAba.getRange(_ci + 1, 2).setValue('FORM_ENGENHARIA_STEAM');
+              break;
+            }
+          }
+        }
+      } catch(_e) {}
+    }
     cfg.abaCore  = s('Aba Form Core Steam',    'FORM_CORE_STEAM');
     // Steam: arena é pista racing (tempo em ms); maxArena = tempo máximo tolerado (ms)
     cfg.maxArena  = n('Pontuação Máxima Arena Steam', n('Pontuação Máxima Arena', 120000));
