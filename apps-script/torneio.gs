@@ -561,7 +561,7 @@ function atualizarInterno_(ss, comp) {
   const proj   = lerRubrica_(ss, cfg.abaProj,  T.CAT.PROJETO, cfg, eq, diag);
   const desig  = lerRubrica_(ss, cfg.abaDes,   T.CAT.DESIGN,  cfg, eq, diag);
   const core   = lerRubrica_(ss, cfg.abaCore,  T.CAT.CORE,    cfg, eq, diag);
-  const tamp   = lerTampinhas_(ss, cfg, eqAll, diag);
+  const tamp   = lerTampinhas_(ss, cfg, eqAll, diag, eq);
   const dados  = calcularResultados_(eq, arena, [proj, desig, core], tamp, cfg);
 
   escreverBase_(ss, dados, abas);
@@ -1069,7 +1069,9 @@ function lerRubrica_(ss, nomeAba, categoria, cfg, eq, diag) {
 // LEITURA DAS TAMPINHAS
 // ================================================================
 
-function lerTampinhas_(ss, cfg, eq, diag) {
+// eqAll: todas as equipes (para resolver IDs); eq: apenas da competição atual (para ranking/diag)
+function lerTampinhas_(ss, cfg, eqAll, diag, eq) {
+  const eqComp = eq || eqAll;
   const res = { porEquipe: {}, linhas: [] };
   const aba = ss.getSheetByName(T.ABAS.TAMPINHAS);
   if (!aba || aba.getLastRow() < 2) return res;
@@ -1084,25 +1086,28 @@ function lerTampinhas_(ss, cfg, eq, diag) {
 
   dados.slice(1).forEach(function(r, ri) {
     if (r.every(function(v) { return v === ''; })) return;
-    const idEq = resolverEq_(r[iEq], eq);
+    const idEq  = resolverEq_(r[iEq], eqAll);  // resolve contra todas as equipes
     const bruto = num_(r[iBruto]);
     const tara  = num_(r[iTara]);
     const liq   = (r[iLiq] !== '' && r[iLiq] !== null) ? num_(r[iLiq]) : Math.max(0, bruto - tara);
+    const destaComp = Boolean(idEq && eqComp.porId[idEq]);  // pertence à comp atual?
     const ok    = Boolean(idEq && liq >= 0);
 
     if (!ok) {
       diag.push({ nivel: 'ATENÇÃO', cat: T.CAT.TAMP, msg: 'Pesagem inválida na linha ' + (ri + 2) + '.' });
-    } else {
+    } else if (destaComp) {
       if (!res.porEquipe[idEq]) res.porEquipe[idEq] = { pesoTotal: 0, qtd: 0 };
       res.porEquipe[idEq].pesoTotal += liq;
       res.porEquipe[idEq].qtd++;
     }
-    res.linhas.push({ data: r[iData], idEq: idEq || String(r[iEq] || ''), bruto: bruto, tara: tara, liq: liq, ok: ok, linha: ri + 2 });
+    if (destaComp || !ok) {
+      res.linhas.push({ data: r[iData], idEq: idEq || String(r[iEq] || ''), bruto: bruto, tara: tara, liq: liq, ok: ok && destaComp, linha: ri + 2 });
+    }
   });
 
   Object.keys(res.porEquipe).forEach(function(id) {
     const b  = res.porEquipe[id];
-    const e  = eq.porId[id];
+    const e  = eqComp.porId[id];
     const al = e ? e.alunos : 0;
     b.kgAluno = al > 0 ? b.pesoTotal / al : 0;
     b.nota40  = cfg.metaKg > 0 ? Math.min(cfg.maxRub, (b.kgAluno / cfg.metaKg) * cfg.maxRub) : 0;
