@@ -12,10 +12,10 @@
   <style>
     body { background: #F0F4F8; }
 
-    .page-avaliacao .topbar{display:flex;align-items:center;gap:1rem}
+    .page-avaliacao .topbar{display:flex;align-items:center;gap:1rem;min-height:52px!important;padding:.25rem 1rem!important}
+    .page-avaliacao .topbar__brand img{height:36px!important}
     .page-avaliacao .topbar__event{flex:1;display:flex;align-items:center;gap:.65rem;padding:0;text-align:left;min-width:0}
-    .av-event-icon{width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border-radius:8px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
-    .av-event-icon svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .av-event-icon{display:none}
 
     /* ── Contentor ───────────────────────────────────────────── */
     .av-wrap { max-width: 780px; margin: 0 auto; padding: 1.6rem 1.25rem 4rem; }
@@ -452,7 +452,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="js/api.js"></script>
+<script src="js/api.js?v=2"></script>
 <script src="js/sidebar-roles.js?v=6"></script>
 <script>
 
