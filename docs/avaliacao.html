@@ -1406,6 +1406,28 @@ function novaAvaliacao() {
 
   verificarPronto();
 }
+
+/* ── Override crítico: fire-and-forget para submissões de avaliação ── */
+(function() {
+  function _postFF(body) {
+    fetch(window.API_URL, {
+      method: 'POST',
+      redirect: 'manual',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(Object.assign({ comp: Comp.val }, body))
+    }).catch(function() {});
+    return Promise.resolve({ ok: true });
+  }
+  API.salvarRubrica = function(juiz, pin, cat, id, notas, obs) {
+    return _postFF({ action:'rubrica', juiz:juiz, pin:pin, categoria:cat, idEquipe:id, notas:notas, obs:obs||{} });
+  };
+  API.salvarArena = function(juiz, pin, id, round, missoes, pen, arena) {
+    return _postFF({ action:'arena', juiz:juiz, pin:pin, idEquipe:id, round:round, missoes:missoes, penalidade:pen||0, arena:arena||'' });
+  };
+  API.salvarPista = function(juiz, pin, id, corridas) {
+    return _postFF({ action:'pista', juiz:juiz, pin:pin, idEquipe:id, corridas:corridas });
+  };
+})();
 </script>
 </body>
 </html>
