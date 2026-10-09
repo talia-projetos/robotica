@@ -1440,7 +1440,6 @@
       overflow:hidden;
       margin-bottom:1rem;
     }
-    /* dentro do feed, o eq-profile perde seu próprio card */
     .turma-feed .eq-profile {
       border:none!important;
       box-shadow:none!important;
@@ -1452,11 +1451,182 @@
       padding:0 1.25rem 1.5rem;
       border-top:1px solid #E8EDF2;
     }
-    .turma-feed .turma-tabs {
-      margin:.15rem 0 .9rem;
+    .turma-feed .turma-tabs { margin:.15rem 0 .9rem; }
+    .turma-feed .coord-team-picker { margin:-.1rem 0 .75rem!important; }
+
+    /* ── Banner: logo SESI ──────────────────────────────────────── */
+    .eq-profile__banner {
+      position: relative;
     }
-    .turma-feed .coord-team-picker {
-      margin:-.1rem 0 .75rem!important;
+    .eq-banner__sesi {
+      position: absolute;
+      top: 11px;
+      right: 14px;
+      height: 20px;
+      width: auto;
+      opacity: .82;
+      filter: brightness(0) invert(1);
+    }
+
+    /* ── Donut Score Redesign ───────────────────────────────────── */
+    .dscore-wrap { display: flex; flex-direction: column; gap: .6rem; }
+
+    .dscore-total {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: .85rem 1rem;
+      background: linear-gradient(135deg,#FFFDF7 0%,#fff 100%);
+      border: 1px solid #EBE0C0;
+      border-left: 3px solid #CCB650;
+      border-radius: 12px;
+    }
+    .dscore-mini { display: flex; flex-direction: column; gap: .22rem; }
+    .dscore-mini-row {
+      display: grid;
+      grid-template-columns: 90px 1fr 32px;
+      align-items: center;
+      gap: .4rem;
+    }
+    .dscore-mini-name {
+      font-size: .54rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dscore-mini-bar-bg {
+      height: 4px;
+      background: #EEF2F6;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .dscore-mini-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width .5s ease;
+    }
+    .dscore-mini-pts {
+      font-size: .53rem;
+      font-weight: 600;
+      color: #64748B;
+      text-align: right;
+    }
+
+    .dscore-cats {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: .45rem;
+    }
+    .dscore-cat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: .6rem .3rem .7rem;
+      background: #fff;
+      border: 1px solid #EBF0F6;
+      border-top: 3px solid var(--cc, #2F80ED);
+      border-radius: 10px;
+      text-align: center;
+      gap: .1rem;
+    }
+    .dscore-cat__ring { position: relative; }
+    .dscore-cat__label {
+      font-size: .55rem;
+      font-weight: 700;
+      color: #4A5568;
+      line-height: 1.25;
+      margin-top: .18rem;
+      padding: 0 .1rem;
+    }
+    .dscore-cat__score {
+      font-size: .6rem;
+      font-weight: 700;
+      margin-top: .06rem;
+    }
+    .dscore-cat__meta {
+      font-size: .52rem;
+      color: #94A3B8;
+    }
+
+    @media(max-width:700px) {
+      .dscore-total { flex-direction: column; text-align: center; }
+      .dscore-mini-row { grid-template-columns: 70px 1fr 28px; }
+      .dscore-cats { grid-template-columns: repeat(3,1fr); gap: .35rem; }
+    }
+    @media(max-width:440px) {
+      .dscore-cats { grid-template-columns: repeat(2,1fr); }
+    }
+
+    /* ── Metodologia redesign ───────────────────────────────────── */
+    .met-section-title {
+      font-size: .6rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      color: #8A97A7;
+      margin: .5rem 0 .55rem;
+    }
+    .met-card {
+      display: grid;
+      grid-template-columns: 28px 44px minmax(0,1fr) auto;
+      align-items: center;
+      gap: .65rem;
+      min-height: 60px;
+      padding: .6rem .8rem;
+    }
+    .met-card__num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .met-card__icon-col {
+      display: flex;
+      flex-direction: column;
+    }
+    .met-card__badge {
+      display: inline-block;
+      font-size: .52rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .18rem .38rem;
+      border-radius: 4px;
+      margin-bottom: .2rem;
+      white-space: nowrap;
+    }
+    .met-card__pts {
+      margin: 0;
+      text-align: right;
+      white-space: nowrap;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+    .met-card__pts-pct {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #12355B;
+      line-height: 1;
+    }
+    .met-card__pts-label {
+      font-size: .5rem;
+      color: #94A3B8;
+      margin-top: .12rem;
+      letter-spacing: .03em;
+    }
+    @media(max-width:700px) {
+      .met-card { grid-template-columns: 24px 1fr; grid-template-rows: auto auto; gap: .35rem .5rem; }
+      .met-card__icon-col { grid-column: 2; }
+      .met-card__desc { grid-column: 1 / -1; }
+      .met-card__pts { grid-column: 1 / -1; flex-direction: row; align-items: baseline; gap: .3rem; }
     }
 
   </style>
@@ -1548,7 +1718,9 @@
 
     <!-- Profile card da equipe -->
     <div class="eq-profile" id="eq-header">
-      <div class="eq-profile__banner" id="eq-banner"></div>
+      <div class="eq-profile__banner" id="eq-banner">
+        <img src="logo-claro.svg" class="eq-banner__sesi" alt="SESI">
+      </div>
       <div class="eq-profile__body">
         <div class="eq-profile__avatar-wrap">
           <img id="eq-logo" class="eq-profile__avatar" src="" alt="" style="display:none">
@@ -1590,40 +1762,66 @@
 
     <!-- ── ABA: Metodologia ─────────────────────────────────────── -->
     <div class="ttab-panel" id="ttab-metodologia">
-      <div class="met-intro" style="display:block">
-        <div style="font-size:.72rem;color:#66778B;line-height:1.55">O torneio integra Ciência, Tecnologia, Engenharia, Artes e Matemática (STEAM) em desafios que combinam criatividade, raciocínio lógico, programação, pesquisa, colaboração e resolução de problemas.</div>
+      <div style="font-size:.72rem;color:#66778B;line-height:1.55;padding:.6rem .1rem .5rem;border-bottom:1px solid #EEF2F7;margin-bottom:.65rem">
+        O torneio integra Ciência, Tecnologia, Engenharia, Artes e Matemática (STEAM). Cada categoria vale <strong style="color:#12355B">20% da pontuação total</strong>.
       </div>
       <div class="met-grid">
-        <div class="met-card" style="border-top-color:#8E5BD9">
-          <div class="met-card__label" style="color:#8E5BD9">Ciência</div>
-          <div class="met-card__titulo">Projeto de Inovação</div>
+
+        <!-- 1. Projeto -->
+        <div class="met-card" style="border-left-color:#8E5BD9">
+          <div class="met-card__num" style="background:#8E5BD9">1</div>
+          <div class="met-card__icon-col">
+            <span class="met-card__badge" style="background:#F3EEFB;color:#6B35BB">Ciência</span>
+            <div class="met-card__titulo">Projeto de Inovação</div>
+          </div>
           <div class="met-card__desc">A equipe identifica um problema real, pesquisa suas causas e possíveis soluções e apresenta uma proposta inovadora a um painel de juízes.</div>
-          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Média da avaliação</div></div>
+          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Média das avaliações</div></div>
         </div>
-        <div class="met-card" style="border-top-color:#2F80ED">
-          <div class="met-card__label" style="color:#2F80ED">Tecnologia</div>
-          <div class="met-card__titulo">Desafio do Robô</div>
-          <div class="met-card__desc">A equipe programa o robô para executar missões na arena em 2min 30s, aplicando lógica, estratégia e programação. Entre os rounds realizados, vale a maior pontuação alcançada.</div>
+
+        <!-- 2. Arena -->
+        <div class="met-card" style="border-left-color:#2F80ED">
+          <div class="met-card__num" style="background:#2F80ED">2</div>
+          <div class="met-card__icon-col">
+            <span class="met-card__badge" style="background:#EBF4FF;color:#1A5EC4">Tecnologia</span>
+            <div class="met-card__titulo">Desafio do Robô</div>
+          </div>
+          <div class="met-card__desc">A equipe programa o robô para executar missões na arena em 2min 30s. Entre os rounds realizados, vale a maior pontuação alcançada.</div>
           <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Melhor round</div></div>
         </div>
-        <div class="met-card" style="border-top-color:#F2994A">
-          <div class="met-card__label" style="color:#F2994A">Engenharia</div>
-          <div class="met-card__titulo">Design do Robô</div>
-          <div class="met-card__desc">Os juízes avaliam como o robô foi pensado, construído e programado, considerando as escolhas de engenharia, o processo de testes e melhorias e a eficiência da solução desenvolvida.</div>
-          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Média da avaliação</div></div>
+
+        <!-- 3. Design -->
+        <div class="met-card" style="border-left-color:#F2994A">
+          <div class="met-card__num" style="background:#F2994A">3</div>
+          <div class="met-card__icon-col">
+            <span class="met-card__badge" style="background:#FFF4EA;color:#C06A10">Engenharia</span>
+            <div class="met-card__titulo">Design do Robô</div>
+          </div>
+          <div class="met-card__desc">Os juízes avaliam como o robô foi pensado, construído e programado — as escolhas de engenharia, testes e eficiência da solução.</div>
+          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Média das avaliações</div></div>
         </div>
-        <div class="met-card" style="border-top-color:#27AE60">
-          <div class="met-card__label" style="color:#27AE60">Artes</div>
-          <div class="met-card__titulo">Core Values</div>
-          <div class="met-card__desc">Os Core Values representam a essência da FLL, valorizando criatividade, trabalho em equipe, inclusão, respeito, descoberta e diversão. Os juízes observam como a equipe colabora, se organiza e comunica suas ideias.</div>
-          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Média da avaliação</div></div>
+
+        <!-- 4. Core Values -->
+        <div class="met-card" style="border-left-color:#27AE60">
+          <div class="met-card__num" style="background:#27AE60">4</div>
+          <div class="met-card__icon-col">
+            <span class="met-card__badge" style="background:#EAFAF1;color:#1A7A44">Artes</span>
+            <div class="met-card__titulo">Core Values</div>
+          </div>
+          <div class="met-card__desc">Criatividade, trabalho em equipe, inclusão e respeito. Os juízes observam como a equipe colabora, se organiza e comunica suas ideias.</div>
+          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Média das avaliações</div></div>
         </div>
-        <div class="met-card" style="border-top-color:#0D9488">
-          <div class="met-card__label" style="color:#0D9488">Matemática · Bioglow FLL</div>
-          <div class="met-card__titulo">Tampinhas &amp; Latas</div>
-          <div class="met-card__desc">Desafio especial desta edição, inspirado na temporada Bioglow da FIRST LEGO League. A equipe coleta tampinhas plásticas e latas destinadas à reciclagem, unindo responsabilidade socioambiental a um objetivo mensurável. Quanto maior o peso coletado, maior a pontuação.</div>
+
+        <!-- 5. Tampinhas -->
+        <div class="met-card" style="border-left-color:#0D9488">
+          <div class="met-card__num" style="background:#0D9488">5</div>
+          <div class="met-card__icon-col">
+            <span class="met-card__badge" style="background:#E8FAF8;color:#0A6E64">Matemática</span>
+            <div class="met-card__titulo">Tampinhas &amp; Latas</div>
+          </div>
+          <div class="met-card__desc">Inspirado na temporada Bioglow da FLL. A equipe coleta tampinhas e latas para reciclagem — quanto maior o peso por aluno, maior a pontuação.</div>
           <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Por peso coletado</div></div>
         </div>
+
       </div>
     </div>
 
@@ -1770,74 +1968,89 @@
   }
 
   function renderScores(scores) {
+    var grid = document.getElementById('scores-grid');
     if (!scores) {
-      document.getElementById('scores-grid').innerHTML =
-        '<p class="text-sm" style="color:var(--texto-sm)">Resultados ainda não disponíveis.</p>';
+      grid.innerHTML = '<p class="text-sm" style="color:var(--texto-sm)">Resultados ainda não disponíveis.</p>';
       return;
     }
 
-    /* SVG donut: viewBox 140×140, r=58, circunferência = 2π×58 ≈ 364.42 */
-    var C  = 364.42;
-    /* SVG donut total: viewBox 160×160, r=66, circunferência = 2π×66 ≈ 414.69 */
-    var BC = 414.69;
     var _did = 0;
-
-    /* lighter color variants for gradient */
     var LIGHTER = {
-      '#2F80ED':'#56CCF2', '#8E5BD9':'#A78BFA', '#F2994A':'#FBBF24',
-      '#27AE60':'#6FCF97', '#0D9488':'#4DD0E1', '#CCB650':'#F6E05E'
+      '#2F80ED':'#7EC8FF','#8E5BD9':'#C4B5FD','#F2994A':'#FBCA6A',
+      '#27AE60':'#6FCF97','#0D9488':'#5EEAD4','#CCB650':'#F4DC6C'
     };
 
-    function donut(size, r, circ, strokeW, color, pct, valHtml, subHtml) {
+    function mkDonut(size, r, strokeW, color, pct) {
       var cx = size / 2, cy = size / 2;
+      var circ = +(2 * Math.PI * r).toFixed(2);
       var dash = (Math.min(pct, 100) / 100 * circ).toFixed(2);
       var gid  = 'dg' + (++_did);
       var c2   = LIGHTER[color] || color;
-      return '<div class="donut-wrap">'
-        + '<svg viewBox="0 0 ' + size + ' ' + size + '" class="donut-svg" overflow="visible">'
+      return '<svg viewBox="0 0 ' + size + ' ' + size + '" style="display:block;width:' + size + 'px;height:' + size + 'px">'
         + '<defs><linearGradient id="' + gid + '" x1="1" y1="0" x2="0" y2="1">'
         + '<stop offset="0%" stop-color="' + c2 + '"/>'
         + '<stop offset="100%" stop-color="' + color + '"/>'
         + '</linearGradient></defs>'
-        + '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#EAECF4" stroke-width="' + strokeW + '"/>'
+        + '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#EDF1F7" stroke-width="' + strokeW + '"/>'
         + (pct > 0
           ? '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="url(#' + gid + ')" stroke-width="' + strokeW + '" '
           + 'stroke-dasharray="' + dash + ' ' + circ + '" stroke-linecap="round" transform="rotate(-90 ' + cx + ' ' + cy + ')"/>'
           : '')
-        + '</svg>'
-        + '<div class="donut-center">' + valHtml + subHtml + '</div>'
-        + '</div>';
+        + '</svg>';
     }
 
     var total    = Number(scores.total || 0);
-    var totalPct = Math.min(100, (total / 100) * 100);
+    var totalPct = Math.min(100, total);
 
-    var totalCard = '<div class="score-card total-card score-card--donut">'
-      + donut(160, 66, BC, 14, '#CCB650', totalPct,
-          '<div class="donut-val" style="color:#8B7218">' + Math.round(totalPct) + '%</div>',
-          '<div class="donut-sub">' + fmt(total) + ' pts</div>')
-      + '<div class="donut-label">Total Geral</div>'
+    var totalHtml = '<div class="dscore-total">'
+      + '<div style="position:relative;width:96px;height:96px;flex-shrink:0">'
+      + mkDonut(96, 38, 9, '#CCB650', totalPct)
+      + '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">'
+      + '<span style="font-size:1.5rem;font-weight:800;color:#8B7218;line-height:1">' + Math.round(totalPct) + '%</span>'
+      + '<span style="font-size:.52rem;color:#A89030;margin-top:.08rem">' + fmt(total) + ' pts</span>'
+      + '</div>'
+      + '</div>'
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="font-size:.57rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;color:#9B8330;margin-bottom:.15rem">Pontuação Total</div>'
+      + '<div style="font-size:.62rem;color:#7A8796;margin-bottom:.5rem">Desempenho nas 5 categorias do torneio</div>'
+      + '<div class="dscore-mini">'
+      + SCORE_CARDS.map(function(c) {
+          var val  = Number(scores[c.campo] || 0);
+          var pct2 = Math.min(100, (val / c.max) * 100);
+          return '<div class="dscore-mini-row">'
+            + '<span class="dscore-mini-name" style="color:' + c.color + '">' + c.label + '</span>'
+            + '<div class="dscore-mini-bar-bg"><div class="dscore-mini-bar-fill" style="width:' + pct2.toFixed(1) + '%;background:' + c.color + '"></div></div>'
+            + '<span class="dscore-mini-pts">' + fmt(val) + '</span>'
+            + '</div>';
+        }).join('')
+      + '</div>'
+      + '</div>'
       + '</div>';
 
-    var cats = SCORE_CARDS.map(function(c) {
-      var val  = Number(scores[c.campo] || 0);
-      var pct  = Math.min(100, (val / c.max) * 100);
-      var sub  = c.sub(scores);
-      var sem  = !sub;
-      return '<div class="score-card score-card--donut">'
-        + donut(140, 58, C, 13, c.color, sem ? 0 : pct,
-            sem ? '<div class="donut-val donut-val--pending">—</div>'
-                : '<div class="donut-val" style="color:' + c.color + '">' + Math.round(pct) + '%</div>',
-            '<div class="donut-sub">' + (sem ? 'Aguardando' : fmt(val) + ' pts') + '</div>')
-        + '<div class="donut-label">' + c.label + '</div>'
-        + (sub
-          ? '<div class="donut-meta">' + sub + '</div>'
-          : '<div class="donut-meta donut-meta--waiting">Aguardando</div>')
-        + '</div>';
-    });
+    var catsHtml = '<div class="dscore-cats">'
+      + SCORE_CARDS.map(function(c) {
+          var val  = Number(scores[c.campo] || 0);
+          var pct2 = Math.min(100, (val / c.max) * 100);
+          var sub  = c.sub(scores);
+          var sem  = !sub;
+          return '<div class="dscore-cat" style="--cc:' + c.color + '">'
+            + '<div class="dscore-cat__ring" style="position:relative;width:74px;height:74px">'
+            + mkDonut(74, 29, 7, c.color, sem ? 0 : pct2)
+            + '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">'
+            + (sem
+              ? '<span style="font-size:1rem;font-weight:700;color:#CBD5E0">—</span>'
+              : '<span style="font-size:.95rem;font-weight:800;color:' + c.color + ';line-height:1">' + Math.round(pct2) + '%</span>')
+            + '</div></div>'
+            + '<div class="dscore-cat__label">' + c.label + '</div>'
+            + (sem
+              ? '<div class="dscore-cat__meta" style="font-style:italic">Aguardando</div>'
+              : '<div class="dscore-cat__score" style="color:' + c.color + '">' + fmt(val) + ' pts</div>'
+                + '<div class="dscore-cat__meta">' + sub + '</div>')
+            + '</div>';
+        }).join('')
+      + '</div>';
 
-    document.getElementById('scores-grid').innerHTML =
-      totalCard + '<div class="scores-cats-grid">' + cats.join('') + '</div>';
+    grid.innerHTML = '<div class="dscore-wrap">' + totalHtml + catsHtml + '</div>';
   }
 
   function renderComments(comentarios) {
@@ -1960,11 +2173,20 @@
     }).catch(function() {});
 
     var logoFiles = {
+      // FLL — 6° e 7° ano
       TUR01:'TUR01.jpg', TUR02:'TUR02.png', TUR03:'TUR03.png',
-      TUR04:'TUR04.jpg', TUR05:'TUR05.png',
-      TUR06:'TUR06.jpg', TUR07:'TUR07.jpg', TUR08:'TUR08.jpg',
-      TUR09:'TUR09.jpg', TUR10:'TUR10.jpg', TUR11:'TUR11.jpg',
-      TUR12:'TUR12.jpg', TUR13:'TUR13.jpg'
+      TUR04:'TUR04.jpg', TUR05:'TUR05.png', TUR06:'TUR06.jpg',
+      TUR07:'TUR07.jpg', TUR08:'TUR08.jpg', TUR09:'TUR09.jpg',
+      TUR10:'TUR10.jpg', TUR11:'TUR11.jpg', TUR12:'TUR12.jpg',
+      TUR13:'TUR13.jpg',
+      // OBR — 8° ano
+      TUR14:'TUR14.jpg', TUR15:'TUR15.jpg', TUR16:'TUR16.png',
+      TUR17:'TUR17.jpg', TUR18:'TUR18.png', TUR19:'TUR19.jpg',
+      TUR20:'TUR20.png', TUR21:'TUR21.jpg', TUR22:'TUR22.png',
+      // Steam Racing — 9° ano
+      TUR24:'TUR24.png', TUR25:'TUR25.jpg', TUR26:'TUR26.png',
+      TUR27:'TUR27.jpg', TUR28:'TUR28.jpg', TUR29:'TUR29.png',
+      TUR30:'TUR30.png'
     };
 
     atualizarBannerLogo(eq.id, logoFiles[eq.id] || null);
@@ -2032,9 +2254,9 @@
   });
 
   var COMP_GRAD = {
-    'FLL':          'linear-gradient(135deg,#0D3A6E 0%,#1A5EA8 100%)',
-    'OBR':          'linear-gradient(135deg,#0A4024 0%,#196337 100%)',
-    'Steam Racing': 'linear-gradient(135deg,#5E1009 0%,#9B1C0E 100%)'
+    'FLL':          'linear-gradient(135deg,#7EC8FF 0%,#2F80ED 100%)',
+    'OBR':          'linear-gradient(135deg,#6FCF97 0%,#27AE60 100%)',
+    'Steam Racing': 'linear-gradient(135deg,#FF9090 0%,#EB5757 100%)'
   };
 
   function compDaEquipe(id) {
