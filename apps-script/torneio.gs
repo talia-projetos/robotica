@@ -616,16 +616,21 @@ function lerConfig_(ss, diag, comp) {
 
   // Sobrescreve form sheets de acordo com a competição
   const c = normComp_(comp);
+  cfg.compNorm = c;
   if (c === 'OBR') {
     cfg.abaArena = s('Aba Form Arena OBR',   'FORM_ARENA_OBR');
     cfg.abaProj  = s('Aba Form Projeto OBR', 'FORM_PROJETO_OBR');
     cfg.abaDes   = s('Aba Form Design OBR',  'FORM_DESIGN_OBR');
     cfg.abaCore  = s('Aba Form Core OBR',    'FORM_CORE_OBR');
+    cfg.maxArena = n('Pontuação Máxima Arena OBR', 160); // OBR: Perigos = máx 160 pts
   } else if (c === 'Steam Racing') {
     cfg.abaArena = s('Aba Form Arena Steam',   'FORM_ARENA_STEAM');
     cfg.abaProj  = s('Aba Form Projeto Steam', 'FORM_PROJETO_STEAM');
     cfg.abaDes   = s('Aba Form Design Steam',  'FORM_DESIGN_STEAM');
     cfg.abaCore  = s('Aba Form Core Steam',    'FORM_CORE_STEAM');
+    // Steam: arena é pista racing (tempo em ms); maxArena = tempo máximo tolerado (ms)
+    cfg.maxArena  = n('Pontuação Máxima Arena Steam', n('Pontuação Máxima Arena', 120000));
+    cfg.pistaTempo = true; // flag: score = tempo (menor é melhor), invert na normalização
   }
 
   const soma = cfg.pArena + cfg.pProj + cfg.pDes + cfg.pCore + cfg.pTamp;
@@ -909,6 +914,15 @@ function lerArena_(ss, cfg, eq, diag) {
 
   const ignora = {};
   [iEq, iRound, iJuiz, iVal, iPen, iTS].forEach(function(i) { if (i >= 0) ignora[i] = true; });
+
+  // Steam pista: ignorar tempo total e tempo de reação; usar apenas Tempo_Efetivo_ms
+  if (cfg.pistaTempo) {
+    cab.forEach(function(h, i) {
+      const hn = norm_(String(h || ''));
+      if (hn.indexOf('total') >= 0 || hn.indexOf('reacao') >= 0 || hn.indexOf('reação') >= 0) ignora[i] = true;
+    });
+  }
+
   const cMissoes = detectarNumericas_(dados, ignora);
 
   if (!cMissoes.length) {
@@ -948,9 +962,13 @@ function lerArena_(ss, cfg, eq, diag) {
     res.porEquipe[l.idEq].rounds.push(l.round);
   });
 
+  const _isSteamArena = cfg.pistaTempo;
   Object.keys(res.porEquipe).forEach(function(id) {
     const b = res.porEquipe[id];
-    b.melhor   = Math.max.apply(null, b.totais);
+    const validos = b.totais.filter(function(t) { return t > 0; });
+    b.melhor   = _isSteamArena
+      ? (validos.length ? Math.min.apply(null, validos) : 0)  // menor tempo = melhor
+      : Math.max.apply(null, b.totais);                        // maior pts = melhor
     b.qtdRounds = b.totais.length;
   });
 
@@ -1114,7 +1132,10 @@ function calcularResultados_(eq, arena, rubricas, tamp, cfg) {
     const co = getRub(T.CAT.CORE,     e.id);
     const ta = tamp.porEquipe[e.id]   || { pesoTotal: 0, kgAluno: 0, nota40: 0, qtd: 0 };
 
-    const a20 = clamp_((ar.melhor   / cfg.maxArena) * cfg.pArena * 100, 0, cfg.pArena * 100);
+    // Steam pista: tempo menor = melhor → inversão da normalização
+  const a20 = cfg.pistaTempo
+    ? (ar.melhor > 0 ? clamp_((1 - ar.melhor / cfg.maxArena) * cfg.pArena * 100, 0, cfg.pArena * 100) : 0)
+    : clamp_((ar.melhor   / cfg.maxArena) * cfg.pArena * 100, 0, cfg.pArena * 100);
     const p20 = clamp_((pr.media    / cfg.maxRub)   * cfg.pProj  * 100, 0, cfg.pProj  * 100);
     const d20 = clamp_((de.media    / cfg.maxRub)   * cfg.pDes   * 100, 0, cfg.pDes   * 100);
     const c20 = clamp_((co.media    / cfg.maxRub)   * cfg.pCore  * 100, 0, cfg.pCore  * 100);
@@ -1429,6 +1450,7 @@ function doPost(e) {
     switch (body.action) {
       case 'rubrica':    r = apiSalvarRubrica_(body);    break;
       case 'arena':      r = apiSalvarArena_(body);      break;
+      case 'pista':      r = apiSalvarPista_(body);      break;
       case 'comentario': r = apiSalvarComentario_(body); break;
       case 'chat_send':  r = apiChatEnviar_(body);       break;
       case 'voto':       r = apiSalvarVoto_(body);       break;
@@ -1718,6 +1740,39 @@ function apiSalvarArena_(body) {
   aba.appendRow(linha);
   atualizarInterno_(ss, body.comp);
   return { ok: true, mensagem: 'Arena salva.' };
+}
+
+function apiSalvarPista_(body) {
+  const ss  = SpreadsheetApp.getActiveSpreadsheet();
+  const cfg = lerConfig_(ss, [], 'Steam Racing');
+  if (!body.idEquipe || !body.corridas) throw new Error('Campos obrigatórios: idEquipe, corridas.');
+
+  const c        = body.corridas;
+  const situacao = String(c.situacao || 'valida').trim();
+  const invalida = situacao === 'falsa_largada' || situacao === 'dnf';
+  const totalMs  = invalida ? '' : num_(c.total);
+  const reacaoMs = invalida ? '' : num_(c.reacao);
+  const efetivo  = (!invalida && totalMs !== '' && reacaoMs !== '')
+    ? Math.max(0, totalMs - reacaoMs) : '';
+
+  let aba = ss.getSheetByName(cfg.abaArena);
+  if (!aba) {
+    aba = ss.insertSheet(cfg.abaArena);
+    aba.getRange(1,1,1,10).setValues([[
+      'Carimbo_data_hora','ID_Equipe','Corrida','Raia','Árbitro',
+      'Tempo_Total_ms','Tempo_Reacao_ms','Tempo_Efetivo_ms','Situacao','Validado'
+    ]]);
+    aba.setFrozenRows(1);
+  }
+  aba.appendRow([
+    new Date(), body.idEquipe,
+    String(c.id   || ''), String(c.raia || ''),
+    String(body.juiz || ''),
+    totalMs, reacaoMs, efetivo, situacao,
+    invalida ? 'Não' : 'Sim'
+  ]);
+  atualizarInterno_(ss, 'Steam Racing');
+  return { ok: true, mensagem: 'Corrida registrada.' };
 }
 
 function apiSalvarComentario_(body) {

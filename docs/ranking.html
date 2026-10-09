@@ -287,6 +287,15 @@
       if (!r.ok) throw new Error(r.erro);
       dadosEquipes = r.equipes || [];
 
+      if (!dadosEquipes.length) {
+        var re = await API.equipes();
+        if (re && re.ok && re.equipes && re.equipes.length) {
+          dadosEquipes = re.equipes.map(function(e) {
+            return Object.assign({ arena20:0, proj20:0, des20:0, core20:0, tamp20:0, total:0, status:'Sem dados' }, e);
+          });
+        }
+      }
+
       renderGeral(dadosEquipes);
       cfg().secoes.forEach(function(s) {
         renderCategoria('tbody-' + s.id, dadosEquipes, s.campo, { posField: s.posField, qtdField: s.qtdField });

@@ -534,6 +534,28 @@ var MISSOES_OBR = [
   }
 ];
 
+/* ─── Rubrica OBR — Perigos por Desenho ─────────────────────── */
+var PERIGOS_OBR = {
+  A: [
+    { cod:'P1', nome:'Obstáculo Sólido', ptsCada:20, max:4 },
+    { cod:'P2', nome:'Lombada',          ptsCada:10, max:4 },
+    { cod:'P3', nome:'GAP',              ptsCada:10, max:2 },
+    { cod:'P4', nome:'Interseção em T',  ptsCada:10, max:2 }
+  ],
+  B: [
+    { cod:'P1', nome:'Obstáculo Sólido', ptsCada:20, max:3 },
+    { cod:'P2', nome:'Lombada',          ptsCada:10, max:4 },
+    { cod:'P3', nome:'GAP',              ptsCada:10, max:3 },
+    { cod:'P4', nome:'Interseção em T',  ptsCada:10, max:3 }
+  ],
+  C: [
+    { cod:'P1', nome:'Obstáculo Sólido', ptsCada:20, max:5 },
+    { cod:'P2', nome:'Lombada',          ptsCada:10, max:3 },
+    { cod:'P3', nome:'GAP',              ptsCada:10, max:1 },
+    { cod:'P4', nome:'Interseção em T',  ptsCada:10, max:2 }
+  ]
+};
+
 /* ─── Dados das rubricas ─────────────────────────────────────── */
 var RUBRICAS = {
   projeto: {
@@ -676,8 +698,9 @@ var MISSOES = [
 ];
 
 var ROUND_SEL    = '';
-var ARENA_SEL    = '';
+var ARENA_SEL    = '';   // FLL: 'Arena A/B/C' | OBR: 'A'/'B'/'C' (Desenho)
 var MISSAO_NOTAS = {};
+var PERIGO_CONTAS = {};  // OBR: contagem por perigo (antes de multiplicar pts)
 
 /* ─── Estado Pista Racing ────────────────────────────────────── */
 var CORRIDA_SEL  = '';  // 'C1' | 'C2' | 'C3' | 'C4'
@@ -798,6 +821,8 @@ function salvarDraft() {
   } else if (CAT === 'arena') {
     draft.missaoNotas = MISSAO_NOTAS;
     draft.round = ROUND_SEL;
+    draft.arenaSel = ARENA_SEL;
+    if (Comp.val === 'OBR') draft.perigoContas = PERIGO_CONTAS;
   } else {
     draft.notas = NOTAS;
     draft.obs = {
@@ -835,11 +860,17 @@ function restaurarDraft() {
     if (d.corridaDado) CORRIDA_DADO = d.corridaDado;
     renderPista();
   } else if (CAT === 'arena') {
+    if (d.arenaSel) {
+      ARENA_SEL = d.arenaSel;
+      var as2 = document.getElementById('sel-arena-av');
+      if (as2) as2.value = d.arenaSel;
+    }
     if (d.round) {
       ROUND_SEL = d.round;
       var rs = document.getElementById('sel-round-av');
       if (rs) rs.value = d.round;
     }
+    if (Comp.val === 'OBR' && d.perigoContas) PERIGO_CONTAS = d.perigoContas;
     MISSAO_NOTAS = d.missaoNotas || {};
     renderArena();
     document.getElementById('total-val').textContent =
@@ -913,12 +944,14 @@ function initArena() {
 
   if (isSteam) { initPista(); return; }
 
-  var missoes = missaoAtual();
-  var maxPts  = isOBR ? 65 : 550;
+  var missoes = isOBR ? [] : missaoAtual();
+  var maxPts  = isOBR ? 160 : 550;
   var nomeCat = isOBR   ? 'Arena de Resgate'
               : isSteam ? 'Pista Racing'
               :           'Desafio do Robô';
-  var nMiss   = missoes.length + ' missões · máx. ' + maxPts + ' pts';
+  var nMiss   = isOBR
+    ? '4 tipos de perigo · máx. 160 pts'
+    : missoes.length + ' missões · máx. ' + maxPts + ' pts';
   var corBg   = isOBR ? '#1B5E20' : '#0D47A1';
   var corBgDk = isOBR ? '#145218' : '#08306e';
 
@@ -935,12 +968,20 @@ function initArena() {
   document.querySelector('.escala-bar').style.display = 'none';
   document.querySelector('.obs-grid').style.display   = 'none';
 
+  var _primeiroSel = isOBR
+    ? ('<label for="sel-arena-av">Modelo</label>'
+      + '<select id="sel-arena-av" onchange="ARENA_SEL=this.value;PERIGO_CONTAS={};MISSAO_NOTAS={};renderArena();verificarPronto()" style="max-width:140px">'
+      + '<option value="">— Desenho —</option>'
+      + ['A','B','C'].map(function(d){ return '<option value="'+d+'">Desenho '+d+'</option>'; }).join('')
+      + '</select>')
+    : ('<label for="sel-arena-av">Arena</label>'
+      + '<select id="sel-arena-av" onchange="ARENA_SEL=this.value;verificarPronto()" style="max-width:120px">'
+      + '<option value="">—</option>'
+      + ['Arena A','Arena B','Arena C'].map(function(a){ return '<option value="'+a+'">'+a+'</option>'; }).join('')
+      + '</select>');
+
   var seletoresHtml = '<div class="round-selector">'
-    + '<label for="sel-arena-av">Arena</label>'
-    + '<select id="sel-arena-av" onchange="ARENA_SEL=this.value;verificarPronto()" style="max-width:120px">'
-    + '<option value="">—</option>'
-    + ['Arena A','Arena B','Arena C'].map(function(a){ return '<option value="'+a+'">'+a+'</option>'; }).join('')
-    + '</select>'
+    + _primeiroSel
     + '<label for="sel-round-av" style="margin-left:.75rem">Round</label>'
     + '<select id="sel-round-av" onchange="ROUND_SEL=this.value;verificarPronto()">'
     + '<option value="">— Selecione —</option>'
@@ -957,6 +998,33 @@ function initArena() {
 
 function renderArena() {
   var wrap = document.getElementById('criterios-wrap');
+
+  /* ── OBR: contagem de perigos por Desenho ── */
+  if (Comp.val === 'OBR') {
+    if (!ARENA_SEL) {
+      wrap.innerHTML = '<div style="text-align:center;padding:2.5rem 1rem;color:#64748B;font-size:.88rem">Selecione o modelo da arena acima.</div>';
+      return;
+    }
+    var perigos = PERIGOS_OBR[ARENA_SEL] || [];
+    wrap.innerHTML = perigos.map(function(p) {
+      var cnt = PERIGO_CONTAS[p.cod] || 0;
+      return '<div class="missao-card" style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">'
+        + '<div style="flex:1;min-width:120px">'
+        + '<div class="missao-nome">' + p.nome + '</div>'
+        + '<div class="missao-desc">' + p.ptsCada + ' pts cada &middot; m&aacute;x ' + p.max + '</div>'
+        + '</div>'
+        + '<div style="display:flex;align-items:center;gap:.55rem;flex-shrink:0">'
+        + '<button class="missao-opt" style="width:34px;height:34px;font-size:1.15rem;padding:0;line-height:1;border-radius:7px" onclick="mudarPerigo(\'' + p.cod + '\',-1)">&#8722;</button>'
+        + '<span style="min-width:22px;text-align:center;font-weight:800;font-size:1.05rem" id="cnt-' + p.cod + '">' + cnt + '</span>'
+        + '<button class="missao-opt" style="width:34px;height:34px;font-size:1.15rem;padding:0;line-height:1;border-radius:7px" onclick="mudarPerigo(\'' + p.cod + '\',1)">+</button>'
+        + '<span style="min-width:54px;text-align:right;font-size:.82rem;color:var(--texto-sm);font-weight:600" id="pts-' + p.cod + '">' + (cnt * p.ptsCada) + ' pts</span>'
+        + '</div>'
+        + '</div>';
+    }).join('');
+    return;
+  }
+
+  /* ── FLL: missões binárias ── */
   var html = '';
   missaoAtual().forEach(function(m) {
     var marcado = MISSAO_NOTAS.hasOwnProperty(m.cod);
@@ -980,6 +1048,23 @@ function renderArena() {
     html += '</div></div>';
   });
   wrap.innerHTML = html;
+}
+
+function mudarPerigo(cod, delta) {
+  if (!ARENA_SEL) return;
+  var perigo = (PERIGOS_OBR[ARENA_SEL] || []).find(function(p) { return p.cod === cod; });
+  if (!perigo) return;
+  var cnt = Math.max(0, Math.min((PERIGO_CONTAS[cod] || 0) + delta, perigo.max));
+  PERIGO_CONTAS[cod] = cnt;
+  MISSAO_NOTAS[cod]  = cnt * perigo.ptsCada;
+  var cntEl = document.getElementById('cnt-' + cod);
+  var ptsEl = document.getElementById('pts-' + cod);
+  if (cntEl) cntEl.textContent = cnt;
+  if (ptsEl) ptsEl.textContent = (cnt * perigo.ptsCada) + ' pts';
+  var total = Object.values(MISSAO_NOTAS).reduce(function(a,b){return a+b;}, 0);
+  document.getElementById('total-val').textContent = total;
+  verificarPronto();
+  salvarDraft();
 }
 
 /* ── Pista Racing ────────────────────────────────────────────── */
@@ -1152,6 +1237,14 @@ function verificarPronto() {
     return;
   }
 
+  if (CAT === 'arena' && Comp.val === 'OBR') {
+    if (!ARENA_SEL)  { info.textContent = 'Selecione o modelo da arena.'; btn.disabled = true; }
+    else if (!ROUND_SEL) { info.textContent = 'Selecione o round.'; btn.disabled = true; }
+    else if (!equipe)    { info.textContent = 'Selecione a equipe.'; btn.disabled = true; }
+    else { info.textContent = 'Pronto para enviar.'; btn.disabled = false; }
+    return;
+  }
+
   if (CAT === 'arena') {
     var round      = ROUND_SEL;
     var marcadas   = Object.keys(MISSAO_NOTAS).length;
@@ -1233,15 +1326,16 @@ async function enviar() {
 
 async function enviarArena() {
   var equipe = document.getElementById('sel-equipe').value;
-  if (!equipe || !ROUND_SEL || !ARENA_SEL) { toast('Selecione arena, equipe e round.', 'err'); return; }
+  if (!equipe || !ROUND_SEL || !ARENA_SEL) { toast('Selecione modelo/arena, equipe e round.', 'err'); return; }
 
+  var arenaParam = Comp.val === 'OBR' ? 'Desenho ' + ARENA_SEL : ARENA_SEL;
   var total = Object.values(MISSAO_NOTAS).reduce(function(a,b){return a+b;}, 0);
   var btn = document.getElementById('btn-enviar');
   btn.disabled = true; btn.textContent = 'Enviando…';
   document.getElementById('spinner').style.display = '';
 
   try {
-    var r = await API.salvarArena(Sessao.juiz, Sessao.pin, equipe, ROUND_SEL, MISSAO_NOTAS, 0, ARENA_SEL);
+    var r = await API.salvarArena(Sessao.juiz, Sessao.pin, equipe, ROUND_SEL, MISSAO_NOTAS, 0, arenaParam);
     if (!r.ok) throw new Error(r.erro || 'Erro desconhecido');
 
     limparDraft();
