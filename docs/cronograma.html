@@ -1262,7 +1262,209 @@
 <script src="js/sidebar-roles.js?v=6"></script>
 <script src="js/product-ui.js?v=10"></script>
 <script>
-  // ── Utilitários de tempo ────────────────────────────────────
+  // ── Dados estáticos do cronograma (Excel) ───────────────────
+  var COLS = [
+    {s:'08:00',e:'08:30'},{s:'08:30',e:'08:47'},{s:'08:47',e:'09:04'},{s:'09:04',e:'09:21'},
+    {s:'09:21',e:'09:38'},{s:'09:38',e:'09:55'},{s:'09:55',e:'10:12'},{s:'10:12',e:'10:29'},
+    {s:'10:29',e:'10:46'},{s:'10:46',e:'11:03'},{s:'11:03',e:'11:20'},{s:'11:20',e:'11:40'},
+    {s:'11:40',e:'12:00'},{s:'12:00',e:'12:20'}
+  ];
+  // Encoding: 'ab'=abertura, 'sa'/'sb'=sala, 'r1/r2/r3 HH:MM-HH:MM'=round, 'fi'/'pr'/'fe'=fase, ''=vazio
+  var DAYS = {
+    d1:{
+      label:'10/09 · 8° e 9° anos',
+      meta:'OBR (8°) + Steam Racing (9°) · 08:00–12:20 · 19 turmas',
+      groups:[
+        {label:'8° ANO — MODELO OBR', teams:[
+          {id:'8A',tid:'TUR14',tutor:'Juliana',      c:['ab','sa','r1 08:52-08:57','','','r2 09:38-09:43','','','r3 10:29-10:34','','','fi','pr','fe']},
+          {id:'8B',tid:'TUR15',tutor:'Sabrina',      c:['','sb','r1 08:57-09:02','','','r2 09:48-09:53','','','r3 10:39-10:44','','','','','']},
+          {id:'8C',tid:'TUR16',tutor:'Ana Paula S.', c:['','','sa','r1 09:09-09:14','','','r2 10:00-10:05','','','r3 10:51-10:56','','','','']},
+          {id:'8D',tid:'TUR17',tutor:'Ricardo',      c:['','','sb','r1 09:14-09:19','','','r2 10:05-10:10','','','r3 10:56-11:01','','','','']},
+          {id:'8E',tid:'TUR18',tutor:'Rosela',       c:['','r1 08:35-08:40','','sa','r2 09:26-09:31','','','r3 10:17-10:22','','','','','','']},
+          {id:'8F',tid:'TUR19',tutor:'Nadja',        c:['','r1 08:40-08:45','','sb','r2 09:31-09:36','','','r3 10:22-10:27','','','','','','']},
+          {id:'8G',tid:'TUR20',tutor:'Camila',       c:['','','','r1 09:04-09:09','sa','','r2 09:55-10:00','','','r3 10:46-10:51','','','','']},
+          {id:'8H',tid:'TUR21',tutor:'Erick',        c:['','','r1 08:47-08:52','','sb','r2 09:43-09:48','','','r3 10:34-10:39','','','','','']},
+          {id:'8I',tid:'TUR22',tutor:'Bruno',        c:['','r1 08:30-08:35','','','r2 09:21-09:26','sa','','r3 10:12-10:17','','','','','','']}
+        ]},
+        {label:'9° ANO — MODELO STEAM RACING', teams:[
+          {id:'9A',tid:'TUR24',tutor:'Max',          c:['ab','r1 08:40-08:45','','','','r2 09:38-09:43','sa','','r3 10:29-10:34','','','fi','pr','fe']},
+          {id:'9B',tid:'TUR25',tutor:'José G.',      c:['','','r1 08:47-08:52','','','r2 09:43-09:48','sb','','r3 10:39-10:44','','','','','']},
+          {id:'9C',tid:'TUR26',tutor:'Elias',        c:['','','r1 08:57-09:02','','','','r2 09:55-10:00','sa','','r3 10:46-10:51','','','','']},
+          {id:'9D',tid:'TUR27',tutor:'Luciana',      c:['','','','r1 09:14-09:19','','','','sb','r2 10:34-10:39','','r3 11:03-11:08','','','']},
+          {id:'9E',tid:'TUR28',tutor:'Wesley',       c:['','r1 08:35-08:40','','','r2 09:31-09:36','','','r3 10:22-10:27','sa','','','','','']},
+          {id:'9F',tid:'TUR29',tutor:'Marcelo',      c:['','','r1 08:52-08:57','','','r2 09:48-09:53','','','sb','r3 10:51-10:56','','','','']},
+          {id:'9G',tid:'TUR30',tutor:'Anderson',     c:['','','','','r1 09:21-09:26','','','r2 10:12-10:17','','sa','r3 11:13-11:18','','','']},
+          {id:'9H',tid:'TUR31',tutor:'Lucyene',      c:['','','','r1 09:04-09:09','','','r2 10:00-10:05','','','sb','r3 11:08-11:13','','','']},
+          {id:'9I',tid:'TUR32',tutor:'Luciana',      c:['','r1 08:30-08:35','','','r2 09:26-09:31','','','r3 10:17-10:22','','','sa','','','']},
+          {id:'9J',tid:'TUR33',tutor:'Daniel',       c:['','','','r1 09:09-09:14','','','r2 10:05-10:10','','','r3 10:56-11:01','sb','','','']}
+        ]}
+      ]
+    },
+    d2:{
+      label:'11/09 · 6° e 7° anos',
+      meta:'FLL · 08:00–12:20 · 13 turmas',
+      groups:[
+        {label:'6° E 7° ANOS — MODELO FLL', teams:[
+          {id:'6A',tid:'TUR01',tutor:'Éverton',      c:['ab','sa','r1 08:51-08:55','','','r2 09:46-09:50','','','r3 10:41-10:45','','','fi','pr','fe']},
+          {id:'6B',tid:'TUR02',tutor:'Izabela',      c:['','sb','r1 08:55-08:59','','','r2 09:50-09:54','','','','r3 10:46-10:50','','','','']},
+          {id:'6C',tid:'TUR03',tutor:'Patricia',     c:['','','sa','r1 09:08-09:12','','','r2 10:03-10:07','','','r3 10:58-11:02','','','','']},
+          {id:'6D',tid:'TUR04',tutor:'Moaci',        c:['','','sb','r1 09:16-09:20','','','','r2 10:12-10:16','','','r3 11:07-11:11','','','']},
+          {id:'6E',tid:'TUR05',tutor:'Yulo',         c:['','r1 08:34-08:38','','sa','r2 09:25-09:29','','','r3 10:24-10:28','','','','','','']},
+          {id:'7A',tid:'TUR06',tutor:'João',         c:['','r1 08:42-08:46','','sb','r2 09:33-09:37','','','','r3 10:33-10:37','','','','','']},
+          {id:'7B',tid:'TUR07',tutor:'Joseli',       c:['','','','','sa','r1 09:42-09:46','','r2 10:16-10:20','','','r3 11:11-11:15','','','']},
+          {id:'7C',tid:'TUR08',tutor:'Ana Claudia',  c:['','','r1 08:59-09:03','','sb','','r2 09:55-09:59','','','r3 10:50-10:54','','','','']},
+          {id:'7D',tid:'TUR09',tutor:'Diego Lopes',  c:['','r1 08:30-08:34','','','r2 09:21-09:25','sa','','r3 10:20-10:24','','','','','','']},
+          {id:'7E',tid:'TUR10',tutor:'Fabiana',      c:['','','','r1 09:12-09:16','','sb','r2 10:07-10:11','','','','r3 11:03-11:07','','','']},
+          {id:'7F',tid:'TUR11',tutor:'Marilia',      c:['','r1 08:38-08:42','','','r2 09:29-09:33','','sa','','r3 10:29-10:33','','','','','']},
+          {id:'7G',tid:'TUR12',tutor:'Reinalda',     c:['','','r1 08:47-08:51','','','r2 09:38-09:42','sb','','r3 10:37-10:41','','','','','']},
+          {id:'7H',tid:'TUR13',tutor:'Rute',         c:['','','','r1 09:04-09:08','','','r2 09:59-10:03','sa','','r3 10:54-10:58','','','','']}
+        ]}
+      ]
+    }
+  };
+
+  // ── Render de células ───────────────────────────────────────
+  var CELL_CFG = {
+    ab:{bg:'#475569',fg:'#fff',lbl:'Abertura'},
+    sa:{bg:'#1D4ED8',fg:'#fff',lbl:'Sala A · 17 min'},
+    sb:{bg:'#15803D',fg:'#fff',lbl:'Sala B · 17 min'},
+    fi:{bg:'#64748B',fg:'#fff',lbl:'Finais / Apuração'},
+    pr:{bg:'#B45309',fg:'#fff',lbl:'Premiação'},
+    fe:{bg:'#7C3AED',fg:'#fff',lbl:'Festa da Amizade'}
+  };
+  var RND_CFG = {
+    r1:{bg:'#6366F1',fg:'#fff'},
+    r2:{bg:'#0284C7',fg:'#fff'},
+    r3:{bg:'#0369A1',fg:'#fff'}
+  };
+
+  function cellHtml(v) {
+    if (!v) return '<td class="sch-empty"></td>';
+    var key = v.split(' ')[0];
+    var time = v.indexOf(' ')>0 ? v.slice(v.indexOf(' ')+1).replace('-','–') : '';
+    if (CELL_CFG[key]) {
+      var c = CELL_CFG[key];
+      return '<td class="sch-cell" style="background:'+c.bg+';color:'+c.fg+'">'+c.lbl+'</td>';
+    }
+    if (RND_CFG[key]) {
+      var r = RND_CFG[key];
+      var rn = key.replace('r','Round ');
+      return '<td class="sch-cell" style="background:'+r.bg+';color:'+r.fg+'">'
+        +'<span class="sch-rl">'+rn+'</span><span class="sch-rt">'+time+'</span></td>';
+    }
+    return '<td class="sch-empty"></td>';
+  }
+
+  // ── Render principal ────────────────────────────────────────
+  var currentDay = 'd1';
+
+  function renderDay(dayKey) {
+    currentDay = dayKey;
+    var day = DAYS[dayKey];
+    var el = document.getElementById('page-meta-sub');
+    if (el) el.textContent = day.meta;
+    document.querySelectorAll('.day-btn').forEach(function(b){
+      b.classList.toggle('active', b.dataset.day===dayKey);
+    });
+    var h = '<div class="sch-wrap"><table class="sch-table"><thead><tr>'
+      +'<th class="sch-th-team">Turma</th><th class="sch-th-tutor">Tutor</th>';
+    COLS.forEach(function(c){
+      h+='<th class="sch-th-time"><span class="sch-ts">'+c.s+'</span><span class="sch-te">'+c.e+'</span></th>';
+    });
+    h+='</tr></thead><tbody>';
+    day.groups.forEach(function(g){
+      h+='<tr class="sch-group-row"><td colspan="'+(2+COLS.length)+'" class="sch-group-lbl">'+g.label+'</td></tr>';
+      g.teams.forEach(function(t){
+        var srch=(t.id+' '+t.tid+' '+t.tutor).toLowerCase();
+        h+='<tr class="sch-row" data-search="'+srch+'">'
+          +'<td class="sch-team"><span class="sch-tid">'+t.id+'</span><span class="sch-tsub">'+t.tid+'</span></td>'
+          +'<td class="sch-tutor">'+t.tutor+'</td>';
+        t.c.forEach(function(v){ h+=cellHtml(v); });
+        h+='</tr>';
+      });
+    });
+    h+='</tbody></table></div>';
+    document.getElementById('timeline-wrap').innerHTML = buildTimeline(day);
+    document.getElementById('schedule-table').innerHTML = h;
+    document.getElementById('info-cards').innerHTML = '';
+    filtrarBusca();
+  }
+
+  function buildTimeline(day) {
+    return '<div class="tl-label">Visão geral · '+day.label+'</div>'
+      +'<div class="tl-bar">'
+      +'<div class="tl-seg tl-abertura" style="width:11.4%">Abertura</div>'
+      +'<div class="tl-seg tl-aval" style="width:64.9%">Avaliações em Sala (A e B) + Rounds</div>'
+      +'<div class="tl-seg tl-delib" style="width:9.5%">Finais</div>'
+      +'<div class="tl-seg tl-premio" style="width:9.5%">Premiação</div>'
+      +'<div class="tl-seg" style="width:4.7%;background:#7C3AED">Festa</div>'
+      +'</div>'
+      +'<div class="tl-ticks">'
+      +'<span class="tl-tick" style="left:0%">08:00</span>'
+      +'<span class="tl-tick" style="left:11.4%">08:30</span>'
+      +'<span class="tl-tick" style="left:76.3%">11:20</span>'
+      +'<span class="tl-tick" style="left:85.8%">11:40</span>'
+      +'<span class="tl-tick" style="left:100%">12:20</span>'
+      +'</div>';
+  }
+
+  // ── Busca ───────────────────────────────────────────────────
+  function filtrarBusca() {
+    var q=(document.getElementById('search-equipe').value||'').toLowerCase().trim();
+    document.querySelectorAll('#schedule-table .sch-row').forEach(function(row){
+      row.style.display=(!q||(row.dataset.search||'').includes(q))?'':'none';
+    });
+  }
+  document.getElementById('search-equipe').addEventListener('input', filtrarBusca);
+
+  // ── Toolbar: botões de dia ──────────────────────────────────
+  (function(){
+    var lbl=document.getElementById('toolbar-filter-label');
+    if(lbl) lbl.textContent='Data';
+    var fil=document.getElementById('toolbar-filters');
+    if(fil) fil.innerHTML=
+      '<button class="filter-sala day-btn active" data-day="d1" type="button">10/09</button>'
+      +'<button class="filter-sala day-btn" data-day="d2" type="button">11/09</button>';
+    document.querySelectorAll('.day-btn').forEach(function(b){
+      b.addEventListener('click',function(){ renderDay(this.dataset.day); });
+    });
+  })();
+
+  // ── Estilos da grade ────────────────────────────────────────
+  var _s=document.createElement('style');
+  _s.textContent='.sch-wrap{overflow-x:auto;border:1px solid #E1E8F0;border-radius:9px;background:#fff}'
+    +'.sch-table{width:100%;border-collapse:collapse;min-width:920px}'
+    +'.sch-th-team{width:60px;min-width:60px;position:sticky;left:0;z-index:5;background:#F7F9FC}'
+    +'.sch-th-tutor{width:96px;min-width:96px;position:sticky;left:60px;z-index:5;background:#F7F9FC}'
+    +'.sch-th-team,.sch-th-tutor,.sch-th-time{padding:.3rem .35rem;font-size:.5rem;font-weight:800;'
+    +'text-transform:uppercase;letter-spacing:.06em;color:#8A97A7;border-bottom:1.5px solid #E1E8F0;'
+    +'border-right:1px solid #EEF3F9;text-align:center;white-space:nowrap}'
+    +'.sch-th-time{min-width:58px}'
+    +'.sch-ts{display:block;font-size:.54rem;color:#26374B;font-weight:700}'
+    +'.sch-te{display:block;font-size:.46rem;color:#94A3B8}'
+    +'.sch-group-row td{padding:.25rem .7rem;font-size:.55rem;font-weight:800;text-transform:uppercase;'
+    +'letter-spacing:.07em;color:#508FCB;background:#EEF6FF;border-bottom:1.5px solid #D0E7FB}'
+    +'.sch-row:hover{background:#F5F9FF}'
+    +'.sch-row:hover .sch-team,.sch-row:hover .sch-tutor{background:#F5F9FF}'
+    +'.sch-team{padding:.38rem .5rem;position:sticky;left:0;background:#fff;z-index:4;'
+    +'border-right:1.5px solid #E9EEF3;border-bottom:1px solid #EEF3F9;white-space:nowrap}'
+    +'.sch-tid{display:block;font-size:.7rem;font-weight:800;color:#26374B}'
+    +'.sch-tsub{display:block;font-size:.5rem;color:#94A3B8}'
+    +'.sch-tutor{padding:.38rem .5rem;position:sticky;left:60px;background:#fff;z-index:4;'
+    +'border-right:1.5px solid #E9EEF3;border-bottom:1px solid #EEF3F9;'
+    +'font-size:.58rem;color:#64748B;white-space:nowrap}'
+    +'.sch-cell{padding:.32rem .28rem;border-right:1px solid rgba(255,255,255,.2);'
+    +'border-bottom:1px solid #EEF3F9;text-align:center;vertical-align:middle;'
+    +'font-size:.53rem;font-weight:700;line-height:1.28}'
+    +'.sch-empty{border-right:1px solid #EEF3F9;border-bottom:1px solid #EEF3F9}'
+    +'.sch-rl{display:block;font-size:.51rem;font-weight:800;letter-spacing:.02em}'
+    +'.sch-rt{display:block;font-size:.47rem;opacity:.88;margin-top:.04rem}';
+  document.head.appendChild(_s);
+
+  // ── Init ────────────────────────────────────────────────────
+  renderDay('d1');
+
+  // --- stubs para compatibilidade com product-ui.js ---
   function addMin(hhmm, mins) {
     var p = hhmm.split(':');
     var t = parseInt(p[0]) * 60 + parseInt(p[1]) + mins;
@@ -1512,7 +1714,7 @@
     buildToolbar(comp);
   }
 
-  buildPage();
+  // buildPage substituído por renderDay() acima
 </script>
 </body>
 </html>
