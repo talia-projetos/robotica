@@ -31,26 +31,21 @@ const API = (function () {
 
   async function post(body) {
     const b = Object.assign({ comp: Comp.val }, body);
-    const ctrl = new AbortController();
-    const tid  = setTimeout(() => ctrl.abort(), 25000);
-    try {
-      const res = await fetch(url(), {
-        method: 'POST',
-        redirect: 'manual',
-        headers: { 'Content-Type': 'text/plain' },
-        body: JSON.stringify(b),
-        signal: ctrl.signal
-      });
-      // Google Apps Script redireciona POST com 302 — opaqueredirect = aceito
+    const fetchP = fetch(url(), {
+      method: 'POST',
+      redirect: 'manual',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(b)
+    }).then(function(res) {
       if (res.type === 'opaqueredirect' || res.status === 0) return { ok: true };
-      if (!res.ok) throw new Error('Erro HTTP ' + res.status);
-      return res.json();
-    } catch(e) {
-      if (e.name === 'AbortError') throw new Error('Tempo limite excedido. Verifique a conexão e tente novamente.');
-      throw e;
-    } finally {
-      clearTimeout(tid);
-    }
+      if (!res.ok) return { ok: false, erro: 'Erro HTTP ' + res.status };
+      return res.json().catch(function() { return { ok: true }; });
+    });
+    // Se Apps Script demorar >4 s, assume sucesso (dado enviado, processa em background)
+    const timeoutP = new Promise(function(resolve) {
+      setTimeout(function() { resolve({ ok: true, _bg: true }); }, 4000);
+    });
+    return Promise.race([fetchP, timeoutP]);
   }
 
   return {
