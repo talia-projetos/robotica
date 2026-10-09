@@ -693,11 +693,13 @@ var ARENA_SEL    = '';
 var MISSAO_NOTAS = {};
 
 /* ─── Estado Pista Racing ────────────────────────────────────── */
-var PISTA_CORRIDAS = [
-  { raia:'A', num:1, total:'', reacao:'', situacao:'valida' },
-  { raia:'A', num:2, total:'', reacao:'', situacao:'valida' },
-  { raia:'B', num:3, total:'', reacao:'', situacao:'valida' },
-  { raia:'B', num:4, total:'', reacao:'', situacao:'valida' }
+var CORRIDA_SEL  = '';  // 'C1' | 'C2' | 'C3' | 'C4'
+var CORRIDA_DADO = { total: '', reacao: '', situacao: 'valida' };
+var CORRIDAS_DEF = [
+  { id:'C1', label:'Corrida 1 · Raia A', raia:'A', num:1 },
+  { id:'C2', label:'Corrida 2 · Raia A', raia:'A', num:2 },
+  { id:'C3', label:'Corrida 3 · Raia B', raia:'B', num:3 },
+  { id:'C4', label:'Corrida 4 · Raia B', raia:'B', num:4 }
 ];
 
 /* ─── Estado ─────────────────────────────────────────────────── */
@@ -786,7 +788,8 @@ function salvarDraft() {
   var equipe = (document.getElementById('sel-equipe') || {}).value || '';
   var draft = { equipe: equipe, ts: Date.now() };
   if (CAT === 'arena' && Comp.val === 'Steam Racing') {
-    draft.pistaCorridas = PISTA_CORRIDAS;
+    draft.corridaSel  = CORRIDA_SEL;
+    draft.corridaDado = CORRIDA_DADO;
   } else if (CAT === 'arena') {
     draft.missaoNotas = MISSAO_NOTAS;
     draft.round = ROUND_SEL;
@@ -823,7 +826,8 @@ function restaurarDraft() {
     if (sel) { sel.value = d.equipe; sel.dispatchEvent(new Event('change')); }
   }
   if (CAT === 'arena' && Comp.val === 'Steam Racing') {
-    if (d.pistaCorridas) PISTA_CORRIDAS = d.pistaCorridas;
+    if (d.corridaSel)  { CORRIDA_SEL = d.corridaSel; var sc = document.getElementById('sel-corrida-av'); if (sc) sc.value = CORRIDA_SEL; }
+    if (d.corridaDado) CORRIDA_DADO = d.corridaDado;
     renderPista();
   } else if (CAT === 'arena') {
     if (d.round) {
@@ -979,17 +983,28 @@ function initPista() {
   head.style.background = 'linear-gradient(135deg,#7B0D0D 0%,#C0392B 100%)';
   document.querySelector('.av-head__cat').textContent = 'Ficha de Tempo';
   document.getElementById('av-head-nome').textContent = 'Pista Racing';
-  document.getElementById('av-head-pts').textContent  = '4 corridas · 2 por raia';
+  document.getElementById('av-head-pts').textContent  = '1 corrida por vez · 4 no total';
 
   document.querySelector('.escala-bar').style.display = 'none';
   document.querySelector('.obs-grid').style.display   = 'none';
 
-  document.querySelector('.total-bar__label').innerHTML = 'Melhor tempo efetivo';
+  document.querySelector('.total-bar__label').innerHTML = 'Tempo efetivo';
   document.getElementById('total-val').textContent = '—';
   document.getElementById('total-max').textContent = '';
 
   document.getElementById('btn-enviar').style.background = '#C0392B';
-  document.getElementById('btn-enviar').textContent = 'Registrar tempos';
+  document.getElementById('btn-enviar').textContent = 'Registrar corrida';
+
+  /* Seletor de corrida (inserido antes do eq-selector) */
+  var seletorHtml = '<div class="round-selector">'
+    + '<label for="sel-corrida-av">Corrida</label>'
+    + '<select id="sel-corrida-av" onchange="CORRIDA_SEL=this.value;renderPista();verificarPronto()">'
+    + '<option value="">— Selecione —</option>';
+  CORRIDAS_DEF.forEach(function(c) {
+    seletorHtml += '<option value="' + c.id + '">' + c.label + '</option>';
+  });
+  seletorHtml += '</select></div>';
+  document.querySelector('.eq-selector').insertAdjacentHTML('beforebegin', seletorHtml);
 
   document.getElementById('sel-equipe').addEventListener('change', verificarPronto);
   renderPista();
@@ -998,132 +1013,92 @@ function initPista() {
 
 function renderPista() {
   var wrap = document.getElementById('criterios-wrap');
-  var html = '';
+  if (!CORRIDA_SEL) { wrap.innerHTML = ''; return; }
 
-  PISTA_CORRIDAS.forEach(function(c, i) {
-    var invalida = c.situacao === 'falsa_largada' || c.situacao === 'dnf';
-    var ef = (!invalida && c.total !== '' && c.reacao !== '')
-      ? (parseFloat(c.total) - parseFloat(c.reacao)) : NaN;
-    var efTxt = isNaN(ef) ? '—' : ef >= 0 ? ef.toFixed(2) : '—';
-    var efNeg = !isNaN(ef) && ef < 0;
+  var invalida = CORRIDA_DADO.situacao === 'falsa_largada' || CORRIDA_DADO.situacao === 'dnf';
+  var ef = (!invalida && CORRIDA_DADO.total !== '' && CORRIDA_DADO.reacao !== '')
+    ? (parseInt(CORRIDA_DADO.total) - parseInt(CORRIDA_DADO.reacao)) : NaN;
+  var efTxt = isNaN(ef) ? '—' : ef >= 0 ? ef + ' ms' : '—';
+  var efNeg = !isNaN(ef) && ef < 0;
 
-    html += '<div class="corrida-card' + (invalida ? ' invalida' : '') + '">'
-      + '<div class="corrida-head">'
-      + '<div class="corrida-num">Corrida ' + c.num + '<span class="corrida-raia">Raia ' + c.raia + '</span></div>'
-      + '<select class="corrida-status" data-idx="' + i + '" onchange="mudarStatusCorrida(this)">'
-      + '<option value="valida"'         + (c.situacao === 'valida'         ? ' selected' : '') + '>Válida</option>'
-      + '<option value="falsa_largada"'  + (c.situacao === 'falsa_largada'  ? ' selected' : '') + '>Falsa Largada</option>'
-      + '<option value="dnf"'            + (c.situacao === 'dnf'            ? ' selected' : '') + '>DNF</option>'
-      + '</select></div>';
+  var html = '<div class="corrida-card' + (invalida ? ' invalida' : '') + '">'
+    + '<div class="corrida-head">'
+    + '<select class="corrida-status" onchange="mudarStatusPista(this)">'
+    + '<option value="valida"'        + (CORRIDA_DADO.situacao === 'valida'        ? ' selected' : '') + '>Válida</option>'
+    + '<option value="falsa_largada"' + (CORRIDA_DADO.situacao === 'falsa_largada' ? ' selected' : '') + '>Falsa Largada</option>'
+    + '<option value="dnf"'           + (CORRIDA_DADO.situacao === 'dnf'           ? ' selected' : '') + '>DNF</option>'
+    + '</select></div>';
 
-    if (invalida) {
-      html += '<div class="corrida-invalida">'
-        + (c.situacao === 'falsa_largada' ? 'Corrida invalidada — falsa largada. Nenhum tempo é atribuído.' : 'DNF — carro não concluiu o percurso.')
-        + '</div>';
-    } else {
-      html += '<div class="corrida-tempos">'
-        + '<div class="tempo-field"><label>Tempo Total (s)</label>'
-        + '<input class="tempo-input" type="number" min="0" step="0.01" placeholder="0.00"'
-        + ' data-idx="' + i + '" data-campo="total" value="' + c.total + '"'
-        + ' oninput="atualizarTempoCorrida(this)"></div>'
-        + '<div class="tempo-field"><label>Tempo de Reação (s)</label>'
-        + '<input class="tempo-input" type="number" min="0" step="0.01" placeholder="0.00"'
-        + ' data-idx="' + i + '" data-campo="reacao" value="' + c.reacao + '"'
-        + ' oninput="atualizarTempoCorrida(this)"></div>'
-        + '<div class="tempo-field"><label>Tempo Efetivo (s)</label>'
-        + '<div class="tempo-efetivo' + (efNeg ? ' negativo' : '') + '" id="ef-' + i + '">' + efTxt + '</div></div>'
-        + '</div>';
-    }
-    html += '</div>';
-  });
-
-  html += '<div class="pista-indicadores">'
-    + '<div class="indicador-item"><div class="ind-label">Melhor Efetivo</div><div class="ind-val" id="ind-melhor-ef">—</div></div>'
-    + '<div class="indicador-item"><div class="ind-label">Melhor Total</div><div class="ind-val" id="ind-melhor-tt">—</div></div>'
-    + '<div class="indicador-item"><div class="ind-label">Média Efetivos</div><div class="ind-val" id="ind-media-ef">—</div></div>'
-    + '<div class="indicador-item"><div class="ind-label">Média Reação</div><div class="ind-val" id="ind-media-rx">—</div></div>'
-    + '<div class="indicador-item"><div class="ind-label">Variação</div><div class="ind-val" id="ind-variacao">—</div></div>'
-    + '<div class="indicador-item"><div class="ind-label">Corridas Válidas</div><div class="ind-val" id="ind-validas">0 / 4</div></div>'
-    + '</div>';
-
+  if (invalida) {
+    html += '<div class="corrida-invalida">'
+      + (CORRIDA_DADO.situacao === 'falsa_largada'
+          ? 'Corrida invalidada — falsa largada. Nenhum tempo é atribuído.'
+          : 'DNF — carro não concluiu o percurso.')
+      + '</div>';
+  } else {
+    html += '<div class="corrida-tempos">'
+      + '<div class="tempo-field"><label>Tempo Total (ms)</label>'
+      + '<input class="tempo-input" type="number" min="0" step="1" placeholder="0"'
+      + ' data-campo="total" value="' + CORRIDA_DADO.total + '" oninput="atualizarTempoPista(this)"></div>'
+      + '<div class="tempo-field"><label>Tempo de Reação (ms)</label>'
+      + '<input class="tempo-input" type="number" min="0" step="1" placeholder="0"'
+      + ' data-campo="reacao" value="' + CORRIDA_DADO.reacao + '" oninput="atualizarTempoPista(this)"></div>'
+      + '<div class="tempo-field"><label>Tempo Efetivo (ms)</label>'
+      + '<div class="tempo-efetivo' + (efNeg ? ' negativo' : '') + '" id="ef-pista">' + efTxt + '</div></div>'
+      + '</div>';
+  }
+  html += '</div>';
   wrap.innerHTML = html;
-  calcularIndicadores();
+
+  /* Atualiza total-bar */
+  var tvEl = document.getElementById('total-val');
+  if (tvEl) tvEl.textContent = !invalida && !isNaN(ef) && ef >= 0 ? ef + ' ms' : '—';
 }
 
-function mudarStatusCorrida(sel) {
-  var i = parseInt(sel.dataset.idx);
-  PISTA_CORRIDAS[i].situacao = sel.value;
-  if (sel.value !== 'valida') {
-    PISTA_CORRIDAS[i].total  = '';
-    PISTA_CORRIDAS[i].reacao = '';
-  }
+function mudarStatusPista(sel) {
+  CORRIDA_DADO.situacao = sel.value;
+  if (sel.value !== 'valida') { CORRIDA_DADO.total = ''; CORRIDA_DADO.reacao = ''; }
   renderPista();
   verificarPronto();
   salvarDraft();
 }
 
-function atualizarTempoCorrida(inp) {
-  var i = parseInt(inp.dataset.idx);
-  PISTA_CORRIDAS[i][inp.dataset.campo] = inp.value;
-  var c = PISTA_CORRIDAS[i];
-  var ef = (c.total !== '' && c.reacao !== '')
-    ? (parseFloat(c.total) - parseFloat(c.reacao)) : NaN;
-  var efEl = document.getElementById('ef-' + i);
+function atualizarTempoPista(inp) {
+  CORRIDA_DADO[inp.dataset.campo] = inp.value;
+  var ef = (CORRIDA_DADO.total !== '' && CORRIDA_DADO.reacao !== '')
+    ? (parseInt(CORRIDA_DADO.total) - parseInt(CORRIDA_DADO.reacao)) : NaN;
+  var efEl = document.getElementById('ef-pista');
   if (efEl) {
-    efEl.textContent = isNaN(ef) ? '—' : ef >= 0 ? ef.toFixed(2) : '—';
+    efEl.textContent = isNaN(ef) ? '—' : ef >= 0 ? ef + ' ms' : '—';
     efEl.classList.toggle('negativo', !isNaN(ef) && ef < 0);
   }
-  calcularIndicadores();
+  var tvEl = document.getElementById('total-val');
+  if (tvEl) tvEl.textContent = !isNaN(ef) && ef >= 0 ? ef + ' ms' : '—';
   verificarPronto();
   salvarDraft();
 }
 
-function calcularIndicadores() {
-  var efetivos = [], totais = [], reacoes = [];
-  PISTA_CORRIDAS.forEach(function(c) {
-    if (c.situacao === 'valida' && c.total !== '' && c.reacao !== '') {
-      var ef = parseFloat(c.total) - parseFloat(c.reacao);
-      if (ef >= 0) {
-        efetivos.push(ef);
-        totais.push(parseFloat(c.total));
-        reacoes.push(parseFloat(c.reacao));
-      }
-    }
-  });
-  var v = efetivos.length;
-  var s = function(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; };
-  s('ind-melhor-ef', v > 0 ? Math.min.apply(null, efetivos).toFixed(2) + ' s' : '—');
-  s('ind-melhor-tt', totais.length > 0 ? Math.min.apply(null, totais).toFixed(2) + ' s' : '—');
-  s('ind-media-ef',  v > 0 ? (efetivos.reduce(function(a,b){return a+b;},0)/v).toFixed(2) + ' s' : '—');
-  s('ind-media-rx',  reacoes.length > 0 ? (reacoes.reduce(function(a,b){return a+b;},0)/reacoes.length).toFixed(2) + ' s' : '—');
-  if (v >= 2) {
-    var mx = Math.max.apply(null, efetivos), mn = Math.min.apply(null, efetivos);
-    s('ind-variacao', ((mx - mn) / mn * 100).toFixed(1) + '%');
-  } else {
-    s('ind-variacao', '—');
-  }
-  s('ind-validas', v + ' / 4');
-  var tvEl = document.getElementById('total-val');
-  if (tvEl) tvEl.textContent = v > 0 ? Math.min.apply(null, efetivos).toFixed(2) + ' s' : '—';
-}
-
 async function enviarPista() {
   var equipe = document.getElementById('sel-equipe').value;
-  if (!equipe) return;
+  if (!equipe || !CORRIDA_SEL) return;
+  var def = CORRIDAS_DEF.find(function(c) { return c.id === CORRIDA_SEL; });
   var btn = document.getElementById('btn-enviar');
   btn.disabled = true; btn.textContent = 'Enviando…';
   document.getElementById('spinner').style.display = '';
   try {
-    var r = await API.salvarPista(Sessao.juiz, Sessao.pin, equipe, PISTA_CORRIDAS);
+    var payload = Object.assign({ raia: def.raia, num: def.num, id: CORRIDA_SEL }, CORRIDA_DADO);
+    var r = await API.salvarPista(Sessao.juiz, Sessao.pin, equipe, payload);
     if (!r.ok) throw new Error(r.erro || 'Erro desconhecido');
     limparDraft();
     ocultarFormulario();
+    var efetivo = (CORRIDA_DADO.situacao === 'valida' && CORRIDA_DADO.total !== '' && CORRIDA_DADO.reacao !== '')
+      ? ' · efetivo: ' + (parseInt(CORRIDA_DADO.total) - parseInt(CORRIDA_DADO.reacao)) + ' ms' : '';
     document.getElementById('sucesso-sub').textContent =
-      'Tempos registrados para ' + document.getElementById('sel-equipe').selectedOptions[0].text + '.';
+      def.label + efetivo + ' · ' + document.getElementById('sel-equipe').selectedOptions[0].text + '.';
     document.getElementById('av-sucesso').style.display = 'block';
   } catch(e) {
     toast('Erro ao enviar: ' + e.message, 'err');
-    btn.disabled = false; btn.textContent = 'Registrar tempos';
+    btn.disabled = false; btn.textContent = 'Registrar corrida';
   } finally {
     document.getElementById('spinner').style.display = 'none';
   }
@@ -1158,12 +1133,16 @@ function verificarPronto() {
   var equipe = document.getElementById('sel-equipe').value;
 
   if (CAT === 'arena' && Comp.val === 'Steam Racing') {
-    if (!equipe) { info.textContent = 'Selecione a equipe.'; btn.disabled = true; return; }
-    var temValida = PISTA_CORRIDAS.some(function(c) {
-      return c.situacao === 'valida' && c.total !== '' && c.reacao !== '' &&
-             (parseFloat(c.total) - parseFloat(c.reacao)) >= 0;
-    });
-    if (!temValida) { info.textContent = 'Registre pelo menos uma corrida válida com tempos.'; btn.disabled = true; return; }
+    if (!equipe)        { info.textContent = 'Selecione a equipe.'; btn.disabled = true; return; }
+    if (!CORRIDA_SEL)   { info.textContent = 'Selecione a corrida.'; btn.disabled = true; return; }
+    var inv = CORRIDA_DADO.situacao === 'falsa_largada' || CORRIDA_DADO.situacao === 'dnf';
+    if (!inv && (CORRIDA_DADO.total === '' || CORRIDA_DADO.reacao === '')) {
+      info.textContent = 'Preencha o tempo total e o tempo de reação.'; btn.disabled = true; return;
+    }
+    if (!inv) {
+      var ef = parseInt(CORRIDA_DADO.total) - parseInt(CORRIDA_DADO.reacao);
+      if (ef < 0) { info.textContent = 'Tempo de reação maior que o tempo total.'; btn.disabled = true; return; }
+    }
     info.textContent = 'Pronto para registrar.'; btn.disabled = false;
     return;
   }
@@ -1282,14 +1261,11 @@ function novaAvaliacao() {
   document.getElementById('total-val').textContent = '0';
 
   if (CAT === 'arena' && Comp.val === 'Steam Racing') {
-    PISTA_CORRIDAS = [
-      { raia:'A', num:1, total:'', reacao:'', situacao:'valida' },
-      { raia:'A', num:2, total:'', reacao:'', situacao:'valida' },
-      { raia:'B', num:3, total:'', reacao:'', situacao:'valida' },
-      { raia:'B', num:4, total:'', reacao:'', situacao:'valida' }
-    ];
+    CORRIDA_SEL  = '';
+    CORRIDA_DADO = { total: '', reacao: '', situacao: 'valida' };
     document.getElementById('total-val').textContent = '—';
-    ['.eq-selector','#criterios-wrap','.total-bar','.av-footer'].forEach(function(s) {
+    var sc = document.getElementById('sel-corrida-av'); if (sc) sc.value = '';
+    ['.round-selector','.eq-selector','#criterios-wrap','.total-bar','.av-footer'].forEach(function(s) {
       var el = s.startsWith('#') ? document.getElementById(s.slice(1)) : document.querySelector(s);
       if (el) el.style.display = '';
     });
