@@ -647,7 +647,8 @@ function lerConfig_(ss, diag, comp) {
     }
     cfg.abaCore  = s('Aba Form Core Steam',    'FORM_CORE_STEAM');
     // Steam: arena é pista racing (tempo em ms); maxArena = tempo máximo tolerado (ms)
-    cfg.maxArena  = n('Pontuação Máxima Arena Steam', n('Pontuação Máxima Arena', 120000));
+    // Não herdar o maxArena do FLL (550 pts): fallback fixo de 120 000 ms (~2 min)
+    cfg.maxArena  = n('Pontuação Máxima Arena Steam', 120000);
     cfg.pistaTempo = true; // flag: score = tempo (menor é melhor), invert na normalização
   }
 
@@ -919,7 +920,7 @@ function lerArena_(ss, cfg, eq, diag) {
   const dados = aba.getDataRange().getValues();
   const cab   = dados[0];
   const iEq   = achaCab_(cab, ['id equipe','id_equipe','equipe','turma'], -1);
-  const iRound= achaCab_(cab, ['round','rodada','partida','tentativa'], -1);
+  const iRound= achaCab_(cab, ['round','rodada','partida','tentativa','corrida'], -1);
   const iJuiz = achaCab_(cab, ['arbitro','árbitro','juiz','avaliador','email'], -1);
   const iVal  = achaCab_(cab, ['validado','valida','homologado'], -1);
   const iPen  = achaCab_(cab, ['penalidade','penalidades','penalty'], -1);
