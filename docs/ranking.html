@@ -142,22 +142,28 @@
     },
     'OBR': {
       geralCols: [
-        { label: 'Arena', campo: 'arena20' }
+        { label: 'Arena',   campo: 'arena20' },
+        { label: 'Projeto', campo: 'proj20'  },
+        { label: 'Core',    campo: 'core20'  }
       ],
       secoes: [
-        { id: 'arena', titulo: 'Arena de Resgate', cor: 'var(--verde)', campo: 'arena20', posField: 'Arena', qtdField: 'arenaRounds', qtdLabel: 'Rounds' }
+        { id: 'arena',   titulo: 'Arena de Resgate',    cor: 'var(--verde)', campo: 'arena20', posField: 'Arena', qtdField: 'arenaRounds', qtdLabel: 'Rounds'  },
+        { id: 'projeto', titulo: 'Projeto de Inovação', cor: 'var(--roxo)',  campo: 'proj20',  posField: 'Proj',  qtdField: 'projJuizes',  qtdLabel: 'Juízes'  },
+        { id: 'core',    titulo: 'Core Values',         cor: 'var(--verde)', campo: 'core20',  posField: 'Core',  qtdField: 'coreJuizes',  qtdLabel: 'Juízes'  }
       ]
     },
     'Steam Racing': {
       geralCols: [
         { label: 'Pista',      campo: 'arena20' },
         { label: 'Engenharia', campo: 'des20'   },
+        { label: 'Projeto',    campo: 'proj20'  },
         { label: 'Core',       campo: 'core20'  }
       ],
       secoes: [
-        { id: 'arena',  titulo: 'Pista Racing',          cor: '#C0392B',       campo: 'arena20', posField: 'Arena', qtdField: 'arenaRounds', qtdLabel: 'Corridas' },
-        { id: 'design', titulo: 'Projeto de Engenharia', cor: '#C84B00',       campo: 'des20',   posField: 'Des',   qtdField: 'desJuizes',   qtdLabel: 'Juízes'   },
-        { id: 'core',   titulo: 'Core Values',           cor: 'var(--verde)',  campo: 'core20',  posField: 'Core',  qtdField: 'coreJuizes',  qtdLabel: 'Juízes'   }
+        { id: 'arena',   titulo: 'Pista Racing',          cor: '#C0392B',      campo: 'arena20', posField: 'Arena', qtdField: 'arenaRounds', qtdLabel: 'Corridas' },
+        { id: 'design',  titulo: 'Projeto de Engenharia', cor: '#C84B00',      campo: 'des20',   posField: 'Des',   qtdField: 'desJuizes',   qtdLabel: 'Juízes'   },
+        { id: 'projeto', titulo: 'Projeto de Inovação',   cor: 'var(--roxo)',  campo: 'proj20',  posField: 'Proj',  qtdField: 'projJuizes',  qtdLabel: 'Juízes'   },
+        { id: 'core',    titulo: 'Core Values',           cor: 'var(--verde)', campo: 'core20',  posField: 'Core',  qtdField: 'coreJuizes',  qtdLabel: 'Juízes'   }
       ]
     }
   };
