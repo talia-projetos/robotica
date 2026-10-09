@@ -1682,8 +1682,7 @@ function apiSalvarRubrica_(body) {
   /* Detecta colunas de critério em ordem (ignora colunas já mapeadas e texto livre) */
   const IGNORA = ['carimbo','timestamp','juiz','avaliador','sala','equipe','turma',
                   'id_equipe','validado','homologado','bom trabalho','reflita',
-                  'observa','comentario','e mail','e-mail','email','identificar',
-                  'comunicar','planejar','desenvolver','refletir'];
+                  'observa','comentario','e mail','e-mail','email'];
   const colsScore = [];
   cab.forEach(function(h, i) {
     if (linha[i] !== '' && linha[i] !== 0) return;
@@ -1875,7 +1874,8 @@ function detectarRubrica_(dados, exib, ignora, esperados) {
     if (
       /^(p|d|cv|c|criterio)\s*0?\d+/.test(h) ||
       /^avaliacao[\s\[]/.test(h) ||
-      /^avalia[cç][aã]o[\s\[]/.test(hRaw)
+      /^avalia[cç][aã]o[\s\[]/.test(hRaw) ||
+      /^(identificar|comunicar|planejar|desenvolver|refletir|avaliar)[\s\[]/.test(h)
     ) { por_codigo.push(c); continue; }
     let prench = 0, validos = 0;
     for (let r = 1; r < lim; r++) {
