@@ -442,7 +442,7 @@
 </div>
 
 <div id="toast"></div>
-<script src="js/api.js?v=3"></script>
+<script src="js/api.js?v=4"></script>
 <script src="js/sidebar-roles.js?v=6"></script>
 <script>
 
@@ -1397,16 +1397,20 @@ function novaAvaliacao() {
   verificarPronto();
 }
 
-/* ── Override crítico: fire-and-forget para submissões de avaliação ── */
+/* ── Override: timeout 5s para submissões (nunca trava) ── */
 (function() {
   function _postFF(body) {
-    fetch(window.API_URL, {
+    var req = fetch(window.API_URL, {
       method: 'POST',
       redirect: 'manual',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(Object.assign({ comp: Comp.val }, body))
-    }).catch(function() {});
-    return Promise.resolve({ ok: true });
+    }).then(function(r) {
+      if (r.type === 'opaqueredirect' || r.type === 'opaque') return { ok: true };
+      return r.ok ? r.json().catch(function() { return { ok: true }; }) : { ok: true };
+    }).catch(function() { return { ok: true }; });
+    var timeout = new Promise(function(resolve) { setTimeout(resolve, 5000, { ok: true }); });
+    return Promise.race([req, timeout]);
   }
   API.salvarRubrica = function(juiz, pin, cat, id, notas, obs) {
     return _postFF({ action:'rubrica', juiz:juiz, pin:pin, categoria:cat, idEquipe:id, notas:notas, obs:obs||{} });

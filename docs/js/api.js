@@ -31,14 +31,17 @@ const API = (function () {
 
   function post(body) {
     const b = Object.assign({ comp: Comp.val }, body);
-    // Fire-and-forget: envia sem aguardar — Apps Script processa no servidor em background
-    fetch(url(), {
+    const req = fetch(url(), {
       method: 'POST',
       redirect: 'manual',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(b)
-    }).catch(function() {});
-    return Promise.resolve({ ok: true });
+    }).then(function(r) {
+      if (r.type === 'opaqueredirect' || r.type === 'opaque') return { ok: true };
+      return r.ok ? r.json().catch(function() { return { ok: true }; }) : { ok: true };
+    }).catch(function() { return { ok: true }; });
+    const timeout = new Promise(function(resolve) { setTimeout(resolve, 5000, { ok: true }); });
+    return Promise.race([req, timeout]);
   }
 
   return {

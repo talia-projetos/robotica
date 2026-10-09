@@ -1697,7 +1697,6 @@ function apiSalvarRubrica_(body) {
   set(['Reflitam sobre','Reflitam','Reflita'], String(obs.melhorar || '').trim());
 
   aba.appendRow(linha);
-  SpreadsheetApp.flush();
   _agendarRecalculo_();
   return { ok: true, mensagem: 'Rubrica salva.' };
 }
@@ -1738,7 +1737,6 @@ function apiSalvarArena_(body) {
   set('Validado', 'Sim');
   Object.keys(body.missoes).forEach(function(m){ set(m, num_(body.missoes[m])); });
   aba.appendRow(linha);
-  SpreadsheetApp.flush();
   _agendarRecalculo_();
   return { ok: true, mensagem: 'Arena salva.' };
 }
@@ -1772,7 +1770,6 @@ function apiSalvarPista_(body) {
     totalMs, reacaoMs, efetivo, situacao,
     invalida ? 'Não' : 'Sim'
   ]);
-  SpreadsheetApp.flush();
   _agendarRecalculo_();
   return { ok: true, mensagem: 'Corrida registrada.' };
 }
