@@ -1095,7 +1095,10 @@ function lerTampinhas_(ss, cfg, eqAll, diag, eq) {
     const ok    = Boolean(idEq && liq >= 0);
 
     if (!ok) {
-      diag.push({ nivel: 'ATENÇÃO', cat: T.CAT.TAMP, msg: 'Pesagem inválida na linha ' + (ri + 2) + '.' });
+      const motivo = !idEq
+        ? 'ID "' + String(r[iEq] || '').trim() + '" não reconhecido na aba Equipes'
+        : 'peso líquido negativo (' + liq.toFixed(3) + ' kg)';
+      diag.push({ nivel: 'ATENÇÃO', cat: T.CAT.TAMP, msg: 'Pesagem inválida na linha ' + (ri + 2) + ': ' + motivo + '.' });
     } else if (destaComp) {
       if (!res.porEquipe[idEq]) res.porEquipe[idEq] = { pesoTotal: 0, qtd: 0 };
       res.porEquipe[idEq].pesoTotal += liq;
