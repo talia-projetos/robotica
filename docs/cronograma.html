@@ -1046,7 +1046,7 @@
     <div>
       <div class="schedule-kicker">Operação do torneio</div>
       <h1>Cronograma</h1>
-      <p class="page-meta">07:00 às 12:00 · 2 arenas · 2 salas de avaliação · 13 equipes</p>
+      <p id="page-meta-sub" class="page-meta">07:00 às 12:00 · Carregando...</p>
     </div>
     <div class="schedule-head-actions">
       <button class="schedule-head-link schedule-head-link--print" type="button" onclick="window.print()">
@@ -1056,33 +1056,16 @@
     </div>
   </header>
 
-  <div class="timeline-macro">
-    <div class="tl-label">Vis&atilde;o geral &middot; 07:00&ndash;12:00</div>
-    <div class="tl-bar">
-      <div class="tl-seg tl-abertura" style="width:10%">Abertura</div>
-      <div class="tl-seg tl-aval"     style="width:60%">Competi&ccedil;&atilde;o &middot; Rounds + Avalia&ccedil;&otilde;es em Sala</div>
-      <div class="tl-seg tl-delib"    style="width:10%">Encerram.</div>
-      <div class="tl-seg tl-delib"    style="width:10%">Delibera&ccedil;&atilde;o</div>
-      <div class="tl-seg tl-premio"   style="width:10%">Premia&ccedil;&atilde;o</div>
-    </div>
-    <div class="tl-ticks">
-      <span class="tl-tick" style="left:0%">07:00</span>
-      <span class="tl-tick" style="left:10%">07:30</span>
-      <span class="tl-tick" style="left:36.67%">08:50</span>
-      <span class="tl-tick" style="left:58.33%">09:55</span>
-      <span class="tl-tick" style="left:70%">10:30</span>
-      <span class="tl-tick" style="left:80%">11:00</span>
-      <span class="tl-tick" style="left:90%">11:30</span>
-      <span class="tl-tick" style="left:100%">12:00</span>
-    </div>
-  </div>
+  <div class="timeline-macro" id="timeline-wrap"></div>
 
   <!-- Nível 2: Controles -->
   <div class="crono-toolbar">
-    <span class="toolbar-label">Sala</span>
-    <button class="filter-sala active" data-sala="all" type="button">Todas</button>
-    <button class="filter-sala" data-sala="sala1" type="button">Sala 1</button>
-    <button class="filter-sala" data-sala="sala2" type="button">Sala 2</button>
+    <span class="toolbar-label" id="toolbar-filter-label">Sala</span>
+    <span id="toolbar-filters">
+      <button class="filter-sala active" data-slot-filter="all" type="button">Todas</button>
+      <button class="filter-sala" data-slot-filter="grupo1" type="button">Sala 1</button>
+      <button class="filter-sala" data-slot-filter="grupo2" type="button">Sala 2</button>
+    </span>
     <div class="toolbar-sep"></div>
     <div class="search-wrap">
       <svg width="14" height="14" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -1263,66 +1246,12 @@
 
   </div><!-- /gantt (hidden) -->
 
-  <!-- Agenda detalhada por equipe -->
-  <div class="det-section">
-    <div class="det-header">
-      <div class="det-col-team">Equipe</div>
-      <div class="det-col">Avalia&ccedil;&atilde;o em Sala</div>
-      <div class="det-col">Round 1 &middot; Arena</div>
-      <div class="det-col">Round 2 &middot; Arena</div>
-      <div class="det-col">Round 3 &middot; Arena</div>
-    </div>
-
-    <div class="det-row" data-sala="sala1"><div class="det-team"><div class="det-team__id">TUR01</div><div class="det-team__nome">6&deg; A &middot; Cyber Panter</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:20&ndash;08:35</div><div class="det-place">Sala 1</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:30&ndash;07:35</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:10&ndash;09:15</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:15&ndash;10:20</div><div class="det-place">Arena B</div></div></div>
-
-    <div class="det-row" data-sala="sala1"><div class="det-team"><div class="det-team__id">TUR02</div><div class="det-team__nome">6&deg; B &middot; Liga do Choque</div></div><div class="det-slot det-slot--sala"><div class="det-time">09:35&ndash;09:50</div><div class="det-place">Sala 1</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:35&ndash;07:40</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:00&ndash;09:05</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:05&ndash;10:10</div><div class="det-place">Arena A</div></div></div>
-
-    <div class="det-row" data-sala="sala2"><div class="det-team"><div class="det-team__id">TUR03</div><div class="det-team__nome">6&deg; C &middot; Alpha Tech</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:50&ndash;09:05</div><div class="det-place">Sala 2</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:40&ndash;07:45</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:20&ndash;09:25</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:00&ndash;10:05</div><div class="det-place">Arena B</div></div></div>
-
-    <div class="det-row" data-sala="sala1"><div class="det-team"><div class="det-team__id">TUR04</div><div class="det-team__nome">6&deg; D &middot; Pheonics Mecanics</div></div><div class="det-slot det-slot--sala"><div class="det-time">09:05&ndash;09:20</div><div class="det-place">Sala 1</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:45&ndash;07:50</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r2"><div class="det-time">08:55&ndash;09:00</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:10&ndash;10:15</div><div class="det-place">Arena B</div></div></div>
-
-    <div class="det-row" data-sala="sala1"><div class="det-team"><div class="det-team__id">TUR05</div><div class="det-team__nome">6&deg; E &middot; TecShark</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:50&ndash;09:05</div><div class="det-place">Sala 1</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:50&ndash;07:55</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:15&ndash;09:20</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:20&ndash;10:25</div><div class="det-place">Arena B</div></div></div>
-
-    <div class="det-row" data-sala="sala2"><div class="det-team"><div class="det-team__id">TUR06</div><div class="det-team__nome">7&deg; A &middot; Hoppin Robots</div></div><div class="det-slot det-slot--sala"><div class="det-time">09:30&ndash;09:45</div><div class="det-place">Sala 2</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:55&ndash;08:00</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:05&ndash;09:10</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r3"><div class="det-time">09:55&ndash;10:00</div><div class="det-place">Arena A</div></div></div>
-
-    <div class="det-row" data-sala="sala1"><div class="det-team"><div class="det-team__id">TUR07</div><div class="det-team__nome">7&deg; B &middot; Bivoltx</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:05&ndash;08:20</div><div class="det-place">Sala 1</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:55&ndash;08:00</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r2"><div class="det-time">08:50&ndash;08:55</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:25&ndash;10:30</div><div class="det-place">Arena A</div></div></div>
-
-    <div class="det-row" data-sala="sala2"><div class="det-team"><div class="det-team__id">TUR08</div><div class="det-team__nome">7&deg; C &middot; Ecoshift</div></div><div class="det-slot det-slot--sala"><div class="det-time">09:10&ndash;09:25</div><div class="det-place">Sala 2</div></div><div class="det-slot det-slot--r1"><div class="det-time">08:00&ndash;08:05</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:00&ndash;09:05</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:15&ndash;10:20</div><div class="det-place">Arena A</div></div></div>
-
-    <div class="det-row" data-sala="sala1"><div class="det-team"><div class="det-team__id">TUR09</div><div class="det-team__nome">7&deg; D &middot; Pantera Lego Team</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:35&ndash;08:50</div><div class="det-place">Sala 1</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:30&ndash;07:35</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:15&ndash;09:20</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:00&ndash;10:05</div><div class="det-place">Arena A</div></div></div>
-
-    <div class="det-row" data-sala="sala2"><div class="det-team"><div class="det-team__id">TUR10</div><div class="det-team__nome">7&deg; E &middot; Imp&eacute;rio das On&ccedil;as</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:35&ndash;08:50</div><div class="det-place">Sala 2</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:35&ndash;07:40</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:05&ndash;09:10</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:10&ndash;10:15</div><div class="det-place">Arena A</div></div></div>
-
-    <div class="det-row" data-sala="sala1"><div class="det-team"><div class="det-team__id">TUR11</div><div class="det-team__nome">7&deg; F &middot; Poseidon</div></div><div class="det-slot det-slot--sala"><div class="det-time">09:20&ndash;09:35</div><div class="det-place">Sala 1</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:40&ndash;07:45</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r2"><div class="det-time">08:55&ndash;09:00</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:20&ndash;10:25</div><div class="det-place">Arena A</div></div></div>
-
-    <div class="det-row" data-sala="sala2"><div class="det-team"><div class="det-team__id">TUR12</div><div class="det-team__nome">7&deg; G &middot; Arara Azul</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:20&ndash;08:35</div><div class="det-place">Sala 2</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:45&ndash;07:50</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r2"><div class="det-time">09:10&ndash;09:15</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r3"><div class="det-time">09:55&ndash;10:00</div><div class="det-place">Arena A</div></div></div>
-
-    <div class="det-row" data-sala="sala2"><div class="det-team"><div class="det-team__id">TUR13</div><div class="det-team__nome">7&deg; H &middot; Nexos</div></div><div class="det-slot det-slot--sala"><div class="det-time">08:05&ndash;08:20</div><div class="det-place">Sala 2</div></div><div class="det-slot det-slot--r1"><div class="det-time">07:50&ndash;07:55</div><div class="det-place">Arena B</div></div><div class="det-slot det-slot--r2"><div class="det-time">08:50&ndash;08:55</div><div class="det-place">Arena A</div></div><div class="det-slot det-slot--r3"><div class="det-time">10:05&ndash;10:10</div><div class="det-place">Arena B</div></div></div>
+  <!-- Agenda dinâmica (preenchida por JS) -->
+  <div id="schedule-table">
+    <div style="padding:2rem;text-align:center"><span class="spinner"></span></div>
   </div>
 
-  <!-- Cards de resumo -->
-  <div class="info-row">
-    <div class="ic">
-      <div class="ic__label">Abertura</div>
-      <div class="ic__val">07:00 &ndash; 07:30</div>
-      <div class="ic__sub">Credenciamento e abertura oficial &middot; audit&oacute;rio</div>
-    </div>
-    <div class="ic">
-      <div class="ic__label">Rounds de arena &middot; 3 corridas</div>
-      <div class="ic__val">07:30 &ndash; 10:30</div>
-      <div class="ic__sub">Round 1: 07:30–08:05 &middot; Round 2: 08:50–09:25 &middot; Round 3: 09:55–10:30 &middot; corridas de 2min30 &middot; 2 arenas</div>
-    </div>
-    <div class="ic">
-      <div class="ic__label">Avalia&ccedil;&otilde;es em sala &middot; 2 salas</div>
-      <div class="ic__val">08:05 &ndash; 09:50</div>
-      <div class="ic__sub">Sala 1 (08:05–09:50, 7 equipes) &middot; Sala 2 (08:05–09:45, 6 equipes) &middot; 15 min por equipe &middot; em paralelo com arena</div>
-    </div>
-    <div class="ic">
-      <div class="ic__label">Delibera&ccedil;&atilde;o &amp; Premia&ccedil;&atilde;o</div>
-      <div class="ic__val">11:00 &ndash; 12:00</div>
-      <div class="ic__sub">Encerramento geral: 10:30 &middot; Delibera&ccedil;&atilde;o: 11:00–11:30 &middot; Premia&ccedil;&atilde;o: 11:30–12:00</div>
-    </div>
-  </div>
+  <div id="info-cards" class="info-row"></div>
 
 </div><!-- /wrap -->
 </main>
@@ -1334,27 +1263,257 @@
 <script src="js/sidebar-roles.js?v=6"></script>
 <script src="js/product-ui.js?v=10"></script>
 <script>
-  /* ── Filtro por sala ─────────────────────────────────────── */
-  document.querySelectorAll('.filter-sala').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      document.querySelectorAll('.filter-sala').forEach(function (b) { b.classList.remove('active'); });
-      this.classList.add('active');
-      filtrarBusca();
-    });
-  });
+  // ── Utilitários de tempo ────────────────────────────────────
+  function addMin(hhmm, mins) {
+    var p = hhmm.split(':');
+    var t = parseInt(p[0]) * 60 + parseInt(p[1]) + mins;
+    return String(Math.floor(t / 60)).padStart(2, '0') + ':' + String(t % 60).padStart(2, '0');
+  }
+  function rng(s, d) { return s + '–' + addMin(s, d); }
 
-  /* ── Busca + filtro por sala ─────────────────────────────── */
-  function filtrarBusca() {
-    var q = document.getElementById('search-equipe').value.toLowerCase().trim();
-    var sala = document.querySelector('.filter-sala.active').dataset.sala;
-    document.querySelectorAll('.det-row').forEach(function (row) {
-      var salaOk = sala === 'all' || row.dataset.sala === sala;
-      var buscaOk = !q || (row.textContent || '').toLowerCase().includes(q);
-      row.style.display = (salaOk && buscaOk) ? '' : 'none';
+  // ── Schedule estático FLL ───────────────────────────────────
+  var FLL_SCHEDULE = [
+    { id:'TUR01', nome:'6° A · Cyber Panter',       sala:'Sala 1', salaRange:'08:20–08:35', r1:'07:30–07:35', r1p:'Arena A', r2:'09:10–09:15', r2p:'Arena A', r3:'10:15–10:20', r3p:'Arena B' },
+    { id:'TUR02', nome:'6° B · Liga do Choque',     sala:'Sala 1', salaRange:'09:35–09:50', r1:'07:35–07:40', r1p:'Arena A', r2:'09:00–09:05', r2p:'Arena B', r3:'10:05–10:10', r3p:'Arena A' },
+    { id:'TUR03', nome:'6° C · Alpha Tech',         sala:'Sala 2', salaRange:'08:50–09:05', r1:'07:40–07:45', r1p:'Arena A', r2:'09:20–09:25', r2p:'Arena A', r3:'10:00–10:05', r3p:'Arena B' },
+    { id:'TUR04', nome:'6° D · Pheonics Mecanics',  sala:'Sala 1', salaRange:'09:05–09:20', r1:'07:45–07:50', r1p:'Arena A', r2:'08:55–09:00', r2p:'Arena B', r3:'10:10–10:15', r3p:'Arena B' },
+    { id:'TUR05', nome:'6° E · TecShark',           sala:'Sala 1', salaRange:'08:50–09:05', r1:'07:50–07:55', r1p:'Arena A', r2:'09:15–09:20', r2p:'Arena A', r3:'10:20–10:25', r3p:'Arena B' },
+    { id:'TUR06', nome:'7° A · Hoppin Robots',      sala:'Sala 2', salaRange:'09:30–09:45', r1:'07:55–08:00', r1p:'Arena A', r2:'09:05–09:10', r2p:'Arena B', r3:'09:55–10:00', r3p:'Arena A' },
+    { id:'TUR07', nome:'7° B · Bivoltx',            sala:'Sala 1', salaRange:'08:05–08:20', r1:'07:55–08:00', r1p:'Arena B', r2:'08:50–08:55', r2p:'Arena A', r3:'10:25–10:30', r3p:'Arena A' },
+    { id:'TUR08', nome:'7° C · Ecoshift',           sala:'Sala 2', salaRange:'09:10–09:25', r1:'08:00–08:05', r1p:'Arena A', r2:'09:00–09:05', r2p:'Arena A', r3:'10:15–10:20', r3p:'Arena A' },
+    { id:'TUR09', nome:'7° D · Pantera Lego Team',  sala:'Sala 1', salaRange:'08:35–08:50', r1:'07:30–07:35', r1p:'Arena B', r2:'09:15–09:20', r2p:'Arena B', r3:'10:00–10:05', r3p:'Arena A' },
+    { id:'TUR10', nome:'7° E · Império das Onças', sala:'Sala 2', salaRange:'08:35–08:50', r1:'07:35–07:40', r1p:'Arena B', r2:'09:05–09:10', r2p:'Arena A', r3:'10:10–10:15', r3p:'Arena A' },
+    { id:'TUR11', nome:'7° F · Poseidon',           sala:'Sala 1', salaRange:'09:20–09:35', r1:'07:40–07:45', r1p:'Arena B', r2:'08:55–09:00', r2p:'Arena A', r3:'10:20–10:25', r3p:'Arena A' },
+    { id:'TUR12', nome:'7° G · Arara Azul',         sala:'Sala 2', salaRange:'08:20–08:35', r1:'07:45–07:50', r1p:'Arena B', r2:'09:10–09:15', r2p:'Arena B', r3:'09:55–10:00', r3p:'Arena A' },
+    { id:'TUR13', nome:'7° H · Nexos',              sala:'Sala 2', salaRange:'08:05–08:20', r1:'07:50–07:55', r1p:'Arena B', r2:'08:50–08:55', r2p:'Arena A', r3:'10:05–10:10', r3p:'Arena B' }
+  ];
+
+  // ── Gerador OBR (Arena Resgate + Salas) ────────────────────
+  function gerarOBR(equipes) {
+    var n = equipes.length;
+    var halfN = Math.ceil(n / 2);
+    var SLOT = 5;
+    return equipes.map(function(e, i) {
+      var salaNum = i % 2 === 0 ? 1 : 2;
+      var salaOff = Math.floor(i / 2);
+      var inA = i < halfN;
+      var r1Off = inA ? i : i - halfN;
+      var r2Off = inA ? Math.max(0, halfN - 1 - i) : Math.max(0, n - 1 - i);
+      var r3Off = inA ? i : i - halfN;
+      return {
+        id: e.id, nome: e.nome || e.turma || e.id,
+        sala: 'Sala ' + salaNum,
+        salaRange: rng(addMin('08:05', salaOff * 15), 15),
+        r1: rng(addMin('07:30', r1Off * SLOT), SLOT), r1p: inA ? 'Arena A' : 'Arena B',
+        r2: rng(addMin('08:50', r2Off * SLOT), SLOT), r2p: inA ? 'Arena B' : 'Arena A',
+        r3: rng(addMin('09:55', r3Off * SLOT), SLOT), r3p: inA ? 'Arena A' : 'Arena B'
+      };
     });
   }
 
+  // ── Gerador Steam Racing (4 Corridas: C1+C2 Raia A, C3+C4 Raia B) ──
+  function gerarSteam(equipes) {
+    var n = equipes.length;
+    var SLOT = 8; var GAP = 5;
+    var sC1 = '07:30';
+    var sC3 = addMin(sC1, n * SLOT + GAP);
+    var sC2 = addMin(sC3, n * SLOT + GAP);
+    var sC4 = addMin(sC2, n * SLOT + GAP);
+    return equipes.map(function(e, i) {
+      return {
+        id: e.id, nome: e.nome || e.turma || e.id,
+        c1: rng(addMin(sC1, i * SLOT), SLOT),
+        c2: rng(addMin(sC2, i * SLOT), SLOT),
+        c3: rng(addMin(sC3, i * SLOT), SLOT),
+        c4: rng(addMin(sC4, i * SLOT), SLOT)
+      };
+    });
+  }
+
+  // ── Renderização ────────────────────────────────────────────
+  function renderArena(schedule) {
+    var h = '<div class="det-section"><div class="det-header">'
+      + '<div>Equipe</div><div>Avaliação em Sala</div>'
+      + '<div>Round 1 · Arena</div><div>Round 2 · Arena</div><div>Round 3 · Arena</div>'
+      + '</div>';
+    schedule.forEach(function(s) {
+      var f = s.sala === 'Sala 1' ? 'grupo1' : 'grupo2';
+      var srch = (s.id + ' ' + s.nome).toLowerCase();
+      h += '<div class="det-row" data-slot-filter="' + f + '" data-search="' + srch + '">'
+        + '<div class="det-team"><div class="det-team__id">' + s.id + '</div><div class="det-team__nome">' + s.nome + '</div></div>'
+        + '<div class="det-slot det-slot--sala"><div class="det-time">' + s.salaRange + '</div><div class="det-place">' + s.sala + '</div></div>'
+        + '<div class="det-slot det-slot--r1"><div class="det-time">' + s.r1 + '</div><div class="det-place">' + s.r1p + '</div></div>'
+        + '<div class="det-slot det-slot--r2"><div class="det-time">' + s.r2 + '</div><div class="det-place">' + s.r2p + '</div></div>'
+        + '<div class="det-slot det-slot--r3"><div class="det-time">' + s.r3 + '</div><div class="det-place">' + s.r3p + '</div></div>'
+        + '</div>';
+    });
+    document.getElementById('schedule-table').innerHTML = h + '</div>';
+  }
+
+  function renderSteam(schedule) {
+    var h = '<div class="det-section"><div class="det-header">'
+      + '<div>Equipe</div>'
+      + '<div>Corrida 1 · Raia A</div><div>Corrida 2 · Raia A</div>'
+      + '<div>Corrida 3 · Raia B</div><div>Corrida 4 · Raia B</div>'
+      + '</div>';
+    schedule.forEach(function(s) {
+      var srch = (s.id + ' ' + s.nome).toLowerCase();
+      h += '<div class="det-row" data-slot-filter="all" data-search="' + srch + '">'
+        + '<div class="det-team"><div class="det-team__id">' + s.id + '</div><div class="det-team__nome">' + s.nome + '</div></div>'
+        + '<div class="det-slot det-slot--r1"><div class="det-time">' + s.c1 + '</div><div class="det-place">Raia A</div></div>'
+        + '<div class="det-slot det-slot--r2"><div class="det-time">' + s.c2 + '</div><div class="det-place">Raia A</div></div>'
+        + '<div class="det-slot det-slot--r3"><div class="det-time">' + s.c3 + '</div><div class="det-place">Raia B</div></div>'
+        + '<div class="det-slot det-slot--r3"><div class="det-time">' + s.c4 + '</div><div class="det-place">Raia B</div></div>'
+        + '</div>';
+    });
+    document.getElementById('schedule-table').innerHTML = h + '</div>';
+  }
+
+  // ── Toolbar dinâmica ────────────────────────────────────────
+  function buildToolbar(comp) {
+    var lbl = document.getElementById('toolbar-filter-label');
+    var fil = document.getElementById('toolbar-filters');
+    if (comp === 'Steam Racing') {
+      if (lbl) lbl.textContent = 'Corridas';
+      if (fil) fil.innerHTML = '<button class="filter-sala active" data-slot-filter="all" type="button">Todas</button>';
+    } else {
+      if (lbl) lbl.textContent = 'Sala';
+      if (fil) fil.innerHTML =
+        '<button class="filter-sala active" data-slot-filter="all" type="button">Todas</button>'
+        + '<button class="filter-sala" data-slot-filter="grupo1" type="button">Sala 1</button>'
+        + '<button class="filter-sala" data-slot-filter="grupo2" type="button">Sala 2</button>';
+    }
+    if (fil) fil.querySelectorAll('.filter-sala').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        fil.querySelectorAll('.filter-sala').forEach(function(b) { b.classList.remove('active'); });
+        this.classList.add('active');
+        filtrarBusca();
+      });
+    });
+  }
+
+  // ── Timeline macro ──────────────────────────────────────────
+  function buildTimeline(comp, n) {
+    var w = document.getElementById('timeline-wrap');
+    if (!w) return;
+    var h = '';
+    if (comp === 'Steam Racing') {
+      h = '<div class="tl-label">Visão geral · Corridas na Pista · ' + n + ' equipes</div>'
+        + '<div class="tl-bar">'
+        + '<div class="tl-seg tl-abertura" style="width:10%">Abertura</div>'
+        + '<div class="tl-seg tl-aval" style="width:65%">4 Corridas por equipe · Raia A e Raia B</div>'
+        + '<div class="tl-seg tl-delib" style="width:10%">Encerram.</div>'
+        + '<div class="tl-seg tl-premio" style="width:15%">Premiação</div>'
+        + '</div>'
+        + '<div class="tl-ticks"><span class="tl-tick" style="left:0%">07:00</span>'
+        + '<span class="tl-tick" style="left:10%">07:30</span>'
+        + '<span class="tl-tick" style="left:75%">10:30</span>'
+        + '<span class="tl-tick" style="left:100%">12:00</span></div>';
+    } else if (comp === 'OBR') {
+      h = '<div class="tl-label">Visão geral · Arena de Resgate · ' + n + ' equipes</div>'
+        + '<div class="tl-bar">'
+        + '<div class="tl-seg tl-abertura" style="width:10%">Abertura</div>'
+        + '<div class="tl-seg tl-aval" style="width:60%">Rounds de Arena + Avaliações em Sala</div>'
+        + '<div class="tl-seg tl-delib" style="width:10%">Encerram.</div>'
+        + '<div class="tl-seg tl-delib" style="width:10%">Deliberação</div>'
+        + '<div class="tl-seg tl-premio" style="width:10%">Premiação</div>'
+        + '</div>'
+        + '<div class="tl-ticks"><span class="tl-tick" style="left:0%">07:00</span>'
+        + '<span class="tl-tick" style="left:10%">07:30</span>'
+        + '<span class="tl-tick" style="left:70%">10:30</span>'
+        + '<span class="tl-tick" style="left:80%">11:00</span>'
+        + '<span class="tl-tick" style="left:90%">11:30</span>'
+        + '<span class="tl-tick" style="left:100%">12:00</span></div>';
+    } else {
+      h = '<div class="tl-label">Visão geral · 07:00–12:00</div>'
+        + '<div class="tl-bar">'
+        + '<div class="tl-seg tl-abertura" style="width:10%">Abertura</div>'
+        + '<div class="tl-seg tl-aval" style="width:60%">Competição · Rounds + Avaliações em Sala</div>'
+        + '<div class="tl-seg tl-delib" style="width:10%">Encerram.</div>'
+        + '<div class="tl-seg tl-delib" style="width:10%">Deliberação</div>'
+        + '<div class="tl-seg tl-premio" style="width:10%">Premiação</div>'
+        + '</div>'
+        + '<div class="tl-ticks"><span class="tl-tick" style="left:0%">07:00</span>'
+        + '<span class="tl-tick" style="left:10%">07:30</span>'
+        + '<span class="tl-tick" style="left:36.67%">08:50</span>'
+        + '<span class="tl-tick" style="left:58.33%">09:55</span>'
+        + '<span class="tl-tick" style="left:70%">10:30</span>'
+        + '<span class="tl-tick" style="left:80%">11:00</span>'
+        + '<span class="tl-tick" style="left:90%">11:30</span>'
+        + '<span class="tl-tick" style="left:100%">12:00</span></div>';
+    }
+    w.innerHTML = h;
+  }
+
+  // ── Cards de resumo ─────────────────────────────────────────
+  function buildInfoCards(comp, n) {
+    var el = document.getElementById('info-cards');
+    if (!el) return;
+    var abertura = '<div class="ic"><div class="ic__label">Abertura</div><div class="ic__val">07:00 – 07:30</div><div class="ic__sub">Credenciamento e abertura oficial · auditório</div></div>';
+    var premio   = '<div class="ic"><div class="ic__label">Deliberação &amp; Premiação</div><div class="ic__val">11:00 – 12:00</div><div class="ic__sub">Encerramento: 10:30 · Deliberação: 11:00–11:30 · Premiação: 11:30–12:00</div></div>';
+    var meio = '';
+    if (comp === 'Steam Racing') {
+      meio = '<div class="ic"><div class="ic__label">Corridas · 4 por equipe</div><div class="ic__val">07:30 – 10:30</div><div class="ic__sub">C1+C2 na Raia A · C3+C4 na Raia B · ' + n + ' equipes · 8 min/corrida</div></div>'
+        + '<div class="ic"><div class="ic__label">Projeto de Engenharia &amp; Core Values</div><div class="ic__val">08:05 – 10:30</div><div class="ic__sub">Avaliações em sala paralelas às corridas</div></div>';
+    } else if (comp === 'OBR') {
+      meio = '<div class="ic"><div class="ic__label">Rounds de Arena · 3 por equipe</div><div class="ic__val">07:30 – 10:30</div><div class="ic__sub">' + n + ' equipes · 2 arenas de resgate · 5 min/corrida</div></div>'
+        + '<div class="ic"><div class="ic__label">Avaliações em Sala · 2 salas</div><div class="ic__val">08:05 – 09:50</div><div class="ic__sub">15 min por equipe · em paralelo com arena</div></div>';
+    } else {
+      meio = '<div class="ic"><div class="ic__label">Rounds de Arena · 3 corridas</div><div class="ic__val">07:30 – 10:30</div><div class="ic__sub">Round 1: 07:30–08:05 · R2: 08:50–09:25 · R3: 09:55–10:30 · 2 arenas</div></div>'
+        + '<div class="ic"><div class="ic__label">Avaliações em Sala · 2 salas</div><div class="ic__val">08:05 – 09:50</div><div class="ic__sub">Sala 1 (7 equipes) · Sala 2 (6 equipes) · 15 min/equipe · paralelo arena</div></div>';
+    }
+    el.innerHTML = abertura + meio + premio;
+  }
+
+  // ── Meta do cabeçalho ───────────────────────────────────────
+  function buildMeta(comp, n) {
+    var el = document.getElementById('page-meta-sub');
+    if (!el) return;
+    if (comp === 'Steam Racing') el.textContent = '07:00 às 12:00 · 2 raias · ' + n + ' equipes';
+    else if (comp === 'OBR')    el.textContent = '07:00 às 12:00 · 2 arenas de resgate · 2 salas · ' + n + ' equipes';
+    else                        el.textContent = '07:00 às 12:00 · 2 arenas · 2 salas de avaliação · ' + n + ' equipes';
+  }
+
+  // ── Filtro + busca ──────────────────────────────────────────
+  function filtrarBusca() {
+    var q = (document.getElementById('search-equipe').value || '').toLowerCase().trim();
+    var ab = document.querySelector('#toolbar-filters .filter-sala.active');
+    var f  = ab ? (ab.dataset.slotFilter || 'all') : 'all';
+    document.querySelectorAll('#schedule-table .det-row').forEach(function(row) {
+      var fOk = f === 'all' || row.dataset.slotFilter === f;
+      var sOk = !q || (row.dataset.search || '').includes(q) || (row.textContent || '').toLowerCase().includes(q);
+      row.style.display = (fOk && sOk) ? '' : 'none';
+    });
+  }
   document.getElementById('search-equipe').addEventListener('input', filtrarBusca);
+
+  // ── Init ────────────────────────────────────────────────────
+  async function buildPage() {
+    var comp = Comp.val;
+    var n = 0;
+    if (comp === 'FLL') {
+      n = FLL_SCHEDULE.length;
+      renderArena(FLL_SCHEDULE);
+    } else {
+      try {
+        var r = await API.equipes();
+        var eq = (r && r.equipes) ? r.equipes : [];
+        n = eq.length;
+        if (comp === 'Steam Racing') renderSteam(gerarSteam(eq));
+        else renderArena(gerarOBR(eq));
+      } catch(_) {
+        n = 0;
+        document.getElementById('schedule-table').innerHTML =
+          '<div style="padding:2rem;text-align:center;color:var(--texto-sm)">Erro ao carregar equipes. Verifique a conexão.</div>';
+      }
+    }
+    buildTimeline(comp, n);
+    buildInfoCards(comp, n);
+    buildMeta(comp, n);
+    buildToolbar(comp);
+  }
+
+  buildPage();
 </script>
 </body>
 </html>

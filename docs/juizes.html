@@ -1578,7 +1578,8 @@
   var _chatUltimo = 0;
 
   function chatIniciar(nome) {
-    _chatNome = nome;
+    _chatNome = nome || Sessao.juiz || localStorage.getItem('coord_nome') || '';
+    if (!_chatNome) return;
     chatCarregar();
     _chatTimer = setInterval(chatCarregar, 8000);
     document.getElementById('chat-input').addEventListener('keydown', function(e) {

@@ -96,20 +96,7 @@
   <div id="view-geral">
     <div class="table-wrap">
       <table id="tabela-geral">
-        <thead>
-          <tr>
-            <th style="width:56px">Pos.</th>
-            <th>Equipe</th>
-            <th>Turno</th>
-            <th>Arena</th>
-            <th>Projeto</th>
-            <th>Design</th>
-            <th>Core</th>
-            <th>Tampinhas</th>
-            <th>Total</th>
-            <th>Status</th>
-          </tr>
-        </thead>
+        <thead id="thead-geral"></thead>
         <tbody id="tbody-geral">
           <tr><td colspan="10" style="text-align:center;padding:2rem">
             <span class="spinner"></span>
@@ -121,58 +108,7 @@
 
   <!-- ── Ranking por Categoria ─────────────────────────────── -->
   <div id="view-categorias" class="hidden">
-    <div class="grid-2">
-      <div class="table-wrap" id="block-arena">
-        <table>
-          <thead><tr>
-            <th colspan="4" style="background:var(--azul)">Arena</th>
-          </tr><tr>
-            <th>Pos.</th><th>Equipe</th><th>Pontos</th><th>Rounds</th>
-          </tr></thead>
-          <tbody id="tbody-arena"></tbody>
-        </table>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr>
-            <th colspan="4" style="background:var(--roxo)">Projeto de Inovação</th>
-          </tr><tr>
-            <th>Pos.</th><th>Equipe</th><th>Nota</th><th>Juízes</th>
-          </tr></thead>
-          <tbody id="tbody-projeto"></tbody>
-        </table>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr>
-            <th colspan="4" style="background:var(--laranja)">Design do Robô</th>
-          </tr><tr>
-            <th>Pos.</th><th>Equipe</th><th>Nota</th><th>Juízes</th>
-          </tr></thead>
-          <tbody id="tbody-design"></tbody>
-        </table>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr>
-            <th colspan="4" style="background:var(--verde)">Core Values</th>
-          </tr><tr>
-            <th>Pos.</th><th>Equipe</th><th>Nota</th><th>Juízes</th>
-          </tr></thead>
-          <tbody id="tbody-core"></tbody>
-        </table>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr>
-            <th colspan="4" style="background:var(--coral)">Tampinhas</th>
-          </tr><tr>
-            <th>Pos.</th><th>Equipe</th><th>Nota</th><th>Pesagens</th>
-          </tr></thead>
-          <tbody id="tbody-tampinhas"></tbody>
-        </table>
-      </div>
-    </div>
+    <div class="grid-2" id="cat-wrap"></div>
   </div>
 </div>
 
@@ -184,8 +120,81 @@
 <script src="js/sidebar-roles.js?v=6"></script>
 <script src="js/product-ui.js?v=10"></script>
 <script>
-  let dadosEquipes = [];
+  var dadosEquipes = [];
 
+  // ── Configuração por competição ───────────────────────────────────
+  var COMP_CONFIG = {
+    'FLL': {
+      geralCols: [
+        { label: 'Arena',     campo: 'arena20' },
+        { label: 'Projeto',   campo: 'proj20'  },
+        { label: 'Design',    campo: 'des20'   },
+        { label: 'Core',      campo: 'core20'  },
+        { label: 'Tampinhas', campo: 'tamp20'  }
+      ],
+      secoes: [
+        { id: 'arena',     titulo: 'Arena',               cor: 'var(--azul)',    campo: 'arena20', posField: 'Arena', qtdField: 'arenaRounds', qtdLabel: 'Rounds'   },
+        { id: 'projeto',   titulo: 'Projeto de Inovação', cor: 'var(--roxo)',    campo: 'proj20',  posField: 'Proj',  qtdField: 'projJuizes',  qtdLabel: 'Juízes'   },
+        { id: 'design',    titulo: 'Design do Robô',      cor: 'var(--laranja)', campo: 'des20',   posField: 'Des',   qtdField: 'desJuizes',   qtdLabel: 'Juízes'   },
+        { id: 'core',      titulo: 'Core Values',         cor: 'var(--verde)',   campo: 'core20',  posField: 'Core',  qtdField: 'coreJuizes',  qtdLabel: 'Juízes'   },
+        { id: 'tampinhas', titulo: 'Tampinhas',           cor: 'var(--coral)',   campo: 'tamp20',  posField: 'Tamp',  qtdField: 'tampPes',     qtdLabel: 'Pesagens' }
+      ]
+    },
+    'OBR': {
+      geralCols: [
+        { label: 'Arena', campo: 'arena20' }
+      ],
+      secoes: [
+        { id: 'arena', titulo: 'Arena de Resgate', cor: 'var(--verde)', campo: 'arena20', posField: 'Arena', qtdField: 'arenaRounds', qtdLabel: 'Rounds' }
+      ]
+    },
+    'Steam Racing': {
+      geralCols: [
+        { label: 'Pista',      campo: 'arena20' },
+        { label: 'Engenharia', campo: 'des20'   },
+        { label: 'Core',       campo: 'core20'  }
+      ],
+      secoes: [
+        { id: 'arena',  titulo: 'Pista Racing',          cor: '#C0392B',       campo: 'arena20', posField: 'Arena', qtdField: 'arenaRounds', qtdLabel: 'Corridas' },
+        { id: 'design', titulo: 'Projeto de Engenharia', cor: '#C84B00',       campo: 'des20',   posField: 'Des',   qtdField: 'desJuizes',   qtdLabel: 'Juízes'   },
+        { id: 'core',   titulo: 'Core Values',           cor: 'var(--verde)',  campo: 'core20',  posField: 'Core',  qtdField: 'coreJuizes',  qtdLabel: 'Juízes'   }
+      ]
+    }
+  };
+
+  function cfg() {
+    return COMP_CONFIG[Comp.val] || COMP_CONFIG['FLL'];
+  }
+
+  // ── Constrói thead e tabelas de categoria baseado na competição ──
+  function buildUI() {
+    var c = cfg();
+    var cols = c.geralCols;
+    var span = 5 + cols.length;
+
+    document.getElementById('thead-geral').innerHTML =
+      '<tr>'
+      + '<th style="width:56px">Pos.</th>'
+      + '<th>Equipe</th>'
+      + '<th>Turno</th>'
+      + cols.map(function(col) { return '<th>' + col.label + '</th>'; }).join('')
+      + '<th>Total</th>'
+      + '<th>Status</th>'
+      + '</tr>';
+
+    var loadingTd = document.querySelector('#tbody-geral tr td');
+    if (loadingTd) loadingTd.colSpan = span;
+
+    document.getElementById('cat-wrap').innerHTML = c.secoes.map(function(s) {
+      return '<div class="table-wrap">'
+        + '<table><thead>'
+        + '<tr><th colspan="4" style="background:' + s.cor + '">' + s.titulo + '</th></tr>'
+        + '<tr><th>Pos.</th><th>Equipe</th><th>Nota</th><th>' + s.qtdLabel + '</th></tr>'
+        + '</thead><tbody id="tbody-' + s.id + '"></tbody></table></div>';
+    }).join('');
+  }
+
+  // ── Helpers ──────────────────────────────────────────────────────
   function mostrarView(v) {
     document.getElementById('view-geral').classList.toggle('hidden', v !== 'geral');
     document.getElementById('view-categorias').classList.toggle('hidden', v !== 'categorias');
@@ -195,74 +204,68 @@
   }
 
   function posBadge(pos) {
-    const cls = pos === 1 ? 'pos-1' : pos === 2 ? 'pos-2' : pos === 3 ? 'pos-3' : 'pos-n';
-    return `<span class="pos-badge ${cls}">${pos || '—'}</span>`;
+    var cls = pos === 1 ? 'pos-1' : pos === 2 ? 'pos-2' : pos === 3 ? 'pos-3' : 'pos-n';
+    return '<span class="pos-badge ' + cls + '">' + (pos || '—') + '</span>';
   }
 
   function statusPill(s) {
-    const cls = s === 'Completo' ? 'completo' : s === 'Pendente' ? 'pendente' : 'sem';
-    return `<span class="status-pill status-${cls}">${s}</span>`;
+    var cls = s === 'Completo' ? 'completo' : s === 'Pendente' ? 'pendente' : 'sem';
+    return '<span class="status-pill status-' + cls + '">' + s + '</span>';
   }
 
-  function fmt(v, dec = 2) {
-    return Number(v || 0).toFixed(dec);
+  function fmt(v, dec) {
+    return Number(v || 0).toFixed(dec !== undefined ? dec : 2);
   }
-
-  const nomesMap = {
-    TUR01:'6° A •Cyber Panter',  TUR02:'6° B •Liga do Choque',
-    TUR03:'6° C •Alpha Tech',    TUR04:'6° D •Pheonics Mecanics',
-    TUR05:'6° E •TecShark',      TUR06:'7° A •Hoppin Robots',
-    TUR07:'7° B •Bivoltx',       TUR08:'7° C •Ecoshift',
-    TUR09:'7° D •Pantera Lego Team', TUR10:'7° E •Império das Onças',
-    TUR11:'7° F •Poseidon',      TUR12:'7° G •Arara Azul',
-    TUR13:'7° H •Nexos'
-  };
 
   function nomeEquipe(e) {
-    return nomesMap[e.id] || e.nome || e.turma || e.id;
+    return e.nome || e.turma || e.id;
   }
 
+  // ── Renderização ─────────────────────────────────────────────────
   function renderGeral(equipes) {
-    const tbody = document.getElementById('tbody-geral');
+    var c = cfg();
+    var cols = c.geralCols;
+    var span = 5 + cols.length;
+    var tbody = document.getElementById('tbody-geral');
     if (!equipes.length) {
-      tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;padding:1.5rem;color:var(--texto-sm)">Nenhuma equipe ainda.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="' + span + '" style="text-align:center;padding:1.5rem;color:var(--texto-sm)">Nenhuma equipe ainda.</td></tr>';
       return;
     }
-    tbody.innerHTML = equipes.map(e => `
-      <tr>
-        <td>${posBadge(e.posGeral)}</td>
-        <td><strong>${nomeEquipe(e)}</strong><br><span class="text-sm">${e.id}</span></td>
-        <td><span class="text-sm">${e.turno || '—'}</span></td>
-        <td>${fmt(e.arena20)}</td>
-        <td>${fmt(e.proj20)}</td>
-        <td>${fmt(e.des20)}</td>
-        <td>${fmt(e.core20)}</td>
-        <td>${fmt(e.tamp20)}</td>
-        <td><strong>${fmt(e.total)}</strong></td>
-        <td>${statusPill(e.status)}</td>
-      </tr>`).join('');
+    tbody.innerHTML = equipes.map(function(e) {
+      return '<tr>'
+        + '<td>' + posBadge(e.posGeral) + '</td>'
+        + '<td><strong>' + nomeEquipe(e) + '</strong><br><span class="text-sm">' + e.id + '</span></td>'
+        + '<td><span class="text-sm">' + (e.turno || '—') + '</span></td>'
+        + cols.map(function(col) { return '<td>' + fmt(e[col.campo]) + '</td>'; }).join('')
+        + '<td><strong>' + fmt(e.total) + '</strong></td>'
+        + '<td>' + statusPill(e.status) + '</td>'
+        + '</tr>';
+    }).join('');
   }
 
   function renderCategoria(tbodyId, equipes, campo, extra) {
-    const tbody = document.getElementById(tbodyId);
+    var tbody = document.getElementById(tbodyId);
     if (!tbody) return;
-    const com = equipes.filter(e => Number(e[campo] || 0) > 0 || e['pos' + extra.posField]);
+    var com = equipes.filter(function(e) {
+      return Number(e[campo] || 0) > 0 || e['pos' + extra.posField];
+    });
     if (!com.length) {
       tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:1rem;color:var(--texto-sm)">Sem dados.</td></tr>';
       return;
     }
-    const sorted = com.slice().sort((a, b) => {
-      const pa = Number(a['pos' + extra.posField]) || 9999;
-      const pb = Number(b['pos' + extra.posField]) || 9999;
+    var sorted = com.slice().sort(function(a, b) {
+      var pa = Number(a['pos' + extra.posField]) || 9999;
+      var pb = Number(b['pos' + extra.posField]) || 9999;
       return pa - pb;
     });
-    tbody.innerHTML = sorted.map(e => `
-      <tr>
-        <td>${posBadge(e['pos' + extra.posField])}</td>
-        <td><strong>${nomeEquipe(e)}</strong><br><span class="text-sm">${e.id}</span></td>
-        <td>${fmt(e[campo])}</td>
-        <td class="text-sm">${e[extra.qtdField] || '—'}</td>
-      </tr>`).join('');
+    tbody.innerHTML = sorted.map(function(e) {
+      return '<tr>'
+        + '<td>' + posBadge(e['pos' + extra.posField]) + '</td>'
+        + '<td><strong>' + nomeEquipe(e) + '</strong><br><span class="text-sm">' + e.id + '</span></td>'
+        + '<td>' + fmt(e[campo]) + '</td>'
+        + '<td class="text-sm">' + (e[extra.qtdField] || '—') + '</td>'
+        + '</tr>';
+    }).join('');
   }
 
   async function carregar() {
@@ -270,23 +273,21 @@
     document.getElementById('spinner').style.display = '';
     if (stEl) { stEl.classList.add('sync-tag--syncing'); stEl.style.display = ''; }
     try {
-      const r = await API.ranking();
+      var r = await API.ranking();
       if (!r.ok) throw new Error(r.erro);
       dadosEquipes = r.equipes || [];
 
       renderGeral(dadosEquipes);
-      renderCategoria('tbody-arena',    dadosEquipes, 'arena20', { posField: 'Arena',  qtdField: 'arenaRounds' });
-      renderCategoria('tbody-projeto',  dadosEquipes, 'proj20',  { posField: 'Proj',   qtdField: 'projJuizes' });
-      renderCategoria('tbody-design',   dadosEquipes, 'des20',   { posField: 'Des',    qtdField: 'desJuizes' });
-      renderCategoria('tbody-core',     dadosEquipes, 'core20',  { posField: 'Core',   qtdField: 'coreJuizes' });
-      renderCategoria('tbody-tampinhas',dadosEquipes, 'tamp20',  { posField: 'Tamp',   qtdField: 'tampPes' });
+      cfg().secoes.forEach(function(s) {
+        renderCategoria('tbody-' + s.id, dadosEquipes, s.campo, { posField: s.posField, qtdField: s.qtdField });
+      });
 
-      const agora = new Date();
+      var agora = new Date();
       if (stEl) {
-        stEl.textContent = 'Planilha · ' + agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+        stEl.textContent = 'Planilha · ' + agora.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
         stEl.classList.remove('sync-tag--syncing');
       }
-    } catch (e) {
+    } catch(e) {
       toast('Erro ao carregar ranking: ' + e.message, 'err');
     } finally {
       document.getElementById('spinner').style.display = 'none';
@@ -294,10 +295,11 @@
     }
   }
 
+  // ── Init ──────────────────────────────────────────────────────────
+  buildUI();
   if (location.hash === '#categorias') mostrarView('categorias');
   else mostrarView('geral');
 
-  // Ranking is public — show coord badge only if already logged in, no gate popup
   if (CoordAuth.logado()) {
     var _bc = document.getElementById('badge-coord');
     if (_bc) _bc.textContent = CoordAuth.nome;
