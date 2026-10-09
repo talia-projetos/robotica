@@ -29,23 +29,16 @@ const API = (function () {
     return res.json();
   }
 
-  async function post(body) {
+  function post(body) {
     const b = Object.assign({ comp: Comp.val }, body);
-    const fetchP = fetch(url(), {
+    // Fire-and-forget: envia sem aguardar — Apps Script processa no servidor em background
+    fetch(url(), {
       method: 'POST',
       redirect: 'manual',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(b)
-    }).then(function(res) {
-      if (res.type === 'opaqueredirect' || res.status === 0) return { ok: true };
-      if (!res.ok) return { ok: false, erro: 'Erro HTTP ' + res.status };
-      return res.json().catch(function() { return { ok: true }; });
-    });
-    // Se Apps Script demorar >4 s, assume sucesso (dado enviado, processa em background)
-    const timeoutP = new Promise(function(resolve) {
-      setTimeout(function() { resolve({ ok: true, _bg: true }); }, 4000);
-    });
-    return Promise.race([fetchP, timeoutP]);
+    }).catch(function() {});
+    return Promise.resolve({ ok: true });
   }
 
   return {
