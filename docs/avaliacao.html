@@ -995,7 +995,7 @@ function initArena() {
     : ('<label for="sel-arena-av">Arena</label>'
       + '<select id="sel-arena-av" onchange="ARENA_SEL=this.value;verificarPronto()" style="max-width:120px">'
       + '<option value="">—</option>'
-      + ['Arena A','Arena B','Arena C'].map(function(a){ return '<option value="'+a+'">'+a+'</option>'; }).join('')
+      + ['Arena A','Arena B'].map(function(a){ return '<option value="'+a+'">'+a+'</option>'; }).join('')
       + '</select>');
 
   var seletoresHtml = '<div class="round-selector">'

@@ -966,6 +966,45 @@
       .steam-lower{grid-template-columns:1fr}
     }
 
+    /* ── Cronômetro ──────────────────────────────────────────────── */
+    #view-cronometro{max-width:520px;margin:0 auto;padding-top:.5rem}
+    .timer-comp-btns{display:flex;gap:.5rem;margin-bottom:1.5rem;justify-content:center;flex-wrap:wrap}
+    .timer-comp-btn{
+      padding:.42rem 1.1rem;border-radius:8px;border:1.5px solid #E1E8F0;background:#fff;
+      font-size:.75rem;font-weight:700;cursor:pointer;color:#718096;transition:all .15s;
+    }
+    .timer-comp-btn.ativo[data-comp="FLL"]          {background:#2F80ED;border-color:#2F80ED;color:#fff}
+    .timer-comp-btn.ativo[data-comp="OBR"]          {background:#27AE60;border-color:#27AE60;color:#fff}
+    .timer-comp-btn.ativo[data-comp="Steam Racing"] {background:#EB5757;border-color:#EB5757;color:#fff}
+    .timer-card{
+      background:#fff;border:1.5px solid #E1E8F0;border-radius:16px;
+      padding:2.5rem 2rem 2rem;margin-bottom:1rem;text-align:center;
+    }
+    .timer-time{
+      font-size:clamp(4rem,15vw,6.5rem);font-weight:800;letter-spacing:-.04em;
+      font-variant-numeric:tabular-nums;line-height:1;
+      color:var(--tc,#2F80ED);transition:color .3s;
+    }
+    .timer-time.done{animation:timerFlash .8s ease 5}
+    @keyframes timerFlash{0%,100%{opacity:1}50%{opacity:.12}}
+    .timer-sub{font-size:.67rem;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:#94A3B8;margin-top:.6rem}
+    .timer-prog-wrap{margin:1.5rem 0 0}
+    .timer-prog-track{height:5px;border-radius:3px;background:#EEF3F8;overflow:hidden}
+    .timer-prog-fill{height:100%;border-radius:3px;background:var(--tc,#2F80ED);transition:width 1s linear,background .3s}
+    .timer-ctrls{display:flex;gap:.65rem;justify-content:center;margin-top:1rem}
+    .timer-ctrls button{
+      min-width:110px;padding:.6rem 1.25rem;border-radius:9px;border:none;
+      font-size:.8rem;font-weight:700;cursor:pointer;transition:opacity .15s;
+    }
+    .timer-ctrls button:active{opacity:.75}
+    .btn-timer-start{background:var(--tc,#2F80ED);color:#fff;transition:background .3s}
+    .btn-timer-reset{background:#F1F5F9;color:#516070}
+    .timer-steam-info{
+      text-align:center;background:#fff;border:1.5px solid #E1E8F0;border-radius:16px;padding:3rem 2rem;
+    }
+    .timer-steam-info h3{font-size:1.05rem;font-weight:800;color:#EB5757;margin:0 0 .5rem}
+    .timer-steam-info p{font-size:.78rem;color:#94A3B8;line-height:1.55;margin:0}
+
   </style>
 </head>
 <body>
@@ -1054,6 +1093,7 @@
         <button class="tab-btn" onclick="mudarTab('design')">Design</button>
         <button class="tab-btn" onclick="mudarTab('core')">Core Values</button>
         <button class="tab-btn tab-btn--steam" onclick="mudarTab('indicadores')">Indicadores STEAM</button>
+        <button class="tab-btn" onclick="mudarTab('cronometro')">Cronômetro</button>
       </div>
       <input id="filtro-busca" type="search" placeholder="Buscar equipe…" oninput="filtrar()" style="min-width:160px">
       <div class="coord-logout">
@@ -1117,6 +1157,32 @@
           <thead id="cat-thead"></thead>
           <tbody id="cat-tbody"></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- Vista: Cronômetro de avaliação -->
+    <div id="view-cronometro" class="hidden" style="--tc:#2F80ED">
+      <div class="timer-comp-btns">
+        <button class="timer-comp-btn ativo" data-comp="FLL"          onclick="timerComp('FLL')">FLL</button>
+        <button class="timer-comp-btn"       data-comp="OBR"          onclick="timerComp('OBR')">OBR</button>
+        <button class="timer-comp-btn"       data-comp="Steam Racing" onclick="timerComp('Steam Racing')">Steam Racing</button>
+      </div>
+      <div id="timer-block">
+        <div class="timer-card">
+          <div class="timer-time" id="timer-time">02:30</div>
+          <div class="timer-sub" id="timer-sub">Avaliação por sala &middot; FLL &middot; 2 min 30 s</div>
+          <div class="timer-prog-wrap">
+            <div class="timer-prog-track"><div class="timer-prog-fill" id="timer-prog" style="width:100%"></div></div>
+          </div>
+        </div>
+        <div class="timer-ctrls">
+          <button class="btn-timer-start" id="btn-timer-start" onclick="timerToggle()">Iniciar</button>
+          <button class="btn-timer-reset"                       onclick="timerReset()">Reiniciar</button>
+        </div>
+      </div>
+      <div id="timer-steam" class="timer-steam-info hidden">
+        <h3>Steam Racing</h3>
+        <p>Steam Racing não utiliza cronômetro de avaliação por sala.<br>O resultado é determinado pelo tempo de corrida na pista.</p>
       </div>
     </div>
 
@@ -1190,13 +1256,14 @@
   // ── Tabs ──────────────────────────────────────────────────────
   function mudarTab(tab) {
     tabAtual = tab;
-    var prefixes = { todas:'todas', projeto:'proj', design:'des', core:'core', indicadores:'indic' };
+    var prefixes = { todas:'todas', projeto:'proj', design:'des', core:'core', indicadores:'indic', cronometro:'cron' };
     document.querySelectorAll('.tab-btn').forEach(function(b) {
       b.classList.toggle('ativo', b.textContent.trim().toLowerCase().startsWith(prefixes[tab] || tab));
     });
     document.getElementById('view-todas').classList.toggle('hidden', tab !== 'todas');
     document.getElementById('view-cat').classList.toggle('hidden', tab !== 'projeto' && tab !== 'design' && tab !== 'core');
     document.getElementById('view-indicadores').classList.toggle('hidden', tab !== 'indicadores');
+    document.getElementById('view-cronometro').classList.toggle('hidden', tab !== 'cronometro');
     if (tab === 'projeto' || tab === 'design' || tab === 'core') renderCat(tab);
     if (tab === 'indicadores') renderIndicadores();
   }
@@ -1493,6 +1560,82 @@
 
   tentarResumir();
   setInterval(tentarResumir, 20000);
+
+  // ── Cronômetro de avaliação ────────────────────────────────────
+  var TIMER_CFG = {
+    'FLL':          { s: 150, color: '#2F80ED', sub: 'FLL &middot; 2 min 30 s' },
+    'OBR':          { s: 300, color: '#27AE60', sub: 'OBR &middot; 5 min'       },
+    'Steam Racing': { s: null, color: '#EB5757', sub: 'Steam Racing'            }
+  };
+  var _tComp    = 'FLL';
+  var _tSec     = 150;
+  var _tTotal   = 150;
+  var _tRunning = false;
+  var _tIv      = null;
+
+  function _timerDraw() {
+    var m = Math.floor(_tSec / 60), s = _tSec % 60;
+    var el  = document.getElementById('timer-time');
+    var sub = document.getElementById('timer-sub');
+    var prog= document.getElementById('timer-prog');
+    var btn = document.getElementById('btn-timer-start');
+    if (el)   el.textContent = (m<10?'0':'')+m+':'+(s<10?'0':'')+s;
+    if (prog) prog.style.width = (_tTotal > 0 ? (_tSec/_tTotal)*100 : 0) + '%';
+    if (btn)  btn.textContent = _tRunning ? 'Pausar' : (_tSec < _tTotal ? 'Continuar' : 'Iniciar');
+  }
+
+  function timerComp(comp) {
+    _timerStop();
+    _tComp = comp;
+    var cfg = TIMER_CFG[comp];
+    _tSec   = cfg.s || 0;
+    _tTotal = cfg.s || 0;
+    var vw = document.getElementById('view-cronometro');
+    if (vw) vw.style.setProperty('--tc', cfg.color);
+    var sub = document.getElementById('timer-sub');
+    if (sub) sub.innerHTML = 'Avaliação por sala &middot; ' + cfg.sub;
+    var block = document.getElementById('timer-block');
+    var steam = document.getElementById('timer-steam');
+    var isSteam = comp === 'Steam Racing';
+    if (block) block.classList.toggle('hidden', isSteam);
+    if (steam) steam.classList.toggle('hidden', !isSteam);
+    document.querySelectorAll('.timer-comp-btn').forEach(function(b) {
+      b.classList.toggle('ativo', b.dataset.comp === comp);
+    });
+    _timerDraw();
+  }
+
+  function timerToggle() {
+    if (_tSec <= 0) return;
+    _tRunning ? _timerStop() : _timerStart();
+  }
+
+  function _timerStart() {
+    _tRunning = true;
+    _tIv = setInterval(function() {
+      _tSec = Math.max(0, _tSec - 1);
+      _timerDraw();
+      if (_tSec <= 0) {
+        _timerStop();
+        var el = document.getElementById('timer-time');
+        if (el) { el.classList.add('done'); setTimeout(function(){ el.classList.remove('done'); }, 5000); }
+      }
+    }, 1000);
+    _timerDraw();
+  }
+
+  function _timerStop() {
+    _tRunning = false;
+    if (_tIv) { clearInterval(_tIv); _tIv = null; }
+    _timerDraw();
+  }
+
+  function timerReset() {
+    _timerStop();
+    _tSec   = TIMER_CFG[_tComp].s || 0;
+    _tTotal = _tSec;
+    _timerDraw();
+  }
 
   // ── Indicadores Educacionais STEAM ─────────────────────────────
   function renderIndicadores() {
