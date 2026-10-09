@@ -1603,10 +1603,14 @@
     }
     box.innerHTML = msgs.map(function(m) {
       var isJuiz = m.de !== 'Coordenação';
+      var horaFmt = '';
+      if (m.hora) {
+        try { horaFmt = new Date(m.hora).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }); } catch(_) {}
+      }
       return '<div class="chat-bubble ' + (isJuiz ? 'chat-bubble--juiz' : 'chat-bubble--coord') + '">'
         + '<div class="chat-bubble__who">' + (m.de || '?') + '</div>'
-        + '<div>' + (m.texto || '') + '</div>'
-        + (m.hora ? '<div class="chat-bubble__time">' + m.hora + '</div>' : '')
+        + '<div>' + (m.msg || m.texto || '') + '</div>'
+        + (horaFmt ? '<div class="chat-bubble__time">' + horaFmt + '</div>' : '')
         + '</div>';
     }).join('');
     if (atBottom) box.scrollTop = box.scrollHeight;

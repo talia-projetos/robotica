@@ -394,20 +394,7 @@
   <div class="eq-selector">
     <label for="sel-equipe">Equipe avaliada</label>
     <select id="sel-equipe">
-      <option value="">— Selecione a equipe —</option>
-      <option value="TUR01">6° A • Cyber Panter</option>
-      <option value="TUR02">6° B • Liga do Choque</option>
-      <option value="TUR03">6° C • Alpha Tech</option>
-      <option value="TUR04">6° D • Pheonics Mecanics</option>
-      <option value="TUR05">6° E • TecShark</option>
-      <option value="TUR06">7° A • Hoppin Robots</option>
-      <option value="TUR07">7° B • Bivoltx</option>
-      <option value="TUR08">7° C • Ecoshift</option>
-      <option value="TUR09">7° D • Pantera Lego Team</option>
-      <option value="TUR10">7° E • Império das Onças</option>
-      <option value="TUR11">7° F • Poseidon</option>
-      <option value="TUR12">7° G • Arara Azul</option>
-      <option value="TUR13">7° H • Nexos</option>
+      <option value="">Carregando equipes…</option>
     </select>
   </div>
 
@@ -707,6 +694,23 @@ var CAT  = '';
 var DEF  = null;
 var NOTAS = {};   // cod -> 1|2|3|4
 
+/* ─── Carrega equipes da API (filtra por Comp.val automaticamente) ── */
+async function carregarEquipes() {
+  var sel = document.getElementById('sel-equipe');
+  try {
+    var r = await API.equipes();
+    if (!r || !r.ok || !r.equipes || !r.equipes.length) throw new Error('vazio');
+    var prevVal = sel.value;
+    sel.innerHTML = '<option value="">— Selecione a equipe —</option>'
+      + r.equipes.map(function(e) {
+          return '<option value="' + e.id + '">' + e.nome + '</option>';
+        }).join('');
+    if (prevVal) sel.value = prevVal;
+  } catch(_) {
+    sel.innerHTML = '<option value="">— Selecione a equipe —</option>';
+  }
+}
+
 /* ─── Init ───────────────────────────────────────────────────── */
 (function init() {
   if (!Sessao.logado()) {
@@ -714,6 +718,7 @@ var NOTAS = {};   // cod -> 1|2|3|4
     return;
   }
   document.getElementById('badge-juiz').textContent = Sessao.juiz;
+  carregarEquipes();
 
   CAT = new URLSearchParams(location.search).get('cat') || '';
 
