@@ -1346,6 +1346,91 @@
       .scores-cats-grid{grid-template-columns:1fr}
     }
 
+    /* ── Profile Card v2 ───────────────────────────────────────── */
+    .eq-profile {
+      border-radius: 14px;
+      overflow: hidden;
+      background: #fff;
+      border: 1px solid #DDE7F0;
+      box-shadow: 0 4px 18px rgba(15,23,42,.04);
+      margin-bottom: .85rem;
+    }
+    .eq-profile__banner {
+      height: 80px;
+      background: linear-gradient(135deg,#0D3A6E 0%,#1A5EA8 100%);
+    }
+    .eq-profile__body {
+      display: flex;
+      align-items: flex-start;
+      gap: .9rem;
+      padding: 0 1.25rem 1rem;
+    }
+    .eq-profile__avatar-wrap {
+      margin-top: -36px;
+      flex-shrink: 0;
+    }
+    .eq-profile__avatar,
+    .eq-profile__avatar-ph {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 10px rgba(15,23,42,.14);
+      display: block;
+    }
+    .eq-profile__avatar {
+      object-fit: cover;
+      object-position: center;
+      background: #EEF3F8;
+    }
+    .eq-profile__avatar-ph {
+      background: #E4EBF4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8A9DB5;
+    }
+    .eq-profile__avatar-ph svg {
+      width: 36px;
+      height: 36px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .eq-profile__info {
+      flex: 1;
+      min-width: 0;
+      padding-top: .55rem;
+    }
+    .eq-profile__name {
+      font-size: 1.18rem;
+      font-weight: 780;
+      color: #172236;
+      letter-spacing: -.025em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .eq-profile__meta {
+      font-size: .7rem;
+      color: #7F8DA0;
+      font-weight: 600;
+      margin-top: .18rem;
+      letter-spacing: .01em;
+    }
+    .eq-profile__actions {
+      padding-top: .7rem;
+      flex-shrink: 0;
+    }
+    @media(max-width:640px) {
+      .eq-profile__banner { height: 58px; }
+      .eq-profile__avatar-wrap { margin-top: -28px; }
+      .eq-profile__avatar, .eq-profile__avatar-ph { width: 72px; height: 72px; }
+      .eq-profile__name { font-size: 1rem; }
+    }
+
   </style>
 </head>
 <body>
@@ -1430,14 +1515,22 @@
       <button id="btn-sair">Sair</button>
     </div>
 
-    <!-- Banner da equipe -->
-    <div class="eq-header" id="eq-header">
-      <img id="eq-logo" class="eq-logo" src="" alt="" style="display:none">
-      <div class="eq-header__info">
-        <div class="eq-header__id" id="eq-id">—</div>
-        <div class="eq-header__nome" id="eq-nome">—</div>
+    <!-- Profile card da equipe -->
+    <div class="eq-profile" id="eq-header">
+      <div class="eq-profile__banner" id="eq-banner"></div>
+      <div class="eq-profile__body">
+        <div class="eq-profile__avatar-wrap">
+          <img id="eq-logo" class="eq-profile__avatar" src="" alt="" style="display:none">
+          <div id="eq-logo-ph" class="eq-profile__avatar-ph">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>
+          </div>
+        </div>
+        <div class="eq-profile__info">
+          <div class="eq-profile__name" id="eq-id">—</div>
+          <div class="eq-profile__meta" id="eq-nome">—</div>
+        </div>
+        <div class="eq-profile__actions" id="eq-status"></div>
       </div>
-      <div class="eq-header__status" id="eq-status"></div>
     </div>
 
     <!-- Abas contextuais -->
@@ -1837,14 +1930,7 @@
       TUR12:'TUR12.jpg', TUR13:'TUR13.jpg'
     };
 
-    var logoEl   = document.getElementById('eq-logo');
-    var logoFile = logoFiles[eq.id];
-    if (logoFile) {
-      logoEl.src = 'img/turmas/' + logoFile;
-      logoEl.style.display = '';
-    } else {
-      logoEl.style.display = 'none';
-    }
+    atualizarBannerLogo(eq.id, logoFiles[eq.id] || null);
 
     renderScores(data.scores);
     renderComments(data.comentarios);
@@ -1908,6 +1994,32 @@
     }
   });
 
+  var COMP_GRAD = {
+    'FLL':          'linear-gradient(135deg,#0D3A6E 0%,#1A5EA8 100%)',
+    'OBR':          'linear-gradient(135deg,#0A4024 0%,#196337 100%)',
+    'Steam Racing': 'linear-gradient(135deg,#5E1009 0%,#9B1C0E 100%)'
+  };
+
+  function compDaEquipe(id) {
+    var n = parseInt((id || '').replace('TUR',''), 10) || 0;
+    return n >= 23 ? 'Steam Racing' : n >= 14 ? 'OBR' : 'FLL';
+  }
+
+  function atualizarBannerLogo(eqId, logoFile) {
+    var banEl    = document.getElementById('eq-banner');
+    var logoEl   = document.getElementById('eq-logo');
+    var logoPhEl = document.getElementById('eq-logo-ph');
+    if (banEl) banEl.style.background = COMP_GRAD[compDaEquipe(eqId)] || COMP_GRAD['FLL'];
+    if (logoFile) {
+      logoEl.src = 'img/turmas/' + logoFile;
+      logoEl.style.display = '';
+      if (logoPhEl) logoPhEl.style.display = 'none';
+    } else {
+      logoEl.style.display = 'none';
+      if (logoPhEl) logoPhEl.style.display = '';
+    }
+  }
+
   var nomesMap = {
     TUR01:'6º A · Cyber Panter', TUR02:'6º B · Liga do Choque',
     TUR03:'6º C · Alpha Tech',   TUR04:'6º D · Pheonics Mecanics',
@@ -1952,6 +2064,7 @@
     document.getElementById('eq-nome').textContent = [sigla, id].filter(Boolean).join(' · ');
     var _bt2 = document.getElementById('badge-turma');
     if (_bt2) _bt2.textContent = id;
+    atualizarBannerLogo(id, null);
     document.getElementById('scores-grid').innerHTML =
       '<p style="color:#94A3B8;font-size:.8rem;padding:.5rem 0">Carregando resultados…</p>';
   }

@@ -1465,6 +1465,8 @@
       if (_bc3) _bc3.textContent = nome;
       renderTodas(dadosEquipes);
       renderSummary();
+      if (tabAtual === 'projeto' || tabAtual === 'design' || tabAtual === 'core') renderCat(tabAtual);
+      if (tabAtual === 'indicadores') renderIndicadores();
       if (_st) {
         var _now = new Date();
         _st.textContent = 'Planilha · ' + _now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
