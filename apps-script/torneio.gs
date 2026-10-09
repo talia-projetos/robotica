@@ -471,7 +471,7 @@ function criarAbaConfig_(ss) {
     ['Aba Form Core OBR',            'FORM_CORE_OBR',      '← OBR: Nome exato da aba de respostas do Form de Core Values.'],
     ['Aba Form Arena Steam',         'FORM_ARENA_STEAM',   '← Steam Racing: Nome exato da aba de respostas do Form da Arena.'],
     ['Aba Form Projeto Steam',       'FORM_PROJETO_STEAM', '← Steam Racing: Nome exato da aba de respostas do Form de Projeto.'],
-    ['Aba Form Design Steam',        'FORM_DESIGN_STEAM',  '← Steam Racing: Nome exato da aba de respostas do Form de Design.'],
+    ['Aba Form Design Steam',        'FORM_ENGENHARIA_STEAM',  '← Steam Racing: Nome exato da aba de respostas do Form de Engenharia.'],
     ['Aba Form Core Steam',          'FORM_CORE_STEAM',    '← Steam Racing: Nome exato da aba de respostas do Form de Core Values.']
   ];
 
@@ -1639,7 +1639,11 @@ function apiSalvarRubrica_(body) {
   if (body.notas.length !== cfg.criterios) throw new Error('Esperadas ' + cfg.criterios + ' notas; recebidas: ' + body.notas.length + '.');
   body.notas.forEach(function(n,i){ const v=num_(n); if(v<1||v>4) throw new Error('Nota '+(i+1)+' inválida (1–4): '+n); });
 
-  const aliases = { 'projeto': T.CAT.PROJETO, 'design': T.CAT.DESIGN, 'core': T.CAT.CORE };
+  const aliases = {
+    'projeto': T.CAT.PROJETO, 'design': T.CAT.DESIGN, 'core': T.CAT.CORE,
+    'Projeto de Engenharia': T.CAT.DESIGN, 'Engenharia': T.CAT.DESIGN,
+    [T.CAT.PROJETO]: T.CAT.PROJETO, [T.CAT.DESIGN]: T.CAT.DESIGN, [T.CAT.CORE]: T.CAT.CORE
+  };
   const categoriaReal = aliases[body.categoria] || body.categoria;
   const mapa = {};
   mapa[T.CAT.PROJETO] = cfg.abaProj;
@@ -1675,7 +1679,7 @@ function apiSalvarRubrica_(body) {
 
   set(['Carimbo de data/hora','Timestamp'], new Date());
   set(['Juiz Avaliador','Nome do Juiz','Juiz','Avaliador','E-mail'], body.juiz);
-  set(['Sala de Avaliação','Sala de Avaliacao','Sala'], categoriaReal);
+  set(['Sala de Avaliação','Sala de Avaliacao','Sala'], body.categoria || categoriaReal);
   set(['Selecione a Equipe','ID_Equipe','Equipe Avaliada','Turma'], body.idEquipe);
   set(['Validado','Homologado'], 'Sim');
 
