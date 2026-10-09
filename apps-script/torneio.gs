@@ -556,11 +556,12 @@ function atualizarInterno_(ss, comp) {
   const abas   = abasComp_(comp);
   const cfg    = lerConfig_(ss, diag, comp);
   const eq     = lerEquipes_(ss, cfg, diag, comp);
+  const eqAll  = lerEquipes_(ss, cfg, [], null);  // todas as competições — tampinhas é transversal
   const arena  = lerArena_(ss, cfg, eq, diag);
   const proj   = lerRubrica_(ss, cfg.abaProj,  T.CAT.PROJETO, cfg, eq, diag);
   const desig  = lerRubrica_(ss, cfg.abaDes,   T.CAT.DESIGN,  cfg, eq, diag);
   const core   = lerRubrica_(ss, cfg.abaCore,  T.CAT.CORE,    cfg, eq, diag);
-  const tamp   = lerTampinhas_(ss, cfg, eq, diag);
+  const tamp   = lerTampinhas_(ss, cfg, eqAll, diag);
   const dados  = calcularResultados_(eq, arena, [proj, desig, core], tamp, cfg);
 
   escreverBase_(ss, dados, abas);
