@@ -31,16 +31,26 @@ const API = (function () {
 
   async function post(body) {
     const b = Object.assign({ comp: Comp.val }, body);
-    const res = await fetch(url(), {
-      method: 'POST',
-      redirect: 'manual',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(b)
-    });
-    // Google Apps Script redireciona POST com 302 — opaqueredirect = aceito
-    if (res.type === 'opaqueredirect' || res.status === 0) return { ok: true };
-    if (!res.ok) throw new Error('Erro HTTP ' + res.status);
-    return res.json();
+    const ctrl = new AbortController();
+    const tid  = setTimeout(() => ctrl.abort(), 25000);
+    try {
+      const res = await fetch(url(), {
+        method: 'POST',
+        redirect: 'manual',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify(b),
+        signal: ctrl.signal
+      });
+      // Google Apps Script redireciona POST com 302 — opaqueredirect = aceito
+      if (res.type === 'opaqueredirect' || res.status === 0) return { ok: true };
+      if (!res.ok) throw new Error('Erro HTTP ' + res.status);
+      return res.json();
+    } catch(e) {
+      if (e.name === 'AbortError') throw new Error('Tempo limite excedido. Verifique a conexão e tente novamente.');
+      throw e;
+    } finally {
+      clearTimeout(tid);
+    }
   }
 
   return {

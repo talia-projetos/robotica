@@ -1697,7 +1697,8 @@ function apiSalvarRubrica_(body) {
   set(['Reflitam sobre','Reflitam','Reflita'], String(obs.melhorar || '').trim());
 
   aba.appendRow(linha);
-  atualizarInterno_(ss, body.comp);
+  SpreadsheetApp.flush();
+  _agendarRecalculo_();
   return { ok: true, mensagem: 'Rubrica salva.' };
 }
 
@@ -1737,7 +1738,8 @@ function apiSalvarArena_(body) {
   set('Validado', 'Sim');
   Object.keys(body.missoes).forEach(function(m){ set(m, num_(body.missoes[m])); });
   aba.appendRow(linha);
-  atualizarInterno_(ss, body.comp);
+  SpreadsheetApp.flush();
+  _agendarRecalculo_();
   return { ok: true, mensagem: 'Arena salva.' };
 }
 
@@ -1770,8 +1772,27 @@ function apiSalvarPista_(body) {
     totalMs, reacaoMs, efetivo, situacao,
     invalida ? 'Não' : 'Sim'
   ]);
-  atualizarInterno_(ss, 'Steam Racing');
+  SpreadsheetApp.flush();
+  _agendarRecalculo_();
   return { ok: true, mensagem: 'Corrida registrada.' };
+}
+
+/* Agenda recálculo via trigger assíncrono (debounce ~5 s) para não bloquear o POST */
+function _agendarRecalculo_() {
+  try {
+    ScriptApp.getProjectTriggers().forEach(function(t) {
+      if (t.getHandlerFunction() === 'TORNEIO_recalcDeferred') ScriptApp.deleteTrigger(t);
+    });
+    ScriptApp.newTrigger('TORNEIO_recalcDeferred').timeBased().after(5000).create();
+  } catch(e) { console.warn('_agendarRecalculo_:', e); }
+}
+
+function TORNEIO_recalcDeferred() {
+  ScriptApp.getProjectTriggers().forEach(function(t) {
+    if (t.getHandlerFunction() === 'TORNEIO_recalcDeferred') ScriptApp.deleteTrigger(t);
+  });
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  COMPS.forEach(function(c) { try { atualizarInterno_(ss, c); } catch(e) { console.error(c, e); } });
 }
 
 function apiSalvarComentario_(body) {
