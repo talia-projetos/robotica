@@ -322,75 +322,191 @@ var ESCALA = [
   { num:'4', nome:'Avançado',            desc:'Atende plenamente aos critérios.' }
 ];
 
+/* ─── Fichas especiais (arena / pista) ───────────────────────── */
+var FICHA_OBR = {
+  titulo: 'Arena de Resgate — OBR',
+  cor: '#1D4ED8', corLight: '#EFF6FF', tipo: 'obr-arena',
+  missoes: [
+    { cod:'OBR1', nome:'Ladrilho inicial superado', pts:5,  desc:'O robô ultrapassa completamente o ladrilho de saída. 0 = não superou · 5 = superou.' },
+    { cod:'OBR2', nome:'Lombada',                   pts:10, desc:'O robô transpõe a lombada sem parar ou sair da faixa. 0 = não transpôs · 10 = transpôs.' },
+    { cod:'OBR3', nome:'Portal',                    pts:5,  desc:'O robô passa pelo portal sem derrubá-lo. 0 = não passou/derrubou · 5 = passou.' },
+    { cod:'OBR4', nome:'Curva',                     pts:10, desc:'O robô realiza a curva dentro dos limites da faixa. 0 = saiu da faixa · 10 = concluiu.' },
+    { cod:'OBR5', nome:'Obstáculo',                 pts:20, desc:'O robô ultrapassa ou contorna o obstáculo sem derrubá-lo. 0 = não superou · 20 = superou.' },
+    { cod:'OBR6', nome:'Gangorra',                  pts:15, desc:'O robô sobe e desce a gangorra, tocando o chão nos dois lados. 0 = não completou · 15 = completou.' }
+  ],
+  maxTotal: 65
+};
+
+var FICHA_STEAM = {
+  titulo: 'Pista de Corridas — Steam Racing',
+  cor: '#0F766E', corLight: '#F0FDF4', tipo: 'steam-pista',
+  corridas: [
+    { id:'C1', label:'Corrida 1 · Raia A' },
+    { id:'C2', label:'Corrida 2 · Raia A' },
+    { id:'C3', label:'Corrida 3 · Raia B' },
+    { id:'C4', label:'Corrida 4 · Raia B' }
+  ]
+};
+
 /* ─── Ler parâmetro ?cat= ─────────────────────────────────────── */
 var cat = (new URLSearchParams(location.search)).get('cat') || 'projeto';
-var def = RUBRICAS[cat] || RUBRICAS['projeto'];
+var def = RUBRICAS[cat] || null;
+var fichaEsp = cat === 'obr-arena' ? FICHA_OBR : cat === 'steam-pista' ? FICHA_STEAM : null;
+if (!def && !fichaEsp) def = RUBRICAS['projeto'];
+
+var defAtivo = fichaEsp || def;
 
 /* ─── Aplicar cor CSS var ─────────────────────────────────────── */
-document.documentElement.style.setProperty('--cor',       def.cor);
-document.documentElement.style.setProperty('--cor-light', def.corLight);
-document.title = 'Rubrica — ' + def.titulo + ' — Torneio STEM SESI';
+document.documentElement.style.setProperty('--cor',       defAtivo.cor);
+document.documentElement.style.setProperty('--cor-light', defAtivo.corLight);
+document.title = 'Ficha — ' + defAtivo.titulo + ' — Torneio STEM SESI';
 
 /* ─── Renderizar ──────────────────────────────────────────────── */
 function h(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 var html = '';
 
-/* Cabeçalho */
+/* Cabeçalho comum */
+var tituloSecundario = fichaEsp ? 'Ficha de Pontuação' : 'Rubrica de Avaliação';
+var subtituloExtra   = fichaEsp ? '' : ('Escala 1–4 &nbsp;&middot;&nbsp; ' + (def.blocos.reduce(function(a,b){return a+b.criterios.length;},0)) + ' critérios &nbsp;&middot;&nbsp; ');
 html += '<div class="print-header">';
 html += '  <div class="print-header__left">';
 html += '    <div class="print-header__tag">Torneio Interno STEM &mdash; SESI</div>';
-html += '    <div class="print-header__title">Rubrica de Avaliação</div>';
-html += '    <div class="print-header__title" style="color:var(--cor)">' + h(def.titulo) + '</div>';
-html += '    <div class="print-header__subtitle">Escala 1–4 &nbsp;&middot;&nbsp; ' + (def.blocos.reduce(function(a,b){return a+b.criterios.length;},0)) + ' critérios &nbsp;&middot;&nbsp; Torneio ' + new Date().getFullYear() + '</div>';
+html += '    <div class="print-header__title">' + h(tituloSecundario) + '</div>';
+html += '    <div class="print-header__title" style="color:var(--cor)">' + h(defAtivo.titulo) + '</div>';
+html += '    <div class="print-header__subtitle">' + subtituloExtra + 'Torneio ' + new Date().getFullYear() + '</div>';
 html += '  </div>';
 html += '  <img src="logo-claro.svg" class="print-header__logo" alt="SESI" style="filter:brightness(0) saturate(100%);opacity:.7">';
 html += '</div>';
 
-/* Escala */
-html += '<div class="escala-bar">';
-ESCALA.forEach(function(e) {
-  html += '<div class="escala-item">';
-  html += '  <div class="escala-item__num">' + h(e.num) + '</div>';
-  html += '  <div class="escala-item__nome">' + h(e.nome) + '</div>';
-  html += '  <div class="escala-item__desc">' + h(e.desc) + '</div>';
-  html += '</div>';
-});
-html += '</div>';
-
-/* Blocos */
-def.blocos.forEach(function(bloco) {
+/* ── Conteúdo específico por tipo ────────────────────────────── */
+if (fichaEsp && fichaEsp.tipo === 'obr-arena') {
+  /* Ficha de missões OBR */
   html += '<div class="bloco">';
-  html += '  <div class="bloco__label">' + h(bloco.label) + '</div>';
+  html += '  <div class="bloco__label">Missões — Arena de Resgate &nbsp;·&nbsp; Máx ' + FICHA_OBR.maxTotal + ' pts por round</div>';
   html += '  <table class="criterios-table">';
   html += '    <thead><tr>';
-  html += '      <th style="width:3em">Cod.</th>';
-  html += '      <th style="width:9rem">Critério</th>';
-  html += '      <th>Descrição / Evidência esperada</th>';
-  html += '      <th>1</th><th>2</th><th>3</th><th>4</th>';
-  html += '    </tr></thead>';
-  html += '    <tbody>';
-  bloco.criterios.forEach(function(c) {
-    html += '    <tr>';
-    html += '      <td class="td-cod">' + h(c.cod) + '</td>';
-    html += '      <td class="td-nome">' + h(c.nome) + '</td>';
-    html += '      <td class="td-desc">' + h(c.desc) + '</td>';
-    html += '      <td class="td-nota"><div class="nota-box"></div></td>';
-    html += '      <td class="td-nota"><div class="nota-box"></div></td>';
-    html += '      <td class="td-nota"><div class="nota-box"></div></td>';
-    html += '      <td class="td-nota"><div class="nota-box"></div></td>';
-    html += '    </tr>';
+  html += '      <th style="width:3.5em">Cód.</th>';
+  html += '      <th style="width:9rem">Missão</th>';
+  html += '      <th>Regra / Critério</th>';
+  html += '      <th style="width:3.5em">Pts</th>';
+  html += '      <th style="width:4em">Round 1</th>';
+  html += '      <th style="width:4em">Round 2</th>';
+  html += '      <th style="width:4em">Round 3</th>';
+  html += '    </tr></thead><tbody>';
+  FICHA_OBR.missoes.forEach(function(m) {
+    html += '<tr>';
+    html += '  <td class="td-cod">' + h(m.cod) + '</td>';
+    html += '  <td class="td-nome">' + h(m.nome) + '</td>';
+    html += '  <td class="td-desc">' + h(m.desc) + '</td>';
+    html += '  <td style="text-align:center;font-weight:700;color:var(--cor)">' + h(String(m.pts)) + '</td>';
+    html += '  <td class="td-nota"><div class="nota-box" style="width:100%;height:28px"></div></td>';
+    html += '  <td class="td-nota"><div class="nota-box" style="width:100%;height:28px"></div></td>';
+    html += '  <td class="td-nota"><div class="nota-box" style="width:100%;height:28px"></div></td>';
+    html += '</tr>';
   });
-  html += '    </tbody>';
-  html += '  </table>';
+  html += '<tr style="background:var(--cor-light);font-weight:800">';
+  html += '  <td colspan="3" style="text-align:right;padding:.4rem .6rem">TOTAL DO ROUND</td>';
+  html += '  <td style="text-align:center;color:var(--cor)">' + FICHA_OBR.maxTotal + '</td>';
+  html += '  <td class="td-nota"><div class="nota-box" style="width:100%;height:30px;border-color:var(--cor)"></div></td>';
+  html += '  <td class="td-nota"><div class="nota-box" style="width:100%;height:30px;border-color:var(--cor)"></div></td>';
+  html += '  <td class="td-nota"><div class="nota-box" style="width:100%;height:30px;border-color:var(--cor)"></div></td>';
+  html += '</tr>';
+  html += '  </tbody></table></div>';
+  html += '<div class="bloco" style="margin-top:1rem">';
+  html += '  <div class="bloco__label">Perigos por Desenho (pontuação adicional)</div>';
+  html += '  <table class="criterios-table"><thead><tr>';
+  html += '    <th>Perigoso</th><th>Pts cada</th><th>Qtd R1</th><th>Sub R1</th><th>Qtd R2</th><th>Sub R2</th><th>Qtd R3</th><th>Sub R3</th>';
+  html += '  </tr></thead><tbody>';
+  [
+    { nome:'Obstáculo Sólido', pts:20 },
+    { nome:'Lombada',          pts:10 },
+    { nome:'GAP',              pts:10 },
+    { nome:'Interseção em T',  pts:10 }
+  ].forEach(function(p) {
+    html += '<tr><td class="td-nome">' + h(p.nome) + '</td>';
+    html += '<td style="text-align:center;color:var(--cor);font-weight:700">' + p.pts + '</td>';
+    for (var i=0;i<6;i++) html += '<td class="td-nota"><div class="nota-box" style="width:100%;height:26px"></div></td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table></div>';
+
+} else if (fichaEsp && fichaEsp.tipo === 'steam-pista') {
+  /* Ficha de tempo — Steam Racing */
+  html += '<div class="bloco">';
+  html += '  <div class="bloco__label">Registro de Tempos — Pista de Corridas</div>';
+  html += '  <table class="criterios-table">';
+  html += '    <thead><tr>';
+  html += '      <th style="width:4em">Cód.</th>';
+  html += '      <th style="width:11rem">Corrida</th>';
+  html += '      <th>Tempo (mm:ss.ms)</th>';
+  html += '      <th style="width:5em">Válida?</th>';
+  html += '      <th>Observação</th>';
+  html += '    </tr></thead><tbody>';
+  FICHA_STEAM.corridas.forEach(function(c) {
+    html += '<tr>';
+    html += '  <td class="td-cod">' + h(c.id) + '</td>';
+    html += '  <td class="td-nome">' + h(c.label) + '</td>';
+    html += '  <td><div class="nota-box" style="width:100%;height:30px;font-size:11pt;letter-spacing:.1em"></div></td>';
+    html += '  <td style="text-align:center"><div style="display:flex;gap:.5rem;justify-content:center"><div class="nota-box" style="width:28px;height:28px"></div><div class="nota-box" style="width:28px;height:28px;border-color:#CBD5E1"></div></div></td>';
+    html += '  <td></td>';
+    html += '</tr>';
+  });
+  html += '<tr style="background:var(--cor-light);font-weight:800">';
+  html += '  <td colspan="2" style="text-align:right;padding:.4rem .6rem">MELHOR TEMPO</td>';
+  html += '  <td><div class="nota-box" style="width:100%;height:30px;border-color:var(--cor)"></div></td>';
+  html += '  <td></td><td></td>';
+  html += '</tr>';
+  html += '  </tbody></table></div>';
+  html += '<div style="margin-top:.75rem;font-size:8.5pt;color:#64748B">';
+  html += '  Válida = S (sim) · N (não) · DQ (desqualificada) &nbsp;·&nbsp; Formato de tempo: <strong>mm:ss.ms</strong> ex: 01:23.456';
   html += '</div>';
-});
+
+} else {
+  /* Rubrica padrão (projeto / design / core) */
+  html += '<div class="escala-bar">';
+  ESCALA.forEach(function(e) {
+    html += '<div class="escala-item">';
+    html += '  <div class="escala-item__num">' + h(e.num) + '</div>';
+    html += '  <div class="escala-item__nome">' + h(e.nome) + '</div>';
+    html += '  <div class="escala-item__desc">' + h(e.desc) + '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  def.blocos.forEach(function(bloco) {
+    html += '<div class="bloco">';
+    html += '  <div class="bloco__label">' + h(bloco.label) + '</div>';
+    html += '  <table class="criterios-table">';
+    html += '    <thead><tr>';
+    html += '      <th style="width:3em">Cod.</th>';
+    html += '      <th style="width:9rem">Critério</th>';
+    html += '      <th>Descrição / Evidência esperada</th>';
+    html += '      <th>1</th><th>2</th><th>3</th><th>4</th>';
+    html += '    </tr></thead>';
+    html += '    <tbody>';
+    bloco.criterios.forEach(function(c) {
+      html += '    <tr>';
+      html += '      <td class="td-cod">' + h(c.cod) + '</td>';
+      html += '      <td class="td-nome">' + h(c.nome) + '</td>';
+      html += '      <td class="td-desc">' + h(c.desc) + '</td>';
+      html += '      <td class="td-nota"><div class="nota-box"></div></td>';
+      html += '      <td class="td-nota"><div class="nota-box"></div></td>';
+      html += '      <td class="td-nota"><div class="nota-box"></div></td>';
+      html += '      <td class="td-nota"><div class="nota-box"></div></td>';
+      html += '    </tr>';
+    });
+    html += '    </tbody>';
+    html += '  </table>';
+    html += '</div>';
+  });
+}
 
 /* Rodapé */
 html += '<div class="print-footer">';
 html += '  <span>Equipe: _________________________</span>';
 html += '  <div class="print-footer__line"></div>';
-html += '  <span>Avaliador(a): _________________________</span>';
+html += '  <span>Avaliador(a) / Árbitro: _________________________</span>';
 html += '  <div class="print-footer__line"></div>';
 html += '  <span>Data: ___/___/______</span>';
 html += '</div>';
