@@ -834,22 +834,27 @@ function renderCriterios() {
 
   DEF.blocos.forEach(function(bloco) {
     html += '<div class="bloco-card">'
-      + '<div class="bloco-head" style="background:' + DEF.cor + '">' + bloco.label + '</div>';
+      + '<div class="bloco-head" style="background:' + DEF.corLight + ';color:' + DEF.cor + ';border-left-color:' + DEF.cor + '">' + bloco.label + '</div>'
+      + '<table class="criterios-table">'
+      + '<thead><tr>'
+      + '<th class="th-cod">Cod.</th>'
+      + '<th class="th-nome">Crit&eacute;rio</th>'
+      + '<th class="th-desc">Descri&ccedil;&atilde;o / Evid&ecirc;ncia esperada</th>'
+      + '<th class="th-nota">1</th><th class="th-nota">2</th><th class="th-nota">3</th><th class="th-nota">4</th>'
+      + '</tr></thead><tbody>';
 
     bloco.criterios.forEach(function(c) {
-      html += '<div class="criterio-row">'
-        + '<div>'
-        + '<div class="criterio-cod">' + c.cod + '</div>'
-        + '<div class="criterio-nome">' + c.nome + '</div>'
-        + '<div class="criterio-desc">' + c.desc + '</div>'
-        + '</div>'
-        + '<div class="score-sel" id="sel-' + c.cod + '">';
+      html += '<tr>'
+        + '<td class="td-cod" style="color:' + DEF.cor + '">' + c.cod + '</td>'
+        + '<td class="td-nome">' + c.nome + '</td>'
+        + '<td class="td-desc">' + c.desc + '</td>';
       [1,2,3,4].forEach(function(n) {
-        html += '<button class="score-btn" data-cod="' + c.cod + '" data-val="' + n + '" onclick="marcar(this)">' + n + '</button>';
+        html += '<td class="td-nota"><button class="score-btn" data-cod="' + c.cod + '" data-val="' + n + '" onclick="marcar(this)">' + n + '</button></td>';
       });
-      html += '</div></div>';
+      html += '</tr>';
     });
-    html += '</div>';
+
+    html += '</tbody></table></div>';
   });
 
   wrap.innerHTML = html;
@@ -927,10 +932,10 @@ function restaurarDraft() {
     NOTAS = d.notas || {};
     Object.keys(NOTAS).forEach(function(cod) {
       var v = NOTAS[cod];
-      var g = document.getElementById('sel-' + cod);
-      if (!g) return;
-      g.querySelectorAll('.score-btn').forEach(function(b) {
-        b.classList.toggle('activo', Number(b.dataset.val) === v);
+      document.querySelectorAll('.score-btn[data-cod="' + cod + '"]').forEach(function(b) {
+        var active = Number(b.dataset.val) === v;
+        b.classList.toggle('ativo', active);
+        if (active) b.style.background = DEF.cor; else b.style.background = '';
       });
     });
     atualizarTotal();
@@ -957,7 +962,7 @@ function marcar(btn) {
   NOTAS[cod] = val;
 
   /* Atualiza visuais do grupo */
-  var grupo = document.getElementById('sel-' + cod).querySelectorAll('.score-btn');
+  var grupo = document.querySelectorAll('.score-btn[data-cod="' + cod + '"]');
   grupo.forEach(function(b) {
     var active = Number(b.dataset.val) === val;
     b.classList.toggle('ativo', active);
