@@ -74,23 +74,53 @@
       box-shadow: 0 1px 3px rgba(0,0,0,.04);
     }
     .bloco-head {
-      padding: .5rem 1rem; font-size: .65rem; font-weight: 800;
-      text-transform: uppercase; letter-spacing: .09em; color: #fff;
-      display: flex; align-items: center; gap: .5rem;
+      padding: .4rem .9rem; font-size: .68rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .1em;
+      border-left: 3px solid;
     }
-    .criterio-row {
-      display: grid; grid-template-columns: minmax(0,1fr) auto;
-      align-items: center; gap: .75rem;
-      padding: .75rem 1rem;
-      border-top: 1px solid #F1F5F9;
+
+    /* ── Tabela de critérios (igual ao PDF) ─────────────────── */
+    .criterios-table {
+      width: 100%; border-collapse: collapse;
+      border: 1px solid #DDE7F0; border-top: none;
     }
-    .criterio-row:first-of-type { border-top: none; }
-    .criterio-cod  { font-size: .62rem; font-weight: 800; color: #94A3B8; margin-bottom: .15rem; letter-spacing: .04em; }
-    .criterio-nome { font-size: .88rem; font-weight: 700; color: #0F172A; line-height: 1.35; }
-    .criterio-desc { font-size: .72rem; color: #64748B; margin-top: .18rem; line-height: 1.4; }
+    .criterios-table thead tr { background: #F8FAFC; }
+    .criterios-table th {
+      font-size: .67rem; font-weight: 700; color: #64748B;
+      text-align: center; padding: .35rem .5rem;
+      border-bottom: 1px solid #DDE7F0; border-right: 1px solid #DDE7F0;
+      white-space: nowrap;
+    }
+    .criterios-table th.th-cod,
+    .criterios-table th.th-nome,
+    .criterios-table th.th-desc { text-align: left; }
+    .criterios-table th:last-child,
+    .criterios-table td:last-child { border-right: none; }
+    .criterios-table tbody tr { border-bottom: 1px solid #EEF2F7; }
+    .criterios-table tbody tr:last-child { border-bottom: none; }
+    .criterios-table tbody tr:nth-child(even) { background: #FBFCFD; }
+    .criterios-table td {
+      padding: .55rem .6rem; vertical-align: middle;
+      border-right: 1px solid #EEF2F7; font-size: .85rem;
+    }
+    .criterios-table .td-cod {
+      font-weight: 800; white-space: nowrap; font-size: .75rem; width: 3rem;
+    }
+    .criterios-table .td-nome {
+      font-weight: 700; color: #1A2536; min-width: 7rem; max-width: 10rem; font-size: .85rem;
+    }
+    .criterios-table .td-desc {
+      color: #445060; line-height: 1.45; font-size: .8rem;
+    }
+    .criterios-table .td-nota {
+      text-align: center; width: 3.2rem; padding: .35rem .25rem;
+    }
+    @media (max-width: 640px) {
+      .criterios-table .td-desc,
+      .criterios-table th.th-desc { display: none; }
+    }
 
     /* ── Selector de nota 1-4 ───────────────────────────────── */
-    .score-sel { display: flex; gap: .28rem; flex-shrink: 0; }
     .score-btn {
       width: 36px; height: 36px; border-radius: 8px;
       border: 1.5px solid #D1D9E4; background: #F8FAFC;

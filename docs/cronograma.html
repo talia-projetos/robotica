@@ -54,12 +54,12 @@
     }
 
     /* Cores da timeline macro */
-    .tl-abertura  { background: #94A3B8; }
-    .tl-aval      { background: #818CF8; }
-    .tl-r2        { background: #60A5FA; }
-    .tl-r3        { background: #38BDF8; }
-    .tl-delib     { background: #94A3B8; }
-    .tl-premio    { background: #F59E0B; }
+    .tl-abertura  { background: #c1dbcf; }
+    .tl-aval      { background: #fbdd9d; }
+    .tl-r2        { background: #e8a490; }
+    .tl-r3        { background: #e8a490; }
+    .tl-delib     { background: #375451; }
+    .tl-premio    { background: #e68459; }
 
     /* ── Toolbar de filtros ──────────────────────────────────── */
     .crono-toolbar {
@@ -155,8 +155,8 @@
     .g-phase__bar {
       width: 3px; height: 14px; border-radius: 2px; flex-shrink: 0;
     }
-    .g-phase--sala1 .g-phase__bar { background: #818CF8; }
-    .g-phase--sala2 .g-phase__bar { background: #A78BFA; }
+    .g-phase--sala1 .g-phase__bar { background: #fbdd9d; }
+    .g-phase--sala2 .g-phase__bar { background: #e68459; }
     .g-phase__range {
       margin-left: auto; font-weight: 500;
       color: #94A3B8; font-size: .6rem;
@@ -232,12 +232,12 @@
     }
     .gb:hover { opacity: .88; transform: scaleY(1.06); z-index: 5; }
 
-    /* Paleta de rounds — família azul (tons suaves) */
-    .gb-s1 { background: #818CF8; }   /* Avaliação Sala 1 — indigo claro */
-    .gb-s2 { background: #A78BFA; }   /* Avaliação Sala 2 — violet claro */
-    .gb-r1 { background: #60A5FA; }   /* Round 1 — blue claro */
-    .gb-r2 { background: #38BDF8; }   /* Round 2 — sky claro */
-    .gb-r3 { background: #0EA5E9; }   /* Round 3 — sky médio */
+    /* Paleta de blocos — paleta outono do torneio */
+    .gb-s1 { background: #fbdd9d; color: #375451; }  /* Sala A — amarelo creme */
+    .gb-s2 { background: #e68459; color: #fff; }     /* Sala B — ferrugem */
+    .gb-r1 { background: #e8a490; color: #375451; }  /* Round — pêssego */
+    .gb-r2 { background: #e8a490; color: #375451; }
+    .gb-r3 { background: #d97c6b; color: #375451; }  /* Round 3 — pêssego mais escuro */
 
     /* ── Cards de resumo (simplificados) ────────────────────── */
     .info-row {
@@ -687,8 +687,8 @@
       width:2px;
     }
 
-    .schedule-slot--avaliacao::before{background:#818CF8}
-    .schedule-slot--round::before{background:#60A5FA}
+    .schedule-slot--avaliacao::before{background:#fbdd9d}
+    .schedule-slot--round::before{background:#e8a490}
 
     .schedule-slot__time{
       color:#26374B;
@@ -1326,33 +1326,33 @@
   // ── Render de células ───────────────────────────────────────
   /* Fases fixas (não variam por competição) */
   var CELL_CFG = {
-    ab:{bg:'#94A3B8',fg:'#fff',lbl:'Abertura'},
-    fi:{bg:'#64748B',fg:'#fff',lbl:'Finais / Apuração'},
-    pr:{bg:'#F59E0B',fg:'#fff',lbl:'Premiação'},
-    fe:{bg:'#A78BFA',fg:'#fff',lbl:'Festa da Amizade'}
+    ab:{bg:'#c1dbcf',fg:'#375451',lbl:'Abertura'},
+    fi:{bg:'#375451',fg:'#fff',lbl:'Finais / Apuração'},
+    pr:{bg:'#e68459',fg:'#fff',lbl:'Premiação'},
+    fe:{bg:'#fbdd9d',fg:'#375451',lbl:'Festa da Amizade'}
   };
-  /* Paletas complementares por competição */
+  /* Paletas por competição — paleta outono */
   var COMP_CFG = {
     fll: {
-      sa:{bg:'#3B82F6',fg:'#fff',lbl:'Sala A · 17 min'},
-      sb:{bg:'#6366F1',fg:'#fff',lbl:'Sala B · 17 min'},
-      r1:{bg:'#60A5FA',fg:'#fff'},
-      r2:{bg:'#3B82F6',fg:'#fff'},
-      r3:{bg:'#2563EB',fg:'#fff'}
+      sa:{bg:'#fbdd9d',fg:'#375451',lbl:'Sala A · 17 min'},
+      sb:{bg:'#e68459',fg:'#fff',lbl:'Sala B · 17 min'},
+      r1:{bg:'#e8a490',fg:'#375451'},
+      r2:{bg:'#e8a490',fg:'#375451'},
+      r3:{bg:'#d97c6b',fg:'#375451'}
     },
     obr: {
-      sa:{bg:'#F97316',fg:'#fff',lbl:'Sala A · 17 min'},
-      sb:{bg:'#EF4444',fg:'#fff',lbl:'Sala B · 17 min'},
-      r1:{bg:'#FB923C',fg:'#fff'},
-      r2:{bg:'#F97316',fg:'#fff'},
-      r3:{bg:'#EA580C',fg:'#fff'}
+      sa:{bg:'#fbdd9d',fg:'#375451',lbl:'Sala A · 17 min'},
+      sb:{bg:'#e68459',fg:'#fff',lbl:'Sala B · 17 min'},
+      r1:{bg:'#e8a490',fg:'#375451'},
+      r2:{bg:'#e8a490',fg:'#375451'},
+      r3:{bg:'#d97c6b',fg:'#375451'}
     },
     steam: {
-      sa:{bg:'#10B981',fg:'#fff',lbl:'Sala A · 17 min'},
-      sb:{bg:'#0D9488',fg:'#fff',lbl:'Sala B · 17 min'},
-      r1:{bg:'#34D399',fg:'#fff'},
-      r2:{bg:'#10B981',fg:'#fff'},
-      r3:{bg:'#059669',fg:'#fff'}
+      sa:{bg:'#fbdd9d',fg:'#375451',lbl:'Sala A · 17 min'},
+      sb:{bg:'#e68459',fg:'#fff',lbl:'Sala B · 17 min'},
+      r1:{bg:'#d55c5a',fg:'#fff'},
+      r2:{bg:'#d55c5a',fg:'#fff'},
+      r3:{bg:'#b84644',fg:'#fff'}
     }
   };
 
@@ -1486,16 +1486,16 @@
   var _s=document.createElement('style');
   _s.textContent='.sch-wrap{overflow-x:auto;border:1px solid #E1E8F0;border-radius:9px;background:#fff}'
     +'.sch-table{width:100%;border-collapse:collapse;min-width:920px}'
-    +'.sch-th-team{width:60px;min-width:60px;position:sticky;left:0;z-index:5;background:#F7F9FC}'
-    +'.sch-th-tutor{width:96px;min-width:96px;position:sticky;left:60px;z-index:5;background:#F7F9FC}'
+    +'.sch-th-team{width:60px;min-width:60px;position:sticky;left:0;z-index:5;background:#375451}'
+    +'.sch-th-tutor{width:96px;min-width:96px;position:sticky;left:60px;z-index:5;background:#375451}'
     +'.sch-th-team,.sch-th-tutor,.sch-th-time{padding:.3rem .35rem;font-size:.5rem;font-weight:800;'
-    +'text-transform:uppercase;letter-spacing:.06em;color:#8A97A7;border-bottom:1.5px solid #E1E8F0;'
-    +'border-right:1px solid #EEF3F9;text-align:center;white-space:nowrap}'
+    +'text-transform:uppercase;letter-spacing:.06em;color:#d8ece4;background:#375451;border-bottom:1.5px solid #2a403e;'
+    +'border-right:1px solid rgba(255,255,255,.12);text-align:center;white-space:nowrap}'
     +'.sch-th-time{min-width:58px}'
     +'.sch-ts{display:block;font-size:.54rem;color:#26374B;font-weight:700}'
     +'.sch-te{display:block;font-size:.46rem;color:#94A3B8}'
     +'.sch-group-lbl{padding:.25rem .7rem;font-size:.55rem;font-weight:800;text-transform:uppercase;'
-    +'letter-spacing:.07em;color:#508FCB;background:#EEF6FF;border-bottom:1.5px solid #D0E7FB}'
+    +'letter-spacing:.07em;color:#fff;background:#375451;border-bottom:1.5px solid #2a403e}'
     +'.sch-row:hover{background:#F5F9FF}'
     +'.sch-row:hover .sch-team,.sch-row:hover .sch-tutor{background:#F5F9FF}'
     +'.sch-team{padding:.38rem .5rem;position:sticky;left:0;background:#fff;z-index:4;'
