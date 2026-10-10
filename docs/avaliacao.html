@@ -84,11 +84,11 @@
       width: 100%; border-collapse: collapse;
       border: 1px solid #DDE7F0; border-top: none;
     }
-    .criterios-table thead tr { background: #F8FAFC; }
     .criterios-table th {
-      font-size: .67rem; font-weight: 700; color: #64748B;
+      background: #F8FAFC !important; color: #64748B !important;
+      font-size: .67rem; font-weight: 700;
       text-align: center; padding: .35rem .5rem;
-      border-bottom: 1px solid #DDE7F0; border-right: 1px solid #DDE7F0;
+      border-bottom: 1.5px solid #DDE7F0; border-right: 1px solid #DDE7F0;
       white-space: nowrap;
     }
     .criterios-table th.th-cod,
@@ -100,7 +100,7 @@
     .criterios-table tbody tr:last-child { border-bottom: none; }
     .criterios-table tbody tr:nth-child(even) { background: #FBFCFD; }
     .criterios-table td {
-      padding: .55rem .6rem; vertical-align: middle;
+      padding: .5rem .6rem; vertical-align: middle;
       border-right: 1px solid #EEF2F7; font-size: .85rem;
     }
     .criterios-table .td-cod {
@@ -113,22 +113,23 @@
       color: #445060; line-height: 1.45; font-size: .8rem;
     }
     .criterios-table .td-nota {
-      text-align: center; width: 3.2rem; padding: .35rem .25rem;
+      text-align: center; width: 2.6rem; padding: .3rem .15rem; vertical-align: middle;
     }
     @media (max-width: 640px) {
       .criterios-table .td-desc,
       .criterios-table th.th-desc { display: none; }
     }
 
-    /* ── Selector de nota 1-4 ───────────────────────────────── */
+    /* ── Selector de nota — caixa igual ao print ────────────── */
     .score-btn {
-      width: 36px; height: 36px; border-radius: 8px;
-      border: 1.5px solid #D1D9E4; background: #F8FAFC;
-      font-size: .85rem; font-weight: 800; color: #94A3B8;
+      width: 26px; height: 26px; border-radius: 4px;
+      border: 1.5px solid #94A3B8; background: #fff;
+      font-size: .75rem; font-weight: 700; color: #94A3B8;
       cursor: pointer; transition: border-color .12s, background .12s, color .12s;
-      display: flex; align-items: center; justify-content: center;
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 0;
     }
-    .score-btn:hover { border-color: #94A3B8; color: #475569; background: #F1F5F9; }
+    .score-btn:hover { border-color: #475569; color: #475569; background: #F1F5F9; }
     .score-btn.ativo { color: #fff; border-color: transparent; }
 
     /* ── Soma progressiva ───────────────────────────────────── */
@@ -200,9 +201,8 @@
       .criterio-nome { font-size: .95rem; }
       .criterio-desc { font-size: .78rem; }
 
-      /* Botões de nota — 48px para toque fácil */
-      .score-sel { margin-top: .2rem; gap: .45rem; }
-      .score-btn { width: 48px; height: 48px; border-radius: 10px; font-size: .95rem; }
+      /* Botões de nota — toque fácil no mobile */
+      .score-btn { width: 36px; height: 36px; border-radius: 6px; font-size: .88rem; }
 
       /* Observações */
       .obs-grid { grid-template-columns: 1fr; }
