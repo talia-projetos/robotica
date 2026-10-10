@@ -1356,28 +1356,26 @@
       margin-bottom: .85rem;
     }
     .eq-profile__banner {
-      height: 80px;
+      min-height: 140px;
       background: linear-gradient(135deg,#0D3A6E 0%,#1A5EA8 100%);
-    }
-    .eq-profile__body {
       display: flex;
-      align-items: flex-start;
-      gap: .9rem;
-      padding: 0 1.25rem 1rem;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 1rem 1.5rem;
+      position: relative;
     }
     .eq-profile__avatar-wrap {
-      margin-top: -36px;
       flex-shrink: 0;
       position: relative;
       z-index: 2;
     }
     .eq-profile__avatar,
     .eq-profile__avatar-ph {
-      width: 88px;
-      height: 88px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
-      border: 3px solid #fff;
-      box-shadow: 0 2px 10px rgba(15,23,42,.14);
+      border: 3px solid rgba(255,255,255,.9);
+      box-shadow: 0 2px 10px rgba(15,23,42,.25);
       display: block;
     }
     .eq-profile__avatar {
@@ -1386,11 +1384,11 @@
       background: #EEF3F8;
     }
     .eq-profile__avatar-ph {
-      background: #E4EBF4;
+      background: rgba(255,255,255,.18);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #8A9DB5;
+      color: rgba(255,255,255,.8);
     }
     .eq-profile__avatar-ph svg {
       width: 36px;
@@ -1404,31 +1402,29 @@
     .eq-profile__info {
       flex: 1;
       min-width: 0;
-      padding-top: .55rem;
     }
     .eq-profile__name {
-      font-size: 1.18rem;
-      font-weight: 780;
-      color: #172236;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #fff;
       letter-spacing: -.025em;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     .eq-profile__meta {
-      font-size: .7rem;
-      color: #7F8DA0;
+      font-size: .85rem;
+      color: rgba(255,255,255,.75);
       font-weight: 600;
       margin-top: .18rem;
       letter-spacing: .01em;
     }
     .eq-profile__actions {
-      padding-top: .7rem;
       flex-shrink: 0;
+      margin-top: .3rem;
     }
     @media(max-width:640px) {
-      .eq-profile__banner { height: 58px; }
-      .eq-profile__avatar-wrap { margin-top: -28px; }
+      .eq-profile__banner { min-height: 110px; padding: .75rem 1rem; gap: .75rem; }
       .eq-profile__avatar, .eq-profile__avatar-ph { width: 72px; height: 72px; }
       .eq-profile__name { font-size: 1rem; }
     }
@@ -1457,9 +1453,6 @@
     .turma-feed .coord-team-picker { margin:-.1rem 0 .75rem!important; }
 
     /* ── Banner: logo SESI ──────────────────────────────────────── */
-    .eq-profile__banner {
-      position: relative;
-    }
     .eq-banner__sesi {
       position: absolute;
       top: 11px;
@@ -1721,9 +1714,6 @@
     <!-- Profile card da equipe -->
     <div class="eq-profile" id="eq-header">
       <div class="eq-profile__banner" id="eq-banner">
-        <img src="logo-claro.svg" class="eq-banner__sesi" alt="SESI">
-      </div>
-      <div class="eq-profile__body">
         <div class="eq-profile__avatar-wrap">
           <img id="eq-logo" class="eq-profile__avatar" src="" alt="" style="display:none">
           <div id="eq-logo-ph" class="eq-profile__avatar-ph">
@@ -1733,8 +1723,9 @@
         <div class="eq-profile__info">
           <div class="eq-profile__name" id="eq-id">—</div>
           <div class="eq-profile__meta" id="eq-nome">—</div>
+          <div class="eq-profile__actions" id="eq-status"></div>
         </div>
-        <div class="eq-profile__actions" id="eq-status"></div>
+        <img src="logo-claro.svg" class="eq-banner__sesi" alt="SESI">
       </div>
     </div>
 
@@ -1871,6 +1862,48 @@
           <div class="doc-action">
             <svg width="13" height="13" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
             Abrir
+          </div>
+        </a>
+      </div>
+      <div class="doc-group">
+        <div class="doc-group__label">Rubricas &mdash; Imprimir / PDF</div>
+        <a class="doc-item" href="rubrica-print.html?cat=projeto" target="_blank" rel="noopener">
+          <div class="doc-icon doc-icon--pdf">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+          </div>
+          <div class="doc-body">
+            <div class="doc-name">Rubrica &mdash; Projeto de Inova&ccedil;&atilde;o</div>
+            <div class="doc-meta">PDF &middot; Imprimir ou salvar como PDF</div>
+          </div>
+          <div class="doc-action">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Imprimir
+          </div>
+        </a>
+        <a class="doc-item" href="rubrica-print.html?cat=design" target="_blank" rel="noopener">
+          <div class="doc-icon doc-icon--pdf">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+          </div>
+          <div class="doc-body">
+            <div class="doc-name">Rubrica &mdash; Design do Rob&ocirc;</div>
+            <div class="doc-meta">PDF &middot; Imprimir ou salvar como PDF</div>
+          </div>
+          <div class="doc-action">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Imprimir
+          </div>
+        </a>
+        <a class="doc-item" href="rubrica-print.html?cat=core" target="_blank" rel="noopener">
+          <div class="doc-icon doc-icon--pdf">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+          </div>
+          <div class="doc-body">
+            <div class="doc-name">Rubrica &mdash; Core Values</div>
+            <div class="doc-meta">PDF &middot; Imprimir ou salvar como PDF</div>
+          </div>
+          <div class="doc-action">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Imprimir
           </div>
         </a>
       </div>

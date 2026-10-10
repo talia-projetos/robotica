@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rubrica de Avaliação — Torneio Interno STEM</title>
+  <style>
+    /* ── Reset e tipografia ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 11pt;
+      color: #1a2536;
+      background: #fff;
+      padding: 0;
+    }
+
+    /* ── Layout de tela ─────────────────────────────────────────── */
+    .page {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 2rem 3rem;
+    }
+
+    /* ── Cabeçalho ──────────────────────────────────────────────── */
+    .print-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 3px solid var(--cor, #0D3A6E);
+      margin-bottom: 1.5rem;
+    }
+    .print-header__left { flex: 1; }
+    .print-header__tag {
+      font-size: 7.5pt;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--cor, #0D3A6E);
+      margin-bottom: .3rem;
+    }
+    .print-header__title {
+      font-size: 18pt;
+      font-weight: 800;
+      color: #0f1f35;
+      line-height: 1.15;
+    }
+    .print-header__subtitle {
+      font-size: 8.5pt;
+      color: #5a6a80;
+      margin-top: .3rem;
+    }
+    .print-header__logo {
+      height: 36px;
+      width: auto;
+      opacity: .85;
+      flex-shrink: 0;
+    }
+
+    /* ── Escala de pontuação ────────────────────────────────────── */
+    .escala-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .5rem;
+      margin-bottom: 1.5rem;
+    }
+    .escala-item {
+      border-radius: 8px;
+      padding: .55rem .7rem;
+      border: 1px solid #dde7f0;
+    }
+    .escala-item__num {
+      font-size: 15pt;
+      font-weight: 800;
+      color: var(--cor, #0D3A6E);
+      line-height: 1;
+    }
+    .escala-item__nome {
+      font-size: 8pt;
+      font-weight: 700;
+      color: #334155;
+      margin-top: .15rem;
+    }
+    .escala-item__desc {
+      font-size: 7.5pt;
+      color: #64748b;
+      margin-top: .25rem;
+      line-height: 1.35;
+    }
+
+    /* ── Blocos / tabela de critérios ───────────────────────────── */
+    .bloco {
+      margin-bottom: 1.25rem;
+      break-inside: avoid;
+    }
+    .bloco__label {
+      font-size: 7.5pt;
+      font-weight: 800;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--cor, #0D3A6E);
+      background: var(--cor-light, #EBF4FF);
+      padding: .35rem .75rem;
+      border-radius: 5px 5px 0 0;
+      border-left: 3px solid var(--cor, #0D3A6E);
+    }
+    .criterios-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #dde7f0;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+      overflow: hidden;
+    }
+    .criterios-table thead tr {
+      background: #f8fafc;
+    }
+    .criterios-table th {
+      font-size: 7.5pt;
+      font-weight: 700;
+      color: #64748b;
+      text-align: center;
+      padding: .35rem .5rem;
+      border-bottom: 1px solid #dde7f0;
+      border-right: 1px solid #dde7f0;
+    }
+    .criterios-table th:first-child { text-align: left; }
+    .criterios-table th:last-child { border-right: none; }
+    .criterios-table tbody tr {
+      border-bottom: 1px solid #eef2f7;
+    }
+    .criterios-table tbody tr:last-child { border-bottom: none; }
+    .criterios-table tbody tr:nth-child(even) { background: #fbfcfd; }
+    .criterios-table td {
+      padding: .5rem .6rem;
+      vertical-align: top;
+      border-right: 1px solid #eef2f7;
+      font-size: 9pt;
+    }
+    .criterios-table td:last-child { border-right: none; }
+    .criterios-table .td-cod {
+      font-weight: 700;
+      color: var(--cor, #0D3A6E);
+      white-space: nowrap;
+      font-size: 8pt;
+      width: 3.5em;
+    }
+    .criterios-table .td-nome {
+      font-weight: 700;
+      color: #1a2536;
+      min-width: 7rem;
+    }
+    .criterios-table .td-desc {
+      color: #445060;
+      line-height: 1.4;
+    }
+    .criterios-table .td-nota {
+      text-align: center;
+      width: 3rem;
+    }
+    .nota-box {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 1.5px solid #94a3b8;
+      border-radius: 4px;
+      margin: auto;
+    }
+
+    /* ── Rodapé ─────────────────────────────────────────────────── */
+    .print-footer {
+      margin-top: 2rem;
+      padding-top: .75rem;
+      border-top: 1px solid #dde7f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 7.5pt;
+      color: #94a3b8;
+    }
+    .print-footer__line { flex: 1; border-top: 1px dashed #dde7f0; margin: 0 .75rem; }
+
+    /* ── Botão de impressão (apenas na tela) ────────────────────── */
+    .btn-print {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--cor, #0D3A6E);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: .65rem 1.25rem;
+      font-size: 10pt;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(0,0,0,.18);
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      z-index: 100;
+    }
+    .btn-print:hover { opacity: .9; }
+
+    /* ── Print CSS ──────────────────────────────────────────────── */
+    @page {
+      size: A4 portrait;
+      margin: 1.5cm 1.8cm 2cm;
+    }
+    @media print {
+      body { padding: 0; font-size: 9.5pt; }
+      .page { max-width: 100%; padding: 0; }
+      .btn-print { display: none !important; }
+      .escala-item { border-color: #ccc; }
+      .bloco { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page" id="page">
+  <!-- conteúdo gerado via JS -->
+</div>
+
+<button class="btn-print" onclick="window.print()">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="6 9 6 2 18 2 18 9"/>
+    <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/>
+    <rect x="6" y="14" width="12" height="8"/>
+  </svg>
+  Imprimir / Salvar PDF
+</button>
+
+<script>
+/* ─── Dados das rubricas ──────────────────────────────────────── */
+var RUBRICAS = {
+  projeto: {
+    titulo: 'Projeto de Inovação',
+    cor: '#6A1B9A', corLight: '#EDE7F6',
+    blocos: [
+      { label: 'Identificar', criterios: [
+        { cod:'P1', nome:'Escolha do local', desc:'A equipe selecionou um local real de Salvador ou Região Metropolitana e justificou a escolha.' },
+        { cod:'P2', nome:'Identificação do problema', desc:'Problema claro, específico e relacionado ao equilíbrio ambiental.' }
+      ]},
+      { label: 'Planejar e Pesquisar', criterios: [
+        { cod:'P3', nome:'Evidências e pesquisa', desc:'Fotos, mapas, dados, entrevistas ou observações do local/problema.' },
+        { cod:'P4', nome:'Causas e consequências', desc:'Explicação das causas do problema, quem é afetado e quais os impactos.' }
+      ]},
+      { label: 'Criar / Prototipar', criterios: [
+        { cod:'P5', nome:'Solução inovadora', desc:'Solução ligada diretamente ao problema e ao local escolhido; demonstra criatividade.' },
+        { cod:'P6', nome:'Protótipo ou demonstração', desc:'Maquete, robô, app, mapa ou outra forma concreta de representação da solução.' }
+      ]},
+      { label: 'Testar e Melhorar', criterios: [
+        { cod:'P7', nome:'Validação da ideia', desc:'Apresentação externa da solução e registro de feedback recebido.' },
+        { cod:'P8', nome:'Melhorias realizadas', desc:'Ajustes na solução após testes, críticas ou novas descobertas.' }
+      ]},
+      { label: 'Comunicar e Impactar', criterios: [
+        { cod:'P9', nome:'Impacto ambiental e social', desc:'Benefícios claros ao ambiente, à comunidade e aos seres vivos do local.' },
+        { cod:'P10', nome:'Comunicação da equipe', desc:'Clareza, participação de todos os membros e domínio do tema na apresentação.' }
+      ]}
+    ]
+  },
+  design: {
+    titulo: 'Design do Robô',
+    cor: '#BF360C', corLight: '#FBE9E7',
+    blocos: [
+      { label: 'Identificar', criterios: [
+        { cod:'D1', nome:'Compreensão do desafio', desc:'Domínio das regras, objetivos e limites do torneio.' },
+        { cod:'D2', nome:'Estratégia de missões', desc:'Priorização das missões escolhidas com justificativas claras.' }
+      ]},
+      { label: 'Planejar', criterios: [
+        { cod:'D3', nome:'Planejamento mecânico', desc:'Decisões de formato, tamanho e estrutura do robô documentadas.' },
+        { cod:'D4', nome:'Planejamento da programação', desc:'Mapeamento de movimentos, sensores e sequências antes de codificar.' }
+      ]},
+      { label: 'Criar / Construir', criterios: [
+        { cod:'D5', nome:'Construção do robô', desc:'Estabilidade, adequação mecânica e qualidade da construção.' },
+        { cod:'D6', nome:'Anexos, mecanismos e programação', desc:'Ferramentas/acessórios do robô e qualidade do código desenvolvido.' }
+      ]},
+      { label: 'Testar e Melhorar', criterios: [
+        { cod:'D7', nome:'Testes realizados', desc:'Observação sistemática de erros e registro dos resultados dos testes.' },
+        { cod:'D8', nome:'Melhorias no robô e no código', desc:'Ajustes concretos realizados a partir dos testes e observações.' }
+      ]},
+      { label: 'Comunicar e Demonstrar', criterios: [
+        { cod:'D9', nome:'Explicação técnica', desc:'A equipe explica com clareza as escolhas mecânicas e de programação.' },
+        { cod:'D10', nome:'Desempenho no desafio prático', desc:'Execução real das missões na arena • consistência e resultado.' }
+      ]}
+    ]
+  },
+  core: {
+    titulo: 'Core Values',
+    cor: '#1B5E20', corLight: '#E8F5E9',
+    blocos: [
+      { label: 'Identificar', criterios: [
+        { cod:'C1', nome:'Descoberta', desc:'Curiosidade, vontade de aprender e compreensão do processo como um todo.' },
+        { cod:'C2', nome:'Reconhecimento dos desafios', desc:'Identificação de dificuldades no projeto, no robô ou nas relações do grupo.' }
+      ]},
+      { label: 'Planejar em Equipe', criterios: [
+        { cod:'C3', nome:'Trabalho em equipe', desc:'Colaboração efetiva, divisão justa de tarefas e apoio mútuo entre os membros.' },
+        { cod:'C4', nome:'Inclusão e respeito', desc:'Espaço garantido para que todos participem e contribuam com suas ideias.' }
+      ]},
+      { label: 'Criar Juntos', criterios: [
+        { cod:'C5', nome:'Criatividade coletiva', desc:'Uso das ideias de todos os membros para construir soluções em conjunto.' },
+        { cod:'C6', nome:'Cooperação na solução de problemas', desc:'Resolução colaborativa de dificuldades técnicas e interpessoais.' }
+      ]},
+      { label: 'Aprender com os Erros', criterios: [
+        { cod:'C7', nome:'Persistência', desc:'Esforço contínuo diante de erros, falhas e limitações do projeto.' },
+        { cod:'C8', nome:'Aprendizagem com feedback', desc:'Abertura a sugestões externas e uso crítico e construtivo delas.' }
+      ]},
+      { label: 'Coopertition®', criterios: [
+        { cod:'C9', nome:'Gracious Professionalism®', desc:'Respeito, ética e boa convivência com outras equipes e com os organizadores.' },
+        { cod:'C10', nome:'Impacto e identidade da equipe', desc:'Entusiasmo, orgulho da equipe e comprometimento com a comunidade.' }
+      ]}
+    ]
+  }
+};
+
+var ESCALA = [
+  { num:'1', nome:'Iniciante',          desc:'Atende pouco aos critérios da categoria.' },
+  { num:'2', nome:'Em desenvolvimento', desc:'Atende parcialmente aos critérios.' },
+  { num:'3', nome:'Proficiente',        desc:'Atende bem aos critérios da categoria.' },
+  { num:'4', nome:'Avançado',            desc:'Atende plenamente aos critérios.' }
+];
+
+/* ─── Ler parâmetro ?cat= ─────────────────────────────────────── */
+var cat = (new URLSearchParams(location.search)).get('cat') || 'projeto';
+var def = RUBRICAS[cat] || RUBRICAS['projeto'];
+
+/* ─── Aplicar cor CSS var ─────────────────────────────────────── */
+document.documentElement.style.setProperty('--cor',       def.cor);
+document.documentElement.style.setProperty('--cor-light', def.corLight);
+document.title = 'Rubrica — ' + def.titulo + ' — Torneio STEM SESI';
+
+/* ─── Renderizar ──────────────────────────────────────────────── */
+function h(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+var html = '';
+
+/* Cabeçalho */
+html += '<div class="print-header">';
+html += '  <div class="print-header__left">';
+html += '    <div class="print-header__tag">Torneio Interno STEM &mdash; SESI</div>';
+html += '    <div class="print-header__title">Rubrica de Avaliação</div>';
+html += '    <div class="print-header__title" style="color:var(--cor)">' + h(def.titulo) + '</div>';
+html += '    <div class="print-header__subtitle">Escala 1–4 &nbsp;&middot;&nbsp; ' + (def.blocos.reduce(function(a,b){return a+b.criterios.length;},0)) + ' critérios &nbsp;&middot;&nbsp; Torneio ' + new Date().getFullYear() + '</div>';
+html += '  </div>';
+html += '  <img src="logo-claro.svg" class="print-header__logo" alt="SESI" style="filter:brightness(0) saturate(100%);opacity:.7">';
+html += '</div>';
+
+/* Escala */
+html += '<div class="escala-bar">';
+ESCALA.forEach(function(e) {
+  html += '<div class="escala-item">';
+  html += '  <div class="escala-item__num">' + h(e.num) + '</div>';
+  html += '  <div class="escala-item__nome">' + h(e.nome) + '</div>';
+  html += '  <div class="escala-item__desc">' + h(e.desc) + '</div>';
+  html += '</div>';
+});
+html += '</div>';
+
+/* Blocos */
+def.blocos.forEach(function(bloco) {
+  html += '<div class="bloco">';
+  html += '  <div class="bloco__label">' + h(bloco.label) + '</div>';
+  html += '  <table class="criterios-table">';
+  html += '    <thead><tr>';
+  html += '      <th style="width:3em">Cod.</th>';
+  html += '      <th style="width:9rem">Critério</th>';
+  html += '      <th>Descrição / Evidência esperada</th>';
+  html += '      <th>1</th><th>2</th><th>3</th><th>4</th>';
+  html += '    </tr></thead>';
+  html += '    <tbody>';
+  bloco.criterios.forEach(function(c) {
+    html += '    <tr>';
+    html += '      <td class="td-cod">' + h(c.cod) + '</td>';
+    html += '      <td class="td-nome">' + h(c.nome) + '</td>';
+    html += '      <td class="td-desc">' + h(c.desc) + '</td>';
+    html += '      <td class="td-nota"><div class="nota-box"></div></td>';
+    html += '      <td class="td-nota"><div class="nota-box"></div></td>';
+    html += '      <td class="td-nota"><div class="nota-box"></div></td>';
+    html += '      <td class="td-nota"><div class="nota-box"></div></td>';
+    html += '    </tr>';
+  });
+  html += '    </tbody>';
+  html += '  </table>';
+  html += '</div>';
+});
+
+/* Rodapé */
+html += '<div class="print-footer">';
+html += '  <span>Equipe: _________________________</span>';
+html += '  <div class="print-footer__line"></div>';
+html += '  <span>Avaliador(a): _________________________</span>';
+html += '  <div class="print-footer__line"></div>';
+html += '  <span>Data: ___/___/______</span>';
+html += '</div>';
+
+document.getElementById('page').innerHTML = html;
+</script>
+</body>
+</html>
