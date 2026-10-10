@@ -1355,42 +1355,36 @@
     return '<td class="sch-empty"></td>';
   }
 
-  // ── Render principal ────────────────────────────────────────
+  // ── Render principal (rowspan + labels) ─────────────────────
+  var PHASE = {ab:1,fi:1,pr:1,fe:1};
   var currentDay = 'd1';
 
-  function renderDay(dayKey) {
-    currentDay = dayKey;
-    var day = DAYS[dayKey];
-    var el = document.getElementById('page-meta-sub');
-    if (el) el.textContent = day.meta;
-    document.querySelectorAll('.day-btn').forEach(function(b){
-      b.classList.toggle('active', b.dataset.day===dayKey);
-    });
-    var h = '<div class="sch-wrap"><table class="sch-table"><thead><tr>'
-      +'<th class="sch-th-team">Turma</th><th class="sch-th-tutor">Tutor</th>';
-    COLS.forEach(function(c){
-      h+='<th class="sch-th-time"><span class="sch-ts">'+c.s+'</span><span class="sch-te">'+c.e+'</span></th>';
-    });
-    h+='</tr></thead><tbody>';
-    day.groups.forEach(function(g){
-      h+='<tr class="sch-group-row"><td colspan="'+(2+COLS.length)+'" class="sch-group-lbl">'+g.label+'</td></tr>';
-      g.teams.forEach(function(t){
-        var srch=(t.id+' '+t.tid+' '+t.tutor).toLowerCase();
-        h+='<tr class="sch-row" data-search="'+srch+'">'
-          +'<td class="sch-team"><span class="sch-tid">'+t.id+'</span><span class="sch-tsub">'+t.tid+'</span></td>'
-          +'<td class="sch-tutor">'+t.tutor+'</td>';
-        t.c.forEach(function(v){ h+=cellHtml(v); });
-        h+='</tr>';
-      });
-    });
-    h+='</tbody></table></div>';
-    document.getElementById('timeline-wrap').innerHTML = buildTimeline(day);
-    document.getElementById('schedule-table').innerHTML = h;
-    document.getElementById('info-cards').innerHTML = '';
-    filtrarBusca();
+  function cellHtmlSpan(v, n) {
+    var key = v.split(' ')[0];
+    var c = CELL_CFG[key];
+    if (!c) return '<td class="sch-empty" rowspan="'+n+'"></td>';
+    return '<td class="sch-cell" rowspan="'+n+'" style="background:'+c.bg+';color:'+c.fg+';vertical-align:middle;border-bottom:1px solid '+c.bg+'">'+c.lbl+'</td>';
   }
 
-  function buildTimeline(day) {
+  function cellHtmlLoc(v, loc) {
+    if (!v) return '<td class="sch-empty"></td>';
+    var key = v.split(' ')[0];
+    var time = v.indexOf(' ')>0 ? v.slice(v.indexOf(' ')+1).replace('-','–') : '';
+    if (CELL_CFG[key]) {
+      var c2 = CELL_CFG[key];
+      return '<td class="sch-cell" style="background:'+c2.bg+';color:'+c2.fg+'">'+c2.lbl+'</td>';
+    }
+    if (RND_CFG[key]) {
+      var r = RND_CFG[key];
+      var pref = loc==='Pista' ? 'Corrida' : 'Round';
+      var rn = pref + ' ' + key.slice(1) + ' · ' + (loc||'Arena');
+      return '<td class="sch-cell" style="background:'+r.bg+';color:'+r.fg+'">'
+        +'<span class="sch-rl">'+rn+'</span><span class="sch-rt">'+time+'</span></td>';
+    }
+    return '<td class="sch-empty"></td>';
+  }
+
+  function _tl(day) {
     return '<div class="tl-label">Visão geral · '+day.label+'</div>'
       +'<div class="tl-bar">'
       +'<div class="tl-seg tl-abertura" style="width:11.4%">Abertura</div>'
@@ -1408,14 +1402,57 @@
       +'</div>';
   }
 
-  // ── Busca ───────────────────────────────────────────────────
-  function filtrarBusca() {
+  function _busca() {
     var q=(document.getElementById('search-equipe').value||'').toLowerCase().trim();
     document.querySelectorAll('#schedule-table .sch-row').forEach(function(row){
       row.style.display=(!q||(row.dataset.search||'').includes(q))?'':'none';
     });
   }
-  document.getElementById('search-equipe').addEventListener('input', filtrarBusca);
+
+  function _renderDay(dayKey) {
+    currentDay = dayKey;
+    var day = DAYS[dayKey];
+    var el = document.getElementById('page-meta-sub');
+    if (el) el.textContent = day.meta;
+    document.querySelectorAll('.day-btn').forEach(function(b){
+      b.classList.toggle('active', b.dataset.day===dayKey);
+    });
+    var h = '<div class="sch-wrap"><table class="sch-table"><thead><tr>'
+      +'<th class="sch-th-team">Turma</th><th class="sch-th-tutor">Tutor</th>';
+    COLS.forEach(function(c){
+      h+='<th class="sch-th-time"><span class="sch-ts">'+c.s+'</span><span class="sch-te">'+c.e+'</span></th>';
+    });
+    h+='</tr></thead><tbody>';
+    day.groups.forEach(function(g){
+      var n = g.teams.length;
+      var loc = g.label.toUpperCase().indexOf('STEAM')>=0 ? 'Pista' : 'Arena';
+      // phase columns: indices where first team has ab/fi/pr/fe
+      var phaseCols = {};
+      g.teams[0].c.forEach(function(v,ci){ if (PHASE[v.split(' ')[0]]) phaseCols[ci]=v; });
+      h+='<tr class="sch-group-row"><td colspan="'+(2+COLS.length)+'" class="sch-group-lbl">'+g.label+'</td></tr>';
+      g.teams.forEach(function(t,ti){
+        var srch=(t.id+' '+t.tid+' '+t.tutor).toLowerCase();
+        h+='<tr class="sch-row" data-search="'+srch+'">'
+          +'<td class="sch-team"><span class="sch-tid">'+t.id+'</span><span class="sch-tsub">'+t.tid+'</span></td>'
+          +'<td class="sch-tutor">'+t.tutor+'</td>';
+        t.c.forEach(function(v,ci){
+          if (phaseCols.hasOwnProperty(ci)) {
+            if (ti===0) h+=cellHtmlSpan(phaseCols[ci], n);
+            // else: skip — spanned from first row
+          } else {
+            h+=cellHtmlLoc(v, loc);
+          }
+        });
+        h+='</tr>';
+      });
+    });
+    h+='</tbody></table></div>';
+    var tlEl=document.getElementById('timeline-wrap');
+    if (tlEl) tlEl.innerHTML=_tl(day);
+    document.getElementById('schedule-table').innerHTML=h;
+    document.getElementById('info-cards').innerHTML='';
+    _busca();
+  }
 
   // ── Toolbar: botões de dia ──────────────────────────────────
   (function(){
@@ -1426,7 +1463,7 @@
       '<button class="filter-sala day-btn active" data-day="d1" type="button">10/09</button>'
       +'<button class="filter-sala day-btn" data-day="d2" type="button">11/09</button>';
     document.querySelectorAll('.day-btn').forEach(function(b){
-      b.addEventListener('click',function(){ renderDay(this.dataset.day); });
+      b.addEventListener('click',function(){ _renderDay(this.dataset.day); });
     });
   })();
 
@@ -1442,7 +1479,7 @@
     +'.sch-th-time{min-width:58px}'
     +'.sch-ts{display:block;font-size:.54rem;color:#26374B;font-weight:700}'
     +'.sch-te{display:block;font-size:.46rem;color:#94A3B8}'
-    +'.sch-group-row td{padding:.25rem .7rem;font-size:.55rem;font-weight:800;text-transform:uppercase;'
+    +'.sch-group-lbl{padding:.25rem .7rem;font-size:.55rem;font-weight:800;text-transform:uppercase;'
     +'letter-spacing:.07em;color:#508FCB;background:#EEF6FF;border-bottom:1.5px solid #D0E7FB}'
     +'.sch-row:hover{background:#F5F9FF}'
     +'.sch-row:hover .sch-team,.sch-row:hover .sch-tutor{background:#F5F9FF}'
@@ -1461,10 +1498,7 @@
     +'.sch-rt{display:block;font-size:.47rem;opacity:.88;margin-top:.04rem}';
   document.head.appendChild(_s);
 
-  // ── Init ────────────────────────────────────────────────────
-  renderDay('d1');
-
-  // --- stubs para compatibilidade com product-ui.js ---
+  // --- stubs restantes do script antigo (não conflitam) ---
   function addMin(hhmm, mins) {
     var p = hhmm.split(':');
     var t = parseInt(p[0]) * 60 + parseInt(p[1]) + mins;
@@ -1714,7 +1748,8 @@
     buildToolbar(comp);
   }
 
-  // buildPage substituído por renderDay() acima
+  // ── Init ────────────────────────────────────────────────────
+  _renderDay('d1');
 </script>
 </body>
 </html>
