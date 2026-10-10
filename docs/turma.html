@@ -1574,7 +1574,7 @@
     }
     .met-card {
       display: grid;
-      grid-template-columns: 28px 44px minmax(0,1fr) auto;
+      grid-template-columns: 28px 44px minmax(0,1fr);
       align-items: center;
       gap: .65rem;
       min-height: 60px;
@@ -1788,7 +1788,6 @@
             <div class="met-card__titulo">Projeto de Inovação</div>
           </div>
           <div class="met-card__desc">A equipe identifica um problema real, pesquisa suas causas e possíveis soluções e apresenta uma proposta inovadora a um painel de juízes.</div>
-          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Média das avaliações</div></div>
         </div>
 
         <!-- 2. Arena -->
@@ -1799,7 +1798,6 @@
             <div class="met-card__titulo">Desafio do Robô</div>
           </div>
           <div class="met-card__desc">A equipe programa o robô para executar missões na arena em 2min 30s. Entre os rounds realizados, vale a maior pontuação alcançada.</div>
-          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Melhor round</div></div>
         </div>
 
         <!-- 3. Design -->
@@ -1810,7 +1808,6 @@
             <div class="met-card__titulo">Design do Robô</div>
           </div>
           <div class="met-card__desc">Os juízes avaliam como o robô foi pensado, construído e programado — as escolhas de engenharia, testes e eficiência da solução.</div>
-          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Média das avaliações</div></div>
         </div>
 
         <!-- 4. Core Values -->
@@ -1821,7 +1818,6 @@
             <div class="met-card__titulo">Core Values</div>
           </div>
           <div class="met-card__desc">Criatividade, trabalho em equipe, inclusão e respeito. Os juízes observam como a equipe colabora, se organiza e comunica suas ideias.</div>
-          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Média das avaliações</div></div>
         </div>
 
         <!-- 5. Tampinhas -->
@@ -1832,7 +1828,6 @@
             <div class="met-card__titulo">Tampinhas &amp; Latas</div>
           </div>
           <div class="met-card__desc">Inspirado na temporada Bioglow da FLL. A equipe coleta tampinhas e latas para reciclagem — quanto maior o peso por aluno, maior a pontuação.</div>
-          <div class="met-card__pts"><div class="met-card__pts-pct">20%</div><div class="met-card__pts-label">Por peso coletado</div></div>
         </div>
 
       </div>
@@ -1870,13 +1865,13 @@
         </a>
       </div>
       <div class="doc-group">
-        <div class="doc-group__label">Avalia&ccedil;&atilde;o</div>
+        <div class="doc-group__label">Avalia&ccedil;&atilde;o &mdash; Rubricas</div>
         <a class="doc-item" href="rubricas.html" target="_blank" rel="noopener">
           <div class="doc-icon doc-icon--web">
             <svg width="16" height="16" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
           </div>
           <div class="doc-body">
-            <div class="doc-name">Rubricas de Avalia&ccedil;&atilde;o</div>
+            <div class="doc-name">Rubricas de Avalia&ccedil;&atilde;o (online)</div>
             <div class="doc-meta">Web &middot; Projeto, Design do Rob&ocirc;, Core Values</div>
           </div>
           <div class="doc-action">
@@ -1884,9 +1879,7 @@
             Abrir
           </div>
         </a>
-      </div>
-      <div class="doc-group">
-        <div class="doc-group__label">Rubricas &mdash; Imprimir / PDF</div>
+        <div style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#94A3B8;padding:.6rem .1rem .15rem">Imprimir / PDF</div>
         <a class="doc-item" href="rubrica-print.html?cat=projeto" target="_blank" rel="noopener">
           <div class="doc-icon doc-icon--pdf">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
@@ -2013,21 +2006,21 @@
       label: 'Projeto de Inovação', campo: 'proj20', max: 20, color: '#8E5BD9',
       sub: function(e) {
         var n = parseInt(e.projJuizes) || 0;
-        return n > 0 ? n + (n === 1 ? ' juiz' : ' juízes') : null;
+        return n > 0 ? (n === 1 ? 'avaliação' : n + ' avaliações') : null;
       }
     },
     {
       label: 'Design do Robô', campo: 'des20', max: 20, color: '#F2994A',
       sub: function(e) {
         var n = parseInt(e.desJuizes) || 0;
-        return n > 0 ? n + (n === 1 ? ' juiz' : ' juízes') : null;
+        return n > 0 ? (n === 1 ? 'avaliação' : n + ' avaliações') : null;
       }
     },
     {
       label: 'Core Values', campo: 'core20', max: 20, color: '#27AE60',
       sub: function(e) {
         var n = parseInt(e.coreJuizes) || 0;
-        return n > 0 ? n + (n === 1 ? ' juiz' : ' juízes') : null;
+        return n > 0 ? (n === 1 ? 'avaliação' : n + ' avaliações') : null;
       }
     },
     {

@@ -54,12 +54,12 @@
     }
 
     /* Cores da timeline macro */
-    .tl-abertura  { background: #475569; }
-    .tl-aval      { background: #6366F1; }
-    .tl-r2        { background: #3B82F6; }
-    .tl-r3        { background: #0369A1; }
-    .tl-delib     { background: #64748B; }
-    .tl-premio    { background: #B45309; }
+    .tl-abertura  { background: #94A3B8; }
+    .tl-aval      { background: #818CF8; }
+    .tl-r2        { background: #60A5FA; }
+    .tl-r3        { background: #38BDF8; }
+    .tl-delib     { background: #94A3B8; }
+    .tl-premio    { background: #F59E0B; }
 
     /* ── Toolbar de filtros ──────────────────────────────────── */
     .crono-toolbar {
@@ -155,8 +155,8 @@
     .g-phase__bar {
       width: 3px; height: 14px; border-radius: 2px; flex-shrink: 0;
     }
-    .g-phase--sala1 .g-phase__bar { background: #6366F1; }
-    .g-phase--sala2 .g-phase__bar { background: #8B5CF6; }
+    .g-phase--sala1 .g-phase__bar { background: #818CF8; }
+    .g-phase--sala2 .g-phase__bar { background: #A78BFA; }
     .g-phase__range {
       margin-left: auto; font-weight: 500;
       color: #94A3B8; font-size: .6rem;
@@ -232,12 +232,12 @@
     }
     .gb:hover { opacity: .88; transform: scaleY(1.06); z-index: 5; }
 
-    /* Paleta de rounds — família azul */
-    .gb-s1 { background: #6366F1; }   /* Avaliação Sala 1 — indigo */
-    .gb-s2 { background: #8B5CF6; }   /* Avaliação Sala 2 — violet */
-    .gb-r1 { background: #3B82F6; }   /* Round 1 — blue */
-    .gb-r2 { background: #0284C7; }   /* Round 2 — sky */
-    .gb-r3 { background: #0369A1; }   /* Round 3 — dark sky */
+    /* Paleta de rounds — família azul (tons suaves) */
+    .gb-s1 { background: #818CF8; }   /* Avaliação Sala 1 — indigo claro */
+    .gb-s2 { background: #A78BFA; }   /* Avaliação Sala 2 — violet claro */
+    .gb-r1 { background: #60A5FA; }   /* Round 1 — blue claro */
+    .gb-r2 { background: #38BDF8; }   /* Round 2 — sky claro */
+    .gb-r3 { background: #0EA5E9; }   /* Round 3 — sky médio */
 
     /* ── Cards de resumo (simplificados) ────────────────────── */
     .info-row {
@@ -687,8 +687,8 @@
       width:2px;
     }
 
-    .schedule-slot--avaliacao::before{background:#7967C9}
-    .schedule-slot--round::before{background:#508FCB}
+    .schedule-slot--avaliacao::before{background:#818CF8}
+    .schedule-slot--round::before{background:#60A5FA}
 
     .schedule-slot__time{
       color:#26374B;
@@ -851,10 +851,10 @@
       content:'';
       position:absolute; left:0; top:0; bottom:0; width:2.5px;
     }
-    .det-slot--sala::before{ background:#7967C9 }
-    .det-slot--r1::before{ background:#3B82F6 }
-    .det-slot--r2::before{ background:#0284C7 }
-    .det-slot--r3::before{ background:#0369A1 }
+    .det-slot--sala::before{ background:#818CF8 }
+    .det-slot--r1::before{ background:#60A5FA }
+    .det-slot--r2::before{ background:#38BDF8 }
+    .det-slot--r3::before{ background:#0EA5E9 }
     .det-time{
       font-size:.67rem; font-weight:800; color:#26374B;
       font-variant-numeric:tabular-nums;
@@ -1325,17 +1325,17 @@
 
   // ── Render de células ───────────────────────────────────────
   var CELL_CFG = {
-    ab:{bg:'#475569',fg:'#fff',lbl:'Abertura'},
-    sa:{bg:'#1D4ED8',fg:'#fff',lbl:'Sala A · 17 min'},
-    sb:{bg:'#15803D',fg:'#fff',lbl:'Sala B · 17 min'},
-    fi:{bg:'#64748B',fg:'#fff',lbl:'Finais / Apuração'},
-    pr:{bg:'#B45309',fg:'#fff',lbl:'Premiação'},
-    fe:{bg:'#7C3AED',fg:'#fff',lbl:'Festa da Amizade'}
+    ab:{bg:'#94A3B8',fg:'#fff',lbl:'Abertura'},
+    sa:{bg:'#60A5FA',fg:'#fff',lbl:'Sala A · 17 min'},
+    sb:{bg:'#34D399',fg:'#fff',lbl:'Sala B · 17 min'},
+    fi:{bg:'#94A3B8',fg:'#fff',lbl:'Finais / Apuração'},
+    pr:{bg:'#F59E0B',fg:'#fff',lbl:'Premiação'},
+    fe:{bg:'#A78BFA',fg:'#fff',lbl:'Festa da Amizade'}
   };
   var RND_CFG = {
-    r1:{bg:'#6366F1',fg:'#fff'},
-    r2:{bg:'#0284C7',fg:'#fff'},
-    r3:{bg:'#0369A1',fg:'#fff'}
+    r1:{bg:'#818CF8',fg:'#fff'},
+    r2:{bg:'#38BDF8',fg:'#fff'},
+    r3:{bg:'#0EA5E9',fg:'#fff'}
   };
 
   function cellHtml(v) {
@@ -1391,7 +1391,7 @@
       +'<div class="tl-seg tl-aval" style="width:64.9%">Avaliações em Sala (A e B) + Rounds</div>'
       +'<div class="tl-seg tl-delib" style="width:9.5%">Finais</div>'
       +'<div class="tl-seg tl-premio" style="width:9.5%">Premiação</div>'
-      +'<div class="tl-seg" style="width:4.7%;background:#7C3AED">Festa</div>'
+      +'<div class="tl-seg" style="width:4.7%;background:#A78BFA">Festa</div>'
       +'</div>'
       +'<div class="tl-ticks">'
       +'<span class="tl-tick" style="left:0%">08:00</span>'
