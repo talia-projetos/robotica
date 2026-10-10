@@ -1572,14 +1572,21 @@
       color: #8A97A7;
       margin: .5rem 0 .55rem;
     }
+    .met-grid { gap: 0 !important; }
     .met-card {
       display: grid;
-      grid-template-columns: 28px 44px minmax(0,1fr);
+      grid-template-columns: 28px 160px minmax(0,1fr);
       align-items: center;
-      gap: .65rem;
-      min-height: 60px;
-      padding: .6rem .8rem;
+      gap: .6rem;
+      min-height: 52px;
+      padding: .55rem .75rem;
+      border-top: none !important;
+      border-right: none !important;
+      border-bottom: 1px solid #EEF2F7 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
     }
+    .met-card:last-child { border-bottom: none !important; }
     .met-card__num {
       width: 28px;
       height: 28px;

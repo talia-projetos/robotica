@@ -1324,34 +1324,50 @@
   };
 
   // ── Render de células ───────────────────────────────────────
+  /* Fases fixas (não variam por competição) */
   var CELL_CFG = {
     ab:{bg:'#94A3B8',fg:'#fff',lbl:'Abertura'},
-    sa:{bg:'#60A5FA',fg:'#fff',lbl:'Sala A · 17 min'},
-    sb:{bg:'#34D399',fg:'#fff',lbl:'Sala B · 17 min'},
-    fi:{bg:'#94A3B8',fg:'#fff',lbl:'Finais / Apuração'},
+    fi:{bg:'#64748B',fg:'#fff',lbl:'Finais / Apuração'},
     pr:{bg:'#F59E0B',fg:'#fff',lbl:'Premiação'},
     fe:{bg:'#A78BFA',fg:'#fff',lbl:'Festa da Amizade'}
   };
-  var RND_CFG = {
-    r1:{bg:'#818CF8',fg:'#fff'},
-    r2:{bg:'#38BDF8',fg:'#fff'},
-    r3:{bg:'#0EA5E9',fg:'#fff'}
+  /* Paletas complementares por competição */
+  var COMP_CFG = {
+    fll: {
+      sa:{bg:'#3B82F6',fg:'#fff',lbl:'Sala A · 17 min'},
+      sb:{bg:'#6366F1',fg:'#fff',lbl:'Sala B · 17 min'},
+      r1:{bg:'#60A5FA',fg:'#fff'},
+      r2:{bg:'#3B82F6',fg:'#fff'},
+      r3:{bg:'#2563EB',fg:'#fff'}
+    },
+    obr: {
+      sa:{bg:'#F97316',fg:'#fff',lbl:'Sala A · 17 min'},
+      sb:{bg:'#EF4444',fg:'#fff',lbl:'Sala B · 17 min'},
+      r1:{bg:'#FB923C',fg:'#fff'},
+      r2:{bg:'#F97316',fg:'#fff'},
+      r3:{bg:'#EA580C',fg:'#fff'}
+    },
+    steam: {
+      sa:{bg:'#10B981',fg:'#fff',lbl:'Sala A · 17 min'},
+      sb:{bg:'#0D9488',fg:'#fff',lbl:'Sala B · 17 min'},
+      r1:{bg:'#34D399',fg:'#fff'},
+      r2:{bg:'#10B981',fg:'#fff'},
+      r3:{bg:'#059669',fg:'#fff'}
+    }
   };
 
-  function cellHtml(v) {
+  function _compKey(lbl) {
+    var u = (lbl||'').toUpperCase();
+    return u.indexOf('STEAM')>=0 ? 'steam' : u.indexOf('OBR')>=0 ? 'obr' : 'fll';
+  }
+
+  function cellHtml(v, ck) {
     if (!v) return '<td class="sch-empty"></td>';
     var key = v.split(' ')[0];
     var time = v.indexOf(' ')>0 ? v.slice(v.indexOf(' ')+1).replace('-','–') : '';
-    if (CELL_CFG[key]) {
-      var c = CELL_CFG[key];
-      return '<td class="sch-cell" style="background:'+c.bg+';color:'+c.fg+'">'+c.lbl+'</td>';
-    }
-    if (RND_CFG[key]) {
-      var r = RND_CFG[key];
-      var rn = key.replace('r','Round ');
-      return '<td class="sch-cell" style="background:'+r.bg+';color:'+r.fg+'">'
-        +'<span class="sch-rl">'+rn+'</span><span class="sch-rt">'+time+'</span></td>';
-    }
+    if (CELL_CFG[key]) { var c=CELL_CFG[key]; return '<td class="sch-cell" style="background:'+c.bg+';color:'+c.fg+'">'+c.lbl+'</td>'; }
+    var cfg = COMP_CFG[ck]||COMP_CFG.fll;
+    if (cfg[key]) { var r=cfg[key]; return '<td class="sch-cell" style="background:'+r.bg+';color:'+r.fg+'"><span class="sch-rl">'+key.replace('r','Round ')+'</span><span class="sch-rt">'+time+'</span></td>'; }
     return '<td class="sch-empty"></td>';
   }
 
@@ -1366,20 +1382,18 @@
     return '<td class="sch-cell" rowspan="'+n+'" style="background:'+c.bg+';color:'+c.fg+';vertical-align:middle;border-bottom:1px solid '+c.bg+'">'+c.lbl+'</td>';
   }
 
-  function cellHtmlLoc(v, loc) {
+  function cellHtmlLoc(v, loc, ck) {
     if (!v) return '<td class="sch-empty"></td>';
     var key = v.split(' ')[0];
     var time = v.indexOf(' ')>0 ? v.slice(v.indexOf(' ')+1).replace('-','–') : '';
-    if (CELL_CFG[key]) {
-      var c2 = CELL_CFG[key];
-      return '<td class="sch-cell" style="background:'+c2.bg+';color:'+c2.fg+'">'+c2.lbl+'</td>';
-    }
-    if (RND_CFG[key]) {
-      var r = RND_CFG[key];
-      var pref = loc==='Pista' ? 'Corrida' : 'Round';
-      var rn = pref + ' ' + key.slice(1) + ' · ' + (loc||'Arena');
-      return '<td class="sch-cell" style="background:'+r.bg+';color:'+r.fg+'">'
-        +'<span class="sch-rl">'+rn+'</span><span class="sch-rt">'+time+'</span></td>';
+    if (CELL_CFG[key]) { var c2=CELL_CFG[key]; return '<td class="sch-cell" style="background:'+c2.bg+';color:'+c2.fg+'">'+c2.lbl+'</td>'; }
+    var cfg = COMP_CFG[ck]||COMP_CFG.fll;
+    if (key==='sa'||key==='sb') { var sc=cfg[key]; return '<td class="sch-cell" style="background:'+sc.bg+';color:'+sc.fg+'">'+sc.lbl+'</td>'; }
+    if (cfg[key]) {
+      var r=cfg[key];
+      var pref=loc==='Pista'?'Corrida':'Round';
+      var rn=pref+' '+key.slice(1)+' \xb7 '+(loc||'Arena');
+      return '<td class="sch-cell" style="background:'+r.bg+';color:'+r.fg+'"><span class="sch-rl">'+rn+'</span><span class="sch-rt">'+time+'</span></td>';
     }
     return '<td class="sch-empty"></td>';
   }
@@ -1426,6 +1440,7 @@
     day.groups.forEach(function(g){
       var n = g.teams.length;
       var loc = g.label.toUpperCase().indexOf('STEAM')>=0 ? 'Pista' : 'Arena';
+      var ck  = _compKey(g.label);
       // phase columns: indices where first team has ab/fi/pr/fe
       var phaseCols = {};
       g.teams[0].c.forEach(function(v,ci){ if (PHASE[v.split(' ')[0]]) phaseCols[ci]=v; });
@@ -1440,7 +1455,7 @@
             if (ti===0) h+=cellHtmlSpan(phaseCols[ci], n);
             // else: skip — spanned from first row
           } else {
-            h+=cellHtmlLoc(v, loc);
+            h+=cellHtmlLoc(v, loc, ck);
           }
         });
         h+='</tr>';
