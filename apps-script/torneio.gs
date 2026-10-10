@@ -1709,9 +1709,12 @@ function apiSalvarRubrica_(body) {
   set(['Selecione a Equipe','ID_Equipe','Equipe Avaliada','Turma'], body.idEquipe);
   set(['Validado','Homologado'], 'Sim');
 
-  /* Detecta colunas de critério em ordem (ignora colunas já mapeadas e texto livre) */
-  const IGNORA = ['carimbo','timestamp','juiz','avaliador','sala','equipe','turma',
-                  'id_equipe','validado','homologado','bom trabalho','reflita',
+  /* Detecta colunas de critério em ordem (ignora colunas já mapeadas e texto livre).
+     ATENÇÃO: não usar 'equipe' aqui — pegaria "Comunicação da equipe" (P10 FLL).
+     Colunas de metadados já foram preenchidas por set() → linha[i] !== '' as exclui. */
+  const IGNORA = ['carimbo','timestamp','juiz','avaliador','sala',
+                  'selecione a equipe','equipe avaliada','id equipe','id_equipe',
+                  'validado','homologado','bom trabalho','reflita',
                   'observa','comentario','e mail','e-mail','email'];
   const colsScore = [];
   cab.forEach(function(h, i) {
