@@ -948,10 +948,12 @@
 
     .scores-grid{
       display:flex;
+      flex-direction:row;
       flex-wrap:wrap;
       justify-content:center;
-      gap:1.25rem 1rem;
-      padding:.5rem 0;
+      align-items:flex-start;
+      gap:1.5rem 1.25rem;
+      padding:.75rem 0 .5rem;
       margin-bottom:0;
     }
 
@@ -1633,14 +1635,14 @@
     }
 
     /* ── Gauge rings (Resumo tab) ───────────────────────────────── */
-    .gauge-wrap { display: flex; flex-direction: column; align-items: center; width: 96px; }
-    .gauge-svg { width: 80px; height: 80px; transform: rotate(-90deg); }
-    .gauge-track { fill: none; stroke: #E8EDF4; stroke-width: 6; }
-    .gauge-ring { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset .6s ease; }
-    .gauge-pct { font-size: 14px; font-weight: 800; fill: #0F172A; dominant-baseline: middle; text-anchor: middle; transform: rotate(90deg); transform-origin: 40px 40px; }
-    .gauge-sub { font-size: 9px; font-weight: 600; fill: #64748B; dominant-baseline: middle; text-anchor: middle; transform: rotate(90deg); transform-origin: 40px 40px; }
-    .gauge-label { font-size: .68rem; font-weight: 700; color: #0F172A; margin-top: .45rem; text-align: center; line-height: 1.3; }
-    .gauge-sublabel { font-size: .6rem; font-weight: 600; margin-top: .1rem; text-align: center; }
+    .gauge-wrap { display: flex; flex-direction: column; align-items: center; width: 104px; }
+    .gauge-svg { width: 88px; height: 88px; transform: rotate(-90deg); overflow: visible; }
+    .gauge-track { fill: none; stroke: #E8EDF4; stroke-width: 7; }
+    .gauge-ring { fill: none; stroke-width: 7; stroke-linecap: round; transition: stroke-dashoffset .7s cubic-bezier(.4,0,.2,1); }
+    .gauge-pct { font-size: 15px; font-weight: 800; fill: #0F172A; dominant-baseline: central; text-anchor: middle; transform: rotate(90deg); transform-box: fill-box; transform-origin: center; }
+    .gauge-sub { font-size: 8.5px; font-weight: 600; fill: #64748B; dominant-baseline: central; text-anchor: middle; transform: rotate(90deg); transform-box: fill-box; transform-origin: center; }
+    .gauge-label { font-size: .7rem; font-weight: 700; color: #0F172A; margin-top: .5rem; text-align: center; line-height: 1.3; max-width: 96px; }
+    .gauge-sublabel { font-size: .62rem; font-weight: 600; margin-top: .1rem; text-align: center; }
 
   </style>
 </head>
@@ -2047,15 +2049,17 @@
   }
 
   function buildGauge(pct, cor, pts, label, sublabel) {
-    var r = 28, cx = 40, cy = 40;
+    var cx = 44, cy = 44, r = 32;
     var circ = 2 * Math.PI * r;
-    var offset = circ * (1 - pct / 100);
+    var safe = Math.min(Math.max(pct, 0), 100);
+    var offset = circ * (1 - safe / 100);
+    var pctTxt = Math.round(safe) + '%';
     return '<div class="gauge-wrap">'
-      + '<svg viewBox="0 0 80 80" class="gauge-svg">'
+      + '<svg viewBox="0 0 88 88" class="gauge-svg">'
       + '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" class="gauge-track"/>'
-      + '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" class="gauge-ring" style="stroke:'+cor+';stroke-dasharray:'+circ+';stroke-dashoffset:'+offset+'"/>'
-      + '<text x="'+cx+'" y="'+(cy-2)+'" class="gauge-pct">'+Math.round(pct)+'%</text>'
-      + '<text x="'+cx+'" y="'+(cy+11)+'" class="gauge-sub">'+pts+'pts</text>'
+      + '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" class="gauge-ring" style="stroke:'+cor+';stroke-dasharray:'+circ.toFixed(2)+';stroke-dashoffset:'+offset.toFixed(2)+'"/>'
+      + '<text x="'+cx+'" y="'+(cy-1)+'" class="gauge-pct">'+pctTxt+'</text>'
+      + '<text x="'+cx+'" y="'+(cy+13)+'" class="gauge-sub">'+pts+'pts</text>'
       + '</svg>'
       + '<div class="gauge-label">'+label+'</div>'
       + '<div class="gauge-sublabel" style="color:'+cor+'">'+sublabel+'</div>'
