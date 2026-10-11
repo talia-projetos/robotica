@@ -3090,3 +3090,70 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     }
   }
 }
+
+
+/* Seleção de competição: o mesmo padrão neutro dos demais campos. */
+@media screen {
+  html body .topbar .comp-sel.comp-chip {
+    box-sizing:border-box;
+    display:inline-flex;
+    align-items:center;
+    justify-content:space-between;
+    min-height:44px;
+    min-width:143px;
+    max-width:200px;
+    padding:0 11px 0 13px;
+    gap:10px;
+    border:1px solid #CDDDE7 !important;
+    border-radius:11px !important;
+    background:#FFFFFF !important;
+    color:#263E53 !important;
+    box-shadow:0 1px 3px rgba(27,55,77,.035) !important;
+    font-size:.77rem;
+    font-weight:780;
+    letter-spacing:0;
+    text-transform:none;
+  }
+  html body .topbar .comp-sel.comp-chip::before {
+    content:"Competição";
+    color:#75899D !important;
+    background:none;
+    padding-right:10px;
+    border-right:1px solid #E1E8EF;
+    font-size:.68rem;
+    font-weight:620;
+    letter-spacing:0;
+  }
+  html body .topbar .comp-sel.comp-chip[aria-haspopup="true"]::after {
+    flex:0 0 7px;
+    width:7px;
+    height:7px;
+    margin:0 0 4px 2px;
+    border-right:2px solid #5B7185;
+    border-bottom:2px solid #5B7185;
+    transform:rotate(45deg);
+  }
+  html body .topbar .comp-sel.comp-chip[aria-haspopup="true"]:hover {
+    background:#FAFCFE !important;
+    border-color:#A5BBCD !important;
+    transform:none;
+    box-shadow:0 2px 8px rgba(27,55,77,.065) !important;
+  }
+  html body .topbar .comp-sel.comp-chip[aria-haspopup="true"]:focus-visible {
+    border-color:var(--hub-choice-accent,#2F80ED) !important;
+    outline:none;
+    box-shadow:0 0 0 3px var(--hub-choice-soft,rgba(47,128,237,.12)) !important;
+  }
+  html body .topbar .comp-sel.comp-chip:not([aria-haspopup="true"]) {
+    cursor:default;
+    opacity:.9;
+  }
+  @media(max-width:700px) {
+    html body .topbar .comp-sel.comp-chip {
+      min-width:69px;
+      min-height:38px;
+      padding:0 10px;
+    }
+    html body .topbar .comp-sel.comp-chip::before {display:none;}
+  }
+}
