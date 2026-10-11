@@ -3176,3 +3176,41 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     transition:none;
   }
 }
+
+
+/* Correção da navegação mobile: o drawer sempre acima da camada de fundo.
+   Preserva abertura/fechamento e permissões administradas pelo JavaScript. */
+@media screen and (max-width:700px) {
+  html body .app-body > nav.app-sidebar {
+    position:fixed !important;
+    z-index:1002 !important;
+    opacity:1;
+    filter:none;
+    -webkit-filter:none;
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+    pointer-events:auto;
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+  }
+  html body .sidebar-backdrop {
+    z-index:1001;
+    background:rgba(7,12,18,.48);
+    backdrop-filter:none;
+    -webkit-backdrop-filter:none;
+  }
+  html body .app-body > nav.app-sidebar > a.sidebar-item,
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > a.sidebar-item {
+    height:48px !important;
+    min-height:48px !important;
+    max-height:48px !important;
+    font-size:.87rem !important;
+    touch-action:manipulation;
+  }
+  html body .mobile-nav-toggle {
+    width:44px;
+    height:44px;
+    touch-action:manipulation;
+  }
+}
