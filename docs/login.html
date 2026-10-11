@@ -962,6 +962,226 @@
       text-wrap:balance;
     }
 
+
+    /* Responsividade da tela de login — smartphones, tablets e modo paisagem.
+       Apenas CSS: IDs, marcação funcional, scripts e autenticação preservados. */
+    @media (max-width:900px) {
+      body {
+        display:block;
+        width:100%;
+        min-height:100%;
+        padding:0;
+        overflow-x:clip;
+        background:#fff;
+      }
+      body::before,body::after {display:none;}
+      .login-shell {
+        width:100%;
+        max-width:none;
+        min-height:100vh;
+        min-height:100svh;
+        display:grid;
+        grid-template-columns:minmax(0,1fr);
+        grid-template-rows:auto 1fr;
+        border:0;
+        border-radius:0;
+        box-shadow:none;
+        overflow:visible;
+      }
+      .login-left {
+        min-height:0;
+        padding:calc(1.55rem + env(safe-area-inset-top, 0px)) clamp(1.5rem,5vw,3rem) 1.55rem;
+      }
+      .left-content {
+        display:grid;
+        grid-template-columns:minmax(0,.82fr) minmax(0,1fr);
+        gap:clamp(1.3rem,4.5vw,3.25rem);
+        min-height:0;
+        padding:0;
+        align-items:center;
+        justify-content:center;
+        text-align:left;
+      }
+      .login-left .left-brand {
+        position:static;
+        top:auto;
+        left:auto;
+        width:100%;
+        max-width:100%;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        text-align:center;
+      }
+      .login-left .left-brand img {
+        width:min(215px,100%);
+        max-height:62px;
+        margin:0 auto .75rem;
+      }
+      .login-left .left-descriptor {
+        max-width:260px;
+        margin:0 auto;
+        font-size:.78rem;
+        line-height:1.5;
+      }
+      .brand-rule {display:none;}
+      .left-quote {width:100%;max-width:430px;}
+      .left-quote__main {
+        font-size:clamp(1.4rem,3vw,1.8rem);
+        line-height:1.23;
+        letter-spacing:-.025em;
+      }
+      .left-quote__support {
+        max-width:365px;
+        margin:.65rem 0 0;
+        font-size:.85rem;
+        line-height:1.52;
+      }
+      .left-footer {display:none;}
+      .login-right {
+        min-width:0;
+        padding:clamp(2rem,5vw,3rem) clamp(1.5rem,5vw,3rem) calc(3rem + env(safe-area-inset-bottom, 0px));
+        align-items:flex-start;
+        justify-content:center;
+      }
+      .login-form {width:100%;max-width:460px;margin:0 auto;}
+      .form-title {font-size:clamp(1.9rem,3.7vw,2.4rem);}
+      .form-sub {font-size:.91rem;margin-bottom:1.85rem;}
+      .field {margin-bottom:1.25rem;}
+      .field label {font-size:.875rem;}
+      .field-label-line {margin-bottom:.38rem;}
+      .field input {
+        min-height:56px;
+        font-size:16px; /* Evita zoom automático do Safari iOS ao focar. */
+      }
+      .pin-toggle,.id-info__trigger {
+        width:44px;
+        height:44px;
+        touch-action:manipulation;
+      }
+      .btn-login {
+        min-height:56px;
+        font-size:1rem;
+        touch-action:manipulation;
+      }
+      .id-info__tooltip {
+        left:-97px;
+        width:min(325px,calc(100vw - 2.5rem));
+        max-width:calc(100vw - 2.5rem);
+      }
+      button {-webkit-tap-highlight-color:transparent;}
+    }
+
+    @media (max-width:600px) {
+      .login-left {
+        padding:calc(1.2rem + env(safe-area-inset-top, 0px)) 1.25rem 1.35rem;
+      }
+      .left-content {
+        display:flex;
+        flex-direction:column;
+        gap:0;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+      }
+      .login-left .left-brand img {
+        width:min(194px,72vw);
+        max-height:54px;
+        margin-bottom:.55rem;
+      }
+      .login-left .left-descriptor {
+        max-width:335px;
+        font-size:.77rem;
+        line-height:1.43;
+      }
+      .left-quote {
+        max-width:395px;
+        margin-top:1.05rem;
+        text-align:center;
+      }
+      .left-quote__main {
+        font-size:clamp(1.23rem,5.3vw,1.55rem);
+        line-height:1.22;
+      }
+      .left-quote__support {
+        max-width:350px;
+        margin:.55rem auto 0;
+        font-size:.8rem;
+        line-height:1.45;
+      }
+      .login-right {
+        padding:1.75rem 1.25rem calc(2.6rem + env(safe-area-inset-bottom, 0px));
+      }
+      .form-eyebrow {font-size:.72rem;margin-bottom:.65rem;}
+      .form-title {font-size:clamp(1.75rem,7vw,2rem);}
+      .form-sub {
+        font-size:.875rem;
+        line-height:1.5;
+        margin-bottom:1.65rem;
+      }
+      .field input,.btn-login {min-height:54px;}
+    }
+
+    @media (max-width:360px) {
+      .login-left {
+        padding:calc(1.1rem + env(safe-area-inset-top, 0px)) 1rem 1.2rem;
+      }
+      .login-right {
+        padding:1.5rem 1rem calc(2.3rem + env(safe-area-inset-bottom, 0px));
+      }
+      .left-quote {margin-top:.85rem;}
+      .left-quote__support {font-size:.78rem;}
+      .id-info__tooltip {width:calc(100vw - 2rem);max-width:calc(100vw - 2rem);}
+    }
+
+    /* Telas horizontais com pouca altura: formulário ao lado da apresentação. */
+    @media (min-width:601px) and (max-width:900px) and (max-height:550px) and (orientation:landscape) {
+      .login-shell {
+        grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
+        grid-template-rows:1fr;
+      }
+      .login-left {padding:clamp(1rem,2.5vw,1.65rem);}
+      .left-content {
+        display:flex;
+        flex-direction:column;
+        align-items:flex-start;
+        text-align:left;
+      }
+      .login-left .left-brand {align-items:flex-start;text-align:left;}
+      .login-left .left-brand img {
+        width:min(175px,80%);
+        max-height:48px;
+        margin:0 0 .45rem;
+      }
+      .login-left .left-descriptor {
+        margin:0;
+        font-size:.73rem;
+        text-align:left;
+      }
+      .left-quote {max-width:100%;margin-top:1.3rem;text-align:left;}
+      .left-quote__main {font-size:clamp(1.15rem,2.3vw,1.55rem);}
+      .left-quote__support {
+        max-width:100%;
+        margin:.5rem 0 0;
+        font-size:.76rem;
+        line-height:1.4;
+      }
+      .login-right {
+        padding:1.2rem clamp(1.25rem,3vw,2rem) calc(1.2rem + env(safe-area-inset-bottom, 0px));
+        align-items:center;
+      }
+      .form-eyebrow {margin-bottom:.35rem;}
+      .form-title {font-size:1.7rem;}
+      .form-sub {margin-bottom:1.05rem;}
+      .field {margin-bottom:.8rem;}
+      .field input,.btn-login {min-height:48px;}
+      .btn-login {margin-top:.3rem;}
+    }
+
+    @media (hover:none) and (pointer:coarse) {
+      .btn-login:hover:not(:disabled) {transform:none;}
+    }
+
   </style>
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';
