@@ -2965,3 +2965,96 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     outline-offset:2px;
   }
 }
+
+
+/* Identidade HUB 2026: aproxima áreas internas da linguagem acolhedora do login.
+   Somente tela; os estados da Arena, cores de competição e impressão continuam próprios. */
+@media screen {
+  :root {
+    --hub-ui-teal:#2F9D8C;
+    --hub-ui-teal-deep:#257F74;
+    --hub-ui-teal-soft:#E7F5F1;
+    --hub-ui-canvas:#F2F7F5;
+    --hub-ui-ink:#263F43;
+    --hub-ui-muted:#71868D;
+    --hub-ui-line:#DFEAE7;
+    --hub-ui-radius:14px;
+    --hub-ui-shadow:0 4px 18px rgba(30,73,70,.042);
+    --app-bg:var(--hub-ui-canvas);
+    --fundo:var(--hub-ui-canvas);
+    --surface-subtle:#F7FAF9;
+    --line:var(--hub-ui-line);
+    --line-strong:#D0E1DC;
+    --ink:var(--hub-ui-ink);
+    --muted:var(--hub-ui-muted);
+    --brand:var(--hub-ui-teal);
+    --brand-strong:var(--hub-ui-teal-deep);
+    --brand-soft:var(--hub-ui-teal-soft);
+    --product-radius:var(--hub-ui-radius);
+    --product-shadow:var(--hub-ui-shadow);
+    --hub-sidebar-bg-top:#30696A;
+    --hub-sidebar-bg-bottom:#28545E;
+    --hub-sidebar-text:#E5F4F1;
+    --hub-sidebar-text-muted:#B8D6D1;
+  }
+  html body:has(.app-body):not(:has(.arena-layout)),
+  html body:has(.app-body):not(:has(.arena-layout)) .app-main,
+  html body:has(.app-body):not(:has(.arena-layout)) .home-stage,
+  html body:has(.app-body):not(:has(.arena-layout)) .team-stage,
+  html body:has(.app-body):not(:has(.arena-layout)) .judge-stage,
+  html body:has(.app-body):not(:has(.arena-layout)) .coord-stage,
+  html body:has(.app-body):not(:has(.arena-layout)) .schedule-stage {
+    background:var(--hub-ui-canvas);
+  }
+  html body .topbar,
+  html body.claro .topbar,
+  html body .app-body .topbar {
+    background:#FFFFFF !important;
+    border-bottom:1px solid var(--hub-ui-line) !important;
+    box-shadow:0 1px 5px rgba(29,67,63,.037) !important;
+  }
+  html body .topbar .topbar__event-name,
+  html body .topbar .topbar-avatar__name {
+    color:var(--hub-ui-ink) !important;
+    font-weight:740;
+  }
+  html body .topbar .topbar__event-org,
+  html body .topbar .topbar-avatar__role {
+    color:var(--hub-ui-muted) !important;
+  }
+  html body .app-body .app-sidebar {
+    background:linear-gradient(162deg,var(--hub-sidebar-bg-top),var(--hub-sidebar-bg-bottom)) !important;
+    border-right:1px solid rgba(238,255,250,.12) !important;
+    box-shadow:inset -1px 0 0 rgba(255,255,255,.025);
+  }
+  html body .app-body .app-sidebar .sidebar-item {
+    color:var(--hub-sidebar-text);
+    border-radius:11px;
+  }
+  html body .app-body .app-sidebar .sidebar-item svg {
+    color:var(--hub-sidebar-text-muted);
+  }
+  html body .app-body .app-sidebar .sidebar-item:hover {
+    background:rgba(255,255,255,.13);
+    color:#FFFFFF;
+  }
+  html body .app-body .app-sidebar .sidebar-item.ativo,
+  html body .app-body .app-sidebar .sidebar-item[aria-current="page"] {
+    background:rgba(255,255,255,.17);
+    color:#FFFFFF;
+    box-shadow:inset 3px 0 0 var(--hub-sidebar-accent,#9FE3D3);
+  }
+  html body .app-body .app-sidebar .sidebar-item.ativo svg,
+  html body .app-body .app-sidebar .sidebar-item[aria-current="page"] svg {
+    color:var(--hub-sidebar-accent,#A8E7D5);
+  }
+  html body .app-body .app-sidebar .sidebar-brand {
+    border-bottom-color:rgba(255,255,255,.15);
+  }
+  html body .app-body .app-sidebar .sidebar-sep {
+    background:rgba(240,255,251,.14);
+  }
+  html body .app-body .app-sidebar .sidebar-toggle {
+    color:#C5E1DB;
+  }
+}
