@@ -5,9 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#12355B">
   <link rel="stylesheet" href="css/styles.css?v=12">
   <script>window.API_URL='https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';</script>
   <style>
+    /* ── Variáveis ─────────────────────────────────────────── */
+    :root {
+      --cor:       #12355B;
+      --cor-light: #EBF4FF;
+    }
+
     /* ── Base ──────────────────────────────────────────────── */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -116,15 +124,17 @@
 
     /* Cabeçalho com logo */
     .ficha-header {
-      background: #19324D;
+      background: #fff;
       padding: 1.1rem 1.75rem;
       display: flex;
       align-items: center;
       gap: 1.25rem;
+      border-bottom: 3px solid var(--cor);
     }
     .ficha-header img {
-      height: 52px;
+      height: 44px;
       flex-shrink: 0;
+      opacity: .88;
     }
     .ficha-header-text { flex: 1; }
     .ficha-header-doc {
@@ -132,18 +142,18 @@
       font-weight: 800;
       letter-spacing: .14em;
       text-transform: uppercase;
-      color: rgba(255,255,255,.5);
+      color: var(--cor);
       margin-bottom: .2rem;
     }
     .ficha-header-title {
       font-size: .95rem;
       font-weight: 800;
-      color: #fff;
+      color: #0f1f35;
       letter-spacing: -.01em;
     }
     .ficha-header-sub {
       font-size: .7rem;
-      color: rgba(255,255,255,.5);
+      color: #5a6a80;
       margin-top: .2rem;
     }
     .ficha-header-right {
@@ -155,15 +165,16 @@
       font-weight: 800;
       letter-spacing: .08em;
       text-transform: uppercase;
-      color: #CCB650;
-      border: 1px solid rgba(204,182,80,.4);
+      color: var(--cor);
+      border: 1px solid var(--cor);
       border-radius: 100px;
       padding: .2rem .55rem;
       display: inline-block;
+      opacity: .75;
     }
     .ficha-header-right .fll-year {
       font-size: .62rem;
-      color: rgba(255,255,255,.4);
+      color: #94A3B8;
       margin-top: .3rem;
     }
 
@@ -216,12 +227,17 @@
     }
     .ficha-section:last-child { border-bottom: none; }
     .section-label {
-      font-size: .6rem;
+      font-size: .58rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: .1em;
-      color: #66758A;
-      margin-bottom: .75rem;
+      color: var(--cor);
+      background: var(--cor-light);
+      padding: .28rem .6rem;
+      border-left: 3px solid var(--cor);
+      border-radius: 0 4px 4px 0;
+      display: inline-block;
+      margin-bottom: .8rem;
     }
 
     /* Scores por categoria */
@@ -431,8 +447,8 @@
       .toolbar { display: none !important; }
       .report-area { max-width: 100%; margin: 0; padding: 0; }
       .ficha { border-radius: 0; box-shadow: none; border: 1px solid #DDE5EE; }
-      .ficha-header { padding: .9rem 1.4rem; }
-      .ficha-header img { height: 44px; }
+      .ficha-header { padding: .9rem 1.4rem; border-bottom-width: 2px; }
+      .ficha-header img { height: 38px; }
       .ficha-section { padding: .75rem 1.4rem; }
       .ficha-equipe  { padding: .85rem 1.4rem; }
       .ficha-footer  { padding: .5rem 1.4rem; }
@@ -814,5 +830,6 @@
 </script>
 <script src="js/sidebar-roles.js?v=6"></script>
 <script src="js/product-ui.js?v=11"></script>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js");</script>
 </body>
 </html>
