@@ -2433,3 +2433,77 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     }
   }
 }
+
+
+/* Refinamento 2026: hierarquia da marca e navegação recolhida */
+@media screen {
+  :root { --hub-logo-topbar-height: 43px; --hub-logo-sidebar-width: 178px; }
+  .topbar > .topbar__brand { order: -3; }
+  .topbar > .comp-sel { order: -2; margin-left:.15rem; margin-right:.6rem; }
+  .topbar > .topbar__event { order: -1; }
+  .topbar > .topbar__badge, .topbar > .topbar__actions { order: 1; }
+  .topbar > .topbar__brand img {
+    height:43px; max-width:210px; width:auto;
+    object-fit:contain;
+    filter:brightness(0) invert(1);
+  }
+  /* Cabeçalhos claros: todas as letras seguem o mesmo tom escuro do H. */
+  .home-shell .topbar .topbar__brand img,
+  .team-shell .topbar .topbar__brand img,
+  .coord-shell .topbar .topbar__brand img {
+    filter:brightness(0) saturate(100%) invert(15%) sepia(18%) saturate(930%) hue-rotate(165deg);
+  }
+  .app-body:not(.sidebar-collapsed) .app-sidebar .sidebar-brand__img {
+    width:178px !important; max-width:178px !important;
+    filter:brightness(0) invert(1);
+  }
+  html body .app-body.sidebar-collapsed .app-sidebar {
+    width:72px !important; min-width:72px !important; flex-basis:72px;
+    padding-left:0; padding-right:0;
+  }
+  html body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand {
+    display:flex; align-items:center; justify-content:center;
+    width:100%; min-height:76px; padding:12px 0;
+    margin:0 0 .5rem;
+  }
+  html body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand__img {
+    content:url("../favicon.svg"); width:44px !important; max-width:44px !important;
+    height:44px !important; max-height:44px !important;
+    object-fit:contain;filter:none;
+  }
+  html body .app-body.sidebar-collapsed .app-sidebar .sidebar-item {
+    width:52px; min-width:52px; max-width:52px; height:48px; min-height:48px;
+    margin:3px auto; padding:0 !important; gap:0 !important;
+    display:flex; align-items:center; justify-content:center;
+    font-size:0 !important; line-height:0;
+    overflow:hidden; border-radius:12px;
+  }
+  html body .app-body.sidebar-collapsed .app-sidebar .sidebar-item svg {
+    width:21px; height:21px; min-width:21px; min-height:21px;
+    flex:0 0 21px; opacity:1;
+  }
+  html body .app-body.sidebar-collapsed .app-sidebar .sidebar-sep {
+    width:48px; margin:10px auto;
+  }
+  html body .app-body.sidebar-collapsed .app-sidebar .sidebar-toggle {
+    width:52px; height:43px; min-height:43px; margin:auto auto 10px;
+    padding:0;justify-content:center; border-radius:10px;
+  }
+  html body .app-body.sidebar-collapsed .app-sidebar .sidebar-toggle svg {
+    width:19px; height:19px;
+  }
+  @media (max-width:700px) {
+    .topbar > .topbar__brand img {height:34px;max-width:142px;}
+    .topbar > .comp-sel {margin-left:0;margin-right:.1rem;}
+    /* A barra móvel usa a abertura lateral; não recolher o menu aberto. */
+    html body .app-body.sidebar-collapsed .app-sidebar {
+      width:min(82vw,280px) !important;min-width:min(82vw,280px) !important;flex-basis:auto;
+    }
+    html body .app-body.sidebar-collapsed .app-sidebar .sidebar-item {
+      width:auto;max-width:none;height:auto;min-height:42px;
+      margin:.08rem .45rem;padding:.58rem .8rem !important;
+      font-size:.79rem !important;line-height:1.35;justify-content:flex-start;gap:.6rem !important;
+    }
+    html body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand {display:none;}
+  }
+}
