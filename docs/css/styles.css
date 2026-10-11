@@ -3144,12 +3144,12 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
   html body:not(:has(.arena-layout)) :is(.btn.btn-primary,.coord-head-link--primary) {
     border-color:transparent;
     border-radius:10px;
-    background:#2F9D8C;
+    background:#257F74;
     color:#FFFFFF;
     box-shadow:0 5px 13px rgba(32,139,116,.13);
   }
   html body:not(:has(.arena-layout)) :is(.btn.btn-primary,.coord-head-link--primary):hover:not(:disabled) {
-    background:#257F74;
+    background:#1E6F66;
     box-shadow:0 8px 18px rgba(32,139,116,.16);
   }
   html body :is(
