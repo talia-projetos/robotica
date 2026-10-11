@@ -3037,3 +3037,56 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
   html body .cs-wrap > .cs-btn,
   html body .cs-wrap .cs-arrow svg {transition:none;}
 }
+
+
+/* Acabamento da navegação: ordem invariável e marca na sidebar em desktop. */
+@media screen {
+  html body .app-body > nav.app-sidebar > .sidebar-brand { order:0; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="index.html"] { order:10; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="arena.html"] { order:20; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="turma.html"] { order:30; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="juizes.html"] { order:40; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="coordenacao.html"] { order:50; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="deliberacao.html"] { order:55; }
+  html body .app-body > nav.app-sidebar > .sidebar-sep { order:60; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="ranking.html"] { order:70; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="documentos.html"] { order:80; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="cronograma.html"] { order:90; }
+  html body .app-body > nav.app-sidebar > .sidebar-toggle { order:100; }
+
+  /* As páginas com menu exibem a marca na sidebar, não duas vezes na tela. */
+  @media(min-width:701px) {
+    html body:has(.app-body > .app-sidebar) .topbar > .topbar__brand {
+      display:none !important;
+    }
+    html body:has(.app-body > .app-sidebar) .topbar .topbar__event {
+      text-align:left;
+      padding-left:0;
+    }
+  }
+  /* Sem menu lateral visível no celular, a marca continua no cabeçalho. */
+  @media(max-width:700px) {
+    html body:has(.app-body > .app-sidebar) .topbar > .topbar__brand {
+      display:flex !important;
+      align-items:center;
+      flex:0 0 auto;
+    }
+  }
+
+  /* O SVG U tem fundo transparente e mantém cor sem filtros de branco. */
+  @media(min-width:701px) {
+    html[data-hub-competition="fll"] body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand__img {
+      content:url("../logo-u-fll.svg") !important;
+    }
+    html[data-hub-competition="obr"] body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand__img {
+      content:url("../logo-u-obr.svg") !important;
+    }
+    html[data-hub-competition="steam"] body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand__img {
+      content:url("../logo-u-steam.svg") !important;
+    }
+    html body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand__img {
+      filter:none !important;
+      object-fit:contain !important;
+    }
+  }
+}
