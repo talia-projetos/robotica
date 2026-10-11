@@ -2836,3 +2836,204 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     }
   }
 }
+
+
+/* Campos de seleção: aparência compartilhada em toda a plataforma, sem mudança de eventos */
+@media screen {
+  :root {
+    --hub-choice-height:44px;
+    --hub-choice-radius:11px;
+    --hub-choice-border:#CDDDE7;
+    --hub-choice-ink:#263E53;
+    --hub-choice-muted:#75899D;
+    --hub-choice-accent:#2F80ED;
+    --hub-choice-soft:rgba(47,128,237,.12);
+    --hub-choice-surface:#FFFFFF;
+  }
+  html[data-hub-competition="obr"] {
+    --hub-choice-accent:#279B70;
+    --hub-choice-soft:rgba(39,155,112,.12);
+  }
+  html[data-hub-competition="steam"] {
+    --hub-choice-accent:#8B5CF6;
+    --hub-choice-soft:rgba(139,92,246,.12);
+  }
+
+  /* Native selects: preserve option values, onchange and accessibility. */
+  html body select:not([multiple]):not([size]) {
+    box-sizing:border-box;
+    min-height:var(--hub-choice-height);
+    max-width:100%;
+    padding:0 39px 0 13px;
+    border:1px solid var(--hub-choice-border);
+    border-radius:var(--hub-choice-radius);
+    background-color:var(--hub-choice-surface);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23596F83' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 7.5 5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 12px center;
+    background-size:18px 18px;
+    color:var(--hub-choice-ink);
+    font:650 .77rem/1.3 'Segoe UI',system-ui,-apple-system,sans-serif;
+    text-overflow:ellipsis;
+    appearance:none;
+    -webkit-appearance:none;
+    cursor:pointer;
+    box-shadow:0 1px 3px rgba(27,55,77,.035);
+    transition:border-color .16s ease, box-shadow .16s ease, background-color .16s ease;
+  }
+  html body select:not([multiple]):not([size]):hover:not(:disabled) {
+    border-color:#9EB9CC;
+    background-color:#FAFCFE;
+  }
+  html body select:not([multiple]):not([size]):focus-visible {
+    outline:none;
+    border-color:var(--hub-choice-accent);
+    box-shadow:0 0 0 3px var(--hub-choice-soft);
+    background-color:#FFFFFF;
+  }
+  html body select:not([multiple]):not([size]):disabled {
+    background-color:#F2F5F8;
+    color:#8798A6;
+    cursor:not-allowed;
+    opacity:.78;
+  }
+  html body select:not([multiple]):not([size]) option {
+    color:#263E53;
+    background:#FFFFFF;
+  }
+
+  /* CustomSelect is already the platform's native implementation; only skin it. */
+  html body .cs-wrap {
+    position:relative;
+    min-width:0;
+    max-width:100%;
+  }
+  html body .cs-wrap > select {
+    position:absolute;
+    opacity:0;
+    pointer-events:none;
+    width:1px;
+    height:1px;
+    min-height:1px;
+    overflow:hidden;
+  }
+  html body .cs-wrap > .cs-btn {
+    box-sizing:border-box;
+    min-height:var(--hub-choice-height);
+    max-width:100%;
+    padding:0 11px 0 13px;
+    background:#FFFFFF;
+    border:1px solid var(--hub-choice-border);
+    border-radius:var(--hub-choice-radius);
+    box-shadow:0 1px 3px rgba(27,55,77,.035);
+    color:var(--hub-choice-ink);
+    font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    font-size:.77rem;
+    font-weight:680;
+    line-height:1.3;
+    gap:10px;
+    transition:border-color .16s ease,box-shadow .16s ease,background-color .16s ease;
+  }
+  html body .cs-wrap > .cs-btn:hover {
+    border-color:#9EB9CC;
+    background:#FAFCFE;
+    box-shadow:0 2px 9px rgba(27,55,77,.06);
+  }
+  html body .cs-wrap > .cs-btn:focus-visible,
+  html body .cs-wrap.cs-open > .cs-btn {
+    outline:none;
+    border-color:var(--hub-choice-accent);
+    background:#FFFFFF;
+    box-shadow:0 0 0 3px var(--hub-choice-soft);
+  }
+  html body .cs-wrap .cs-label {
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  html body .cs-wrap .cs-arrow {
+    box-sizing:border-box;
+    display:grid;
+    place-items:center;
+    flex:0 0 27px;
+    width:27px;
+    height:27px;
+    border-radius:7px;
+    background:#F1F5F8;
+    color:#506B83;
+  }
+  html body .cs-wrap .cs-arrow svg {
+    width:12px;
+    height:8px;
+    transition:transform .16s;
+  }
+  html body .cs-wrap.cs-open .cs-arrow {
+    background:var(--hub-choice-soft);
+    color:var(--hub-choice-accent);
+  }
+  html body .cs-wrap .cs-dropdown {
+    box-sizing:border-box;
+    top:calc(100% + 7px);
+    max-width:min(390px,calc(100vw - 24px));
+    min-width:100%;
+    padding:6px;
+    border:1px solid #DCE7EF;
+    border-radius:12px;
+    background:#FFFFFF;
+    box-shadow:0 12px 32px rgba(21,46,66,.14);
+    z-index:700;
+  }
+  html body .cs-wrap .cs-dropdown.cs-drop--up {
+    top:auto;
+    bottom:calc(100% + 7px);
+  }
+  html body .cs-wrap .cs-item {
+    min-height:39px;
+    padding:9px 10px;
+    border-radius:8px;
+    color:#375166;
+    font-size:.75rem;
+    line-height:1.35;
+    font-weight:570;
+  }
+  html body .cs-wrap .cs-item:hover:not(.cs-item--ph):not(.cs-item--dis),
+  html body .cs-wrap .cs-item:focus-visible {
+    background:#F1F6F9;
+    outline:none;
+    color:#203F57;
+  }
+  html body .cs-wrap .cs-item--sel {
+    color:var(--hub-choice-accent);
+    font-weight:770;
+    background:var(--hub-choice-soft);
+  }
+  html body .cs-wrap .cs-item__chk {
+    color:var(--hub-choice-accent);
+  }
+  html body .cs-wrap .cs-item--ph {
+    color:#8294A5;
+    font-style:normal;
+  }
+
+  /* Existing competition picker shares sizing, not the native select mechanics. */
+  html body .topbar .comp-sel.comp-chip {
+    min-height:var(--hub-choice-height);
+    border-radius:var(--hub-choice-radius);
+    font-weight:770;
+  }
+  @media(max-width:700px) {
+    :root {--hub-choice-height:44px;}
+    html body select:not([multiple]):not([size]),
+    html body .cs-wrap > .cs-btn {font-size:.79rem;}
+    html body .cs-wrap .cs-dropdown {
+      max-width:calc(100vw - 20px);
+      min-width:100%;
+    }
+    html body .topbar .comp-sel.comp-chip {min-height:38px;}
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  html body select:not([multiple]):not([size]),
+  html body .cs-wrap > .cs-btn,
+  html body .cs-wrap .cs-arrow svg {transition:none;}
+}
