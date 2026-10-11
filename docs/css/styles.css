@@ -2749,3 +2749,90 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     }
   }
 }
+
+
+/* Identidade comum: topbar clara + marca de tamanho controlado */
+@media screen {
+  html body .topbar {
+    box-sizing:border-box;
+    background:#FFFFFF !important;
+    color:#253849 !important;
+    border-bottom:1px solid #DDE7EF !important;
+    box-shadow:0 1px 3px rgba(22,49,68,.045) !important;
+    height:var(--hub-topbar-height,64px) !important;
+    min-height:var(--hub-topbar-height,64px) !important;
+    max-height:var(--hub-topbar-height,64px);
+    padding:0 clamp(.75rem,1.8vw,1.5rem);
+    gap:clamp(.4rem,1.3vw,.95rem);
+    align-items:center;
+  }
+  html body .topbar .topbar__brand {
+    display:flex;align-items:center;justify-content:center;
+    flex:0 0 auto;min-width:0;
+    color:#213949 !important;
+  }
+  html body .topbar .topbar__brand img {
+    display:block;
+    width:auto !important;min-width:0;
+    max-width:152px !important;
+    height:31px !important;max-height:31px !important;
+    object-fit:contain !important;object-position:center;
+    filter:brightness(0) saturate(100%) invert(17%) sepia(14%) saturate(1177%) hue-rotate(156deg) !important;
+  }
+  html body .topbar .topbar__event-name,
+  html body .topbar .topbar__badge,
+  html body .topbar .topbar-avatar__name,
+  html body .topbar .topbar__brand-name {
+    color:#23394C !important;
+  }
+  html body .topbar .topbar__event-org,
+  html body .topbar .topbar-avatar__role {
+    color:#75889B !important;
+  }
+  html body .topbar .av-chevron {
+    stroke:#718499 !important;
+  }
+  html body .topbar .av-btn:focus-visible {
+    outline:2px solid #7CA8C2;outline-offset:4px;
+  }
+  html body .topbar .topbar__nav a {
+    color:#536D83 !important;
+  }
+  html body .topbar .topbar__nav a:hover {
+    background:#EEF4F8 !important;
+    color:#274F6B !important;
+  }
+  html body .topbar .topbar__nav a.ativo {
+    color:#285D7C !important;
+    background:#EAF3F9 !important;
+    box-shadow:inset 0 -2px 0 #75B9DE;
+  }
+  @media(max-width:700px) {
+    :root {--hub-topbar-height:60px;}
+    html body .topbar {
+      height:60px !important;min-height:60px !important;max-height:60px;
+      padding:0 .75rem;gap:.45rem;
+    }
+    html body .topbar .topbar__brand img {
+      max-width:124px !important;height:27px !important;max-height:27px !important;
+    }
+  }
+
+  /* Marca compacta: apenas o desenho vetorial U na cor da competição */
+  @media(min-width:701px) {
+    html[data-hub-competition="fll"] body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand__img {
+      content:url("../logo-u-fll.svg") !important;
+    }
+    html[data-hub-competition="obr"] body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand__img {
+      content:url("../logo-u-obr.svg") !important;
+    }
+    html[data-hub-competition="steam"] body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand__img {
+      content:url("../logo-u-steam.svg") !important;
+    }
+    html body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand__img {
+      width:43px !important;height:49px !important;
+      min-width:43px !important;max-width:43px !important;max-height:49px !important;
+      filter:none !important;object-fit:contain !important;
+    }
+  }
+}
