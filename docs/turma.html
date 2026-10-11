@@ -2418,11 +2418,13 @@
     });
   }
 
-  async function abrirComoCoordenacao(nome, pin) {
+  async function abrirComoCoordenacao(nome, pin, isRefresh) {
     document.getElementById('view-login').classList.add('hidden');
     document.getElementById('view-resultados').classList.remove('hidden');
-    document.getElementById('scores-grid').innerHTML =
-      '<p style="color:#94A3B8;font-size:.8rem;padding:.5rem 0">Carregando equipes…</p>';
+    if (!isRefresh) {
+      document.getElementById('scores-grid').innerHTML =
+        '<p style="color:#94A3B8;font-size:.8rem;padding:.5rem 0">Carregando equipes…</p>';
+    }
     var _sp2 = document.getElementById('spinner');
     if (_sp2) _sp2.style.display = '';
 
@@ -2450,14 +2452,17 @@
     var coordNome = localStorage.getItem('coord_nome');
     var coordPin  = localStorage.getItem('coord_pin');
 
+    var jaMostrando = !document.getElementById('view-resultados').classList.contains('hidden');
+
     if (!id && coordNome && coordPin) {
-      abrirComoCoordenacao(coordNome, coordPin);
+      abrirComoCoordenacao(coordNome, coordPin, jaMostrando);
       return;
     }
     if (!id) return;
 
-    /* Mostra a equipe imediatamente — sem esperar a API */
-    exibirTurmaImediato(id);
+    /* Primeira carga: exibe a tela imediatamente com placeholder */
+    if (!jaMostrando) exibirTurmaImediato(id);
+
     var _sp3 = document.getElementById('spinner');
     var _st  = document.getElementById('sync-tag');
     if (_sp3) _sp3.style.display = '';
@@ -2472,17 +2477,21 @@
           _st.textContent = 'Planilha · ' + _now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
           _st.classList.remove('sync-tag--syncing');
         }
-      } else {
-        /* Servidor rejeitou credenciais → limpa e volta ao login */
+      } else if (!jaMostrando) {
+        /* Credenciais rejeitadas na primeira carga → volta ao login */
         localStorage.removeItem(STORAGE_KEY_ID);
         localStorage.removeItem(STORAGE_KEY_PIN);
         document.getElementById('view-resultados').classList.add('hidden');
         document.getElementById('view-login').classList.remove('hidden');
       }
+      /* Em refresh com r.ok===false: Apps Script falhou transitoriamente —
+         mantém o conteúdo existente e aguarda o próximo ciclo */
     } catch(_) {
-      /* Falha localizada: preserva o portal e mantém conteúdo estático acessível */
-      document.getElementById('scores-grid').innerHTML =
-        '<div class="inline-state inline-state--error"><strong>Não foi possível atualizar os resultados.</strong><span>Metodologia, documentos e feedback continuam disponíveis. Tente novamente em alguns instantes.</span></div>';
+      /* Falha de rede: na primeira carga mostra erro; em refresh preserva o conteúdo */
+      if (!jaMostrando) {
+        document.getElementById('scores-grid').innerHTML =
+          '<div class="inline-state inline-state--error"><strong>Não foi possível carregar os resultados.</strong><span>Metodologia, documentos e feedback continuam disponíveis. Tente novamente em alguns instantes.</span></div>';
+      }
     } finally {
       if (_sp3) _sp3.style.display = 'none';
       if (_st)  _st.classList.remove('sync-tag--syncing');
@@ -2491,7 +2500,7 @@
 
   carregarEquipes();
   tentarResumir();
-  setInterval(tentarResumir, 30000);
+  setInterval(tentarResumir, 60000);
 </script>
 </body>
 </html>
