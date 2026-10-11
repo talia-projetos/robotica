@@ -913,6 +913,33 @@
       .btn-login:hover:not(:disabled) {transform:none;}
     }
 
+
+
+    /* Marca horizontal oficial sobre o painel de boas-vindas. */
+    .login-left .left-brand img {
+      content:url("logo-hub-on-dark-fll.svg");
+      display:block;
+      width:clamp(205px,21vw,256px);
+      max-width:100%;
+      height:auto;
+      max-height:68px;
+      object-fit:contain;
+      object-position:left center;
+      filter:none;
+    }
+    @media (max-width:820px) {
+      .login-left .left-brand img {
+        width:min(202px,82%);
+        max-height:54px;
+      }
+    }
+    @media (max-width:450px) {
+      .login-left .left-brand img {
+        width:min(178px,80%);
+        max-height:47px;
+      }
+    }
+
   </style>
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';
@@ -924,7 +951,7 @@
   <aside class="login-left" aria-label="HUB Circuito">
     <div class="left-content">
       <div class="left-brand">
-        <img src="logo-claro.svg" alt="HUB Circuito">
+        <img src="logo-hub-on-dark-fll.svg" alt="HUB Circuito">
         <div class="left-descriptor">Robótica, educação e trabalho em equipe.</div>
       </div>
       <div class="brand-rule"></div>
