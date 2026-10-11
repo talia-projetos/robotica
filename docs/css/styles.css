@@ -2939,3 +2939,29 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
 @media(prefers-reduced-motion:reduce) {
   html body .cs-btn,html body .cs-item,html body select {transition:none;}
 }
+
+
+/* Acabamento final: seletor de competição segue a altura dos demais campos. */
+@media screen and (min-width:701px) {
+  html body .topbar .comp-sel.comp-chip {
+    box-sizing:border-box;
+    min-height:44px !important;
+    height:44px !important;
+    border-radius:11px !important;
+    padding:0 12px !important;
+    gap:9px;
+    background:#FFFFFF !important;
+    border:1px solid var(--hub-control-border,#CBD9E3) !important;
+    color:var(--hub-control-ink,#273D50) !important;
+    box-shadow:0 1px 3px rgba(21,45,63,.04) !important;
+  }
+  html body .topbar .comp-sel.comp-chip[aria-haspopup="true"]:hover {
+    border-color:#A9BECC !important;
+    background:#FBFDFE !important;
+    transform:none;
+  }
+  html body .topbar .comp-sel.comp-chip[aria-haspopup="true"]:focus-visible {
+    outline:2px solid var(--hub-control-accent,#2F80ED);
+    outline-offset:2px;
+  }
+}
