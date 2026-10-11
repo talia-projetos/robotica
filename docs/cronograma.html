@@ -262,21 +262,6 @@
     .ic__sub   { font-size: .67rem; color: #64748B; margin-top: .2rem; line-height: 1.45; }
 
     /* ── Impressão ───────────────────────────────────────────── */
-    @media print {
-      @page { size: A4 landscape; margin: .7cm 1cm; }
-      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      body { background: #fff; }
-      .topbar, .crono-toolbar { display: none !important; }
-      .wrap { max-width: 100%; padding: 0; }
-      .gantt-card { overflow: visible; border-radius: 8px; }
-      .gantt { min-width: 0; width: 100%; }
-      .gb { font-size: .57rem; }
-      .g-track { height: 38px; }
-      .gb { top: 5px; height: 28px; }
-      .info-row { margin-top: .5rem; gap: .4rem; }
-      .g-axis { position: static; }
-      .g-lbl  { position: static; }
-    }
 
     @media (max-width: 700px) {
       .info-row { grid-template-columns: repeat(2, 1fr); }
@@ -943,6 +928,14 @@
       .det-time{ font-size:.59rem }
       .det-place{ font-size:.5rem }
       .det-row{ page-break-inside:avoid }
+
+      /* Gantt */
+      .gantt-card{ overflow:visible; border-radius:8px }
+      .gantt{ min-width:0; width:100% }
+      .g-track{ height:38px }
+      .gb{ font-size:.57rem; top:5px; height:28px }
+      .g-axis{ position:static }
+      .g-lbl { position:static }
     }
 
     @media(max-width:900px){
