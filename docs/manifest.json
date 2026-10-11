@@ -1,0 +1,40 @@
+{
+  "name": "HUB Circuito — Torneio STEM",
+  "short_name": "HUB Circuito",
+  "description": "Plataforma de gestão do Torneio Interno de Robótica — SESI Reitor Miguel Calmon",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0C1521",
+  "theme_color": "#12355B",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Arena",
+      "short_name": "Arena",
+      "url": "./arena.html",
+      "description": "Cronômetro e placar da Arena"
+    },
+    {
+      "name": "Avaliações",
+      "short_name": "Juízes",
+      "url": "./juizes.html",
+      "description": "Portal dos juízes"
+    },
+    {
+      "name": "Ranking",
+      "short_name": "Ranking",
+      "url": "./ranking.html",
+      "description": "Classificação das equipes"
+    }
+  ]
+}

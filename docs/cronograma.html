@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HUB Circuito</title>
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="css/styles.css?v=11">
+  <link rel="stylesheet" href="css/styles.css?v=12">
   <style>
-    body { background: #F0F4F8; }
+    body { background: #F7F9F8; }
     .wrap { max-width: 1280px; margin: 0 auto; padding: 1.75rem 1.75rem 5rem; }
 
     /* ── Cabeçalho ───────────────────────────────────────────── */
@@ -39,9 +39,9 @@
     }
     .tl-seg {
       display: flex; align-items: center; justify-content: center;
-      font-size: .62rem; font-weight: 700; color: #fff;
+      font-size: .62rem; font-weight: 700; color: #253D40;
       white-space: nowrap; overflow: hidden;
-      border-right: 2px solid rgba(255,255,255,.25);
+      border-right: 2px solid rgba(255,255,255,.4);
       flex-shrink: 0;
     }
     .tl-seg:last-child { border-right: none; }
@@ -54,12 +54,12 @@
     }
 
     /* Cores da timeline macro */
-    .tl-abertura  { background: #c1dbcf; }
-    .tl-aval      { background: #fbdd9d; }
-    .tl-r2        { background: #e8a490; }
-    .tl-r3        { background: #e8a490; }
-    .tl-delib     { background: #375451; }
-    .tl-premio    { background: #e68459; }
+    .tl-abertura  { background: #CEDFEF; color: #253D40; }
+    .tl-aval      { background: #F8E7BC; color: #253D40; }
+    .tl-r2        { background: #B8DCD1; color: #253D40; }
+    .tl-r3        { background: #98C9BA; color: #253D40; }
+    .tl-delib     { background: #BFCFD1; color: #253D40; }
+    .tl-premio    { background: #F2BEAA; color: #253D40; }
 
     /* ── Toolbar de filtros ──────────────────────────────────── */
     .crono-toolbar {
@@ -155,8 +155,8 @@
     .g-phase__bar {
       width: 3px; height: 14px; border-radius: 2px; flex-shrink: 0;
     }
-    .g-phase--sala1 .g-phase__bar { background: #fbdd9d; }
-    .g-phase--sala2 .g-phase__bar { background: #e68459; }
+    .g-phase--sala1 .g-phase__bar { background: #365551; }
+    .g-phase--sala2 .g-phase__bar { background: #365551; }
     .g-phase__range {
       margin-left: auto; font-weight: 500;
       color: #94A3B8; font-size: .6rem;
@@ -223,7 +223,7 @@
       top: 8px; height: 36px;
       border-radius: 6px;
       display: flex; align-items: center; justify-content: center;
-      font-size: .64rem; font-weight: 700; color: #fff;
+      font-size: .64rem; font-weight: 700; color: #253D40;
       white-space: nowrap; letter-spacing: .01em;
       cursor: default;
       transition: opacity .15s, transform .1s;
@@ -233,11 +233,11 @@
     .gb:hover { opacity: .88; transform: scaleY(1.06); z-index: 5; }
 
     /* Paleta de blocos — paleta outono do torneio */
-    .gb-s1 { background: #fbdd9d; color: #375451; }  /* Sala A — amarelo creme */
-    .gb-s2 { background: #e68459; color: #fff; }     /* Sala B — ferrugem */
-    .gb-r1 { background: #e8a490; color: #375451; }  /* Round — pêssego */
-    .gb-r2 { background: #e8a490; color: #375451; }
-    .gb-r3 { background: #d97c6b; color: #375451; }  /* Round 3 — pêssego mais escuro */
+    .gb-s1 { background: #F8E7BC; color: #253D40; }  /* Sala A */
+    .gb-s2 { background: #F4D1BD; color: #253D40; }  /* Sala B */
+    .gb-r1 { background: #D6EAE3; color: #253D40; }  /* Round 1 — verde-sálvia */
+    .gb-r2 { background: #B8DCD1; color: #253D40; }  /* Round 2 */
+    .gb-r3 { background: #98C9BA; color: #253D40; }  /* Round 3 */
 
     /* ── Cards de resumo (simplificados) ────────────────────── */
     .info-row {
@@ -687,8 +687,8 @@
       width:2px;
     }
 
-    .schedule-slot--avaliacao::before{background:#fbdd9d}
-    .schedule-slot--round::before{background:#e8a490}
+    .schedule-slot--avaliacao::before{background:#F8E7BC}
+    .schedule-slot--round::before{background:#D6EAE3}
 
     .schedule-slot__time{
       color:#26374B;
@@ -1260,7 +1260,7 @@
 <div id="toast"></div>
 <script src="js/api.js?v=4"></script>
 <script src="js/sidebar-roles.js?v=6"></script>
-<script src="js/product-ui.js?v=10"></script>
+<script src="js/product-ui.js?v=11"></script>
 <script>
   // ── Dados estáticos do cronograma (Excel) ───────────────────
   var COLS = [
@@ -1326,33 +1326,33 @@
   // ── Render de células ───────────────────────────────────────
   /* Fases fixas (não variam por competição) */
   var CELL_CFG = {
-    ab:{bg:'#c1dbcf',fg:'#375451',lbl:'Abertura'},
-    fi:{bg:'#375451',fg:'#fff',lbl:'Finais / Apuração'},
-    pr:{bg:'#e68459',fg:'#fff',lbl:'Premiação'},
-    fe:{bg:'#fbdd9d',fg:'#375451',lbl:'Festa da Amizade'}
+    ab:{bg:'#CEDFEF',fg:'#253D40',lbl:'Abertura'},
+    fi:{bg:'#BFCFD1',fg:'#253D40',lbl:'Finais / Apuração'},
+    pr:{bg:'#F2BEAA',fg:'#253D40',lbl:'Premiação'},
+    fe:{bg:'#F9DEA4',fg:'#253D40',lbl:'Festa da Amizade'}
   };
   /* Paletas por competição — paleta outono */
   var COMP_CFG = {
     fll: {
-      sa:{bg:'#fbdd9d',fg:'#375451',lbl:'Sala A · 17 min'},
-      sb:{bg:'#e68459',fg:'#fff',lbl:'Sala B · 17 min'},
-      r1:{bg:'#e8a490',fg:'#375451'},
-      r2:{bg:'#e8a490',fg:'#375451'},
-      r3:{bg:'#d97c6b',fg:'#375451'}
+      sa:{bg:'#F8E7BC',fg:'#253D40',lbl:'Sala A · 17 min'},
+      sb:{bg:'#F4D1BD',fg:'#253D40',lbl:'Sala B · 17 min'},
+      r1:{bg:'#D5E4F5',fg:'#253D40'},
+      r2:{bg:'#BDD3EE',fg:'#253D40'},
+      r3:{bg:'#A2BFE6',fg:'#253D40'}
     },
     obr: {
-      sa:{bg:'#fbdd9d',fg:'#375451',lbl:'Sala A · 17 min'},
-      sb:{bg:'#e68459',fg:'#fff',lbl:'Sala B · 17 min'},
-      r1:{bg:'#e8a490',fg:'#375451'},
-      r2:{bg:'#e8a490',fg:'#375451'},
-      r3:{bg:'#d97c6b',fg:'#375451'}
+      sa:{bg:'#F8E7BC',fg:'#253D40',lbl:'Sala A · 17 min'},
+      sb:{bg:'#F4D1BD',fg:'#253D40',lbl:'Sala B · 17 min'},
+      r1:{bg:'#D6EAE3',fg:'#253D40'},
+      r2:{bg:'#B8DCD1',fg:'#253D40'},
+      r3:{bg:'#98C9BA',fg:'#253D40'}
     },
     steam: {
-      sa:{bg:'#fbdd9d',fg:'#375451',lbl:'Sala A · 17 min'},
-      sb:{bg:'#e68459',fg:'#fff',lbl:'Sala B · 17 min'},
-      r1:{bg:'#d55c5a',fg:'#fff'},
-      r2:{bg:'#d55c5a',fg:'#fff'},
-      r3:{bg:'#b84644',fg:'#fff'}
+      sa:{bg:'#F8E7BC',fg:'#253D40',lbl:'Sala A · 17 min'},
+      sb:{bg:'#F4D1BD',fg:'#253D40',lbl:'Sala B · 17 min'},
+      r1:{bg:'#E7DDF3',fg:'#253D40'},
+      r2:{bg:'#D2C3E9',fg:'#253D40'},
+      r3:{bg:'#BBA7DC',fg:'#253D40'}
     }
   };
 
@@ -1405,7 +1405,7 @@
       +'<div class="tl-seg tl-aval" style="width:64.9%">Avaliações em Sala (A e B) + Rounds</div>'
       +'<div class="tl-seg tl-delib" style="width:9.5%">Finais</div>'
       +'<div class="tl-seg tl-premio" style="width:9.5%">Premiação</div>'
-      +'<div class="tl-seg" style="width:4.7%;background:#A78BFA">Festa</div>'
+      +'<div class="tl-seg" style="width:4.7%;background:#F9DEA4;color:#253D40">Festa</div>'
       +'</div>'
       +'<div class="tl-ticks">'
       +'<span class="tl-tick" style="left:0%">08:00</span>'
@@ -1486,16 +1486,16 @@
   var _s=document.createElement('style');
   _s.textContent='.sch-wrap{overflow-x:auto;border:1px solid #E1E8F0;border-radius:9px;background:#fff}'
     +'.sch-table{width:100%;border-collapse:collapse;min-width:920px}'
-    +'.sch-th-team{width:60px;min-width:60px;position:sticky;left:0;z-index:5;background:#375451}'
-    +'.sch-th-tutor{width:96px;min-width:96px;position:sticky;left:60px;z-index:5;background:#375451}'
+    +'.sch-th-team{width:60px;min-width:60px;position:sticky;left:0;z-index:5;background:#365551}'
+    +'.sch-th-tutor{width:96px;min-width:96px;position:sticky;left:60px;z-index:5;background:#365551}'
     +'.sch-th-team,.sch-th-tutor,.sch-th-time{padding:.3rem .35rem;font-size:.5rem;font-weight:800;'
-    +'text-transform:uppercase;letter-spacing:.06em;color:#d8ece4;background:#375451;border-bottom:1.5px solid #2a403e;'
+    +'text-transform:uppercase;letter-spacing:.06em;color:#d8ece4;background:#365551;border-bottom:1.5px solid #2a403e;'
     +'border-right:1px solid rgba(255,255,255,.12);text-align:center;white-space:nowrap}'
     +'.sch-th-time{min-width:58px}'
     +'.sch-ts{display:block;font-size:.54rem;color:#26374B;font-weight:700}'
     +'.sch-te{display:block;font-size:.46rem;color:#94A3B8}'
     +'.sch-group-lbl{padding:.25rem .7rem;font-size:.55rem;font-weight:800;text-transform:uppercase;'
-    +'letter-spacing:.07em;color:#fff;background:#375451;border-bottom:1.5px solid #2a403e}'
+    +'letter-spacing:.07em;color:#fff;background:#365551;border-bottom:1.5px solid #2a403e}'
     +'.sch-row:hover{background:#F5F9FF}'
     +'.sch-row:hover .sch-team,.sch-row:hover .sch-tutor{background:#F5F9FF}'
     +'.sch-team{padding:.38rem .5rem;position:sticky;left:0;background:#fff;z-index:4;'
