@@ -2507,3 +2507,245 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     html body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand {display:none;}
   }
 }
+
+
+/* SIDEBAR ÚNICA — dimensões e ícones iguais em todas as páginas do HUB.
+   Aplicada após os estilos legados para eliminar divergências entre telas. */
+@media screen {
+  :root {
+    --hub-nav-width: 198px;
+    --hub-nav-compact-width: 72px;
+    --hub-nav-logo-width: 174px;
+    --hub-nav-icon-size: 20px;
+  }
+
+  html body .app-body .app-sidebar .sidebar-brand {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 86px !important;
+    min-height: 86px !important;
+    max-height: 86px;
+    margin: 0 0 9px !important;
+    padding: 13px 10px !important;
+    flex: 0 0 86px;
+    border-bottom: 1px solid rgba(255,255,255,.12);
+  }
+
+  html body .app-body .app-sidebar .sidebar-brand__img {
+    display: block;
+    width: var(--hub-nav-logo-width) !important;
+    max-width: var(--hub-nav-logo-width) !important;
+    height: 51px !important;
+    max-height: 51px !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    filter: brightness(0) invert(1);
+  }
+
+  html body .app-body .app-sidebar .sidebar-item {
+    box-sizing: border-box;
+    width: calc(100% - 16px) !important;
+    max-width: calc(100% - 16px) !important;
+    min-height: 44px !important;
+    height: 44px !important;
+    margin: 3px 8px !important;
+    padding: 0 12px !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 11px !important;
+    border-radius: 11px !important;
+    font-size: .78rem !important;
+    font-weight: 640 !important;
+    line-height: 1.25 !important;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--hub-sidebar-text, #D8E4EB);
+  }
+
+  html body .app-body .app-sidebar .sidebar-item > svg {
+    display: block;
+    box-sizing: content-box;
+    width: var(--hub-nav-icon-size) !important;
+    min-width: var(--hub-nav-icon-size) !important;
+    max-width: var(--hub-nav-icon-size) !important;
+    height: var(--hub-nav-icon-size) !important;
+    min-height: var(--hub-nav-icon-size) !important;
+    max-height: var(--hub-nav-icon-size) !important;
+    flex: 0 0 var(--hub-nav-icon-size) !important;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8 !important;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: .9;
+  }
+
+  html body .app-body .app-sidebar .sidebar-item.ativo {
+    color: #FFF !important;
+    background: rgba(255,255,255,.14) !important;
+    box-shadow: inset 3px 0 0 var(--hub-sidebar-accent, #8CCAF0) !important;
+    font-weight: 760 !important;
+  }
+  html body .app-body .app-sidebar .sidebar-item.ativo > svg {
+    color: var(--hub-sidebar-accent, #8CCAF0) !important;
+    opacity: 1;
+  }
+
+  html body .app-body .app-sidebar .sidebar-sep {
+    flex: 0 0 1px;
+    width: calc(100% - 32px) !important;
+    height: 1px;
+    margin: 12px 16px !important;
+    background: rgba(234,246,250,.14);
+  }
+
+  html body .app-body .app-sidebar > .sidebar-toggle {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: calc(100% - 16px) !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    margin: auto 8px 0 !important;
+    padding: 0 12px !important;
+    border-radius: 10px;
+    font-size: .72rem;
+  }
+  html body .app-body .app-sidebar > .sidebar-toggle svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+  }
+
+  @media (min-width: 701px) {
+    html body .app-body .app-sidebar {
+      box-sizing: border-box;
+      position: sticky !important;
+      width: var(--hub-nav-width) !important;
+      min-width: var(--hub-nav-width) !important;
+      max-width: var(--hub-nav-width) !important;
+      flex: 0 0 var(--hub-nav-width) !important;
+      padding: 0 0 14px !important;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    html body .app-body:is(.home-shell,.team-shell,.judge-shell,.coord-shell,.schedule-shell) > .app-sidebar {
+      top: 0 !important;
+      height: 100vh !important;
+      height: 100dvh !important;
+    }
+    html body .app-body:not(.home-shell,.team-shell,.judge-shell,.coord-shell,.schedule-shell) > .app-sidebar {
+      top: var(--hub-topbar-height, 64px) !important;
+      height: calc(100vh - var(--hub-topbar-height, 64px)) !important;
+      height: calc(100dvh - var(--hub-topbar-height, 64px)) !important;
+    }
+
+    html body .app-body.sidebar-collapsed .app-sidebar {
+      width: var(--hub-nav-compact-width) !important;
+      min-width: var(--hub-nav-compact-width) !important;
+      max-width: var(--hub-nav-compact-width) !important;
+      flex: 0 0 var(--hub-nav-compact-width) !important;
+    }
+
+    html body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand {
+      width: 100% !important;
+      height: 86px !important;
+      min-height: 86px !important;
+      max-height: 86px !important;
+      margin-bottom: 9px !important;
+      padding: 13px 0 !important;
+      flex: 0 0 86px;
+    }
+    html body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand__img {
+      content: url("../favicon.svg") !important;
+      width: 45px !important;
+      min-width: 45px !important;
+      max-width: 45px !important;
+      height: 45px !important;
+      max-height: 45px !important;
+      object-fit: contain !important;
+      filter: none !important;
+    }
+
+    html body .app-body.sidebar-collapsed .app-sidebar .sidebar-item {
+      width: 52px !important;
+      min-width: 52px !important;
+      max-width: 52px !important;
+      height: 44px !important;
+      min-height: 44px !important;
+      margin: 3px auto !important;
+      padding: 0 !important;
+      gap: 0 !important;
+      justify-content: center !important;
+      font-size: 0 !important;
+      line-height: 0 !important;
+      overflow: hidden;
+    }
+    html body .app-body.sidebar-collapsed .app-sidebar .sidebar-item > svg {
+      width: 21px !important;
+      min-width: 21px !important;
+      max-width: 21px !important;
+      height: 21px !important;
+      min-height: 21px !important;
+      max-height: 21px !important;
+      flex: 0 0 21px !important;
+    }
+    html body .app-body.sidebar-collapsed .app-sidebar .sidebar-sep {
+      width: 42px !important;
+      margin: 12px auto !important;
+    }
+    html body .app-body.sidebar-collapsed .app-sidebar > .sidebar-toggle {
+      width: 52px !important;
+      height: 42px !important;
+      margin: auto auto 0 !important;
+      padding: 0 !important;
+      justify-content: center !important;
+    }
+    html body .app-body.sidebar-collapsed .app-sidebar .sidebar-toggle-label {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 700px) {
+    html body .app-body .app-sidebar,
+    html body .app-body.sidebar-collapsed .app-sidebar {
+      width: min(82vw,280px) !important;
+      min-width: min(82vw,280px) !important;
+      max-width: min(82vw,280px) !important;
+      flex: 0 0 auto !important;
+      padding: 0 0 14px !important;
+    }
+    html body .app-body .app-sidebar .sidebar-brand {
+      display: none !important;
+    }
+    html body .app-body.sidebar-collapsed .app-sidebar .sidebar-item {
+      width: calc(100% - 16px) !important;
+      max-width: calc(100% - 16px) !important;
+      height: 44px !important;
+      margin: 3px 8px !important;
+      padding: 0 12px !important;
+      gap: 11px !important;
+      font-size: .78rem !important;
+      line-height: 1.25 !important;
+      justify-content: flex-start !important;
+    }
+    html body .app-body.sidebar-collapsed .app-sidebar .sidebar-item > svg {
+      width: 20px !important;
+      min-width: 20px !important;
+      max-width: 20px !important;
+      height: 20px !important;
+      min-height: 20px !important;
+      max-height: 20px !important;
+      flex: 0 0 20px !important;
+    }
+    html body .app-body .app-sidebar > .sidebar-toggle {
+      display: none !important;
+    }
+  }
+}
