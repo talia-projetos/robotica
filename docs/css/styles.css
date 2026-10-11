@@ -2314,3 +2314,90 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     .topbar .topbar__brand img { height:30px; max-width:140px; }
   }
 }
+
+
+/* HUB Circuito — sidebar com azul-petróleo suave */
+@media screen {
+  :root {
+    --hub-sidebar-bg-top: #2D4654;
+    --hub-sidebar-bg-bottom: #263F4C;
+    --hub-sidebar-text: #D8E4EB;
+    --hub-sidebar-text-muted: #A8BBC8;
+    --hub-sidebar-active: #FFFFFF;
+    --hub-sidebar-accent: #8CCAF0;
+  }
+  html[data-hub-competition="obr"] {
+    --hub-sidebar-accent: #82D7B1;
+  }
+  html[data-hub-competition="steam"] {
+    --hub-sidebar-accent: #C6ADF1;
+  }
+
+  /* Alta especificidade para respeitar as dimensões próprias de cada página. */
+  html body .app-body .app-sidebar {
+    background: linear-gradient(180deg, var(--hub-sidebar-bg-top), var(--hub-sidebar-bg-bottom)) !important;
+    border-right: 1px solid rgba(236,249,255,.12);
+    color: var(--hub-sidebar-text);
+  }
+  html body .app-body .app-sidebar .sidebar-brand {
+    border-bottom-color: rgba(232,246,253,.12);
+  }
+  html body .app-body .app-sidebar .sidebar-item {
+    min-height: 41px;
+    color: var(--hub-sidebar-text);
+    border-radius: 10px;
+    font-weight: 610;
+    line-height: 1.35;
+    transition: background .16s ease, color .16s ease, box-shadow .16s ease;
+  }
+  html body .app-body .app-sidebar .sidebar-item svg {
+    opacity: .86;
+    color: var(--hub-sidebar-text-muted);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: color .16s ease, opacity .16s ease;
+  }
+  html body .app-body .app-sidebar .sidebar-item:hover {
+    background: rgba(255,255,255,.115);
+    color: #FFFFFF;
+  }
+  html body .app-body .app-sidebar .sidebar-item:hover svg {
+    color: #F2FAFF;
+    opacity: 1;
+  }
+  html body .app-body .app-sidebar .sidebar-item.ativo,
+  html body .app-body .app-sidebar .sidebar-item[aria-current="page"] {
+    background: rgba(255,255,255,.14);
+    color: var(--hub-sidebar-active);
+    box-shadow: inset 3px 0 0 var(--hub-sidebar-accent);
+    font-weight: 730;
+  }
+  html body .app-body .app-sidebar .sidebar-item.ativo svg,
+  html body .app-body .app-sidebar .sidebar-item[aria-current="page"] svg {
+    color: var(--hub-sidebar-accent);
+    opacity: 1;
+  }
+  html body .app-body .app-sidebar .sidebar-sep {
+    background: rgba(232,246,253,.13);
+  }
+  html body .app-body .app-sidebar .sidebar-toggle {
+    color: #C1D1DC;
+    font-weight: 620;
+  }
+  html body .app-body .app-sidebar .sidebar-toggle:hover {
+    background: rgba(255,255,255,.09);
+    color: #FFFFFF;
+  }
+  html body .app-body .app-sidebar .sidebar-item:focus-visible,
+  html body .app-body .app-sidebar .sidebar-toggle:focus-visible {
+    outline: 2px solid var(--hub-sidebar-accent);
+    outline-offset: 2px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body .app-body .app-sidebar .sidebar-item,
+  html body .app-body .app-sidebar .sidebar-item svg {
+    transition: none;
+  }
+}
