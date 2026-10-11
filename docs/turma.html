@@ -1806,6 +1806,22 @@
       #scores-grid .gauge-ring { transition:none; }
     }
 
+  
+    /* Contexto pedagógico — descrição, não novo indicador */
+    .met-context {
+      margin:0 0 1.15rem; padding:1rem 1.1rem;
+      border:1px solid #E2EAF1; border-radius:12px;
+      background:linear-gradient(105deg,#F7FAFD 0%,#FFFFFF 100%);
+    }
+    .met-context__eyebrow {
+      margin-bottom:.42rem; color:#56738F; font-size:.67rem;
+      font-weight:800; letter-spacing:.065em; text-transform:uppercase;
+    }
+    .met-context p { margin:.35rem 0 .55rem; color:#50667C; font-size:.75rem; line-height:1.65; }
+    .met-context p:last-child { margin-bottom:0; }
+    .met-context strong { color:#1B3C5C; font-weight:760; }
+    @media(max-width:700px) { .met-context {padding:.85rem;} .met-context p {font-size:.72rem;} }
+
   </style>
 </head>
 <body>
@@ -1937,8 +1953,10 @@
 
     <!-- ── ABA: Metodologia ─────────────────────────────────────── -->
     <div class="ttab-panel" id="ttab-metodologia">
-      <div style="font-size:.72rem;color:#66778B;line-height:1.55;padding:.6rem .1rem .5rem;border-bottom:1px solid #EEF2F7;margin-bottom:.65rem">
-        O torneio integra Ciência, Tecnologia, Engenharia, Artes e Matemática (STEAM). Cada categoria vale <strong style="color:#12355B">20% da pontuação total</strong>.
+      <div class="met-context">
+        <div class="met-context__eyebrow">Como interpretar a avaliação</div>
+        <p>Os desafios de robótica integram conhecimentos de Ciência, Tecnologia, Engenharia, Artes e Matemática (STEAM). Nesta modalidade, as cinco categorias contribuem com <strong>20% da pontuação total cada</strong>, considerando os critérios definidos para o torneio.</p>
+        <p>Os registros de projeto, programação, construção e trabalho em equipe ajudam professores e estudantes a refletir sobre estratégias, decisões e processos de resolução de problemas. Essa leitura pode dialogar com os 4Cs, a Taxonomia de Bloom e a BNCC, sem reduzir a aprendizagem à classificação final.</p>
       </div>
       <div class="met-grid">
 
