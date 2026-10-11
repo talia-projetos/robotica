@@ -961,6 +961,39 @@
       d.getDate() + ' de ' + meses[d.getMonth()] + ' de ' + d.getFullYear();
   })();
 
+  /* Banner dinâmico por competição — aplicado UMA vez no carregamento.
+     A troca de competição via chip recarrega a página, então o banner
+     atualiza sem polling. */
+  (function () {
+    var BANNER_BG = {
+      'FLL':
+        'radial-gradient(circle at 83% 30%,rgba(74,196,222,.26),transparent 28%),' +
+        'linear-gradient(135deg,#10243B 0%,#183A5E 64%,#1A4F75 100%)',
+      'OBR':
+        'radial-gradient(circle at 83% 30%,rgba(47,128,237,.28),transparent 28%),' +
+        'linear-gradient(135deg,#0D2140 0%,#153368 64%,#1A4490 100%)',
+      'Steam Racing':
+        'radial-gradient(circle at 83% 30%,rgba(139,92,246,.30),transparent 28%),' +
+        'linear-gradient(135deg,#140D2E 0%,#22164A 64%,#2E1D65 100%)'
+    };
+    var HERO_IMG = {
+      'FLL':          'img/robo-lego.png',
+      'OBR':          'img/robo-obr.png',
+      'Steam Racing': 'img/robo-steam.png'
+    };
+
+    var comp   = (localStorage.getItem('torneio_comp') || 'FLL');
+    var banner = document.querySelector('.home-feature');
+    var img    = document.getElementById('hero-robo-img');
+
+    if (banner && BANNER_BG[comp]) {
+      banner.style.background = BANNER_BG[comp];
+    }
+    if (img && HERO_IMG[comp]) {
+      img.src = HERO_IMG[comp];
+    }
+  })();
+
 </script>
 
 <script>if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js");</script>
