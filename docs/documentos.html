@@ -82,6 +82,44 @@
     }
     .doc-action svg { flex-shrink: 0; fill: none; stroke: currentColor;
                       stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  
+    /* Documentos: catálogo em cards acessíveis e hierarquia uniforme */
+    body { background:#EEF3F8; }
+    .wrap { width:100%; max-width:1220px; padding:1.55rem clamp(1rem,2.6vw,2.5rem) 3rem; }
+    .page-hd { margin-bottom:1.4rem; }
+    .page-hd h1 { font-size:clamp(1.75rem,2.6vw,2.15rem); font-weight:790; line-height:1.18; }
+    .page-hd p { font-size:.79rem; line-height:1.55; margin-top:.38rem; color:#73859A; }
+    .doc-group { margin-bottom:1.6rem; }
+    .doc-group__label {
+      font-size:.69rem; color:#60758B; letter-spacing:.075em; font-weight:800;
+      padding-bottom:.65rem; margin-bottom:.85rem;
+    }
+    .doc-item {
+      min-height:84px; padding:1rem 1.05rem; margin-bottom:.65rem;
+      border:1px solid #E0E8F0; border-radius:13px;
+      background:#FFF; gap:1rem;
+      box-shadow:0 2px 13px rgba(15,31,51,.025);
+      transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+    }
+    .doc-item:hover { border-color:#BED3E5; box-shadow:0 7px 19px rgba(15,31,51,.06); transform:translateY(-1px); }
+    .doc-item--unavailable { opacity:.45; }
+    .doc-icon { width:46px; height:46px; border-radius:11px; }
+    .doc-icon svg { width:23px; height:23px; }
+    .doc-name { color:#21364B; font-size:.83rem; font-weight:760; white-space:normal; line-height:1.35; }
+    .doc-meta { color:#788A9E; font-size:.7rem; line-height:1.45; margin-top:.3rem; }
+    .doc-action { font-size:.73rem; gap:.4rem; }
+    .doc-item:focus-visible { outline:3px solid #9BC4E8; outline-offset:3px; }
+    @media(max-width:700px) {
+      .wrap { padding:1.05rem .9rem 2.4rem; }
+      .doc-item { min-height:78px; padding:.78rem; gap:.65rem; }
+      .doc-icon { width:41px; height:41px; }
+      .doc-action { font-size:.67rem; }
+    }
+    @media(prefers-reduced-motion:reduce) {
+      .doc-item { transition:none; }
+      .doc-item:hover { transform:none; }
+    }
+
   </style>
   <script>window.API_URL='https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';</script>
 </head>
