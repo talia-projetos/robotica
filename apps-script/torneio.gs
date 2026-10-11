@@ -1684,7 +1684,21 @@ function apiSalvarRubrica_(body) {
     const h = ['Carimbo de data/hora','Juiz Avaliador','Sala de Avaliação','Selecione a Equipe','Validado'];
     for (let i = 1; i <= cfg.criterios; i++) h.push('Critério ' + i);
     h.push('Bom Trabalho', 'Reflitam');
-    aba.getRange(1,1,1,h.length).setValues([h]);
+    const cabRange = aba.getRange(1, 1, 1, h.length);
+    cabRange.setValues([h])
+            .setBackground(T.CORES.MARINHO)
+            .setFontColor('#FFFFFF')
+            .setFontWeight('bold');
+    aba.setFrozenRows(1);
+    aba.setTabColor(T.CORES.ROXO);
+    aba.setColumnWidth(1, 160);   // Carimbo
+    aba.setColumnWidth(2, 160);   // Juiz
+    aba.setColumnWidth(3, 150);   // Sala
+    aba.setColumnWidth(4, 160);   // Equipe
+    aba.setColumnWidth(5, 80);    // Validado
+    for (let c = 6; c <= h.length - 2; c++) aba.setColumnWidth(c, 60);   // Critérios
+    aba.setColumnWidth(h.length - 1, 280); // Bom Trabalho
+    aba.setColumnWidth(h.length,     280); // Reflitam
   }
 
   /* Mapeamento dinâmico por nome de coluna (compatível com Form e aba própria) */
