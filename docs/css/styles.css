@@ -2401,3 +2401,35 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     transition: none;
   }
 }
+
+
+/* Complemento da marca: outros cabeçalhos e perfil da equipe — só tela */
+@media screen {
+  html[data-hub-competition="fll"] body:is(.page-deliberacao,.page-relatorio) .topbar .topbar__brand img {
+    content:url("../logo-hub-on-dark-fll.svg");
+  }
+  html[data-hub-competition="obr"] body:is(.page-deliberacao,.page-relatorio) .topbar .topbar__brand img {
+    content:url("../logo-hub-on-dark-obr.svg");
+  }
+  html[data-hub-competition="steam"] body:is(.page-deliberacao,.page-relatorio) .topbar .topbar__brand img {
+    content:url("../logo-hub-on-dark-steam.svg");
+  }
+
+  html[data-hub-competition="fll"] .eq-banner__sesi {content:url("../logo-hub-on-light-fll.svg");}
+  html[data-hub-competition="obr"] .eq-banner__sesi {content:url("../logo-hub-on-light-obr.svg");}
+  html[data-hub-competition="steam"] .eq-banner__sesi {content:url("../logo-hub-on-light-steam.svg");}
+  html[data-hub-competition] .eq-banner__sesi {
+    height:27px;
+    width:auto;
+    max-width:95px;
+    object-fit:contain;
+    filter:none;
+    opacity:.86;
+  }
+  @media(max-width:700px) {
+    html[data-hub-competition] .eq-banner__sesi {
+      height:18px;
+      max-width:65px;
+    }
+  }
+}
