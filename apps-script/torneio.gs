@@ -110,6 +110,8 @@ function onOpen() {
     .addSeparator()
     .addItem('Corrigir nomes de equipes','TORNEIO_corrigirNomes')
     .addItem('Reinstalar gatilho Forms', 'TORNEIO_instalarGatilho')
+    .addSeparator()
+    .addItem('Colorir e ordenar abas de rubrica', 'TORNEIO_colorirRubricas')
     .addToUi();
 }
 
@@ -1420,7 +1422,11 @@ function ordenarAbas_(ss) {
     T.ABAS.STATUS, 'STATUS_OBR', 'STATUS_STEAM',
     T.ABAS.BASE, 'BASE_OBR', 'BASE_STEAM',
     T.ABAS.CONFIG, T.ABAS.EQUIPES, T.ABAS.TAMPINHAS,
-    T.ABAS.DIAG, 'DIAGNOSTICO_OBR', 'DIAGNOSTICO_STEAM'
+    T.ABAS.DIAG, 'DIAGNOSTICO_OBR', 'DIAGNOSTICO_STEAM',
+    // Rubricas FLL → OBR → Steam
+    'FORM_ARENA',     'FORM_PROJETO',     'FORM_DESIGN',     'FORM_CORE',
+    'FORM_ARENA_OBR', 'FORM_PROJETO_OBR', 'FORM_DESIGN_OBR', 'FORM_CORE_OBR',
+    'FORM_ARENA_STEAM','FORM_PROJETO_STEAM','FORM_ENGENHARIA_STEAM','FORM_CORE_STEAM'
   ];
   const existentes = ordem.filter(function(nome) { return ss.getSheetByName(nome); });
   existentes.forEach(function(nome, i) {
@@ -1428,6 +1434,36 @@ function ordenarAbas_(ss) {
     ss.setActiveSheet(aba);
     ss.moveActiveSheet(i + 1);
   });
+}
+
+
+/** Aplica cores de aba por competição e reordena FLL→OBR→Steam nas abas de rubrica. */
+function TORNEIO_colorirRubricas() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const COR = { 'FLL': '#3979B8', 'OBR': '#00A651', 'Steam Racing': '#C0392B' };
+  const MAPA = {
+    'FORM_ARENA':             'FLL',
+    'FORM_PROJETO':           'FLL',
+    'FORM_DESIGN':            'FLL',
+    'FORM_CORE':              'FLL',
+    'FORM_ARENA_OBR':         'OBR',
+    'FORM_PROJETO_OBR':       'OBR',
+    'FORM_DESIGN_OBR':        'OBR',
+    'FORM_CORE_OBR':          'OBR',
+    'FORM_ARENA_STEAM':       'Steam Racing',
+    'FORM_PROJETO_STEAM':     'Steam Racing',
+    'FORM_ENGENHARIA_STEAM':  'Steam Racing',
+    'FORM_CORE_STEAM':        'Steam Racing'
+  };
+  var atualizadas = 0;
+  Object.keys(MAPA).forEach(function(nome) {
+    var aba = ss.getSheetByName(nome);
+    if (!aba) return;
+    aba.setTabColor(COR[MAPA[nome]]);
+    atualizadas++;
+  });
+  ordenarAbas_(ss);
+  ss.toast(atualizadas + ' aba(s) colorida(s) e ordenadas (FLL → OBR → Steam).', 'Torneio', 5);
 }
 
 
@@ -1690,7 +1726,8 @@ function apiSalvarRubrica_(body) {
             .setFontColor('#FFFFFF')
             .setFontWeight('bold');
     aba.setFrozenRows(1);
-    aba.setTabColor(T.CORES.ROXO);
+    const _COR_COMP = { 'FLL': '#3979B8', 'OBR': '#00A651', 'Steam Racing': '#C0392B' };
+    aba.setTabColor(_COR_COMP[cfg.compNorm] || T.CORES.ROXO);
     aba.setColumnWidth(1, 160);   // Carimbo
     aba.setColumnWidth(2, 160);   // Juiz
     aba.setColumnWidth(3, 150);   // Sala

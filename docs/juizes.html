@@ -1500,8 +1500,10 @@
     travarChipComp();
     document.getElementById('juiz-nome-top').textContent = r.nome || 'Juiz';
     document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
-    document.getElementById('badge-juiz').textContent = r.nome;
-    document.getElementById('btn-sair').style.display = '';
+    var bj = document.getElementById('badge-juiz');
+    if (bj) bj.textContent = r.nome;
+    var bs = document.getElementById('btn-sair');
+    if (bs) bs.style.display = '';
     document.getElementById('jh-ini').textContent = (r.nome || 'J').trim()[0].toUpperCase();
     configurarWorkspaceJuiz(r.categoria || '');
     if (!_chatTimer) chatIniciar(r.nome);
@@ -1566,8 +1568,10 @@
     if (card) card.style.display = 'none';
     document.getElementById('view-painel').style.display = 'none';
     document.getElementById('view-login').style.display  = '';
-    document.getElementById('badge-juiz').textContent = '';
-    document.getElementById('btn-sair').style.display = 'none';
+    var bj2 = document.getElementById('badge-juiz');
+    if (bj2) bj2.textContent = '';
+    var bs2 = document.getElementById('btn-sair');
+    if (bs2) bs2.style.display = 'none';
     document.getElementById('l-nome').value = '';
     document.getElementById('l-pin').value  = '';
   }
