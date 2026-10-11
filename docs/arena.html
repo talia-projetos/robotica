@@ -735,6 +735,15 @@
     <div class="arena-rail">
 
       <div class="rail-section">
+        <div class="rail-label">Competi&ccedil;&atilde;o</div>
+        <div style="display:flex;gap:.3rem">
+          <button class="btn-view" id="cbtn-FLL" onclick="cronoComp('FLL')" style="flex:1;justify-content:center;font-size:.65rem;min-height:30px">FLL</button>
+          <button class="btn-view" id="cbtn-OBR" onclick="cronoComp('OBR')" style="flex:1;justify-content:center;font-size:.65rem;min-height:30px">OBR</button>
+          <button class="btn-view" id="cbtn-Steam" onclick="cronoComp('Steam')" style="flex:1;justify-content:center;font-size:.65rem;min-height:30px">Steam</button>
+        </div>
+      </div>
+
+      <div class="rail-section">
         <div class="rail-label">Round</div>
         <select id="sel-round" onchange="trocarRound(this.value)">
           <option value="R1">Round 1</option>
@@ -1166,9 +1175,29 @@
   }
 
   /* ── Cronômetro ───────────────────────────────────────────── */
+  var CRONO_CFG = { FLL: 150, OBR: 300, Steam: 150 };
+  var _cronoTotal = 150;
   var cronoSeg = 150, cronoRodando = false, cronoTimer = null;
   var roundAtual = 'R1';
   var audioCtx = typeof AudioContext !== 'undefined' ? new AudioContext() : null;
+
+  function cronoComp(comp) {
+    if (cronoRodando && !confirm('Trocar competição reinicia o cronômetro. Continuar?')) return;
+    clearInterval(cronoTimer);
+    cronoRodando = false;
+    _cronoTotal = CRONO_CFG[comp] || 150;
+    cronoSeg = _cronoTotal;
+    ['FLL','OBR','Steam'].forEach(function(c) {
+      var b = document.getElementById('cbtn-' + c);
+      if (b) b.style.background = c === comp ? 'rgba(77,201,195,.18)' : '';
+      if (b) b.style.color      = c === comp ? '#4DC9C3' : '';
+      if (b) b.style.borderColor= c === comp ? 'rgba(77,201,195,.4)' : '';
+    });
+    cronoAtualizar();
+    setToggleBtn(SVG_PLAY, 'Iniciar');
+    aplicarEstado('pronto');
+    document.getElementById('crono-round').textContent = 'Round ' + roundAtual.replace('R', '') + ' · ' + comp;
+  }
 
   function beep(freq, dur, vol) {
     if (!audioCtx) return;
@@ -1211,11 +1240,11 @@
   function cronoAtualizar() {
     var el = document.getElementById('crono-display');
     el.textContent = Math.floor(cronoSeg / 60) + ':' + String(cronoSeg % 60).padStart(2, '0');
-    el.classList.toggle('urgente', cronoSeg > 0 && cronoSeg <= 30);
+    el.classList.toggle('urgente', cronoSeg > 0 && cronoSeg <= Math.min(30, _cronoTotal * 0.2));
     el.classList.toggle('acabou',  cronoSeg === 0);
     var ring = document.getElementById('crono-ring');
     if (ring) {
-      var pct = cronoSeg / 150;
+      var pct = _cronoTotal > 0 ? cronoSeg / _cronoTotal : 0;
       ring.style.strokeDashoffset = (678.58 * (1 - pct)).toFixed(2);
       ring.style.stroke = cronoSeg > 50 ? '#4DC9C3' : cronoSeg > 20 ? '#F59E0B' : '#EF4444';
     }
@@ -1225,7 +1254,7 @@
     roundAtual = val;
     clearInterval(cronoTimer);
     cronoRodando = false;
-    cronoSeg = 150;
+    cronoSeg = _cronoTotal;
     cronoAtualizar();
     setToggleBtn(SVG_PLAY, 'Iniciar');
     aplicarEstado('pronto');
@@ -1266,7 +1295,7 @@
     if (cronoRodando && !confirm('Resetar o cronômetro em execução?')) return;
     clearInterval(cronoTimer);
     cronoRodando = false;
-    cronoSeg = 150;
+    cronoSeg = _cronoTotal;
     cronoAtualizar();
     setToggleBtn(SVG_PLAY, 'Iniciar');
     aplicarEstado('pronto');
@@ -1274,7 +1303,7 @@
   }
 
   /* Init */
-  document.getElementById('crono-round').textContent = 'Round 1';
+  cronoComp('FLL');
   cronoAtualizar();
 </script>
 </body>
