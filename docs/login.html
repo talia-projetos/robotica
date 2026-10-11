@@ -380,6 +380,98 @@
       .login-support { grid-template-columns:1fr; }
       .form-title { font-size:1.72rem; }
     }
+
+    /* Interface de entrada em tons minerais e azul-petróleo */
+    :root {
+      --bg:#EFF4F3;--ink:#1C3040;--muted:#718491;
+      --line:#D4E0E5;--brand:#2E7280;--brand-strong:#245D6A;
+    }
+    body {
+      background:radial-gradient(circle at 15% 12%,rgba(120,164,174,.12),transparent 32%),
+                 linear-gradient(155deg,#F8FAF9,#EAF0F1);
+    }
+    .login-shell {border-color:#D8E3E6;border-radius:20px;box-shadow:0 24px 65px rgba(29,54,70,.105);}
+    .login-left {
+      background:radial-gradient(circle at 80% 20%,rgba(165,218,218,.16),transparent 36%),
+                 radial-gradient(circle at 14% 84%,rgba(150,204,212,.12),transparent 35%),
+                 linear-gradient(152deg,#2B4956 0%,#365A67 55%,#426A72 100%);
+    }
+    .login-left::before {opacity:.31;}
+    .login-left::after {border-color:rgba(190,227,231,.18);box-shadow:0 0 0 26px rgba(255,255,255,.022),0 0 0 62px rgba(255,255,255,.014);}
+    .left-brand img {
+      content:url("logo-hub-on-dark-fll.svg");
+      width:min(285px,94%);max-height:108px;object-fit:contain;margin-bottom:1.4rem;
+    }
+    .left-descriptor {color:#E2EFF1;}
+    .left-quote__main {color:#F1F8F8;font-weight:560;}
+    .left-footer {color:rgba(248,255,255,.73);}
+    .login-right {background:#fff;}
+    .form-eyebrow {color:#347688;}
+    .form-title {color:#193242;}
+    .form-sub {color:#6A7F8F;margin-bottom:1.95rem;}
+    .field {margin-bottom:1.22rem;}
+    .field label {color:#314A5B;font-size:.8rem;font-weight:740;}
+    .field-label-line {display:flex;align-items:center;gap:.38rem;width:fit-content;margin-bottom:.42rem;}
+    .field-label-line label {margin:0;}
+    .id-info {display:inline-flex;align-items:center;position:relative;}
+    .id-info__trigger {
+      display:grid;place-items:center;width:28px;height:28px;
+      border:0;border-radius:50%;padding:0;background:transparent;
+      color:#6C8A9B;cursor:help;
+      transition:background .16s,color .16s;
+    }
+    .id-info__trigger svg {width:16px;height:16px;}
+    .id-info__trigger:hover,.id-info:focus-within .id-info__trigger {background:#E7F1F3;color:#2D7280;}
+    .id-info__trigger:focus-visible {outline:2px solid #438D9A;outline-offset:2px;}
+    .id-info__tooltip {
+      position:absolute;z-index:25;top:calc(100% + 9px);left:-97px;
+      display:block;width:min(337px,calc(100vw - 48px));
+      padding:.96rem 1.05rem;background:#fff;border:1px solid #D9E6E9;
+      border-radius:12px;box-shadow:0 12px 32px rgba(25,59,74,.16);
+      text-align:left;color:#536B7A;font-size:.76rem;line-height:1.55;
+      opacity:0;visibility:hidden;pointer-events:none;
+      transform:translateY(-5px);transition:opacity .15s,transform .15s,visibility .15s;
+    }
+    .id-info__tooltip::before {
+      content:"";position:absolute;top:-5px;left:103px;width:9px;height:9px;
+      background:#fff;border-left:1px solid #D9E6E9;border-top:1px solid #D9E6E9;
+      transform:rotate(45deg);
+    }
+    .id-info__item {display:block;}
+    .id-info__item + .id-info__item {padding-top:.7rem;margin-top:.7rem;border-top:1px solid #EDF1F3;}
+    .id-info__item strong {display:block;font-size:.75rem;color:#264A5D;font-weight:790;margin-bottom:.12rem;}
+    .id-info:hover .id-info__tooltip,.id-info:focus-within .id-info__tooltip {
+      opacity:1;visibility:visible;pointer-events:auto;transform:none;
+    }
+    .field input {
+      min-height:49px;padding:.78rem .9rem;border-radius:10px;
+      border-color:#D4E0E5;background:#F8FAFB;color:#213B4E;
+    }
+    .field input:hover:not(:focus) {border-color:#B8CDD6;}
+    .field input:focus {border-color:#4C919C;box-shadow:0 0 0 3px rgba(63,139,152,.13);}
+    .pin-toggle {width:36px;height:36px;border-radius:8px;}
+    .pin-toggle:hover {background:#E9F3F4;color:#2B7482;}
+    .btn-login {
+      min-height:49px;margin-top:.45rem;border-radius:10px;
+      box-shadow:0 6px 16px rgba(39,104,119,.16);
+      font-weight:740;
+    }
+    .btn-login:hover:not(:disabled) {box-shadow:0 8px 20px rgba(39,104,119,.2);}
+    .btn-login:focus-visible {outline:3px solid #8DC8CE;outline-offset:3px;}
+    @media(max-width:820px) {
+      .login-left {min-height:265px;}
+      .left-brand img {width:min(215px,88%);max-height:77px;margin-bottom:.9rem;}
+    }
+    @media(max-width:480px) {
+      .login-left {min-height:225px;padding:1.6rem 1.2rem;}
+      .left-quote__main {font-size:.9rem;}
+      .form-sub {margin-bottom:1.5rem;}
+    }
+    @media(prefers-reduced-motion:reduce) {
+      .id-info__trigger,.id-info__tooltip,.field input,.btn-login {transition:none;}
+      .btn-login:hover:not(:disabled) {transform:none;}
+    }
+
   </style>
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';
@@ -415,12 +507,24 @@
       <div class="form-sub">Acesse seu ambiente de robótica educacional.</div>
 
       <div class="field">
-        <label for="f-id">Identificação</label>
+        <div class="field-label-line">
+          <label for="f-id">Identificação</label>
+          <span class="id-info">
+            <button class="id-info__trigger" type="button" aria-label="Como preencher a identificação" aria-describedby="id-info-text">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"/><path d="M12 10.5v5.5M12 7.5h.01"/>
+              </svg>
+            </button>
+            <span class="id-info__tooltip" id="id-info-text" role="tooltip">
+              <span class="id-info__item"><strong>Professor</strong>Use o código da turma e o PIN recebido. Exemplo: TUR01.</span>
+              <span class="id-info__item"><strong>Juiz ou coordenação</strong>Use seu nome cadastrado e PIN pessoal.</span>
+            </span>
+          </span>
+        </div>
         <input id="f-id" type="text"
                placeholder="Seu nome ou ID da turma"
                autocomplete="username" autofocus>
         <p class="field-error" id="err-id"></p>
-        <p class="field-hint">Professores usam o ID da turma, como TUR01.</p>
       </div>
 
       <div class="field">
@@ -453,10 +557,7 @@
         <span class="btn-text">Entrar</span>
       </button>
 
-      <div class="login-support" aria-label="Orientações de acesso">
-        <div class="support-item"><strong>Professor</strong>Use o código da turma e o PIN recebido.</div>
-        <div class="support-item"><strong>Juiz ou coordenação</strong>Use seu nome cadastrado e PIN pessoal.</div>
-      </div>
+
 
 
     </div>
