@@ -373,6 +373,56 @@
         font-size: .85rem;
       }
     }
+
+    /* Apenas visualização em tela: impressão A4 permanece idêntica. */
+    @media screen {
+      body {
+        background:#F2F7F5;
+        color:#263F43;
+      }
+      .print-bar {
+        min-height:64px;
+        padding:.7rem clamp(1rem,3vw,1.8rem);
+        background:#FFFFFF;
+        border-bottom:1px solid #DFEAE7;
+        box-shadow:0 1px 5px rgba(29,67,63,.045);
+        color:#263F43;
+        font-family:'Segoe UI',system-ui,sans-serif;
+      }
+      .print-bar button {
+        min-height:39px;
+        padding:.55rem 1rem;
+        border-radius:10px;
+        background:#2F9D8C;
+        color:#FFFFFF;
+        font-family:inherit;
+        box-shadow:0 4px 11px rgba(32,139,116,.13);
+      }
+      .print-bar button:hover {
+        background:#257F74;
+      }
+      .print-bar button:focus-visible {
+        outline:3px solid #89CCB9;
+        outline-offset:2px;
+      }
+      .pagina {
+        margin:22px auto 30px;
+        border:1px solid #E0EAE7;
+        border-radius:12px;
+        box-shadow:0 5px 25px rgba(30,73,70,.065);
+        overflow:hidden;
+      }
+      @media(max-width:900px) {
+        .pagina {
+          max-width:calc(100vw - 24px);
+          overflow-x:auto;
+          border-radius:9px;
+        }
+        .print-bar {
+          gap:.75rem;
+        }
+      }
+    }
   </style>
 </head>
 <body>
