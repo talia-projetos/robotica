@@ -1506,6 +1506,14 @@ function doPost(e) {
   let body;
   try { body = JSON.parse(e.postData.contents); }
   catch (_) { return jsonOut_({ ok: false, erro: 'JSON inválido.' }); }
+
+  /* Serializa todas as escritas — evita race condition em envios simultâneos
+     (criação de aba, appendRow com cabeçalho stale, trigger duplicado). */
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(15000)) {
+    return jsonOut_({ ok: false, erro: 'Servidor ocupado. Tente novamente em instantes.' });
+  }
+
   try {
     autenticarJuiz_(body.juiz, body.pin);
     let r;
@@ -1521,6 +1529,8 @@ function doPost(e) {
     return jsonOut_(r);
   } catch (err) {
     return jsonOut_({ ok: false, erro: err.message });
+  } finally {
+    lock.releaseLock();
   }
 }
 
