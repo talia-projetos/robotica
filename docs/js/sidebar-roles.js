@@ -7,6 +7,22 @@
 
   var currentFile = (location.pathname.split('/').pop() || 'index.html').split('?')[0] || 'index.html';
 
+  /* Estado visual da marca: não altera seleção, permissões ou chamadas da API. */
+  var visualCompetition = localStorage.getItem('torneio_comp') || 'FLL';
+  var assignedCompetition = localStorage.getItem('hub_comp') || '';
+  if (role === 'juiz' && assignedCompetition && assignedCompetition !== 'Geral') {
+    visualCompetition = assignedCompetition;
+  }
+  if (role === 'professor') {
+    var teamNumber = parseInt((localStorage.getItem('turma_id') || '').replace(/\D/g, ''), 10) || 0;
+    if (teamNumber >= 23) visualCompetition = 'Steam Racing';
+    else if (teamNumber >= 14) visualCompetition = 'OBR';
+    else if (teamNumber > 0) visualCompetition = 'FLL';
+  }
+  var brandComp = /steam/i.test(visualCompetition) ? 'steam' : visualCompetition === 'OBR' ? 'obr' : 'fll';
+  document.documentElement.setAttribute('data-hub-competition', brandComp);
+
+
   /* Coordenação usa as mesmas credenciais nas áreas de avaliação/deliberação.
      Espelha a sessão para evitar novo login — mas NÃO em juizes.html, que tem
      fluxo de auth próprio e não deve auto-entrar no modo juiz. */
