@@ -542,9 +542,14 @@ function criarAbaTampinhas_(ss) {
 
 function instalarGatilho_(ss) {
   ScriptApp.getProjectTriggers().forEach(function(t) {
-    if (t.getHandlerFunction() === 'TORNEIO_aoEnviarForm') ScriptApp.deleteTrigger(t);
+    var fn = t.getHandlerFunction();
+    if (fn === 'TORNEIO_aoEnviarForm' || fn === 'TORNEIO_atualizar') {
+      ScriptApp.deleteTrigger(t);
+    }
   });
   ScriptApp.newTrigger('TORNEIO_aoEnviarForm').forSpreadsheet(ss).onFormSubmit().create();
+  /* Recalcula a cada 5 min para refletir exclusões manuais de linhas nas abas de rubrica */
+  ScriptApp.newTrigger('TORNEIO_atualizar').timeBased().everyMinutes(5).create();
 }
 
 
