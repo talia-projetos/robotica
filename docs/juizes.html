@@ -1074,6 +1074,97 @@
       .judge-login-card{padding:1.75rem 1.25rem}
     }
 
+
+
+    /* Workspace de avaliações — consistência com os perfis e os painéis HUB */
+    .painel-wrap { max-width:1220px; padding:1.55rem clamp(1rem,2.6vw,2.5rem) 3rem; }
+    .judge-workspace-head { align-items:center; margin-bottom:1.15rem; }
+    .judge-workspace-kicker { font-size:.72rem; font-weight:670; margin-bottom:.32rem; }
+    .judge-workspace-head h1 {
+      font-size:clamp(1.75rem,2.6vw,2.15rem); line-height:1.15; letter-spacing:-.04em;
+    }
+    .judge-workspace-sub { font-size:.78rem; line-height:1.55; color:#697D92; }
+    .judge-layout { grid-template-columns:minmax(0,1.48fr) minmax(255px,.66fr); gap:1rem; }
+    .judge-main-card, .judge-support-card, .sala-progress-card {
+      border:1px solid #E0E8EF; border-radius:16px;
+      box-shadow:0 3px 18px rgba(15,31,51,.035);
+    }
+    .judge-main-card { padding:1.25rem; }
+    .judge-area-strip {
+      border-radius:12px; padding:.9rem 1rem;
+      background:linear-gradient(105deg,#F6F9FC 0%,#F9FBFD 100%);
+      border-color:#E3EAF0; margin-bottom:1.2rem;
+    }
+    .judge-area-label { color:#6E8195; font-size:.65rem; letter-spacing:.065em; }
+    .judge-area-value { color:#1C3249; font-size:.84rem; font-weight:780; margin-top:.18rem; }
+    .judge-area-note { color:#6F8094; font-size:.7rem; line-height:1.5; max-width:340px; }
+    .judge-section-head { gap:.9rem; margin-bottom:.7rem; }
+    .judge-section-title { font-size:.67rem; letter-spacing:.085em; }
+    .judge-section-hint { color:#788A9E; font-size:.66rem; line-height:1.4; }
+    .form-grid { gap:.65rem; }
+    .form-card {
+      display:flex; align-items:center; min-height:83px; padding:.95rem 1rem;
+      border:1px solid #E2E9F0; border-radius:12px; background:#fff;
+      box-shadow:none; gap:.9rem;
+      transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease;
+    }
+    .form-card:hover { border-color:#C5D7E7; box-shadow:0 8px 20px rgba(20,44,65,.065); transform:translateY(-1px); }
+    .form-card.is-assigned { background:#F9FCFF; border-color:#ABCFE9; box-shadow:inset 3px 0 0 #3979B8; }
+    .fc-icon {
+      display:flex;align-items:center;justify-content:center;
+      width:43px;height:43px;border-radius:11px; flex-shrink:0;
+    }
+    .fc-icon svg { width:21px;height:21px; fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round; }
+    .fc-title { color:#21354B; font-size:.83rem; font-weight:770; }
+    .fc-desc { margin-top:.24rem; color:#73859A; font-size:.69rem; line-height:1.46; }
+    .fc-assigned { padding:.26rem .47rem; border-radius:6px; font-size:.6rem; }
+    .fc-cta {
+      display:flex; align-items:center; justify-content:center;
+      min-width:128px; min-height:38px; padding:.6rem .72rem;
+      border:1px solid #E3EAF1; border-radius:9px; background:#F6F9FC;
+      color:#3D536C; font-weight:740; font-size:.68rem;
+    }
+    .form-card.is-assigned .fc-cta { border-color:#C7DBED; background:#EDF5FC; color:#266EA4; }
+    .form-card:focus-visible, .support-row:focus-visible { outline:3px solid #9BC4E8; outline-offset:3px; }
+    .judge-support { gap:.75rem; }
+    .judge-support-card, .sala-progress-card { padding:1.05rem; }
+    .support-kicker { font-size:.65rem; letter-spacing:.08em; margin-bottom:.7rem; }
+    .support-row { min-height:68px; padding:.8rem; border-radius:11px; gap:.8rem; }
+    .support-row + .support-row { margin-top:.55rem; }
+    .support-row:hover { border-color:#C7D9E7; background:#FAFCFF; }
+    .support-icon { width:40px;height:40px;border-radius:10px; }
+    .support-icon svg { width:19px;height:19px; }
+    .support-title { color:#263950; font-size:.75rem; }
+    .support-sub { color:#7C8CA0; font-size:.65rem; line-height:1.4; margin-top:.18rem; }
+    .support-arrow { font-size:1.1rem; }
+    .judge-help { padding:1rem; border-radius:12px; font-size:.69rem; line-height:1.55; }
+    .judge-help strong { font-size:.73rem; margin-bottom:.3rem; }
+    .judge-chat-card { margin-top:0; border-radius:13px; }
+    .judge-chat-header { min-height:40px; padding:.72rem .85rem; font-size:.66rem; }
+    .judge-chat-msgs { min-height:96px; padding:.75rem; gap:.5rem; }
+    .judge-chat-input { padding:.7rem; gap:.45rem; }
+    .judge-chat-input input { min-height:40px; font-size:.73rem; border-radius:9px; }
+    .judge-chat-input button { min-height:40px; border-radius:9px; font-size:.72rem; }
+    @media (max-width:1000px) {
+      .judge-layout { grid-template-columns:1fr; }
+      .judge-support { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .judge-help { grid-column:1 / -1; }
+    }
+    @media (max-width:700px) {
+      .painel-wrap { padding:1.05rem .9rem 2.4rem; }
+      .judge-main-card { padding:.85rem; }
+      .judge-area-strip { padding:.8rem; }
+      .form-card { padding:.9rem; gap:.65rem; }
+      .fc-icon { width:41px;height:41px; }
+      .judge-support { display:block; }
+      .judge-workspace-head { align-items:flex-start; }
+      .fc-cta { min-height:44px; width:100%; margin-left:0; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      .form-card { transition:none; }
+      .form-card:hover { transform:none; }
+    }
+
   </style>
 </head>
 <body>

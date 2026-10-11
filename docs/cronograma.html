@@ -985,6 +985,131 @@
       .det-header,.det-row{ min-width:580px }
     }
 
+  
+    /* Grade operacional: exclusivamente tela; impressão mantida */
+    @media screen {
+      .schedule-shell .wrap { max-width:1380px; padding:1.55rem clamp(1rem,2.6vw,2.5rem) 3rem; }
+      .schedule-shell .schedule-workspace-head h1 { font-size:clamp(1.75rem,2.6vw,2.15rem); line-height:1.15; }
+      .schedule-shell .schedule-workspace-head { margin-bottom:1.2rem; }
+      .schedule-shell .crono-toolbar { gap:.7rem; min-height:58px; padding:.65rem .8rem; border-radius:12px; }
+      .schedule-shell .filter-sala { min-height:38px; padding:.6rem .86rem; font-size:.72rem; border-radius:9px; }
+      .schedule-shell .filter-sala.active { border-color:#ABC7DD; background:#E8F1FA; color:#214F78; }
+      .schedule-shell .search-wrap { min-height:38px; border-radius:9px; }
+      .schedule-shell #search-equipe { font-size:.72rem; }
+      .schedule-shell .timeline-macro { border-radius:13px; padding:1rem 1.1rem 1.15rem; margin-bottom:1rem; }
+      .schedule-shell .tl-label { font-size:.65rem; margin-bottom:.7rem; }
+      .schedule-shell .tl-bar { height:36px; border-radius:8px; }
+      .schedule-shell .tl-seg { font-size:.61rem; font-weight:750; }
+      .schedule-shell .tl-tick { font-size:.62rem; color:#52677A; font-variant-numeric:tabular-nums; }
+
+      .schedule-shell .sch-wrap {
+        border-radius:13px; border:1px solid #DAE4EC;
+        overflow-x:auto; box-shadow:0 3px 18px rgba(17,39,61,.04);
+        scrollbar-color:#B6C9D7 #F1F5F9;
+      }
+      .schedule-shell .sch-table {
+        width:100%; min-width:1270px; border-collapse:separate; border-spacing:0;
+        table-layout:fixed;
+      }
+      .schedule-shell .sch-th-team {width:74px;min-width:74px;left:0;}
+      .schedule-shell .sch-th-tutor {width:118px;min-width:118px;left:74px;}
+      .schedule-shell .sch-th-time {
+        width:auto;min-width:74px;
+        background:#274743; color:#E9F4F0;
+      }
+      .schedule-shell .sch-th-team, .schedule-shell .sch-th-tutor {
+        background:#274743;color:#E9F4F0;
+      }
+      .schedule-shell .sch-th-team,
+      .schedule-shell .sch-th-tutor,
+      .schedule-shell .sch-th-time {
+        height:54px; padding:.54rem .28rem; font-size:.63rem; font-weight:800;
+        line-height:1.26; letter-spacing:.05em; vertical-align:middle;
+        border-color:rgba(255,255,255,.17);
+      }
+      .schedule-shell .sch-th-time .sch-ts {
+        color:#FFFFFF; font-size:.7rem; font-weight:800;
+        font-variant-numeric:tabular-nums; letter-spacing:.01em;
+      }
+      .schedule-shell .sch-th-time .sch-te {
+        color:#B7D3CB; font-size:.62rem; margin-top:3px;
+        font-variant-numeric:tabular-nums; letter-spacing:.01em;
+      }
+      .schedule-shell .sch-group-lbl {
+        padding:.65rem .85rem; height:36px;
+        background:#315852; color:#FFFFFF; font-size:.68rem;
+        letter-spacing:.07em; text-align:left;
+      }
+      .schedule-shell .sch-row {height:57px;}
+      .schedule-shell .sch-team {
+        left:0; padding:.68rem .6rem; border-right:1px solid #D7E3EC;
+      }
+      .schedule-shell .sch-tutor {
+        left:74px; padding:.68rem .6rem; font-size:.69rem; font-weight:600;
+        color:#51677D; white-space:normal; line-height:1.25;
+        border-right:1px solid #D7E3EC;
+      }
+      .schedule-shell .sch-tid { font-size:.8rem; font-weight:820; color:#1D3045; }
+      .schedule-shell .sch-tsub { font-size:.63rem; margin-top:.16rem; color:#6D8295; }
+      .schedule-shell .sch-cell {
+        padding:.45rem .27rem; font-size:.63rem; font-weight:760;
+        line-height:1.24; vertical-align:middle; color:#253D40;
+        border-right:1px solid rgba(255,255,255,.34);
+        border-bottom:1px solid #E7EDF3;
+      }
+      .schedule-shell .sch-rl {
+        display:block; font-size:.64rem; font-weight:800;
+        letter-spacing:0; overflow-wrap:normal;
+      }
+      .schedule-shell .sch-rt {
+        display:block; font-size:.62rem; font-weight:700;
+        letter-spacing:.015em; opacity:1; margin-top:.27rem;
+        font-variant-numeric:tabular-nums;
+        white-space:nowrap;
+      }
+      .schedule-shell .sch-empty {
+        background:#FFFFFF;border-right:1px solid #ECF1F5;
+        border-bottom:1px solid #ECF1F5;
+      }
+      .schedule-shell .sch-row:nth-of-type(even) .sch-empty { background:#F8FAFC; }
+      .schedule-shell .sch-row:hover .sch-team,
+      .schedule-shell .sch-row:hover .sch-tutor { background:#EDF5FB; }
+      /* FLL — família azul */
+      .schedule-shell .sch-cell[style*="#D5E4F5"] { background:#E4EFFD!important;color:#163D68!important; }
+      .schedule-shell .sch-cell[style*="#BDD3EE"] { background:#C8DFF9!important;color:#163D68!important; }
+      .schedule-shell .sch-cell[style*="#A2BFE6"] { background:#A8CDF2!important;color:#163D68!important; }
+      /* OBR — família verde */
+      .schedule-shell .sch-cell[style*="#D6EAE3"] { background:#DFF2E9!important;color:#184E3C!important; }
+      .schedule-shell .sch-cell[style*="#B8DCD1"] { background:#BCE2D0!important;color:#184E3C!important; }
+      .schedule-shell .sch-cell[style*="#98C9BA"] { background:#94CFB5!important;color:#184E3C!important; }
+      /* STEAM Racing — lavanda original */
+      .schedule-shell .sch-cell[style*="#E7DDF3"] { background:#EEE5FA!important;color:#443269!important; }
+      .schedule-shell .sch-cell[style*="#D2C3E9"] { background:#D9C9EF!important;color:#443269!important; }
+      .schedule-shell .sch-cell[style*="#BBA7DC"] { background:#BDA9DF!important;color:#352352!important; }
+      /* Áreas operacionais não pertencem à competição; cores neutras/quentes */
+      .schedule-shell .sch-cell[style*="#F8E7BC"] { background:#F9EBC8!important;color:#59441D!important; }
+      .schedule-shell .sch-cell[style*="#F4D1BD"] { background:#F5DCCB!important;color:#674026!important; }
+      .schedule-shell .sch-cell[style*="#CEDFEF"] { background:#D6E6F2!important;color:#294B63!important; }
+      .schedule-shell .sch-cell[style*="#BFCFD1"] { background:#D2DFE0!important;color:#29464A!important; }
+      .schedule-shell .sch-cell[style*="#F2BEAA"] { background:#F1C9B9!important;color:#653823!important; }
+      .schedule-shell .sch-cell[style*="#F9DEA4"] { background:#F7DFAF!important;color:#5E451E!important; }
+      .schedule-shell .sch-cell { box-shadow:inset 0 0 0 1px rgba(255,255,255,.15); }
+      .schedule-shell .sch-cell[rowspan] { font-size:.69rem; font-weight:800; }
+      .schedule-shell .schedule-viewbar__title { font-size:.68rem; }
+      .schedule-shell .schedule-team { border-radius:12px; }
+      .schedule-shell .schedule-team__head { padding:.8rem 1rem; }
+      .schedule-shell .schedule-slot { padding:.8rem; }
+      .schedule-shell .schedule-slot__time { font-size:.73rem; font-variant-numeric:tabular-nums; }
+      .schedule-shell .schedule-slot__activity { font-size:.7rem; }
+      .schedule-shell .schedule-slot__place { font-size:.65rem; }
+      @media (max-width:700px) {
+        .schedule-shell .wrap { padding:1.05rem .9rem 2.4rem; }
+        .schedule-shell .sch-wrap { border-radius:11px; }
+        .schedule-shell .sch-table { min-width:1240px; }
+        .schedule-shell .crono-toolbar { gap:.45rem; }
+      }
+    }
+
   </style>
   <script>window.API_URL='https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';</script>
 </head>

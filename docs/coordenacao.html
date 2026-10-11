@@ -968,6 +968,74 @@
       .steam-lower{grid-template-columns:1fr}
     }
 
+  
+    /* Revisão de superfície e hierarquia da Coordenação — somente tela */
+    #view-coord { max-width:1220px; padding:1.55rem clamp(1rem,2.6vw,2.5rem) 3rem; }
+    .coord-workspace-head { align-items:center; gap:1.25rem; margin-bottom:1.2rem!important; }
+    .coord-workspace-kicker { font-size:.72rem; font-weight:680; margin-bottom:.34rem; }
+    .coord-workspace-head h1 { font-size:clamp(1.75rem,2.6vw,2.15rem); line-height:1.15; }
+    .coord-workspace-sub { max-width:690px; font-size:.78rem; line-height:1.52; }
+    .coord-head-actions { gap:.55rem; }
+    .coord-head-link { min-height:40px; padding:.62rem .82rem; border-radius:10px; font-size:.72rem; }
+    .coord-head-link:focus-visible { outline:3px solid #9BC4E8; outline-offset:3px; }
+    .coord-toolbar { gap:.7rem; margin-bottom:1.15rem; padding:.6rem; border-radius:13px; box-shadow:0 2px 12px rgba(18,40,61,.025); }
+    .tab-bar { gap:.25rem; }
+    .tab-btn { min-height:39px; padding:.58rem .86rem; border-radius:9px; font-size:.72rem; }
+    .tab-btn.ativo { background:#EAF3FB; color:#1C5B94; }
+    .tab-btn:focus-visible { outline:2px solid #8DB9DC; outline-offset:-2px; }
+    #filtro-busca { min-height:39px; width:min(225px,36vw); min-width:0!important; padding:.62rem .75rem; border-radius:9px; font-size:.73rem; }
+    .coord-section-head { margin:.2rem 0 .72rem; }
+    .coord-section-title { font-size:.66rem; }
+    .coord-section-note { color:#77899C; font-size:.65rem; }
+    .coord-summary { gap:.8rem; margin-bottom:1.15rem; }
+    .summary-chip { min-height:83px; padding:1rem .95rem; gap:.65rem; border-radius:13px; font-size:.69rem; box-shadow:0 2px 11px rgba(15,31,51,.025); }
+    .summary-chip strong { font-size:1.33rem!important; }
+    .summary-chip__dot { width:8px; height:8px; }
+    .eq-cards { gap:.64rem; }
+    .eq-card { border-radius:12px!important; box-shadow:0 2px 12px rgba(15,31,51,.025)!important; }
+    .eq-card__header { min-height:72px; padding:.95rem 1rem; gap:.85rem; }
+    .eq-card__header:hover { background:#F7FAFD; }
+    .eq-card__id { font-size:.78rem; }
+    .eq-card__nome { font-size:.66rem; line-height:1.45; }
+    .eq-card__pos { font-size:.72rem; }
+    .eq-score-mini { min-width:43px; }
+    .eq-score-mini__val { font-size:.8rem; }
+    .eq-score-mini__label { font-size:.58rem; }
+    .eq-score-total { font-size:.94rem; }
+    .eq-card__body { padding:1.1rem; background:#FAFCFE!important; }
+    .detail-grid { gap:.65rem; margin-bottom:1.05rem; }
+    .detail-score { padding:.85rem; border-radius:10px; }
+    .detail-score__label { font-size:.62rem; line-height:1.3; }
+    .detail-score__val { font-size:1.13rem; }
+    .comments-cols { gap:.7rem; }
+    .comment-block { padding:.8rem; border-radius:10px; }
+    .comment-text { font-size:.71rem; line-height:1.55; text-align:left; }
+    #view-cat .table-wrap, .steam-matrix-wrap, .steam-panel { border-radius:12px; overflow:hidden; }
+    #view-cat thead th { padding:.75rem .85rem; font-size:.66rem; }
+    #view-cat tbody td { padding:.78rem .85rem; font-size:.72rem; }
+    .steam-kpis { gap:.7rem; margin-bottom:.9rem; }
+    .steam-kpi { border-radius:12px; padding:.95rem; }
+    .steam-kpi__label { font-size:.62rem; }
+    .steam-kpi__val { font-size:1.17rem; }
+    .bloom-label, .bloom-count { font-size:.7rem; }
+    @media (max-width:980px) {
+      .coord-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .steam-kpis { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    }
+    @media (max-width:700px) {
+      #view-coord { padding:1.05rem .9rem 2.4rem; }
+      .coord-workspace-head { align-items:flex-start; }
+      .coord-head-actions { justify-content:flex-start; }
+      .coord-toolbar { flex-direction:column; align-items:stretch; }
+      .tab-bar { max-width:100%; }
+      #filtro-busca { width:100%; }
+      .eq-card__header { padding:.8rem; gap:.55rem; }
+      .eq-card__scores { gap:.45rem; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      .eq-card, .coord-head-link, .tab-btn { transition:none; }
+    }
+
   </style>
 </head>
 <body>

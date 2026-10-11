@@ -2126,3 +2126,310 @@ a, button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
   .round-selector .cs-btn { min-height: 44px; font-size: .9rem; }
   .coord-team-picker .cs-wrap { min-width: 0; width: 100%; }
 }
+
+
+/* HUB Circuito — componentes compartilhados, edição visual 2026
+   Preserva IDs, eventos, APIs e mídia de impressão existentes. */
+:root {
+  --hub-radius-control: 11px;
+  --hub-radius-card: 15px;
+  --hub-border-card: #E1E8F0;
+  --hub-shadow-card: 0 3px 18px rgba(17,37,61,.035);
+  --hub-ink: #182B42;
+  --hub-muted: #6F8094;
+}
+
+body .topbar .comp-sel.comp-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .62rem;
+  min-height: 37px;
+  margin: 0 .5rem 0 0;
+  padding: .36rem .72rem;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 11px;
+  box-shadow: 0 2px 8px rgba(28,57,87,.11);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .005em;
+  line-height: 1.2;
+  transition: filter .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+
+body .topbar .comp-sel.comp-chip::before {
+  content: "Competição";
+  color: rgba(255,255,255,.87);
+  font-size: .64rem;
+  font-weight: 600;
+  padding-right: .6rem;
+  border-right: 1px solid rgba(255,255,255,.32);
+  letter-spacing: .005em;
+}
+
+body .topbar .comp-sel.comp-chip[aria-haspopup="true"]::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin-left: .14rem;
+  border-right: 1.7px solid currentColor;
+  border-bottom: 1.7px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+
+body .topbar .comp-sel.comp-chip[aria-haspopup="true"]:hover {
+  filter: brightness(.96);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 13px rgba(28,57,87,.14);
+}
+body .topbar .comp-sel.comp-chip[aria-haspopup="true"]:active {
+  transform: translateY(0);
+}
+body .topbar .comp-sel.comp-chip:not([aria-haspopup]) {
+  box-shadow: none;
+  opacity: .92;
+}
+body .topbar .comp-sel.comp-chip:focus-visible {
+  outline: 3px solid #C4D9F0;
+  outline-offset: 3px;
+}
+
+body .comp-drop {
+  min-width: 230px;
+  padding: .43rem;
+  border: 1px solid var(--hub-border-card);
+  border-radius: 13px;
+  box-shadow: 0 14px 38px rgba(18,35,53,.16);
+}
+body .comp-drop .comp-opt {
+  min-height: 43px;
+  padding: .72rem .85rem;
+  border-radius: 9px;
+  font-size: .77rem;
+  font-weight: 720;
+  transition: background .14s ease;
+}
+body .comp-drop .comp-opt:hover:not(.ativo),
+body .comp-drop .comp-opt:focus-visible:not(.ativo) {
+  background: #F0F5FA;
+}
+body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-offset: -2px; }
+
+:is(.team-shell, .judge-shell, .home-shell) a:focus-visible,
+:is(.team-shell, .judge-shell, .home-shell) button:focus-visible {
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  body .topbar .comp-sel.comp-chip {
+    min-height: 35px;
+    margin-right: .12rem;
+    padding: .37rem .58rem;
+    gap: .35rem;
+    font-size: .68rem;
+  }
+  body .topbar .comp-sel.comp-chip::before {
+    content: "";
+    display: none;
+  }
+  body .comp-drop { min-width: 205px; max-width: calc(100vw - 24px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body .topbar .comp-sel.comp-chip, body .comp-drop .comp-opt { transition: none; }
+  body .topbar .comp-sel.comp-chip[aria-haspopup="true"]:hover { transform: none; }
+}
+
+
+/* HUB Circuito — geometria global e marca dinâmica, somente tela */
+@media screen {
+  :root {
+    --hub-topbar-height: 64px;
+    --hub-sidebar-width: 190px;
+    --hub-logo-sidebar-width: 160px;
+    --hub-logo-topbar-height: 33px;
+  }
+  .topbar { min-height:var(--hub-topbar-height); height:var(--hub-topbar-height); box-sizing:border-box; }
+  .app-body:not(.sidebar-collapsed) .app-sidebar {
+    width:var(--hub-sidebar-width); min-width:var(--hub-sidebar-width);
+    box-sizing:border-box;
+  }
+  .app-body .app-sidebar .sidebar-brand {
+    min-height:75px; box-sizing:border-box;
+  }
+  .app-body:not(.sidebar-collapsed) .app-sidebar .sidebar-brand__img {
+    width:var(--hub-logo-sidebar-width); max-width:var(--hub-logo-sidebar-width);
+    height:auto; max-height:56px; object-fit:contain; object-position:center;
+  }
+  .topbar .topbar__brand img {
+    height:var(--hub-logo-topbar-height); width:auto; max-width:170px; object-fit:contain;
+  }
+
+  /* Os SVGs antigos continuam nos src originais: a variante nova é visual, por CSS. */
+  html[data-hub-competition="fll"] .app-sidebar .sidebar-brand__img { content:url("../logo-hub-on-dark-fll.svg"); }
+  html[data-hub-competition="obr"] .app-sidebar .sidebar-brand__img { content:url("../logo-hub-on-dark-obr.svg"); }
+  html[data-hub-competition="steam"] .app-sidebar .sidebar-brand__img { content:url("../logo-hub-on-dark-steam.svg"); }
+
+  html[data-hub-competition="fll"] .topbar .topbar__brand img { content:url("../logo-hub-on-light-fll.svg"); }
+  html[data-hub-competition="obr"] .topbar .topbar__brand img { content:url("../logo-hub-on-light-obr.svg"); }
+  html[data-hub-competition="steam"] .topbar .topbar__brand img { content:url("../logo-hub-on-light-steam.svg"); }
+
+  /* Páginas com a topbar escura usam a versão branca da mesma marca. */
+  html[data-hub-competition="fll"] body:is(.page-ranking,.page-documentos,.page-arena,.page-avaliacao) .topbar .topbar__brand img {
+    content:url("../logo-hub-on-dark-fll.svg");
+  }
+  html[data-hub-competition="obr"] body:is(.page-ranking,.page-documentos,.page-arena,.page-avaliacao) .topbar .topbar__brand img {
+    content:url("../logo-hub-on-dark-obr.svg");
+  }
+  html[data-hub-competition="steam"] body:is(.page-ranking,.page-documentos,.page-arena,.page-avaliacao) .topbar .topbar__brand img {
+    content:url("../logo-hub-on-dark-steam.svg");
+  }
+
+  /* Compatibiliza as páginas com topbar externa à área lateral. */
+  body:is(.page-ranking,.page-documentos,.page-arena,.page-avaliacao) .app-sidebar {
+    top:var(--hub-topbar-height);
+    height:calc(100vh - var(--hub-topbar-height));
+  }
+
+  @media (min-width:701px) {
+    .app-body:not(.sidebar-collapsed) .app-sidebar {
+      width:var(--hub-sidebar-width) !important;
+      min-width:var(--hub-sidebar-width) !important;
+    }
+    .app-body:not(.sidebar-collapsed) .app-sidebar .sidebar-brand__img {
+      width:var(--hub-logo-sidebar-width) !important;
+      max-width:var(--hub-logo-sidebar-width) !important;
+      height:auto !important;
+    }
+    .topbar { min-height:var(--hub-topbar-height) !important; }
+  }
+  @media (max-width:700px) {
+    :root { --hub-topbar-height:60px; --hub-logo-topbar-height:30px; }
+    .topbar { height:60px; min-height:60px !important; }
+    .app-body:not(.sidebar-collapsed) .app-sidebar {
+      width:min(82vw,280px); min-width:min(82vw,280px);
+    }
+    body:is(.page-ranking,.page-documentos,.page-arena,.page-avaliacao) .app-sidebar {
+      top:60px; height:calc(100vh - 60px);
+    }
+    .topbar .topbar__brand img { height:30px; max-width:140px; }
+  }
+}
+
+
+/* HUB Circuito — sidebar com azul-petróleo suave */
+@media screen {
+  :root {
+    --hub-sidebar-bg-top: #2D4654;
+    --hub-sidebar-bg-bottom: #263F4C;
+    --hub-sidebar-text: #D8E4EB;
+    --hub-sidebar-text-muted: #A8BBC8;
+    --hub-sidebar-active: #FFFFFF;
+    --hub-sidebar-accent: #8CCAF0;
+  }
+  html[data-hub-competition="obr"] {
+    --hub-sidebar-accent: #82D7B1;
+  }
+  html[data-hub-competition="steam"] {
+    --hub-sidebar-accent: #C6ADF1;
+  }
+
+  /* Alta especificidade para respeitar as dimensões próprias de cada página. */
+  html body .app-body .app-sidebar {
+    background: linear-gradient(180deg, var(--hub-sidebar-bg-top), var(--hub-sidebar-bg-bottom)) !important;
+    border-right: 1px solid rgba(236,249,255,.12);
+    color: var(--hub-sidebar-text);
+  }
+  html body .app-body .app-sidebar .sidebar-brand {
+    border-bottom-color: rgba(232,246,253,.12);
+  }
+  html body .app-body .app-sidebar .sidebar-item {
+    min-height: 41px;
+    color: var(--hub-sidebar-text);
+    border-radius: 10px;
+    font-weight: 610;
+    line-height: 1.35;
+    transition: background .16s ease, color .16s ease, box-shadow .16s ease;
+  }
+  html body .app-body .app-sidebar .sidebar-item svg {
+    opacity: .86;
+    color: var(--hub-sidebar-text-muted);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: color .16s ease, opacity .16s ease;
+  }
+  html body .app-body .app-sidebar .sidebar-item:hover {
+    background: rgba(255,255,255,.115);
+    color: #FFFFFF;
+  }
+  html body .app-body .app-sidebar .sidebar-item:hover svg {
+    color: #F2FAFF;
+    opacity: 1;
+  }
+  html body .app-body .app-sidebar .sidebar-item.ativo,
+  html body .app-body .app-sidebar .sidebar-item[aria-current="page"] {
+    background: rgba(255,255,255,.14);
+    color: var(--hub-sidebar-active);
+    box-shadow: inset 3px 0 0 var(--hub-sidebar-accent);
+    font-weight: 730;
+  }
+  html body .app-body .app-sidebar .sidebar-item.ativo svg,
+  html body .app-body .app-sidebar .sidebar-item[aria-current="page"] svg {
+    color: var(--hub-sidebar-accent);
+    opacity: 1;
+  }
+  html body .app-body .app-sidebar .sidebar-sep {
+    background: rgba(232,246,253,.13);
+  }
+  html body .app-body .app-sidebar .sidebar-toggle {
+    color: #C1D1DC;
+    font-weight: 620;
+  }
+  html body .app-body .app-sidebar .sidebar-toggle:hover {
+    background: rgba(255,255,255,.09);
+    color: #FFFFFF;
+  }
+  html body .app-body .app-sidebar .sidebar-item:focus-visible,
+  html body .app-body .app-sidebar .sidebar-toggle:focus-visible {
+    outline: 2px solid var(--hub-sidebar-accent);
+    outline-offset: 2px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body .app-body .app-sidebar .sidebar-item,
+  html body .app-body .app-sidebar .sidebar-item svg {
+    transition: none;
+  }
+}
+
+
+/* Complemento da marca: outros cabeçalhos e perfil da equipe — só tela */
+@media screen {
+  html[data-hub-competition="fll"] body:is(.page-deliberacao,.page-relatorio) .topbar .topbar__brand img {
+    content:url("../logo-hub-on-dark-fll.svg");
+  }
+  html[data-hub-competition="obr"] body:is(.page-deliberacao,.page-relatorio) .topbar .topbar__brand img {
+    content:url("../logo-hub-on-dark-obr.svg");
+  }
+  html[data-hub-competition="steam"] body:is(.page-deliberacao,.page-relatorio) .topbar .topbar__brand img {
+    content:url("../logo-hub-on-dark-steam.svg");
+  }
+
+  html[data-hub-competition="fll"] .eq-banner__sesi {content:url("../logo-hub-on-light-fll.svg");}
+  html[data-hub-competition="obr"] .eq-banner__sesi {content:url("../logo-hub-on-light-obr.svg");}
+  html[data-hub-competition="steam"] .eq-banner__sesi {content:url("../logo-hub-on-light-steam.svg");}
+  html[data-hub-competition] .eq-banner__sesi {
+    height:27px;
+    width:auto;
+    max-width:95px;
+    object-fit:contain;
+    filter:none;
+    opacity:.86;
+  }
+  @media(max-width:700px) {
+    html[data-hub-competition] .eq-banner__sesi {
+      height:18px;
+      max-width:65px;
+    }
+  }
+}

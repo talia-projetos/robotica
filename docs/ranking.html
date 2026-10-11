@@ -48,6 +48,57 @@
       font-size: .78rem;
       margin: .15rem 0 0;
     }
+  
+    /* Ranking: tipografia, alternância e leitura tabular */
+    .page-ranking .container { max-width:1220px; padding:1.55rem clamp(1rem,2.6vw,2.5rem) 3rem; }
+    .page-ranking .workspace-head { align-items:center; gap:1.2rem; margin-bottom:1.25rem!important; }
+    .page-ranking .workspace-eyebrow { font-size:.71rem; font-weight:670; color:#72869A; }
+    .page-ranking .workspace-head h1 { color:#17283C; font-size:clamp(1.75rem,2.6vw,2.15rem); line-height:1.15; }
+    .page-ranking .page-meta { font-size:.8rem; line-height:1.5; margin-top:.42rem; }
+    .page-ranking .workspace-head-actions {
+      padding:.3rem; gap:.25rem!important; border:1px solid #E2EAF1;
+      border-radius:12px; background:#F5F8FB;
+    }
+    .page-ranking .schedule-head-link {
+      min-height:39px; border:1px solid transparent; border-radius:9px;
+      padding:.63rem .95rem; color:#687C91; background:transparent;
+      font-size:.74rem; font-weight:740;
+    }
+    .page-ranking .schedule-head-link:hover { background:#FFF; color:#2B5073; }
+    .page-ranking .schedule-head-link--ativo {
+      background:#FFF; border-color:#DFE8F1; color:#1E405F;
+      box-shadow:0 2px 7px rgba(17,42,65,.08);
+    }
+    .page-ranking .schedule-head-link:focus-visible { outline:3px solid #9BC4E8; outline-offset:2px; }
+    .page-ranking .table-wrap {
+      border:1px solid #E1E8F0; border-radius:14px;
+      background:#FFF; overflow-x:auto;
+      box-shadow:0 3px 18px rgba(15,31,51,.035);
+    }
+    .page-ranking .table-wrap table { width:100%; border-collapse:separate; border-spacing:0; }
+    .page-ranking .table-wrap thead th {
+      padding:.85rem .9rem; font-size:.68rem; font-weight:790; letter-spacing:.04em;
+      background:#F5F8FB; border-bottom:1px solid #E3EAF1; white-space:nowrap;
+    }
+    .page-ranking .table-wrap tbody td {
+      padding:.85rem .9rem; font-size:.76rem; border-bottom:1px solid #EEF2F6;
+      vertical-align:middle; font-variant-numeric:tabular-nums;
+    }
+    .page-ranking .table-wrap tbody tr:hover { background:#FAFCFF; }
+    .page-ranking .table-wrap tbody tr:last-child td { border-bottom:0; }
+    .page-ranking #view-categorias .card,
+    .page-ranking #view-categorias .cat-card {
+      border:1px solid #E1E8F0; border-radius:14px;
+      box-shadow:0 3px 18px rgba(15,31,51,.035); overflow:hidden;
+    }
+    @media(max-width:700px) {
+      .page-ranking .container { padding:1.05rem .9rem 2.4rem; }
+      .page-ranking .workspace-head { align-items:flex-start; flex-direction:column; gap:.8rem; }
+      .page-ranking .workspace-head-actions { max-width:100%; }
+      .page-ranking .table-wrap thead th { padding:.68rem .62rem; font-size:.65rem; }
+      .page-ranking .table-wrap tbody td { padding:.75rem .62rem; font-size:.72rem; }
+    }
+
   </style>
 </head>
 <body>

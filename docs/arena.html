@@ -690,6 +690,58 @@
     }
     body.modo-telao .crono-steam__time { font-size: clamp(3rem, 5vw, 5rem); }
 
+  
+    /* Arena: aprimoramentos de console em tela normal; telão mantém regras originais */
+    body:not(.modo-telao) .arena-header { margin:1.45rem 0 1rem; gap:1rem; }
+    body:not(.modo-telao) .arena-titulo { font-size:clamp(1.35rem,2.15vw,1.85rem); font-weight:790; letter-spacing:-.035em; }
+    body:not(.modo-telao) .arena-update { font-size:.76rem; line-height:1.4; }
+    body:not(.modo-telao) .arena-tab-bar { gap:.35rem; margin-bottom:1.15rem; padding-bottom:.4rem; }
+    body:not(.modo-telao) .arena-tab {
+      min-height:41px; padding:.65rem .95rem; border-radius:9px;
+      font-size:.76rem; font-weight:740; transition:background .16s ease,color .16s ease;
+    }
+    body:not(.modo-telao) .arena-tab.ativo { background:rgba(77,201,195,.16); }
+    body:not(.modo-telao) .arena-tab:focus-visible,
+    body:not(.modo-telao) .btn-view:focus-visible,
+    body:not(.modo-telao) #btn-crono-toggle:focus-visible,
+    body:not(.modo-telao) #btn-crono-reset:focus-visible { outline:3px solid #80BEB9; outline-offset:2px; }
+    body:not(.modo-telao) .arena-layout { gap:1.15rem; grid-template-columns:minmax(0,1fr) 245px; }
+    body:not(.modo-telao) .arena-main { gap:1rem; min-width:0; }
+    body:not(.modo-telao) .cronometro,
+    body:not(.modo-telao) .crono-steam { border-radius:16px; border:1px solid var(--ar-border2); }
+    body:not(.modo-telao) .arena-wrap { border-radius:14px; border:1px solid var(--ar-border); overflow:auto; }
+    body:not(.modo-telao) .arena-table thead th {
+      padding:.78rem .95rem; font-size:.68rem; white-space:nowrap; letter-spacing:.035em;
+    }
+    body:not(.modo-telao) .arena-table td {
+      padding:.83rem .95rem; font-size:.79rem; vertical-align:middle;
+      font-variant-numeric:tabular-nums;
+    }
+    body:not(.modo-telao) .arena-rail {
+      padding:1.1rem; border-radius:15px;
+      gap:.55rem; box-shadow:0 5px 16px rgba(0,0,0,.07);
+    }
+    body:not(.modo-telao) .rail-label { font-size:.67rem; }
+    body:not(.modo-telao) .arena-rail select,
+    body:not(.modo-telao) .btn-view,
+    body:not(.modo-telao) #btn-crono-toggle,
+    body:not(.modo-telao) #btn-crono-reset {
+      min-height:42px; border-radius:10px; font-size:.76rem;
+    }
+    body:not(.modo-telao) .btn-view { padding:.65rem .73rem; }
+    body:not(.modo-telao) .crono-steam__podium-item { padding:.55rem .7rem; border-radius:9px; }
+    @media(max-width:1100px) {
+      body:not(.modo-telao) .arena-layout { grid-template-columns:1fr; }
+      body:not(.modo-telao) .arena-rail { display:flex; flex-wrap:wrap; }
+    }
+    @media(max-width:700px) {
+      body:not(.modo-telao) .arena-tab-bar { overflow-x:auto; scrollbar-width:thin; }
+      body:not(.modo-telao) .arena-tab { white-space:nowrap; }
+      body:not(.modo-telao) .arena-header { flex-wrap:wrap; }
+      body:not(.modo-telao) .arena-rail { display:flex; flex-direction:column; }
+    }
+    @media(prefers-reduced-motion:reduce) { body:not(.modo-telao) .arena-tab { transition:none; } }
+
   </style>
   <script>window.API_URL = 'https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';</script>
 </head>
