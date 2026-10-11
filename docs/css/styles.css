@@ -2507,3 +2507,236 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     html body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand {display:none;}
   }
 }
+
+
+/* Navegação lateral unificada: dimensões independentes da página (tela apenas). */
+@media screen {
+  :root {
+    --hub-sidebar-open: 190px;
+    --hub-sidebar-closed: 72px;
+    --hub-sidebar-icon-size: 20px;
+    --hub-sidebar-row-height: 44px;
+    --hub-topbar-height: 64px;
+  }
+
+  html body .app-body > nav.app-sidebar {
+    box-sizing: border-box;
+    padding: 9px 7px 12px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  html body .app-body > nav.app-sidebar > .sidebar-brand {
+    order: -10;
+    display: flex;
+    flex: 0 0 80px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 80px !important;
+    height: 80px !important;
+    margin: 0 0 9px !important;
+    padding: 9px 4px 12px !important;
+    border-bottom: 1px solid rgba(232,246,253,.13);
+    box-sizing: border-box;
+  }
+  html body .app-body:not(.sidebar-collapsed) > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+    display: block;
+    width: 158px !important;
+    max-width: 158px !important;
+    height: 48px !important;
+    max-height: 48px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+  }
+
+  html body .app-body > nav.app-sidebar > a.sidebar-item {
+    box-sizing: border-box;
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 0 0 var(--hub-sidebar-row-height);
+    width: calc(100% - 4px);
+    height: var(--hub-sidebar-row-height) !important;
+    min-height: var(--hub-sidebar-row-height) !important;
+    max-height: var(--hub-sidebar-row-height);
+    margin: 2px 2px !important;
+    padding: 0 12px !important;
+    gap: 11px !important;
+    border-radius: 10px !important;
+    font-size: .77rem !important;
+    font-weight: 620;
+    line-height: 1.3 !important;
+    white-space: nowrap;
+  }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[style*="display: none"] {
+    display: none !important;
+  }
+  html body .app-body > nav.app-sidebar > a.sidebar-item > svg {
+    box-sizing: content-box;
+    display: block;
+    width: var(--hub-sidebar-icon-size) !important;
+    height: var(--hub-sidebar-icon-size) !important;
+    min-width: var(--hub-sidebar-icon-size) !important;
+    min-height: var(--hub-sidebar-icon-size) !important;
+    max-width: var(--hub-sidebar-icon-size);
+    max-height: var(--hub-sidebar-icon-size);
+    flex: 0 0 var(--hub-sidebar-icon-size) !important;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    overflow: visible;
+  }
+
+  /* A ordem é visual e fixa; permissões e links continuam controlados pelo JS. */
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="index.html"] { order: 10; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="arena.html"] { order: 20; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="turma.html"] { order: 30; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="juizes.html"] { order: 40; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="rubricas.html"] { order: 45; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="coordenacao.html"] { order: 50; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="deliberacao.html"] { order: 55; }
+  html body .app-body > nav.app-sidebar > .sidebar-sep {
+    order: 60;
+    width: calc(100% - 18px);
+    height: 1px;
+    flex: 0 0 1px;
+    margin: 11px 9px !important;
+    background: rgba(232,246,253,.13);
+  }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="ranking.html"] { order: 70; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="documentos.html"] { order: 80; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="cronograma.html"] { order: 90; }
+  html body .app-body > nav.app-sidebar > .sidebar-toggle {
+    order: 100;
+    flex-shrink: 0;
+  }
+  html body .app-body > nav.app-sidebar > a.sidebar-item:focus-visible,
+  html body .app-body > nav.app-sidebar > .sidebar-toggle:focus-visible {
+    outline: 2px solid var(--hub-sidebar-accent, #8CCAF0);
+    outline-offset: 2px;
+  }
+}
+
+@media screen and (min-width:701px) {
+  html body .app-body > nav.app-sidebar {
+    flex: 0 0 var(--hub-sidebar-open) !important;
+    width: var(--hub-sidebar-open) !important;
+    min-width: var(--hub-sidebar-open) !important;
+    max-width: var(--hub-sidebar-open) !important;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar {
+    flex: 0 0 var(--hub-sidebar-closed) !important;
+    width: var(--hub-sidebar-closed) !important;
+    min-width: var(--hub-sidebar-closed) !important;
+    max-width: var(--hub-sidebar-closed) !important;
+    padding: 9px 5px 12px !important;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand {
+    min-height: 80px !important;
+    height: 80px !important;
+    width: 100%;
+    margin-bottom: 9px !important;
+    padding: 9px 0 12px !important;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+    content: url("../favicon.svg");
+    display: block;
+    width: 44px !important;
+    min-width: 44px;
+    max-width: 44px !important;
+    height: 44px !important;
+    max-height: 44px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    filter: none;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > a.sidebar-item {
+    flex: 0 0 48px;
+    width: 52px !important;
+    min-width: 52px !important;
+    max-width: 52px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    margin: 3px auto !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    border-radius: 12px !important;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > a.sidebar-item > svg {
+    width: 21px !important;
+    height: 21px !important;
+    min-width: 21px !important;
+    min-height: 21px !important;
+    max-width: 21px;
+    max-height: 21px;
+    flex-basis: 21px !important;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-sep {
+    width: 46px;
+    margin: 11px auto !important;
+  }
+  html body .app-body > nav.app-sidebar > .sidebar-toggle {
+    height: 42px;
+    min-height: 42px;
+    margin-top: auto;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-toggle {
+    width: 52px !important;
+    min-width: 52px !important;
+    max-width: 52px !important;
+    height: 42px;
+    margin: auto auto 9px !important;
+    padding: 0 !important;
+    justify-content: center;
+  }
+
+  /* Dois tipos de shell: barra superior externa ou interna ao corpo. */
+  html body .app-body:is(.home-shell,.team-shell,.judge-shell,.coord-shell,.schedule-shell) > nav.app-sidebar {
+    position: sticky;
+    top: 0 !important;
+    height: 100vh !important;
+  }
+  html body .app-body:not(.home-shell):not(.team-shell):not(.judge-shell):not(.coord-shell):not(.schedule-shell) > nav.app-sidebar {
+    position: sticky;
+    top: var(--hub-topbar-height) !important;
+    height: calc(100vh - var(--hub-topbar-height)) !important;
+  }
+}
+
+@media screen and (max-width:700px) {
+  /* O menu móvel continua como painel deslizante, independentemente do estado salvo. */
+  html body .app-body > nav.app-sidebar,
+  html body .app-body.sidebar-collapsed > nav.app-sidebar {
+    width: min(82vw,280px) !important;
+    min-width: min(82vw,280px) !important;
+    max-width: min(82vw,280px) !important;
+    flex: 0 0 auto !important;
+    top: 60px !important;
+    height: calc(100dvh - 60px) !important;
+  }
+  html body .app-body > nav.app-sidebar > .sidebar-brand { display: none !important; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item,
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > a.sidebar-item {
+    width: calc(100% - 4px) !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    margin: 2px 2px !important;
+    padding: 0 12px !important;
+    justify-content: flex-start !important;
+    gap: 11px !important;
+    font-size: .77rem !important;
+    line-height: 1.3 !important;
+  }
+  html body .app-body > nav.app-sidebar > a.sidebar-item > svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
