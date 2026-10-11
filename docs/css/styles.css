@@ -3058,3 +3058,121 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     color:#C5E1DB;
   }
 }
+
+
+/* Componentes contínuos: controles, cartões, tipografia e ações. */
+@media screen {
+  html body .topbar .comp-sel.comp-chip,
+  html body .cs-btn,
+  html body select:not([multiple]),
+  html body .coord-team-picker .cs-btn {
+    border-radius:11px;
+    border-color:#D3E3DE;
+    box-shadow:0 1px 3px rgba(30,73,70,.03);
+  }
+  html body .cs-btn:hover,
+  html body select:not([multiple]):hover:not(:disabled) {
+    border-color:#AFD0C7;
+  }
+  html body .cs-btn:focus-visible,
+  html body select:not([multiple]):focus-visible {
+    outline-color:#2F9D8C;
+  }
+  html body .cs-dropdown,
+  html body .comp-drop {
+    border-color:#DFEAE7;
+    box-shadow:0 16px 36px rgba(31,70,66,.13);
+  }
+  html body .cs-item:hover:not(.cs-item--dis):not(.cs-item--ph),
+  html body .comp-drop .comp-opt:hover:not(.ativo) {
+    background:#EDF8F4;
+  }
+  /* Não aplicar a cartões coloridos que representam pontuação ou modalidade. */
+  html body :is(
+    .home-learning__panel,.home-insight,.hero-event-card,.acesso,
+    .turma-feed__content,.coord-team-picker,.met-context,
+    .judge-main-card,.judge-support-card,.sala-progress-card,.judge-chat-card,
+    .form-card,.coord-toolbar,.summary-chip,.detail-score,.comment-block,
+    .eq-card,.steam-panel,.steam-kpi,.doc-item,.page-ranking .table-wrap,
+    .page-ranking .cat-card,.schedule-team,.eq-selector
+  ) {
+    border-color:var(--hub-ui-line);
+    border-radius:var(--hub-ui-radius);
+    box-shadow:var(--hub-ui-shadow);
+  }
+  html body :is(
+    .home-learning__skill,.support-row,.coord-team-picker,
+    .judge-area-strip,.met-context
+  ) {
+    background-color:#F8FBFA;
+    border-color:#E4EFEB;
+  }
+  html body :is(
+    .workspace-head h1,.page-hd h1,.page-title,
+    .team-workspace-head h1,.judge-workspace-head h1,
+    .coord-workspace-head h1,.schedule-workspace-head h1,
+    .home-learning__intro h2
+  ) {
+    color:var(--hub-ui-ink);
+    letter-spacing:-.035em;
+  }
+  html body :is(
+    .workspace-eyebrow,.home-section-title,.team-workspace-kicker,
+    .judge-workspace-kicker,.coord-workspace-kicker,
+    .schedule-kicker,.home-learning__eyebrow,.coord-section-title
+  ) {
+    color:#367E74;
+    letter-spacing:.075em;
+  }
+  html body :is(
+    .page-meta,.page-hd p,.workspace-sub,.team-workspace-sub,
+    .judge-workspace-sub,.coord-workspace-sub,.home-learning__intro p,
+    .doc-meta,.fc-desc,.support-sub
+  ) {
+    color:var(--hub-ui-muted);
+    line-height:1.55;
+  }
+  html body .home-insight {
+    background:linear-gradient(105deg,#FFFFFF,#F1F9F6);
+  }
+  html body .home-insight__label {color:#488A7B;}
+  html body .home-learning__bncc-tags span {
+    border-color:#DFEBE5;
+    background:#F8FBF9;
+    color:#517B72;
+  }
+  html body:not(:has(.arena-layout)) :is(.btn.btn-primary,.coord-head-link--primary) {
+    border-color:transparent;
+    border-radius:10px;
+    background:#2F9D8C;
+    color:#FFFFFF;
+    box-shadow:0 5px 13px rgba(32,139,116,.13);
+  }
+  html body:not(:has(.arena-layout)) :is(.btn.btn-primary,.coord-head-link--primary):hover:not(:disabled) {
+    background:#257F74;
+    box-shadow:0 8px 18px rgba(32,139,116,.16);
+  }
+  html body :is(
+    .acesso,.form-card,.doc-item,.support-row,.eq-card,
+    .home-learning__cta,.coord-head-link,.schedule-head-link
+  ):focus-visible {
+    outline:3px solid #89CCB9;
+    outline-offset:3px;
+  }
+  html body :is(.acesso,.doc-item,.form-card,.support-row):hover {
+    border-color:#B9DCD0;
+  }
+  @media(max-width:700px) {
+    html body :is(
+      .home-learning__panel,.turma-feed__content,.judge-main-card,
+      .judge-support-card,.coord-toolbar,.doc-item,.schedule-team
+    ) {
+      border-radius:12px;
+    }
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  html body :is(.acesso,.doc-item,.form-card,.support-row,.btn-primary) {
+    transition:none;
+  }
+}
