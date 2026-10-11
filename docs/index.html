@@ -730,6 +730,49 @@
         display:none;
       }
     }
+
+    /* Faixa pedagógica automática — não representa resultados de avaliação */
+    .home-insight {
+      display:flex;align-items:center;gap:.75rem;min-height:64px;
+      margin:0 0 1rem;padding:.8rem 1.1rem;border:1px solid #E0E9F0;
+      border-radius:13px;background:linear-gradient(105deg,#FFF 0%,#F7FAFD 100%);
+      box-shadow:0 2px 12px rgba(18,40,61,.025);
+    }
+    .home-insight__symbol {
+      display:flex;align-items:center;justify-content:center;flex:0 0 39px;
+      width:39px;height:39px;border-radius:11px;
+      background:var(--home-competition-soft);color:var(--home-competition-accent);
+    }
+    .home-insight__symbol svg {width:21px;height:21px;}
+    .home-insight__copy {min-width:0;flex:1;}
+    .home-insight__label {display:block;font-size:.6rem;letter-spacing:.065em;text-transform:uppercase;font-weight:800;color:#668099;margin-bottom:.28rem;}
+    .home-insight__track {position:relative;height:1.25rem;overflow:hidden;}
+    .home-insight__message {
+      position:absolute;left:0;top:0;width:100%;font-size:.74rem;font-weight:640;line-height:1.25rem;
+      color:#263B54;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+      opacity:0;transform:translateY(5px);animation:home-insight-cycle 18s infinite both;
+    }
+    .home-insight__message:nth-child(2) {animation-delay:6s;}
+    .home-insight__message:nth-child(3) {animation-delay:12s;}
+    .home-insight__signal {display:flex;gap:4px;align-self:center;}
+    .home-insight__signal i {display:block;width:5px;height:5px;border-radius:50%;background:#CCD7E2;}
+    .home-insight__signal i:first-child {background:var(--home-competition-accent);}
+    @keyframes home-insight-cycle {
+      0%,5% {opacity:0;transform:translateY(6px);}
+      9%,29% {opacity:1;transform:translateY(0);}
+      33.333%,100% {opacity:0;transform:translateY(-6px);}
+    }
+    @media (max-width:700px) {
+      .home-insight {min-height:70px;padding:.75rem;gap:.55rem;}
+      .home-insight__track {height:2.5rem;}
+      .home-insight__message {font-size:.68rem;white-space:normal;line-height:1.25rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+      .home-insight__signal {display:none;}
+    }
+    @media (prefers-reduced-motion:reduce) {
+      .home-insight__message {animation:none;opacity:0;transform:none;}
+      .home-insight__message:first-child {opacity:1;}
+    }
+
   </style>
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';
@@ -897,6 +940,21 @@
                 <p>Os desafios de robótica mobilizam competências que vão além da pontuação. Conheça os referenciais que orientam a leitura pedagógica das avaliações.</p>
               </div>
               <a class="home-learning__cta" href="coordenacao.html">Ver acompanhamento da coordenação <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
+            </div>
+
+            <div class="home-insight" aria-label="Orientações pedagógicas">
+              <div class="home-insight__symbol" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-3 11.2V17h6v-2.8A6 6 0 0 0 12 3Z"/><path d="M9 20h6M10 17h4"/></svg>
+              </div>
+              <div class="home-insight__copy">
+                <span class="home-insight__label">Perspectivas de aprendizagem</span>
+                <div class="home-insight__track" aria-live="off">
+                  <span class="home-insight__message">As rubricas registram evidências do percurso das equipes, além da classificação.</span>
+                  <span class="home-insight__message">Pensamento crítico, criatividade, comunicação e colaboração orientam a leitura dos 4Cs.</span>
+                  <span class="home-insight__message">BNCC e Taxonomia de Bloom apoiam a reflexão pedagógica sobre os desafios da robótica.</span>
+                </div>
+              </div>
+              <span class="home-insight__signal" aria-hidden="true"><i></i><i></i><i></i></span>
             </div>
             <div class="home-learning__layout">
               <div class="home-learning__panel home-learning__panel--skills">
