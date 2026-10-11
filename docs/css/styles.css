@@ -2507,3 +2507,435 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     html body .app-body.sidebar-collapsed .app-sidebar .sidebar-brand {display:none;}
   }
 }
+
+
+/* Navegação lateral unificada: dimensões independentes da página (tela apenas). */
+@media screen {
+  :root {
+    --hub-sidebar-open: 190px;
+    --hub-sidebar-closed: 72px;
+    --hub-sidebar-icon-size: 20px;
+    --hub-sidebar-row-height: 44px;
+    --hub-topbar-height: 64px;
+  }
+
+  html body .app-body > nav.app-sidebar {
+    box-sizing: border-box;
+    padding: 9px 7px 12px !important;
+    overflow-x: hidden !important;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+
+  html body .app-body > nav.app-sidebar > .sidebar-brand {
+    order: -10;
+    display: flex;
+    flex: 0 0 80px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 80px !important;
+    height: 80px !important;
+    margin: 0 0 9px !important;
+    padding: 9px 4px 12px !important;
+    border-bottom: 1px solid rgba(232,246,253,.13);
+    box-sizing: border-box;
+  }
+  html body .app-body:not(.sidebar-collapsed) > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+    display: block;
+    width: 158px !important;
+    max-width: 158px !important;
+    height: 48px !important;
+    max-height: 48px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+  }
+
+  html body .app-body > nav.app-sidebar > a.sidebar-item {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex: 0 0 var(--hub-sidebar-row-height);
+    width: calc(100% - 4px);
+    height: var(--hub-sidebar-row-height) !important;
+    min-height: var(--hub-sidebar-row-height) !important;
+    max-height: var(--hub-sidebar-row-height);
+    margin: 2px 2px !important;
+    padding: 0 12px !important;
+    gap: 11px !important;
+    border-radius: 10px !important;
+    font-size: .77rem !important;
+    font-weight: 620;
+    line-height: 1.3 !important;
+    white-space: nowrap;
+  }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[style*="display: none"] {
+    display: none !important;
+  }
+  html body .app-body > nav.app-sidebar > a.sidebar-item > svg {
+    box-sizing: content-box;
+    display: block;
+    width: var(--hub-sidebar-icon-size) !important;
+    height: var(--hub-sidebar-icon-size) !important;
+    min-width: var(--hub-sidebar-icon-size) !important;
+    min-height: var(--hub-sidebar-icon-size) !important;
+    max-width: var(--hub-sidebar-icon-size);
+    max-height: var(--hub-sidebar-icon-size);
+    flex: 0 0 var(--hub-sidebar-icon-size) !important;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    overflow: visible;
+  }
+
+  /* A ordem é visual e fixa; permissões e links continuam controlados pelo JS. */
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="index.html"] { order: 10; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="arena.html"] { order: 20; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="turma.html"] { order: 30; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="juizes.html"] { order: 40; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="rubricas.html"] { order: 45; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="coordenacao.html"] { order: 50; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="deliberacao.html"] { order: 55; }
+  html body .app-body > nav.app-sidebar > .sidebar-sep {
+    order: 60;
+    width: calc(100% - 18px);
+    height: 1px;
+    flex: 0 0 1px;
+    margin: 11px 9px !important;
+    background: rgba(232,246,253,.13);
+  }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="ranking.html"] { order: 70; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="documentos.html"] { order: 80; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item[href="cronograma.html"] { order: 90; }
+  html body .app-body > nav.app-sidebar > .sidebar-toggle {
+    order: 100;
+    flex-shrink: 0;
+  }
+  html body .app-body > nav.app-sidebar > a.sidebar-item:focus-visible,
+  html body .app-body > nav.app-sidebar > .sidebar-toggle:focus-visible {
+    outline: 2px solid var(--hub-sidebar-accent, #8CCAF0);
+    outline-offset: 2px;
+  }
+}
+
+@media screen and (min-width:701px) {
+  html body .app-body > nav.app-sidebar {
+    flex: 0 0 var(--hub-sidebar-open) !important;
+    width: var(--hub-sidebar-open) !important;
+    min-width: var(--hub-sidebar-open) !important;
+    max-width: var(--hub-sidebar-open) !important;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar {
+    flex: 0 0 var(--hub-sidebar-closed) !important;
+    width: var(--hub-sidebar-closed) !important;
+    min-width: var(--hub-sidebar-closed) !important;
+    max-width: var(--hub-sidebar-closed) !important;
+    padding: 9px 5px 12px !important;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand {
+    min-height: 80px !important;
+    height: 80px !important;
+    width: 100%;
+    margin-bottom: 9px !important;
+    padding: 9px 0 12px !important;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+    content: url("../favicon.svg");
+    display: block;
+    width: 44px !important;
+    min-width: 44px;
+    max-width: 44px !important;
+    height: 44px !important;
+    max-height: 44px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    filter: none;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > a.sidebar-item {
+    flex: 0 0 48px;
+    width: 52px !important;
+    min-width: 52px !important;
+    max-width: 52px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+    margin: 3px auto !important;
+    padding: 0 !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    font-size: 0 !important;
+    line-height: 0 !important;
+    border-radius: 12px !important;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > a.sidebar-item > svg {
+    width: 21px !important;
+    height: 21px !important;
+    min-width: 21px !important;
+    min-height: 21px !important;
+    max-width: 21px;
+    max-height: 21px;
+    flex-basis: 21px !important;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-sep {
+    width: 46px;
+    margin: 11px auto !important;
+  }
+  html body .app-body > nav.app-sidebar > .sidebar-toggle {
+    height: 42px;
+    min-height: 42px;
+    margin-top: auto;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-toggle {
+    width: 52px !important;
+    min-width: 52px !important;
+    max-width: 52px !important;
+    height: 42px;
+    margin: auto auto 9px !important;
+    padding: 0 !important;
+    justify-content: center;
+  }
+
+  /* Dois tipos de shell: barra superior externa ou interna ao corpo. */
+  html body .app-body:is(.home-shell,.team-shell,.judge-shell,.coord-shell,.schedule-shell) > nav.app-sidebar {
+    position: sticky;
+    top: 0 !important;
+    height: 100vh !important;
+  }
+  html body .app-body:not(.home-shell):not(.team-shell):not(.judge-shell):not(.coord-shell):not(.schedule-shell) > nav.app-sidebar {
+    position: sticky;
+    top: var(--hub-topbar-height) !important;
+    height: calc(100vh - var(--hub-topbar-height)) !important;
+  }
+}
+
+@media screen and (max-width:700px) {
+  /* O menu móvel continua como painel deslizante, independentemente do estado salvo. */
+  html body .app-body > nav.app-sidebar,
+  html body .app-body.sidebar-collapsed > nav.app-sidebar {
+    width: min(82vw,280px) !important;
+    min-width: min(82vw,280px) !important;
+    max-width: min(82vw,280px) !important;
+    flex: 0 0 auto !important;
+    top: 60px !important;
+    height: calc(100dvh - 60px) !important;
+  }
+  html body .app-body > nav.app-sidebar > .sidebar-brand { display: none !important; }
+  html body .app-body > nav.app-sidebar > a.sidebar-item,
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > a.sidebar-item {
+    width: calc(100% - 4px) !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    margin: 2px 2px !important;
+    padding: 0 12px !important;
+    justify-content: flex-start !important;
+    gap: 11px !important;
+    font-size: .77rem !important;
+    line-height: 1.3 !important;
+  }
+  html body .app-body > nav.app-sidebar > a.sidebar-item > svg {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
+
+/* Topbar neutra, U contextual e padrão compartilhado para seletores — somente tela */
+@media screen {
+  :root {
+    --hub-control-border:#CBD9E3;
+    --hub-control-ink:#273D50;
+    --hub-control-muted:#748799;
+    --hub-control-ring:rgba(67,128,150,.16);
+    --hub-control-surface:#FFFFFF;
+    --hub-topbar-height:64px;
+  }
+  html[data-hub-competition="fll"] { --hub-control-accent:#2F80ED; }
+  html[data-hub-competition="obr"] { --hub-control-accent:#279B70; }
+  html[data-hub-competition="steam"] { --hub-control-accent:#8B5CF6; }
+
+  /* Neutralidade do cabeçalho independentemente do modelo de página. */
+  html body .topbar,
+  html body.claro .topbar,
+  html body .app-body .topbar {
+    box-sizing:border-box;
+    height:var(--hub-topbar-height) !important;
+    min-height:var(--hub-topbar-height) !important;
+    max-height:var(--hub-topbar-height) !important;
+    padding:0 clamp(.85rem,2vw,1.4rem) !important;
+    background:#FFFFFF !important;
+    color:#24394E !important;
+    border-bottom:1px solid #DAE4EC !important;
+    box-shadow:0 1px 3px rgba(21,45,63,.04) !important;
+  }
+  html body .topbar .topbar__event-name,
+  html body .topbar .topbar-avatar__name,
+  html body .topbar .topbar__brand-name,
+  html body .topbar .av-btn {
+    color:#263B4E !important;
+  }
+  html body .topbar .topbar__event-org,
+  html body .topbar .topbar-avatar__role { color:#718597 !important; }
+  html body .topbar .av-chevron { stroke:#667E90 !important; }
+  html body .topbar .topbar__brand img {
+    height:31px !important; max-height:31px !important;
+    width:auto !important; max-width:155px !important;
+    object-fit:contain !important; object-position:left center !important;
+    filter:brightness(0) saturate(100%) invert(18%) sepia(15%) saturate(1125%) hue-rotate(161deg) !important;
+  }
+  @media(min-width:701px) {
+    html body .topbar > .topbar__brand { display:none !important; }
+  }
+  /* A sidebar abriga o logotipo, sem duplicá-lo na barra de contexto. */
+  html body .app-body:not(.sidebar-collapsed) > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+    filter:brightness(0) invert(1);
+  }
+  @media (min-width:701px) {
+    html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+      content:url("../logo-u-fll.svg");
+      filter:none !important;
+      width:37px !important;
+      min-width:37px !important;
+      max-width:37px !important;
+      height:43px !important;
+      max-height:43px !important;
+      border:0 !important;
+      background:transparent !important;
+      box-shadow:none !important;
+    }
+    html[data-hub-competition="obr"] body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+      content:url("../logo-u-obr.svg");
+    }
+    html[data-hub-competition="steam"] body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+      content:url("../logo-u-steam.svg");
+    }
+  }
+
+  /* Todos os campos dropdown nativos e personalizados têm a mesma linguagem. */
+  html body select {
+    box-sizing:border-box;
+    min-height:44px;
+    border:1px solid var(--hub-control-border);
+    border-radius:11px;
+    padding:.68rem 2.45rem .68rem .85rem;
+    background-color:var(--hub-control-surface);
+    background-image:
+      linear-gradient(45deg,transparent 50%,#607889 50%),
+      linear-gradient(135deg,#607889 50%,transparent 50%);
+    background-position:calc(100% - 19px) calc(50% - 2px),calc(100% - 13px) calc(50% - 2px);
+    background-size:6px 6px;
+    background-repeat:no-repeat;
+    appearance:none;-webkit-appearance:none;
+    color:var(--hub-control-ink);
+    font:650 .78rem/1.3 system-ui,-apple-system,sans-serif;
+    box-shadow:0 1px 2px rgba(20,48,64,.025);
+    cursor:pointer;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  html body select:hover { border-color:#9DBBC9; }
+  html body select:focus-visible {
+    outline:2px solid var(--hub-control-accent,#3D8397);
+    outline-offset:2px;
+  }
+  html body select:disabled { opacity:.52;cursor:not-allowed;background-color:#F2F6F8; }
+  html body .cs-wrap > select {
+    position:absolute;opacity:0;pointer-events:none;
+    width:1px;height:1px;min-height:0;padding:0;overflow:hidden;
+  }
+  html body .cs-wrap { min-width:0; }
+  html body .cs-btn {
+    box-sizing:border-box;
+    min-height:44px;
+    background:#FFFFFF;
+    border:1px solid var(--hub-control-border);
+    border-radius:11px;
+    padding:.67rem .83rem;
+    color:var(--hub-control-muted);
+    font-size:.78rem;font-weight:650;line-height:1.3;
+    box-shadow:0 1px 2px rgba(20,48,64,.025);
+    transition:border-color .15s,box-shadow .15s,background .15s;
+  }
+  html body .cs-btn.cs-has-val { color:var(--hub-control-ink);font-weight:710; }
+  html body .cs-btn:hover { background:#FBFDFE;border-color:#9DBBC9;box-shadow:0 2px 8px rgba(22,53,69,.055); }
+  html body .cs-btn:focus-visible,
+  html body .cs-wrap.cs-open .cs-btn {
+    outline:2px solid var(--hub-control-accent,#3D8397);outline-offset:2px;
+    border-color:var(--hub-control-accent,#3D8397);
+    box-shadow:0 0 0 4px var(--hub-control-ring);
+  }
+  html body .cs-arrow { width:15px;min-width:15px;color:#617E90; }
+  html body .cs-arrow svg { width:13px;height:9px; }
+  html body .cs-dropdown {
+    z-index:1200;
+    top:calc(100% + 6px);
+    border:1px solid #D7E2E9;
+    border-radius:12px;
+    background:#FFFFFF;
+    padding:5px;
+    box-shadow:0 12px 31px rgba(25,54,74,.13);
+  }
+  html body .cs-drop--up { top:auto;bottom:calc(100% + 6px); }
+  html body .cs-item {
+    min-height:40px;padding:.6rem .77rem;border-radius:8px;
+    font-size:.77rem;line-height:1.35;color:#30485B;
+  }
+  html body .cs-item:hover:not(.cs-item--dis):not(.cs-item--ph) { background:#F0F5F8; }
+  html body .cs-item:focus-visible { outline:2px solid var(--hub-control-accent,#3D8397);outline-offset:-2px; }
+  html body .cs-item--sel { color:var(--hub-control-accent,#2F80ED);font-weight:760; }
+  html body .cs-item__chk { color:var(--hub-control-accent,#2F80ED); }
+
+  /* O seletor de competição também segue o padrão de dropdown. */
+  html body .topbar .comp-sel.comp-chip {
+    box-sizing:border-box;
+    height:39px;
+    min-height:39px;
+    border:1px solid var(--hub-control-border) !important;
+    border-radius:11px;
+    background:#FFFFFF !important;
+    color:var(--hub-control-ink) !important;
+    padding:0 .8rem;
+    box-shadow:0 1px 3px rgba(21,45,63,.035);
+    cursor:pointer;
+    font-size:.73rem;
+    font-weight:780;
+  }
+  html body .topbar .comp-sel.comp-chip::before {
+    color:#708496;
+    border-color:#D4E0E7;
+    font-weight:620;
+  }
+  html body .topbar .comp-sel.comp-chip[aria-haspopup="true"]:focus-visible {
+    outline:2px solid var(--hub-control-accent,#3D8397);
+    outline-offset:2px;
+  }
+  html body .topbar .comp-sel.comp-chip:not([aria-haspopup]) {
+    cursor:default;
+    background:#F8FAFC !important;
+  }
+  html body .comp-drop {
+    min-width:225px;
+    padding:5px;
+    background:#FFFFFF;
+    border:1px solid #D7E2E9;
+    border-radius:12px;
+    box-shadow:0 13px 31px rgba(25,54,74,.14);
+  }
+  html body .comp-drop .comp-opt { min-height:42px;padding:.65rem .85rem;border-radius:8px; }
+  html body .comp-drop .comp-opt:focus-visible { outline:2px solid var(--hub-control-accent,#3D8397);outline-offset:-2px; }
+
+  @media(max-width:700px) {
+    :root { --hub-topbar-height:60px; }
+    html body .topbar, html body.claro .topbar, html body .app-body .topbar {
+      height:60px !important;min-height:60px !important;max-height:60px !important;
+      gap:.55rem !important;
+    }
+    html body .topbar .topbar__brand img { height:27px !important;max-height:27px !important;max-width:130px !important; }
+    html body .topbar .comp-sel.comp-chip { padding:0 .55rem;min-height:35px;height:35px;font-size:.67rem; }
+    html body .cs-btn,html body select { min-height:44px; }
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  html body .cs-btn,html body .cs-item,html body select {transition:none;}
+}
