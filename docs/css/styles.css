@@ -3214,3 +3214,47 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     touch-action:manipulation;
   }
 }
+
+
+/* Marca do menu recolhido: tamanho compacto e centralizado, sem cortes.
+   As marcas por modalidade permanecem dinâmicas, sem alterar o JavaScript. */
+@media screen and (min-width:701px) {
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand {
+    box-sizing:border-box;
+    width:100% !important;
+    min-width:0 !important;
+    min-height:72px !important;
+    height:72px !important;
+    flex:0 0 72px;
+    margin:0 0 8px !important;
+    padding:10px 0 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    overflow:visible;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+    content:url("../logo-u-fll.svg") !important;
+    display:block !important;
+    box-sizing:border-box;
+    flex:0 0 auto;
+    width:28px !important;
+    min-width:0 !important;
+    max-width:28px !important;
+    height:30px !important;
+    min-height:0 !important;
+    max-height:30px !important;
+    margin:0 auto !important;
+    padding:0 !important;
+    object-fit:contain !important;
+    object-position:center center !important;
+    filter:none !important;
+    transform:none !important;
+  }
+  html[data-hub-competition="obr"] body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+    content:url("../logo-u-obr.svg") !important;
+  }
+  html[data-hub-competition="steam"] body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+    content:url("../logo-u-steam.svg") !important;
+  }
+}
