@@ -31,16 +31,25 @@ const API = (function () {
 
   function post(body) {
     const b = Object.assign({ comp: Comp.val }, body);
+    /* redirect:'follow' para ler a resposta real do Apps Script (JSON com ok/erro).
+       Content-Type text/plain evita preflight CORS. */
     const req = fetch(url(), {
       method: 'POST',
-      redirect: 'manual',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(b)
     }).then(function(r) {
+      /* Fallback seguro: redirect opaco significa que o servidor recebeu */
       if (r.type === 'opaqueredirect' || r.type === 'opaque') return { ok: true };
-      return r.ok ? r.json().catch(function() { return { ok: true }; }) : { ok: true };
-    }).catch(function() { return { ok: true }; });
-    const timeout = new Promise(function(resolve) { setTimeout(resolve, 5000, { ok: true }); });
+      return r.ok
+        ? r.json().catch(function() { return { ok: true }; })
+        : { ok: false, erro: 'Erro no servidor (' + r.status + '). Tente novamente.' };
+    }).catch(function() {
+      return { ok: false, erro: 'Sem conexão. Verifique a rede e tente enviar novamente.' };
+    });
+    /* 30 s: Apps Script sob carga pode levar mais que 5 s */
+    const timeout = new Promise(function(resolve) {
+      setTimeout(resolve, 30000, { ok: false, erro: 'Tempo limite excedido. Tente novamente.' });
+    });
     return Promise.race([req, timeout]);
   }
 
