@@ -2126,3 +2126,115 @@ a, button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
   .round-selector .cs-btn { min-height: 44px; font-size: .9rem; }
   .coord-team-picker .cs-wrap { min-width: 0; width: 100%; }
 }
+
+
+/* HUB Circuito — componentes compartilhados, edição visual 2026
+   Preserva IDs, eventos, APIs e mídia de impressão existentes. */
+:root {
+  --hub-radius-control: 11px;
+  --hub-radius-card: 15px;
+  --hub-border-card: #E1E8F0;
+  --hub-shadow-card: 0 3px 18px rgba(17,37,61,.035);
+  --hub-ink: #182B42;
+  --hub-muted: #6F8094;
+}
+
+body .topbar .comp-sel.comp-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .62rem;
+  min-height: 37px;
+  margin: 0 .5rem 0 0;
+  padding: .36rem .72rem;
+  border: 1px solid rgba(255,255,255,.28);
+  border-radius: 11px;
+  box-shadow: 0 2px 8px rgba(28,57,87,.11);
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .005em;
+  line-height: 1.2;
+  transition: filter .16s ease, box-shadow .16s ease, transform .16s ease;
+}
+
+body .topbar .comp-sel.comp-chip::before {
+  content: "Competição";
+  color: rgba(255,255,255,.87);
+  font-size: .64rem;
+  font-weight: 600;
+  padding-right: .6rem;
+  border-right: 1px solid rgba(255,255,255,.32);
+  letter-spacing: .005em;
+}
+
+body .topbar .comp-sel.comp-chip[aria-haspopup="true"]::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin-left: .14rem;
+  border-right: 1.7px solid currentColor;
+  border-bottom: 1.7px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+}
+
+body .topbar .comp-sel.comp-chip[aria-haspopup="true"]:hover {
+  filter: brightness(.96);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 13px rgba(28,57,87,.14);
+}
+body .topbar .comp-sel.comp-chip[aria-haspopup="true"]:active {
+  transform: translateY(0);
+}
+body .topbar .comp-sel.comp-chip:not([aria-haspopup]) {
+  box-shadow: none;
+  opacity: .92;
+}
+body .topbar .comp-sel.comp-chip:focus-visible {
+  outline: 3px solid #C4D9F0;
+  outline-offset: 3px;
+}
+
+body .comp-drop {
+  min-width: 230px;
+  padding: .43rem;
+  border: 1px solid var(--hub-border-card);
+  border-radius: 13px;
+  box-shadow: 0 14px 38px rgba(18,35,53,.16);
+}
+body .comp-drop .comp-opt {
+  min-height: 43px;
+  padding: .72rem .85rem;
+  border-radius: 9px;
+  font-size: .77rem;
+  font-weight: 720;
+  transition: background .14s ease;
+}
+body .comp-drop .comp-opt:hover:not(.ativo),
+body .comp-drop .comp-opt:focus-visible:not(.ativo) {
+  background: #F0F5FA;
+}
+body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-offset: -2px; }
+
+:is(.team-shell, .judge-shell, .home-shell) a:focus-visible,
+:is(.team-shell, .judge-shell, .home-shell) button:focus-visible {
+  outline-offset: 3px;
+}
+
+@media (max-width: 700px) {
+  body .topbar .comp-sel.comp-chip {
+    min-height: 35px;
+    margin-right: .12rem;
+    padding: .37rem .58rem;
+    gap: .35rem;
+    font-size: .68rem;
+  }
+  body .topbar .comp-sel.comp-chip::before {
+    content: "";
+    display: none;
+  }
+  body .comp-drop { min-width: 205px; max-width: calc(100vw - 24px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body .topbar .comp-sel.comp-chip, body .comp-drop .comp-opt { transition: none; }
+  body .topbar .comp-sel.comp-chip[aria-haspopup="true"]:hover { transform: none; }
+}
