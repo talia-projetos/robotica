@@ -1510,7 +1510,7 @@ function doPost(e) {
   /* Serializa todas as escritas — evita race condition em envios simultâneos
      (criação de aba, appendRow com cabeçalho stale, trigger duplicado). */
   const lock = LockService.getScriptLock();
-  if (!lock.tryLock(15000)) {
+  if (!lock.tryLock(8000)) {
     return jsonOut_({ ok: false, erro: 'Servidor ocupado. Tente novamente em instantes.' });
   }
 
