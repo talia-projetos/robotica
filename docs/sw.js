@@ -1,5 +1,5 @@
 /* HUB Circuito — Service Worker v1 */
-const CACHE = 'hub-v1';
+const CACHE = 'hub-v2';
 const SHELL = [
   './',
   './index.html',
@@ -13,7 +13,6 @@ const SHELL = [
   './turma.html',
   './documentos.html',
   './rubricas.html',
-  './ajuda.html',
   './css/styles.css',
   './js/api.js',
   './js/sidebar-roles.js',
