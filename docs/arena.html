@@ -626,6 +626,70 @@
       .crono-eyebrow,.crono-estado{justify-self:center;text-align:center}
     }
 
+    /* ── Painel Steam Racing (substitui o cronômetro) ──────────── */
+    .crono-steam {
+      min-height: 310px;
+      display: grid;
+      place-items: center;
+      padding: 1.7rem 2rem;
+      border-radius: 14px;
+      border: 1px solid var(--ar-border);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(139,111,168,.09), transparent 38%),
+        linear-gradient(145deg, #111D2E 0%, #0E1928 100%);
+      text-align: center;
+    }
+    body.claro .crono-steam {
+      background: #fff;
+      box-shadow: 0 8px 24px rgba(24,43,64,.06);
+    }
+    .crono-steam__inner { display: flex; flex-direction: column; align-items: center; gap: .5rem; }
+    .crono-steam__eyebrow {
+      font-size: .65rem; font-weight: 800; letter-spacing: .14em;
+      text-transform: uppercase; color: var(--ar-muted);
+    }
+    .crono-steam__label {
+      font-size: .78rem; font-weight: 700; letter-spacing: .06em;
+      text-transform: uppercase; color: #BBA7DC;
+    }
+    body.claro .crono-steam__label { color: #8B6FA8; }
+    .crono-steam__time {
+      font-size: clamp(3.5rem, 7vw, 5.5rem); font-weight: 900;
+      color: var(--ar-text); letter-spacing: .04em;
+      font-variant-numeric: tabular-nums; line-height: 1; margin: .35rem 0;
+    }
+    .crono-steam__team { font-size: .8rem; color: var(--ar-muted); font-weight: 600; }
+    .crono-steam__podium {
+      margin-top: .85rem; display: flex; flex-direction: column;
+      gap: .3rem; min-width: 260px;
+    }
+    .crono-steam__podium-item {
+      display: flex; align-items: center; gap: .65rem;
+      padding: .32rem .55rem; border-radius: 7px;
+      background: rgba(255,255,255,.04);
+    }
+    body.claro .crono-steam__podium-item { background: rgba(0,0,0,.04); }
+    .crono-steam__podium-pos {
+      font-size: .7rem; font-weight: 800; color: var(--ar-muted); min-width: 20px;
+    }
+    .crono-steam__podium-pos.gold   { color: var(--ar-gold); }
+    .crono-steam__podium-pos.silver { color: #94A3B8; }
+    .crono-steam__podium-pos.bronze { color: #C8874D; }
+    .crono-steam__podium-nome {
+      flex: 1; font-size: .72rem; font-weight: 600; color: var(--ar-text);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .crono-steam__podium-val { font-size: .8rem; font-weight: 800; color: #BBA7DC; }
+    body.claro .crono-steam__podium-val { color: #8B6FA8; }
+
+    /* Telão: Steam panel compacto horizontal */
+    body.modo-telao .crono-steam {
+      min-height: 0;
+      padding: .85rem 2rem;
+      border-radius: 12px;
+    }
+    body.modo-telao .crono-steam__time { font-size: clamp(3rem, 5vw, 5rem); }
+
   </style>
   <script>window.API_URL = 'https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';</script>
 </head>
@@ -714,6 +778,17 @@
           <div class="crono-display" id="crono-display">2:30</div>
         </div>
         <div class="crono-estado" id="crono-estado">Pronto para iniciar</div>
+      </div>
+
+      <!-- Steam Racing: melhor tempo de corrida -->
+      <div class="crono-steam hidden" id="crono-steam">
+        <div class="crono-steam__inner">
+          <div class="crono-steam__eyebrow">Steam Racing &middot; Pista</div>
+          <div class="crono-steam__label">Melhor Tempo de Corra&ccedil;&atilde;o</div>
+          <div class="crono-steam__time" id="steam-best-time">—</div>
+          <div class="crono-steam__team" id="steam-best-team">Aguardando resultados...</div>
+          <div class="crono-steam__podium" id="steam-podium"></div>
+        </div>
       </div>
 
       <!-- Ranking -->
@@ -1126,6 +1201,8 @@
 
     head.innerHTML = headR.innerHTML = theadHtml;
     body.innerHTML = bodyR.innerHTML = tbodyHtml;
+
+    if (_compAtiva === 'Steam') renderSteamPanel(equipes);
   }
 
   /* ── Sincronização ────────────────────────────────────────── */
@@ -1177,28 +1254,94 @@
   }
 
   /* ── Cronômetro ───────────────────────────────────────────── */
-  var CRONO_CFG = { FLL: 150, OBR: 300, Steam: 150 };
+  var CRONO_CFG = { FLL: 150, OBR: 300 };
   var _cronoTotal = 150;
   var cronoSeg = 150, cronoRodando = false, cronoTimer = null;
   var roundAtual = 'R1';
+  var _compAtiva = 'FLL';
   var audioCtx = typeof AudioContext !== 'undefined' ? new AudioContext() : null;
 
   function cronoComp(comp) {
-    if (cronoRodando && !confirm('Trocar competição reinicia o cronômetro. Continuar?')) return;
+    var isSteam = comp === 'Steam';
+    if (!isSteam && cronoRodando && !confirm('Trocar competição reinicia o cronômetro. Continuar?')) return;
+
+    _compAtiva = comp;
+    Comp.set(comp === 'OBR' ? 'OBR' : comp === 'Steam' ? 'Steam Racing' : 'FLL');
+
     clearInterval(cronoTimer);
     cronoRodando = false;
-    _cronoTotal = CRONO_CFG[comp] || 150;
-    cronoSeg = _cronoTotal;
+
+    /* Alterna cronômetro ↔ painel Steam */
+    document.getElementById('cronometro').classList.toggle('hidden', isSteam);
+    document.getElementById('crono-steam').classList.toggle('hidden', !isSteam);
+
+    /* Oculta/mostra controles de round e botões de crono no rail */
+    var roundSec  = document.getElementById('sel-round') && document.getElementById('sel-round').closest('.rail-section');
+    var cronoBtns = document.querySelector('.crono-btns');
+    if (roundSec)  roundSec.style.display  = isSteam ? 'none' : '';
+    if (cronoBtns) cronoBtns.style.display = isSteam ? 'none' : '';
+
+    /* Destaque do botão ativo */
     ['FLL','OBR','Steam'].forEach(function(c) {
       var b = document.getElementById('cbtn-' + c);
-      if (b) b.style.background = c === comp ? 'rgba(77,201,195,.18)' : '';
-      if (b) b.style.color      = c === comp ? '#4DC9C3' : '';
-      if (b) b.style.borderColor= c === comp ? 'rgba(77,201,195,.4)' : '';
+      if (!b) return;
+      b.style.background  = c === comp ? 'rgba(77,201,195,.18)' : '';
+      b.style.color       = c === comp ? '#4DC9C3' : '';
+      b.style.borderColor = c === comp ? 'rgba(77,201,195,.4)'  : '';
     });
-    cronoAtualizar();
-    setToggleBtn(SVG_PLAY, 'Iniciar');
-    aplicarEstado('pronto');
-    document.getElementById('crono-round').textContent = 'Round ' + roundAtual.replace('R', '') + ' · ' + comp;
+
+    if (!isSteam) {
+      _cronoTotal = CRONO_CFG[comp] || 150;
+      cronoSeg    = _cronoTotal;
+      cronoAtualizar();
+      setToggleBtn(SVG_PLAY, 'Iniciar');
+      aplicarEstado('pronto');
+      document.getElementById('crono-round').textContent = 'Round ' + roundAtual.replace('R', '') + ' · ' + comp;
+    }
+
+    /* Recarrega dados da competição selecionada */
+    carregar();
+  }
+
+  /* ── Painel Steam: melhor tempo de corrida ─────────────────── */
+  function renderSteamPanel(equipes) {
+    var bestEl   = document.getElementById('steam-best-time');
+    var teamEl   = document.getElementById('steam-best-team');
+    var podiumEl = document.getElementById('steam-podium');
+    if (!bestEl) return;
+
+    if (!equipes || !equipes.length) {
+      bestEl.textContent  = '—';
+      teamEl.textContent  = 'Sem resultados ainda';
+      if (podiumEl) podiumEl.innerHTML = '';
+      return;
+    }
+
+    var sorted = equipes.slice().sort(function(a, b) {
+      return Number(b.melhor || 0) - Number(a.melhor || 0);
+    });
+
+    var leader = sorted[0];
+    bestEl.textContent = leader.melhor !== undefined ? leader.melhor : '—';
+
+    var rawNome = nomesMap[leader.id] || leader.nome || leader.id;
+    var partes  = rawNome.split(' •');
+    teamEl.textContent = partes.length > 1 ? partes[1].trim() : rawNome;
+
+    var posLabels  = ['1°', '2°', '3°'];
+    var posClasses = ['gold', 'silver', 'bronze'];
+    if (podiumEl) {
+      podiumEl.innerHTML = sorted.slice(0, 3).map(function(e, i) {
+        var n = nomesMap[e.id] || e.nome || e.id;
+        var p = n.split(' •');
+        var label = p.length > 1 ? p[1].trim() : n;
+        return '<div class="crono-steam__podium-item">'
+          + '<span class="crono-steam__podium-pos ' + posClasses[i] + '">' + posLabels[i] + '</span>'
+          + '<span class="crono-steam__podium-nome">' + label + '</span>'
+          + '<span class="crono-steam__podium-val">' + (e.melhor || '—') + '</span>'
+          + '</div>';
+      }).join('');
+    }
   }
 
   function beep(freq, dur, vol) {
@@ -1304,9 +1447,13 @@
     document.getElementById('crono-round').textContent = 'Round ' + roundAtual.replace('R', '');
   }
 
-  /* Init */
-  cronoComp('FLL');
-  cronoAtualizar();
+  /* Init — retoma competição salva na sessão anterior */
+  var _initCompVal = Comp.val;
+  var _initComp = _initCompVal === 'Steam Racing' ? 'Steam'
+                : _initCompVal === 'OBR'          ? 'OBR'
+                : 'FLL';
+  cronoComp(_initComp);
+  if (_initComp !== 'Steam') cronoAtualizar();
 </script>
 <script>if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js");</script>
 </body>
