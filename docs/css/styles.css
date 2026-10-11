@@ -2965,3 +2965,214 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     outline-offset:2px;
   }
 }
+
+
+/* Identidade HUB 2026: aproxima áreas internas da linguagem acolhedora do login.
+   Somente tela; os estados da Arena, cores de competição e impressão continuam próprios. */
+@media screen {
+  :root {
+    --hub-ui-teal:#2F9D8C;
+    --hub-ui-teal-deep:#257F74;
+    --hub-ui-teal-soft:#E7F5F1;
+    --hub-ui-canvas:#F2F7F5;
+    --hub-ui-ink:#263F43;
+    --hub-ui-muted:#71868D;
+    --hub-ui-line:#DFEAE7;
+    --hub-ui-radius:14px;
+    --hub-ui-shadow:0 4px 18px rgba(30,73,70,.042);
+    --app-bg:var(--hub-ui-canvas);
+    --fundo:var(--hub-ui-canvas);
+    --surface-subtle:#F7FAF9;
+    --line:var(--hub-ui-line);
+    --line-strong:#D0E1DC;
+    --ink:var(--hub-ui-ink);
+    --muted:var(--hub-ui-muted);
+    --brand:var(--hub-ui-teal);
+    --brand-strong:var(--hub-ui-teal-deep);
+    --brand-soft:var(--hub-ui-teal-soft);
+    --product-radius:var(--hub-ui-radius);
+    --product-shadow:var(--hub-ui-shadow);
+    --hub-sidebar-bg-top:#30696A;
+    --hub-sidebar-bg-bottom:#28545E;
+    --hub-sidebar-text:#E5F4F1;
+    --hub-sidebar-text-muted:#B8D6D1;
+  }
+  html body:has(.app-body):not(:has(.arena-layout)),
+  html body:has(.app-body):not(:has(.arena-layout)) .app-main,
+  html body:has(.app-body):not(:has(.arena-layout)) .home-stage,
+  html body:has(.app-body):not(:has(.arena-layout)) .team-stage,
+  html body:has(.app-body):not(:has(.arena-layout)) .judge-stage,
+  html body:has(.app-body):not(:has(.arena-layout)) .coord-stage,
+  html body:has(.app-body):not(:has(.arena-layout)) .schedule-stage {
+    background:var(--hub-ui-canvas);
+  }
+  html body .topbar,
+  html body.claro .topbar,
+  html body .app-body .topbar {
+    background:#FFFFFF !important;
+    border-bottom:1px solid var(--hub-ui-line) !important;
+    box-shadow:0 1px 5px rgba(29,67,63,.037) !important;
+  }
+  html body .topbar .topbar__event-name,
+  html body .topbar .topbar-avatar__name {
+    color:var(--hub-ui-ink) !important;
+    font-weight:740;
+  }
+  html body .topbar .topbar__event-org,
+  html body .topbar .topbar-avatar__role {
+    color:var(--hub-ui-muted) !important;
+  }
+  html body .app-body .app-sidebar {
+    background:linear-gradient(162deg,var(--hub-sidebar-bg-top),var(--hub-sidebar-bg-bottom)) !important;
+    border-right:1px solid rgba(238,255,250,.12) !important;
+    box-shadow:inset -1px 0 0 rgba(255,255,255,.025);
+  }
+  html body .app-body .app-sidebar .sidebar-item {
+    color:var(--hub-sidebar-text);
+    border-radius:11px;
+  }
+  html body .app-body .app-sidebar .sidebar-item svg {
+    color:var(--hub-sidebar-text-muted);
+  }
+  html body .app-body .app-sidebar .sidebar-item:hover {
+    background:rgba(255,255,255,.13);
+    color:#FFFFFF;
+  }
+  html body .app-body .app-sidebar .sidebar-item.ativo,
+  html body .app-body .app-sidebar .sidebar-item[aria-current="page"] {
+    background:rgba(255,255,255,.17);
+    color:#FFFFFF;
+    box-shadow:inset 3px 0 0 var(--hub-sidebar-accent,#9FE3D3);
+  }
+  html body .app-body .app-sidebar .sidebar-item.ativo svg,
+  html body .app-body .app-sidebar .sidebar-item[aria-current="page"] svg {
+    color:var(--hub-sidebar-accent,#A8E7D5);
+  }
+  html body .app-body .app-sidebar .sidebar-brand {
+    border-bottom-color:rgba(255,255,255,.15);
+  }
+  html body .app-body .app-sidebar .sidebar-sep {
+    background:rgba(240,255,251,.14);
+  }
+  html body .app-body .app-sidebar .sidebar-toggle {
+    color:#C5E1DB;
+  }
+}
+
+
+/* Componentes contínuos: controles, cartões, tipografia e ações. */
+@media screen {
+  html body .topbar .comp-sel.comp-chip,
+  html body .cs-btn,
+  html body select:not([multiple]),
+  html body .coord-team-picker .cs-btn {
+    border-radius:11px;
+    border-color:#D3E3DE;
+    box-shadow:0 1px 3px rgba(30,73,70,.03);
+  }
+  html body .cs-btn:hover,
+  html body select:not([multiple]):hover:not(:disabled) {
+    border-color:#AFD0C7;
+  }
+  html body .cs-btn:focus-visible,
+  html body select:not([multiple]):focus-visible {
+    outline-color:#2F9D8C;
+  }
+  html body .cs-dropdown,
+  html body .comp-drop {
+    border-color:#DFEAE7;
+    box-shadow:0 16px 36px rgba(31,70,66,.13);
+  }
+  html body .cs-item:hover:not(.cs-item--dis):not(.cs-item--ph),
+  html body .comp-drop .comp-opt:hover:not(.ativo) {
+    background:#EDF8F4;
+  }
+  /* Não aplicar a cartões coloridos que representam pontuação ou modalidade. */
+  html body :is(
+    .home-learning__panel,.home-insight,.hero-event-card,.acesso,
+    .turma-feed__content,.coord-team-picker,.met-context,
+    .judge-main-card,.judge-support-card,.sala-progress-card,.judge-chat-card,
+    .form-card,.coord-toolbar,.summary-chip,.detail-score,.comment-block,
+    .eq-card,.steam-panel,.steam-kpi,.doc-item,.page-ranking .table-wrap,
+    .page-ranking .cat-card,.schedule-team,.eq-selector
+  ) {
+    border-color:var(--hub-ui-line);
+    border-radius:var(--hub-ui-radius);
+    box-shadow:var(--hub-ui-shadow);
+  }
+  html body :is(
+    .home-learning__skill,.support-row,.coord-team-picker,
+    .judge-area-strip,.met-context
+  ) {
+    background-color:#F8FBFA;
+    border-color:#E4EFEB;
+  }
+  html body :is(
+    .workspace-head h1,.page-hd h1,.page-title,
+    .team-workspace-head h1,.judge-workspace-head h1,
+    .coord-workspace-head h1,.schedule-workspace-head h1,
+    .home-learning__intro h2
+  ) {
+    color:var(--hub-ui-ink);
+    letter-spacing:-.035em;
+  }
+  html body :is(
+    .workspace-eyebrow,.home-section-title,.team-workspace-kicker,
+    .judge-workspace-kicker,.coord-workspace-kicker,
+    .schedule-kicker,.home-learning__eyebrow,.coord-section-title
+  ) {
+    color:#367E74;
+    letter-spacing:.075em;
+  }
+  html body :is(
+    .page-meta,.page-hd p,.workspace-sub,.team-workspace-sub,
+    .judge-workspace-sub,.coord-workspace-sub,.home-learning__intro p,
+    .doc-meta,.fc-desc,.support-sub
+  ) {
+    color:var(--hub-ui-muted);
+    line-height:1.55;
+  }
+  html body .home-insight {
+    background:linear-gradient(105deg,#FFFFFF,#F1F9F6);
+  }
+  html body .home-insight__label {color:#488A7B;}
+  html body .home-learning__bncc-tags span {
+    border-color:#DFEBE5;
+    background:#F8FBF9;
+    color:#517B72;
+  }
+  html body:not(:has(.arena-layout)) :is(.btn.btn-primary,.coord-head-link--primary) {
+    border-color:transparent;
+    border-radius:10px;
+    background:#257F74;
+    color:#FFFFFF;
+    box-shadow:0 5px 13px rgba(32,139,116,.13);
+  }
+  html body:not(:has(.arena-layout)) :is(.btn.btn-primary,.coord-head-link--primary):hover:not(:disabled) {
+    background:#1E6F66;
+    box-shadow:0 8px 18px rgba(32,139,116,.16);
+  }
+  html body :is(
+    .acesso,.form-card,.doc-item,.support-row,.eq-card,
+    .home-learning__cta,.coord-head-link,.schedule-head-link
+  ):focus-visible {
+    outline:3px solid #89CCB9;
+    outline-offset:3px;
+  }
+  html body :is(.acesso,.doc-item,.form-card,.support-row):hover {
+    border-color:#B9DCD0;
+  }
+  @media(max-width:700px) {
+    html body :is(
+      .home-learning__panel,.turma-feed__content,.judge-main-card,
+      .judge-support-card,.coord-toolbar,.doc-item,.schedule-team
+    ) {
+      border-radius:12px;
+    }
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  html body :is(.acesso,.doc-item,.form-card,.support-row,.btn-primary) {
+    transition:none;
+  }
+}
