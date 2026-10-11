@@ -2238,3 +2238,79 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
   body .topbar .comp-sel.comp-chip, body .comp-drop .comp-opt { transition: none; }
   body .topbar .comp-sel.comp-chip[aria-haspopup="true"]:hover { transform: none; }
 }
+
+
+/* HUB Circuito — geometria global e marca dinâmica, somente tela */
+@media screen {
+  :root {
+    --hub-topbar-height: 64px;
+    --hub-sidebar-width: 190px;
+    --hub-logo-sidebar-width: 160px;
+    --hub-logo-topbar-height: 33px;
+  }
+  .topbar { min-height:var(--hub-topbar-height); height:var(--hub-topbar-height); box-sizing:border-box; }
+  .app-body:not(.sidebar-collapsed) .app-sidebar {
+    width:var(--hub-sidebar-width); min-width:var(--hub-sidebar-width);
+    box-sizing:border-box;
+  }
+  .app-body .app-sidebar .sidebar-brand {
+    min-height:75px; box-sizing:border-box;
+  }
+  .app-body:not(.sidebar-collapsed) .app-sidebar .sidebar-brand__img {
+    width:var(--hub-logo-sidebar-width); max-width:var(--hub-logo-sidebar-width);
+    height:auto; max-height:56px; object-fit:contain; object-position:center;
+  }
+  .topbar .topbar__brand img {
+    height:var(--hub-logo-topbar-height); width:auto; max-width:170px; object-fit:contain;
+  }
+
+  /* Os SVGs antigos continuam nos src originais: a variante nova é visual, por CSS. */
+  html[data-hub-competition="fll"] .app-sidebar .sidebar-brand__img { content:url("../logo-hub-on-dark-fll.svg"); }
+  html[data-hub-competition="obr"] .app-sidebar .sidebar-brand__img { content:url("../logo-hub-on-dark-obr.svg"); }
+  html[data-hub-competition="steam"] .app-sidebar .sidebar-brand__img { content:url("../logo-hub-on-dark-steam.svg"); }
+
+  html[data-hub-competition="fll"] .topbar .topbar__brand img { content:url("../logo-hub-on-light-fll.svg"); }
+  html[data-hub-competition="obr"] .topbar .topbar__brand img { content:url("../logo-hub-on-light-obr.svg"); }
+  html[data-hub-competition="steam"] .topbar .topbar__brand img { content:url("../logo-hub-on-light-steam.svg"); }
+
+  /* Páginas com a topbar escura usam a versão branca da mesma marca. */
+  html[data-hub-competition="fll"] body:is(.page-ranking,.page-documentos,.page-arena,.page-avaliacao) .topbar .topbar__brand img {
+    content:url("../logo-hub-on-dark-fll.svg");
+  }
+  html[data-hub-competition="obr"] body:is(.page-ranking,.page-documentos,.page-arena,.page-avaliacao) .topbar .topbar__brand img {
+    content:url("../logo-hub-on-dark-obr.svg");
+  }
+  html[data-hub-competition="steam"] body:is(.page-ranking,.page-documentos,.page-arena,.page-avaliacao) .topbar .topbar__brand img {
+    content:url("../logo-hub-on-dark-steam.svg");
+  }
+
+  /* Compatibiliza as páginas com topbar externa à área lateral. */
+  body:is(.page-ranking,.page-documentos,.page-arena,.page-avaliacao) .app-sidebar {
+    top:var(--hub-topbar-height);
+    height:calc(100vh - var(--hub-topbar-height));
+  }
+
+  @media (min-width:701px) {
+    .app-body:not(.sidebar-collapsed) .app-sidebar {
+      width:var(--hub-sidebar-width) !important;
+      min-width:var(--hub-sidebar-width) !important;
+    }
+    .app-body:not(.sidebar-collapsed) .app-sidebar .sidebar-brand__img {
+      width:var(--hub-logo-sidebar-width) !important;
+      max-width:var(--hub-logo-sidebar-width) !important;
+      height:auto !important;
+    }
+    .topbar { min-height:var(--hub-topbar-height) !important; }
+  }
+  @media (max-width:700px) {
+    :root { --hub-topbar-height:60px; --hub-logo-topbar-height:30px; }
+    .topbar { height:60px; min-height:60px !important; }
+    .app-body:not(.sidebar-collapsed) .app-sidebar {
+      width:min(82vw,280px); min-width:min(82vw,280px);
+    }
+    body:is(.page-ranking,.page-documentos,.page-arena,.page-avaliacao) .app-sidebar {
+      top:60px; height:calc(100vh - 60px);
+    }
+    .topbar .topbar__brand img { height:30px; max-width:140px; }
+  }
+}
