@@ -1528,6 +1528,49 @@
       .btn-login:hover:not(:disabled) {transform:none;}
     }
 
+  
+    /* Correcao 2026 do autofill: icones reais acima do input, nao background. */
+    .input-icon-wrap,.pin-wrapper{position:relative;}
+    .input-leading-icon{position:absolute;top:50%;left:15px;transform:translateY(-50%);width:21px;height:21px;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:2;color:#819A9A;}
+    .input-leading-icon svg{width:21px;height:21px;display:block;}
+    .input-icon-wrap:focus-within .input-leading-icon,.pin-wrapper:focus-within .input-leading-icon{color:#2E9F8D;}
+    .input-icon-wrap #f-id,.pin-wrapper #f-pin{display:block;width:100%;padding-left:47px;background-image:none !important;}
+    .pin-wrapper #f-pin{padding-right:53px;}
+    .pin-wrapper .pin-toggle{z-index:3;}
+    #f-id:-webkit-autofill,#f-id:-webkit-autofill:hover,#f-id:-webkit-autofill:focus,
+    #f-pin:-webkit-autofill,#f-pin:-webkit-autofill:hover,#f-pin:-webkit-autofill:focus{
+      -webkit-text-fill-color:#294751 !important;caret-color:#294751;
+      -webkit-box-shadow:0 0 0 1000px #F7FAF9 inset !important;
+      box-shadow:0 0 0 1000px #F7FAF9 inset !important;
+      border-color:#C9DFD8 !important;transition:background-color 99999s ease-out 0s;
+    }
+    #f-id:-webkit-autofill:focus,#f-pin:-webkit-autofill:focus{
+      -webkit-box-shadow:0 0 0 1000px #fff inset,0 0 0 4px rgba(46,159,141,.14) !important;
+      box-shadow:0 0 0 1000px #fff inset,0 0 0 4px rgba(46,159,141,.14) !important;
+      border-color:#2E9F8D !important;
+    }
+    @media(max-width:900px){
+      .login-shell{height:auto !important;min-height:100svh;overflow:visible;}
+      .login-left{height:auto;flex-shrink:0;}
+      .login-right,.login-form{min-width:0;box-sizing:border-box;}
+      .input-icon-wrap #f-id,.pin-wrapper #f-pin{font-size:16px;}
+      .id-info__tooltip{box-sizing:border-box;}
+    }
+    @media(max-width:600px){
+      .login-left{padding-bottom:3.5rem;}
+      .login-right{margin-top:-24px;}
+      .login-form{padding-top:1.7rem;}
+      .form-title{max-width:100%;text-wrap:balance;}
+      .form-sub,.field-label-line{max-width:100%;}
+      .id-info__tooltip{left:-100px;max-width:calc(100vw - 3rem);}
+    }
+    @media(max-width:360px){
+      .login-form{padding:1.4rem 1rem;}
+      .login-right{padding-inline:.65rem;}
+      .form-title{font-size:1.72rem;}
+      .id-info__tooltip{max-width:calc(100vw - 2.2rem);}
+    }
+
   </style>
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';
@@ -1579,15 +1622,17 @@
             </span>
           </span>
         </div>
+        <div class="input-icon-wrap"><span class="input-leading-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="3.25"/><path d="M5.5 20v-1c0-3.6 2.65-5.6 6.5-5.6s6.5 2 6.5 5.6v1"/></svg></span>
         <input id="f-id" type="text"
                placeholder="Seu nome ou ID da turma"
-               autocomplete="username" autofocus>
+               autocomplete="username" autofocus></div>
         <p class="field-error" id="err-id"></p>
       </div>
 
       <div class="field">
         <label for="f-pin">PIN</label>
         <div class="pin-wrapper">
+          <span class="input-leading-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5.5" y="10" width="13" height="11" rx="2.5"/><path d="M8.5 10V7a3.5 3.5 0 0 1 7 0v3"/></svg></span>
           <input id="f-pin" type="password"
                  placeholder="PIN de acesso"
                  autocomplete="current-password">
