@@ -1728,7 +1728,8 @@ function _fmtBase_(ss, nomeAba) {
   aba.setColumnWidth(3, 120); // Competição
   for (var c = 4; c <= Math.min(nCols, 14); c++) aba.setColumnWidth(c, 90);
   aba.setFrozenRows(3);
-  aba.setFrozenColumns(2);
+  // setFrozenColumns não é usado aqui: _titulo_ mescla toda a linha 1 e o Sheets
+  // proíbe congelar no meio de uma célula mesclada.
   aba.setHiddenGridlines(true);
 }
 
