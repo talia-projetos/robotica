@@ -109,6 +109,7 @@ function onOpen() {
     .addItem('Ver Painel Steam Racing',  'TORNEIO_abrirPainelSteam')
     .addSeparator()
     .addItem('Corrigir nomes de equipes','TORNEIO_corrigirNomes')
+    .addItem('Carregar dados de tampinhas','TORNEIO_popularTampinhas')
     .addItem('Reinstalar gatilho Forms', 'TORNEIO_instalarGatilho')
     .addSeparator()
     .addItem('Colorir e ordenar abas de rubrica', 'TORNEIO_colorirRubricas')
@@ -196,39 +197,40 @@ function TORNEIO_corrigirNomes() {
     ['TUR11', '7° F - Poseidon',          'Marilia',    'FLL'],
     ['TUR12', '7° G - Arara Azul',        'Reinalda',   'FLL'],
     ['TUR13', '7° H - Nexos',             'Rute',       'FLL'],
-    ['TUR14', '8° A',                     '',           'OBR'],
-    ['TUR15', '8° B',                     '',           'OBR'],
-    ['TUR16', '8° C',                     '',           'OBR'],
-    ['TUR17', '8° D',                     '',           'OBR'],
-    ['TUR18', '8° E',                     '',           'OBR'],
-    ['TUR19', '8° F',                     '',           'OBR'],
-    ['TUR20', '8° G',                     '',           'OBR'],
-    ['TUR21', '8° H',                     '',           'OBR'],
-    ['TUR22', '8° I',                     '',           'OBR'],
-    ['TUR23', '8° J',                     '',           'OBR'],
-    ['TUR24', '9° A',                     '',           'Steam Racing'],
-    ['TUR25', '9° B',                     '',           'Steam Racing'],
-    ['TUR26', '9° C',                     '',           'Steam Racing'],
-    ['TUR27', '9° D',                     '',           'Steam Racing'],
-    ['TUR28', '9° E',                     '',           'Steam Racing'],
-    ['TUR29', '9° F',                     '',           'Steam Racing'],
-    ['TUR30', '9° G',                     '',           'Steam Racing'],
-    ['TUR31', '9° H',                     '',           'Steam Racing'],
-    ['TUR32', '9° I',                     '',           'Steam Racing'],
-    ['TUR33', '9° J',                     '',           'Steam Racing']
+    ['TUR14', '8° A',                     '',              'OBR'],
+    ['TUR15', '8° B',                     '',              'OBR'],
+    ['TUR16', '8° C',                     '',              'OBR'],
+    ['TUR17', '8° D',                     'Ricardo',       'OBR'],
+    ['TUR18', '8° E',                     'Rosela',        'OBR'],
+    ['TUR19', '8° F',                     '',              'OBR'],
+    ['TUR20', '8° G',                     'Camila',        'OBR'],
+    ['TUR21', '8° H',                     'Eric',          'OBR'],
+    ['TUR22', '8° I',                     '',              'OBR'],
+    ['TUR23', '8° J',                     '',              'OBR'],
+    ['TUR24', '9° A',                     'Max',           'Steam Racing'],
+    ['TUR25', '9° B',                     'José Grimaldo', 'Steam Racing'],
+    ['TUR26', '9° C',                     'Elias',         'Steam Racing'],
+    ['TUR27', '9° D',                     'Luciana',       'Steam Racing'],
+    ['TUR28', '9° E',                     'Anderson',      'Steam Racing'],
+    ['TUR29', '9° F',                     'Vanessa',       'Steam Racing'],
+    ['TUR30', '9° G',                     '',              'Steam Racing'],
+    ['TUR31', '9° H',                     'Lucyene',       'Steam Racing'],
+    ['TUR32', '9° I',                     '',              'Steam Racing'],
+    ['TUR33', '9° J',                     '',              'Steam Racing']
   ];
 
   const dados = aba.getDataRange().getValues();
-  const cab   = dados[0];
+  const off   = _headerOffset_(aba);
+  const cab   = dados[off] || [];
   const iId   = achaCab_(cab, ['id equipe','id_equipe','id'], 0);
   const iNome = achaCab_(cab, ['nome equipe','nome_equipe','turma'], 1);
   const iTutor= achaCab_(cab, ['tutor','professor'], 3);
-  const iComp = achaCab_(cab, ['competicao','competição'], -1);
+  const iComp = achaCab_(cab, ['competicao','competição'], 6);
 
   const existentes = {};
-  dados.slice(1).forEach(function(r, i) {
+  dados.slice(off + 1).forEach(function(r, i) {
     const id = String(r[iId] || '').trim().toUpperCase();
-    if (id) existentes[id] = i + 2;
+    if (id) existentes[id] = i + off + 2;
   });
 
   corretos.forEach(function(c) {
@@ -244,6 +246,67 @@ function TORNEIO_corrigirNomes() {
   });
 
   SpreadsheetApp.getActiveSpreadsheet().toast('Equipes atualizadas: FLL (TUR01–13) · OBR (TUR14–23) · Steam Racing (TUR24–33)', 'Torneio', 8);
+}
+
+// Popula a aba TAMPINHAS com os dados reais de quantidade (10/10/2026).
+// Apaga dados anteriores e insere um registro por turma.
+function TORNEIO_popularTampinhas() {
+  const ss  = SpreadsheetApp.getActiveSpreadsheet();
+  let   aba = ss.getSheetByName(T.ABAS.TAMPINHAS);
+  if (!aba) { SpreadsheetApp.getUi().alert('Aba TAMPINHAS não encontrada. Execute Instalar primeiro.'); return; }
+
+  const off  = _headerOffset_(aba);
+  const cab  = ['Data', 'ID_Equipe', 'Qtd_Tampinhas', 'Qtd_Latinhas', 'Responsavel'];
+  const lCab = off + 1;
+  aba.getRange(lCab, 1, 1, cab.length).setValues([cab]);
+
+  const ultima = aba.getLastRow();
+  const lDados = lCab + 1;
+  if (ultima >= lDados) aba.getRange(lDados, 1, ultima - lDados + 1, cab.length).clearContent();
+
+  const agora = new Date();
+  const dados = [
+    [agora,'TUR01', 5096, 648,  'Éverton'],
+    [agora,'TUR02',12636,1042,  'Izabela'],
+    [agora,'TUR03', 4244,3810,  'Patrícia'],
+    [agora,'TUR04', 2641, 412,  'Moaci'],
+    [agora,'TUR05',10784,2868,  'Yulo'],
+    [agora,'TUR06', 8345,1271,  'João'],
+    [agora,'TUR07', 5328,1180,  'Joseli'],
+    [agora,'TUR08',  522, 250,  ''],
+    [agora,'TUR09',  879, 150,  ''],
+    [agora,'TUR10',11712,1498,  'Fabiana'],
+    [agora,'TUR11', 2740, 472,  ''],
+    [agora,'TUR12', 1045, 582,  ''],
+    [agora,'TUR13',  453,  68,  ''],
+    [agora,'TUR14',  496,  40,  ''],
+    [agora,'TUR15',  503, 273,  ''],
+    [agora,'TUR16',  864, 694,  ''],
+    [agora,'TUR17', 1170, 784,  'Ricardo'],
+    [agora,'TUR18',17194,3232,  'Rosela'],
+    [agora,'TUR19',   21, 645,  ''],
+    [agora,'TUR20',16643, 121,  'Camila'],
+    [agora,'TUR21', 6602,1403,  'Eric'],
+    [agora,'TUR22',  120, 322,  ''],
+    [agora,'TUR24', 7555,  71,  'Max'],
+    [agora,'TUR25', 3222, 177,  'José Grimaldo'],
+    [agora,'TUR26',  328,  53,  'Elias'],
+    [agora,'TUR27',  292,1599,  'Luciana'],
+    [agora,'TUR28',    1, 473,  'Anderson'],
+    [agora,'TUR29', 1989, 824,  'Vanessa'],
+    [agora,'TUR30',    5,   0,  ''],
+    [agora,'TUR31', 4116,  83,  'Lucyene']
+  ];
+
+  aba.getRange(lDados, 1, dados.length, cab.length).setValues(dados);
+  aba.getRange(lDados, 1, dados.length, 1).setNumberFormat('dd/mm/yyyy');
+
+  SpreadsheetApp.getActiveSpreadsheet().toast(
+    dados.length + ' turmas carregadas. TUR23 (8° J), TUR32 (9° I), TUR33 (9° J) permanecem com zero.',
+    'Tampinhas', 8
+  );
+
+  COMPS.forEach(function(c) { try { atualizarInterno_(ss, c); } catch(e) { console.error(c, e); } });
 }
 
 function TORNEIO_instalarGatilho() {
@@ -460,7 +523,9 @@ function criarAbaConfig_(ss) {
     ['Peso Tampinhas',               0.20,            'Peso na classificação geral.'],
     ['Pontuação Máxima Arena',       550,             'Pontuação bruta máxima da Arena (limita o resultado do round).'],
     ['Pontuação Máxima Rubricas',    40,              'Máximo possível em cada rubrica (10 critérios × 4 pts).'],
-    ['Meta Tampinhas kg/aluno',      0.5,             'Ao atingir esta meta, a equipe recebe a nota máxima.'],
+    ['Meta Tampinhas kg/aluno',      0.5,             'Legado kg — mantido para compatibilidade.'],
+    ['Meta Tampinhas unid/aluno',    500,             'Unidades (tampinhas + latinhas) por aluno para nota máxima.'],
+    ['Conversão Latinha (tampinhas equiv)', 1,        'Quantas tampinhas equivale 1 latinha (padrão: 1).'],
     ['Critérios por Rubrica',        10,              'Número de critérios com nota 1–4 em cada Form de rubrica.'],
     ['Juízes Esperados por Rubrica', 3,               'Avaliações esperadas por equipe em cada categoria.'],
     ['Rounds Esperados Arena',       3,               'O sistema usa o melhor round entre todos os válidos.'],
@@ -531,12 +596,12 @@ function criarAbaTampinhas_(ss) {
   let aba = ss.getSheetByName(T.ABAS.TAMPINHAS);
   if (!aba) {
     aba = ss.insertSheet(T.ABAS.TAMPINHAS);
-    aba.getRange(1, 1, 1, 6).setValues([[
-      'Data_Pesagem', 'ID_Equipe', 'Peso_Bruto_kg', 'Tara_kg', 'Peso_Liquido_kg', 'Responsavel'
+    aba.getRange(1, 1, 1, 5).setValues([[
+      'Data', 'ID_Equipe', 'Qtd_Tampinhas', 'Qtd_Latinhas', 'Responsavel'
     ]]);
-    aba.getRange(1, 1, 1, 6).setBackground(T.CORES.CORAL).setFontColor('#FFF').setFontWeight('bold');
+    aba.getRange(1, 1, 1, 5).setBackground(T.CORES.CORAL).setFontColor('#FFF').setFontWeight('bold');
     aba.getRange('A2:A').setNumberFormat('dd/mm/yyyy');
-    aba.getRange('C2:E').setNumberFormat('0.000');
+    aba.getRange('C2:D').setNumberFormat('#,##0');
     aba.setFrozenRows(1);
   }
 }
@@ -592,7 +657,9 @@ function lerConfig_(ss, diag, comp) {
   const mapa = {};
 
   if (aba && aba.getLastRow() > 1) {
-    aba.getDataRange().getValues().slice(1).forEach(function(r) {
+    var _cfgVals = aba.getDataRange().getValues();
+    var _cfgOff  = _headerOffset_(aba);
+    _cfgVals.slice(_cfgOff + 1).forEach(function(r) {
       const k = norm_(r[0]);
       if (k) mapa[k] = r[1];
     });
@@ -615,6 +682,8 @@ function lerConfig_(ss, diag, comp) {
     maxArena:    n('Pontuação Máxima Arena', 550),
     maxRub:      n('Pontuação Máxima Rubricas', 40),
     metaKg:      n('Meta Tampinhas kg/aluno', 0.5),
+    metaUnid:    n('Meta Tampinhas unid/aluno', 500),
+    convLatinha: n('Conversão Latinha (tampinhas equiv)', 1),
     criterios:   Math.max(1, Math.round(n('Critérios por Rubrica', 10))),
     juizes:      Math.max(1, Math.round(n('Juízes Esperados por Rubrica', 1))),
     rounds:      Math.max(1, Math.round(n('Rounds Esperados Arena', 3))),
@@ -684,21 +753,22 @@ function lerEquipes_(ss, cfg, diag, comp) {
   }
 
   const dados = aba.getDataRange().getValues();
-  const cab   = dados[0];
+  const off   = _headerOffset_(aba);
+  const cab   = dados[off] || [];
   const iId   = achaCab_(cab, ['id equipe', 'id_equipe', 'codigo', 'n', 'numero'], 0);
   const iNome = achaCab_(cab, ['nome equipe', 'nome_equipe', 'turma'], 1);
   const iTurno= achaCab_(cab, ['turno'], 2);
   const iTutor= achaCab_(cab, ['tutor', 'professor', 'orientador'], 3);
   const iQtd  = achaCab_(cab, ['qtde alunos', 'qtd alunos', 'quantidade alunos', 'alunos'], 4);
   const iPin  = achaCab_(cab, ['pin', 'senha'], -1);
-  const iComp = achaCab_(cab, ['competicao', 'competição'], -1);
+  const iComp = achaCab_(cab, ['competicao', 'competição'], 6);
   const compFiltro = comp ? normComp_(comp) : null;
 
   const lista   = [];
   const porId   = {};
   const aliases = {};
 
-  dados.slice(1).forEach(function(r, i) {
+  dados.slice(off + 1).forEach(function(r, i) {
     if (r.every(function(v) { return v === ''; })) return;
     const id = String(r[iId] || '').trim().toUpperCase();
     if (!id) { diag.push({ nivel: 'ATENÇÃO', cat: 'EQUIPES', msg: 'Linha ' + (i + 2) + ' sem ID.' }); return; }
@@ -1103,34 +1173,50 @@ function lerTampinhas_(ss, cfg, eqAll, diag, eq) {
   if (!aba || aba.getLastRow() < 2) return res;
 
   const dados = aba.getDataRange().getValues();
-  const cab   = dados[0];
+  const off   = _headerOffset_(aba);
+  const cab   = dados[off] || [];
   const iEq   = achaCab_(cab, ['id equipe','equipe','turma'], 1);
-  const iBruto= achaCab_(cab, ['peso bruto','bruto'], 2);
-  const iTara = achaCab_(cab, ['tara'], 3);
-  const iLiq  = achaCab_(cab, ['peso liquido','liquido','líquido'], 4);
   const iData = achaCab_(cab, ['data'], 0);
 
-  dados.slice(1).forEach(function(r, ri) {
-    if (r.every(function(v) { return v === ''; })) return;
-    const idEq  = resolverEq_(r[iEq], eqAll);  // resolve contra todas as equipes
-    const bruto = num_(r[iBruto]);
-    const tara  = num_(r[iTara]);
-    const liq   = (r[iLiq] !== '' && r[iLiq] !== null) ? num_(r[iLiq]) : Math.max(0, bruto - tara);
-    const destaComp = Boolean(idEq && eqComp.porId[idEq]);  // pertence à comp atual?
+  // Modo unidades: detecta por colunas Qtd_Tampinhas / Qtd_Latinhas
+  const iTamp = achaCab_(cab, ['qtd tampinhas','qtd_tampinhas','tampinhas'], -1);
+  const iLat  = achaCab_(cab, ['qtd latinhas','qtd_latinhas','latinhas'], -1);
+  const modoUnid = iTamp >= 0;
 
-    // Linha de outra competição (ou ID não cadastrado): silenciosamente ignorada.
-    // Só reporta erro quando a equipe pertence à comp atual mas os dados estão inconsistentes.
+  // Modo legado (peso em kg)
+  const iBruto = modoUnid ? -1 : achaCab_(cab, ['peso bruto','bruto'], 2);
+  const iTara  = modoUnid ? -1 : achaCab_(cab, ['tara'], 3);
+  const iLiq   = modoUnid ? -1 : achaCab_(cab, ['peso liquido','liquido','líquido'], 4);
+
+  const conv = cfg.convLatinha || 1;
+  const meta = modoUnid ? (cfg.metaUnid > 0 ? cfg.metaUnid : cfg.metaKg) : cfg.metaKg;
+
+  dados.slice(off + 1).forEach(function(r, ri) {
+    if (r.every(function(v) { return v === ''; })) return;
+    const idEq = resolverEq_(r[iEq], eqAll);
+    const destaComp = Boolean(idEq && eqComp.porId[idEq]);
     if (!destaComp) return;
 
-    const ok = liq >= 0;
+    var totalVal;
+    if (modoUnid) {
+      const qtdTamp = Math.max(0, num_(r[iTamp]));
+      const qtdLat  = iLat >= 0 ? Math.max(0, num_(r[iLat])) : 0;
+      totalVal = qtdTamp + qtdLat * conv;
+    } else {
+      const bruto = num_(r[iBruto]);
+      const tara  = num_(r[iTara]);
+      totalVal = (iLiq >= 0 && r[iLiq] !== '' && r[iLiq] !== null) ? num_(r[iLiq]) : Math.max(0, bruto - tara);
+    }
+
+    const ok = totalVal >= 0;
     if (!ok) {
-      diag.push({ nivel: 'ATENÇÃO', cat: T.CAT.TAMP, msg: 'Pesagem inválida na linha ' + (ri + 2) + ': peso líquido negativo (' + liq.toFixed(3) + ' kg).' });
+      diag.push({ nivel: 'ATENÇÃO', cat: T.CAT.TAMP, msg: 'Valor inválido na linha ' + (off + ri + 2) + '.' });
     } else {
       if (!res.porEquipe[idEq]) res.porEquipe[idEq] = { pesoTotal: 0, qtd: 0 };
-      res.porEquipe[idEq].pesoTotal += liq;
+      res.porEquipe[idEq].pesoTotal += totalVal;
       res.porEquipe[idEq].qtd++;
     }
-    res.linhas.push({ data: r[iData], idEq: idEq, bruto: bruto, tara: tara, liq: liq, ok: ok, linha: ri + 2 });
+    res.linhas.push({ data: r[iData], idEq: idEq, liq: totalVal, ok: ok, linha: off + ri + 2 });
   });
 
   Object.keys(res.porEquipe).forEach(function(id) {
@@ -1138,7 +1224,7 @@ function lerTampinhas_(ss, cfg, eqAll, diag, eq) {
     const e  = eqComp.porId[id];
     const al = e ? e.alunos : 0;
     b.kgAluno = al > 0 ? b.pesoTotal / al : 0;
-    b.nota40  = cfg.metaKg > 0 ? Math.min(cfg.maxRub, (b.kgAluno / cfg.metaKg) * cfg.maxRub) : 0;
+    b.nota40  = meta > 0 ? Math.min(cfg.maxRub, (b.kgAluno / meta) * cfg.maxRub) : 0;
     if (!al) diag.push({ nivel: 'ERRO', cat: T.CAT.TAMP, msg: 'Equipe ' + id + ' sem quantidade de alunos.' });
   });
 
@@ -1562,6 +1648,24 @@ function _adjustHex_(hex, pct) {
   } catch(e) { return hex; }
 }
 
+// Garante que a aba tenha 2 linhas de título antes do cabeçalho de colunas (linha 3).
+// Na 1ª formatação insere 2 linhas — o cabeçalho original desce para a linha 3 sem perda.
+// Nas execuções seguintes detecta a mesclagem existente e não insere de novo.
+function _garantirLinhasTitulo_(aba) {
+  var nCols  = Math.max(aba.getLastColumn(), 1);
+  var merges = aba.getRange(1, 1, 1, nCols).getMergedRanges();
+  if (!merges.some(function(m) { return m.getNumColumns() > 1; })) {
+    aba.insertRowsBefore(1, 2);
+  }
+}
+
+// Retorna 0 se a aba não tem linhas de título, ou 2 se tem (linha 1 mesclada = título).
+function _headerOffset_(aba) {
+  var nCols  = Math.max(aba.getLastColumn(), 1);
+  var merges = aba.getRange(1, 1, 1, nCols).getMergedRanges();
+  return merges.some(function(m) { return m.getNumColumns() > 1; }) ? 2 : 0;
+}
+
 function _zebraRows_(aba, primeiraLinhaDados, ultimaLinha, nCols) {
   for (var i = primeiraLinhaDados; i <= ultimaLinha; i++) {
     var bg = (i % 2 === 0) ? _FMT.ZEBRA : _FMT.BRANCO;
@@ -1593,6 +1697,7 @@ function _bordas_(aba, linha, col, numLinhas, numCols) {
 function _fmtConfig_(ss) {
   var aba = ss.getSheetByName('CONFIG');
   if (!aba) return;
+  _garantirLinhasTitulo_(aba);
   var nLinhas = Math.max(aba.getLastRow(), 1);
   var nCols   = 3;
 
@@ -1624,11 +1729,14 @@ function _fmtConfig_(ss) {
 function _fmtEquipes_(ss) {
   var aba = ss.getSheetByName('EQUIPES');
   if (!aba) return;
+  _garantirLinhasTitulo_(aba);
   var nLinhas = Math.max(aba.getLastRow(), 1);
   var nCols   = aba.getLastColumn() || 7;
 
-  _titulo_(aba, 'EQUIPES CADASTRADAS', 'FLL · OBR · Steam Racing — ' + (nLinhas - 1) + ' equipes', _FMT.HD_ADMIN);
+  _titulo_(aba, 'EQUIPES CADASTRADAS', 'FLL · OBR · Steam Racing — ' + Math.max(nLinhas - 3, 0) + ' equipes', _FMT.HD_ADMIN);
   _cabHeader_(aba, 3, nCols, _FMT.CINZA_ESC);
+  var _cabEq = ['ID_Equipe', 'Nome_Equipe', 'Turno', 'Tutor', 'Qtde_Alunos', 'PIN', 'Competicao'];
+  aba.getRange(3, 1, 1, Math.min(nCols, _cabEq.length)).setValues([_cabEq.slice(0, Math.min(nCols, _cabEq.length))]);
 
   if (nLinhas > 3) {
     _zebraRows_(aba, 4, nLinhas, nCols);
@@ -1656,11 +1764,14 @@ function _fmtEquipes_(ss) {
 function _fmtTampinhas_(ss) {
   var aba = ss.getSheetByName('TAMPINHAS');
   if (!aba) return;
+  _garantirLinhasTitulo_(aba);
   var nLinhas = Math.max(aba.getLastRow(), 1);
   var nCols   = aba.getLastColumn() || 5;
 
-  _titulo_(aba, 'TAMPINHAS QUE TRANSFORMAM', 'Peso coletado por equipe — meta: 0,5 kg por aluno', _FMT.VERDE);
+  _titulo_(aba, 'TAMPINHAS QUE TRANSFORMAM', 'Quantidade coletada por equipe — tampinhas e latinhas (unidades)', _FMT.VERDE);
   _cabHeader_(aba, 3, nCols, _FMT.VERDE);
+  var _cabTamp = ['Data', 'ID_Equipe', 'Qtd_Tampinhas', 'Qtd_Latinhas', 'Responsavel'];
+  aba.getRange(3, 1, 1, Math.min(nCols, _cabTamp.length)).setValues([_cabTamp.slice(0, Math.min(nCols, _cabTamp.length))]);
 
   if (nLinhas > 3) _zebraRows_(aba, 4, nLinhas, nCols);
   aba.setColumnWidth(1, 100);
@@ -1676,11 +1787,14 @@ function _fmtTampinhas_(ss) {
 function _fmtJuizes_(ss) {
   var aba = ss.getSheetByName('HUB_JUIZES');
   if (!aba) return;
+  _garantirLinhasTitulo_(aba);
   var nLinhas = Math.max(aba.getLastRow(), 1);
   var nCols   = aba.getLastColumn() || 5;
 
   _titulo_(aba, 'CREDENCIAIS DE JUÍZES · HUB DIGITAL', 'Credenciais de acesso ao sistema de avaliação', _FMT.HD_ADMIN);
   _cabHeader_(aba, 3, nCols, _FMT.CINZA_ESC);
+  var _cabJuiz = ['Nome', 'PIN', 'Categoria', 'Ativo', 'Competição'];
+  aba.getRange(3, 1, 1, Math.min(nCols, _cabJuiz.length)).setValues([_cabJuiz.slice(0, Math.min(nCols, _cabJuiz.length))]);
 
   if (nLinhas > 3) _zebraRows_(aba, 4, nLinhas, nCols);
 
@@ -1708,6 +1822,7 @@ function _fmtJuizes_(ss) {
 function _fmtBase_(ss, nomeAba) {
   var aba = ss.getSheetByName(nomeAba);
   if (!aba) return;
+  _garantirLinhasTitulo_(aba);
   var nLinhas = Math.max(aba.getLastRow(), 1);
   var nCols   = aba.getLastColumn() || 12;
   var comp    = nomeAba.indexOf('OBR') >= 0 ? 'OBR' : (nomeAba.indexOf('STEAM') >= 0 ? 'Steam Racing' : 'FLL');
@@ -1737,6 +1852,7 @@ function _fmtBase_(ss, nomeAba) {
 function _fmtRanking_(ss, nomeAba) {
   var aba = ss.getSheetByName(nomeAba);
   if (!aba) return;
+  _garantirLinhasTitulo_(aba);
   var nLinhas = Math.max(aba.getLastRow(), 1);
   var nCols   = aba.getLastColumn() || 9;
   var comp    = nomeAba.indexOf('OBR') >= 0 ? 'OBR' : (nomeAba.indexOf('STEAM') >= 0 ? 'Steam Racing' : 'FLL');
@@ -1774,6 +1890,7 @@ function _fmtRanking_(ss, nomeAba) {
 function _fmtRankCat_(ss, nomeAba) {
   var aba = ss.getSheetByName(nomeAba);
   if (!aba) return;
+  _garantirLinhasTitulo_(aba);
   var nLinhas = Math.max(aba.getLastRow(), 1);
   var nCols   = aba.getLastColumn() || 6;
   var comp    = nomeAba.indexOf('OBR') >= 0 ? 'OBR' : (nomeAba.indexOf('STEAM') >= 0 ? 'Steam Racing' : 'FLL');
@@ -1798,6 +1915,7 @@ function _fmtRankCat_(ss, nomeAba) {
 function _fmtStatus_(ss, nomeAba) {
   var aba = ss.getSheetByName(nomeAba);
   if (!aba) return;
+  _garantirLinhasTitulo_(aba);
   var nLinhas = Math.max(aba.getLastRow(), 1);
   var nCols   = aba.getLastColumn() || 8;
   var comp    = nomeAba.indexOf('OBR') >= 0 ? 'OBR' : (nomeAba.indexOf('STEAM') >= 0 ? 'Steam Racing' : 'FLL');
@@ -1854,9 +1972,8 @@ function _fmtTodasRubricas_(ss) {
     var nCols   = Math.max(aba.getLastColumn(), 1);
     var corHd   = r.comp === 'OBR' ? _FMT.HD_OBR : (r.comp === 'Steam Racing' ? _FMT.HD_STEAM : _FMT.HD_FLL);
 
-    _titulo_(aba, r.comp + ' · ' + r.cat, 'Respostas do formulário Google — não editar manualmente', corHd);
-    // cabeçalho de colunas (linha 3 ou linha 1 original — aqui linha 1 já é o cabeçalho original do Forms)
-    // O Forms coloca o cabeçalho na linha 1 — vamos apenas recolorir sem mover dados
+    // Apenas recolore o cabeçalho original do Forms (linha 1) — NÃO usa _titulo_ nem insere linhas,
+    // pois o Google Forms sempre adiciona respostas imediatamente após a linha 1.
     aba.getRange(1, 1, 1, nCols)
       .setBackground(corHd).setFontColor(_FMT.BRANCO)
       .setFontWeight('bold').setFontSize(10).setWrap(false);
@@ -2449,16 +2566,29 @@ function detectarRubrica_(dados, exib, ignora, esperados) {
 function escTabela_(ss, nome, cab, rows, cor) {
   let aba = ss.getSheetByName(nome);
   if (!aba) aba = ss.insertSheet(nome);
-  aba.clearContents();
+
+  // Detecta se a aba já tem linhas de título formatadas (linha 1 mesclada)
+  const nc      = cab.length;
+  const nExist  = aba.getLastColumn() || nc;
+  const merges  = aba.getRange(1, 1, 1, Math.max(nExist, nc)).getMergedRanges();
+  const temTit  = merges.some(function(m) { return m.getNumColumns() > 1; });
+  const lCab    = temTit ? 3 : 1;   // linha do cabeçalho de colunas
+  const lDados  = temTit ? 4 : 2;   // primeira linha de dados
+  const frozen  = temTit ? 3 : 1;
+
+  // Limpa apenas a área de dados (preserva as 2 linhas de título se existirem)
+  const ultima = aba.getLastRow();
+  if (ultima >= lCab) {
+    aba.getRange(lCab, 1, ultima - lCab + 1, Math.max(nExist, nc)).clearContent();
+  }
   aba.clearConditionalFormatRules();
   aba.setTabColor(cor);
-  const nr = 1 + rows.length;
-  const nc = cab.length;
-  aba.getRange(1,1,1,nc).setValues([cab])
+
+  aba.getRange(lCab,1,1,nc).setValues([cab])
     .setBackground(cor).setFontColor('#FFF').setFontWeight('bold').setHorizontalAlignment('center');
-  if (rows.length) aba.getRange(2,1,rows.length,nc).setValues(rows);
-  aba.setFrozenRows(1);
-  aba.getRange(1,1,nr,nc).setVerticalAlignment('middle');
+  if (rows.length) aba.getRange(lDados,1,rows.length,nc).setValues(rows);
+  aba.setFrozenRows(frozen);
+  aba.getRange(lCab,1,rows.length + 1,nc).setVerticalAlignment('middle');
   for (let c = 1; c <= Math.min(nc,20); c++) {
     aba.autoResizeColumn(c);
     aba.setColumnWidth(c, Math.min(Math.max(aba.getColumnWidth(c), 55), 300));
