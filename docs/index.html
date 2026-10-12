@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#12355B">
-  <link rel="stylesheet" href="css/styles.css?v=13">
+  <link rel="stylesheet" href="css/styles.css?v=17">
   <style>
     body {
       background:#EEF3F8;
@@ -532,49 +532,69 @@
       text-overflow:ellipsis;
     }
 
-    /* ── Atividades ───────────────────────────────────────────── */
-    .atividades-list {
-      overflow:hidden;
-      border:1px solid #E1E8F0;
-      border-radius:9px;
-      background:#fff;
-    }
 
-    .atividade {
-      min-height:48px;
-      display:grid;
-      grid-template-columns:58px minmax(150px,.72fr) minmax(170px,1fr);
-      align-items:center;
-      gap:.75rem;
-      padding:.62rem .85rem;
-      border-bottom:1px solid #EEF2F6;
+    /* Início: identidade visual contextual e painéis pedagógicos. */
+    .home-shell { --home-competition-accent:#2F80ED; --home-competition-soft:#EAF3FD; }
+    .home-shell .home-content { max-width:1210px; padding:1.6rem clamp(1rem,2.8vw,2.5rem) 2.5rem; }
+    .home-shell .sidebar-item svg { width:18px; height:18px; flex-shrink:0; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .home-shell .sidebar-item.ativo { color:#fff; background:rgba(80,143,203,.17); box-shadow:inset 3px 0 0 var(--home-competition-accent); }
+    .home-shell .home-event-icon, .home-shell .hero-cta-btn, .home-shell .hero-event-link { background:var(--home-competition-soft); color:var(--home-competition-accent); }
+    .home-shell .home-event-icon { width:38px; height:38px; border-radius:11px; }
+    .home-shell .hero-dashboard { gap:1rem; }
+    .home-shell .home-feature, .home-shell .hero-event-card { border-radius:14px; }
+    .home-shell .home-feature { min-height:200px; }
+    .home-shell .home-feature__copy { padding:1.35rem 0 1.35rem 1.55rem; }
+    .home-shell .hub-main { gap:1.35rem; margin-top:1.35rem; }
+    .home-shell .acessos-grid { gap:.75rem; }
+    .home-shell .acesso { min-height:78px; padding:.85rem .9rem; border-radius:12px !important; }
+    .home-shell .acesso__icon { width:41px; height:41px; border-radius:11px; }
+    .home-shell .acesso__icon svg { width:20px; height:20px; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .home-shell .acesso__name { font-size:.78rem; }
+    .home-shell .acesso__desc { font-size:.64rem; margin-top:.1rem; }
+    .home-shell .acesso--arena .acesso__icon { background:var(--home-competition-soft); color:var(--home-competition-accent); }
+    .home-shell a:focus-visible, .home-shell button:focus-visible { outline:3px solid var(--home-competition-accent); outline-offset:3px; }
+    .home-learning { margin-top:.1rem; }
+    .home-learning__intro { display:flex; align-items:flex-end; justify-content:space-between; gap:1.25rem; margin-bottom:1rem; }
+    .home-learning__intro h2 { color:#13243A; font-size:clamp(1.25rem,2.1vw,1.65rem); letter-spacing:-.035em; line-height:1.15; margin:.3rem 0 .45rem; font-weight:780; }
+    .home-learning__intro p { color:#65758B; font-size:.78rem; line-height:1.6; max-width:670px; margin:0; }
+    .home-learning__cta { color:var(--home-competition-accent); font-size:.72rem; font-weight:700; display:inline-flex; align-items:center; white-space:nowrap; gap:.25rem; text-decoration:none; padding:.5rem 0; }
+    .home-learning__cta:hover { text-decoration:underline; }
+    .home-learning__cta svg { width:15px; height:15px; flex:none; }
+    .home-learning__layout { display:grid; grid-template-columns:minmax(0,1.13fr) minmax(0,1fr); gap:1rem; }
+    .home-learning__panel { background:#fff; border:1px solid #E1E8F0; border-radius:14px; padding:1.25rem 1.35rem; min-width:0; box-shadow:0 2px 12px rgba(15,31,51,.025); }
+    .home-learning__panel-head { display:flex; align-items:flex-start; justify-content:space-between; gap:.75rem; }
+    .home-learning__eyebrow { display:block; color:#64748B; font-size:.61rem; letter-spacing:.08em; text-transform:uppercase; font-weight:800; }
+    .home-learning__panel-head h3 { margin:.35rem 0 1.15rem; color:#17263C; font-size:1.04rem; font-weight:760; letter-spacing:-.02em; }
+    .home-learning__pill { border-radius:8px; padding:.35rem .55rem; background:var(--home-competition-soft); color:var(--home-competition-accent); font-size:.72rem; font-weight:800; }
+    .home-learning__skills { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.7rem; }
+    .home-learning__skill { display:flex; align-items:flex-start; gap:.7rem; min-width:0; padding:.75rem; border:1px solid #EDF1F5; background:#F9FBFD; border-radius:10px; }
+    .home-learning__skill-icon { width:34px; height:34px; border-radius:9px; background:var(--home-competition-soft); color:var(--home-competition-accent); display:flex; align-items:center; justify-content:center; flex:none; }
+    .home-learning__skill-icon svg { width:20px; height:20px; }
+    .home-learning__skill-copy strong { display:block; color:#1D3047; font-size:.76rem; line-height:1.3; }
+    .home-learning__skill-copy p { font-size:.66rem; color:#748397; line-height:1.48; margin:.28rem 0 0; }
+    .home-learning__note { font-size:.63rem; color:#8290A1; line-height:1.55; margin:1rem 0 0; }
+    .home-learning__bloom-desc { color:#748397; font-size:.72rem; margin:-.55rem 0 1rem; line-height:1.5; }
+    .home-learning__bloom { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.5rem; margin:0; padding:0; list-style:none; }
+    .home-learning__bloom li { display:flex; align-items:center; gap:.45rem; min-width:0; border:1px solid #E5EDF3; background:#F8FAFD; border-radius:9px; padding:.65rem .55rem; }
+    .home-learning__bloom li span { width:21px; height:21px; border-radius:6px; display:flex; align-items:center; justify-content:center; background:var(--home-competition-soft); color:var(--home-competition-accent); font-size:.59rem; font-weight:800; flex:none; }
+    .home-learning__bloom li strong { font-size:.68rem; color:#2B3B4E; font-weight:730; white-space:nowrap; }
+    .home-learning__bncc { border-top:1px solid #E9EEF4; margin-top:1.05rem; padding-top:1rem; }
+    .home-learning__bncc-tags { display:flex; flex-wrap:wrap; gap:.38rem; margin-top:.58rem; }
+    .home-learning__bncc-tags span { border:1px solid #E2EAF2; border-radius:999px; padding:.32rem .53rem; color:#55687E; font-size:.59rem; background:#F8FAFC; }
+    .home-learning__foot { margin:.65rem 0 0; font-size:.62rem; color:#78899B; line-height:1.5; }
+    @media (max-width:1080px) { .home-learning__layout { grid-template-columns:1fr; } }
+    @media (max-width:700px) {
+      .home-shell .home-content { padding:1rem .9rem 2rem; }
+      .home-shell .home-feature { min-height:175px; }
+      .home-shell .acessos-grid { gap:.55rem; }
+      .home-shell .acesso { min-height:74px; padding:.72rem; }
+      .home-learning__intro { flex-direction:column; align-items:flex-start; gap:.65rem; }
+      .home-learning__panel { padding:1rem; }
+      .home-learning__skills { grid-template-columns:1fr; }
+      .home-learning__bloom { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .home-learning__cta { white-space:normal; }
     }
-
-    .atividade:last-child {
-      border-bottom:0;
-    }
-
-    .ativ-time {
-      color:#355F84;
-      font-size:.65rem;
-      font-weight:800;
-      font-variant-numeric:tabular-nums;
-    }
-
-    .ativ-nome {
-      color:#27364A;
-      font-size:.68rem;
-      font-weight:700;
-    }
-
-    .ativ-local {
-      color:#8492A4;
-      font-size:.61rem;
-    }
-
-    .ativ-dot {
-      display:none;
-    }
+    @media (prefers-reduced-motion:reduce) { .home-shell .acesso { transition:none; } .home-shell .acesso:hover { transform:none; } }
 
     /* ── Footer ───────────────────────────────────────────────── */
     .hub-footer {
@@ -710,6 +730,410 @@
         display:none;
       }
     }
+
+    /* Faixa pedagógica automática — não representa resultados de avaliação */
+    .home-insight {
+      display:flex;align-items:center;gap:.75rem;min-height:64px;
+      margin:0 0 1rem;padding:.8rem 1.1rem;border:1px solid #E0E9F0;
+      border-radius:13px;background:linear-gradient(105deg,#FFF 0%,#F7FAFD 100%);
+      box-shadow:0 2px 12px rgba(18,40,61,.025);
+    }
+    .home-insight__symbol {
+      display:flex;align-items:center;justify-content:center;flex:0 0 39px;
+      width:39px;height:39px;border-radius:11px;
+      background:var(--home-competition-soft);color:var(--home-competition-accent);
+    }
+    .home-insight__symbol svg {width:21px;height:21px;}
+    .home-insight__copy {min-width:0;flex:1;}
+    .home-insight__label {display:block;font-size:.6rem;letter-spacing:.065em;text-transform:uppercase;font-weight:800;color:#668099;margin-bottom:.28rem;}
+    .home-insight__track {position:relative;height:1.25rem;overflow:hidden;}
+    .home-insight__message {
+      position:absolute;left:0;top:0;width:100%;font-size:.74rem;font-weight:640;line-height:1.25rem;
+      color:#263B54;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+      opacity:0;transform:translateY(5px);animation:home-insight-cycle 18s infinite both;
+    }
+    .home-insight__message:nth-child(2) {animation-delay:6s;}
+    .home-insight__message:nth-child(3) {animation-delay:12s;}
+    .home-insight__signal {display:flex;gap:4px;align-self:center;}
+    .home-insight__signal i {display:block;width:5px;height:5px;border-radius:50%;background:#CCD7E2;}
+    .home-insight__signal i:first-child {background:var(--home-competition-accent);}
+    @keyframes home-insight-cycle {
+      0%,5% {opacity:0;transform:translateY(6px);}
+      9%,29% {opacity:1;transform:translateY(0);}
+      33.333%,100% {opacity:0;transform:translateY(-6px);}
+    }
+    @media (max-width:700px) {
+      .home-insight {min-height:70px;padding:.75rem;gap:.55rem;}
+      .home-insight__track {height:2.5rem;}
+      .home-insight__message {font-size:.68rem;white-space:normal;line-height:1.25rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+      .home-insight__signal {display:none;}
+    }
+    @media (prefers-reduced-motion:reduce) {
+      .home-insight__message {animation:none;opacity:0;transform:none;}
+      .home-insight__message:first-child {opacity:1;}
+    }
+
+
+    /* Home responsiva 2026 — refinamento de hierarquia e toque.
+       Regras de apresentação: nenhuma alteração nos links, IDs ou eventos. */
+    @media (min-width:701px) and (max-width:1050px) {
+      .home-shell .home-content {
+        max-width:900px;
+        padding:clamp(1.25rem,2.8vw,1.85rem) clamp(1.1rem,2.9vw,2rem) 2.5rem;
+      }
+      .home-shell .hero-dashboard {gap:.85rem;}
+      .home-shell .home-feature {min-height:205px;}
+      .home-shell .home-feature__copy {width:62%;padding:1.4rem 0 1.4rem 1.5rem;}
+      .home-shell .home-feature__title {font-size:clamp(1.15rem,2.4vw,1.45rem);}
+      .home-shell .home-robot {width:38%;}
+      .home-shell .hero-event-card {min-height:132px;}
+      .home-shell .acessos-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem;}
+      .home-shell .acesso {min-height:86px;}
+      .home-shell .acesso__name {font-size:.86rem;}
+      .home-shell .acesso__desc {font-size:.71rem;}
+    }
+    @media (max-width:700px) {
+      html,body {overflow-x:clip;}
+      .home-shell,.home-stage,.home-shell .app-main {min-width:0;}
+      .home-shell .topbar {
+        position:sticky;
+        top:0;
+        z-index:15;
+        gap:.5rem !important;
+        padding:0 .9rem !important;
+        border-bottom:1px solid #DCEAE7 !important;
+        box-shadow:0 3px 15px rgba(35,73,70,.055) !important;
+      }
+      .home-shell .home-mobile-brand {
+        display:flex;
+        align-items:center;
+        min-width:0;
+        flex:0 1 auto;
+      }
+      .home-shell .home-mobile-brand img {
+        max-width:120px !important;
+        width:auto !important;
+        height:28px !important;
+        max-height:28px !important;
+        object-fit:contain;
+      }
+      .home-shell .mobile-nav-toggle {
+        border:1px solid #DCEAE7;
+        background:#F2F8F6;
+        color:#27554F;
+        border-radius:12px;
+        flex-shrink:0;
+      }
+      .home-shell .topbar__badge {min-width:0;margin-left:auto;}
+      .home-shell .home-content {
+        width:100%;
+        max-width:600px;
+        margin:0 auto;
+        padding:1.5rem clamp(.95rem,4.2vw,1.5rem) 2.8rem;
+      }
+      .home-shell .hero-heading {
+        display:flex;
+        flex-direction:row;
+        align-items:center;
+        justify-content:space-between;
+        gap:.75rem;
+        margin-bottom:1.15rem;
+      }
+      .home-shell .hero-eyebrow {
+        color:#557F77;
+        font-size:.73rem;
+        font-weight:700;
+        line-height:1.4;
+      }
+      .home-shell .hub-hero h1 {
+        color:#263F43;
+        font-size:clamp(1.85rem,7.4vw,2.25rem);
+        line-height:1.08;
+      }
+      .home-shell .hero-date {
+        max-width:128px;
+        flex:0 0 auto;
+        padding:.5rem .65rem;
+        border:1px solid #DDEBE6;
+        border-radius:12px;
+        background:#FFFFFF;
+        color:#71868D;
+        font-size:.67rem;
+        line-height:1.42;
+        text-align:center;
+        box-shadow:0 2px 8px rgba(31,66,62,.025);
+      }
+      .home-shell .hero-dashboard {grid-template-columns:minmax(0,1fr);gap:.8rem;}
+      .home-shell .home-feature {
+        display:grid;
+        grid-template-columns:minmax(0,1fr) minmax(92px,34%);
+        align-items:stretch;
+        min-height:235px;
+        border:1px solid #174B65;
+        border-radius:18px !important;
+        background:
+          radial-gradient(ellipse at 88% 24%,rgba(88,201,211,.25),transparent 40%),
+          linear-gradient(130deg,#123348 0%,#1B4A63 60%,#236981 100%);
+        box-shadow:0 13px 25px rgba(18,59,76,.14);
+      }
+      .home-shell .home-feature__copy {
+        width:auto;
+        min-width:0;
+        padding:1.4rem .15rem 1.4rem 1.3rem;
+        justify-content:center;
+      }
+      .home-shell .home-feature__kicker {
+        margin-bottom:.6rem;
+        color:#8EE1D1;
+        font-size:.65rem;
+        line-height:1.3;
+        letter-spacing:.08em;
+      }
+      .home-shell .home-feature__title {
+        max-width:none;
+        font-size:clamp(1.16rem,4.7vw,1.48rem);
+        line-height:1.21;
+        letter-spacing:-.03em;
+        text-wrap:balance;
+      }
+      .home-shell .home-feature__sub {
+        max-width:none;
+        margin-top:.75rem;
+        color:rgba(240,250,249,.83);
+        font-size:.79rem;
+        line-height:1.48;
+      }
+      .home-shell .home-robot {
+        width:auto;
+        min-width:0;
+        padding:.55rem .55rem .55rem 0;
+        align-self:stretch;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+      }
+      .home-shell .home-robot img {
+        width:100% !important;
+        max-width:175px;
+        max-height:195px;
+        height:auto !important;
+        object-fit:contain;
+        object-position:center;
+      }
+      .home-shell .hero-event-card {
+        min-height:135px;
+        display:grid;
+        grid-template-columns:minmax(0,1fr) auto;
+        grid-template-rows:auto auto auto;
+        align-content:center;
+        gap:.08rem .7rem;
+        padding:1.1rem 1.15rem;
+        border:1px solid #DCEAE6;
+        border-radius:15px !important;
+        background:#fff;
+        box-shadow:0 3px 14px rgba(26,68,61,.04);
+      }
+      .home-shell .hero-event-label {
+        grid-column:1 / -1;
+        font-size:.66rem;
+        color:#568E83;
+        margin-bottom:.35rem;
+      }
+      .home-shell .hero-event-name {
+        grid-column:1;
+        font-size:.98rem;
+        line-height:1.35;
+        color:#263F43;
+      }
+      .home-shell .hero-event-org {
+        grid-column:1;
+        margin:.28rem 0 0;
+        font-size:.73rem;
+        color:#70878C;
+      }
+      .home-shell .hero-event-link {
+        grid-column:2;
+        grid-row:2 / span 2;
+        align-self:center;
+        min-height:44px;
+        padding:.6rem .85rem;
+        border-color:#D3E9E1;
+        border-radius:10px;
+        background:#EFF8F5;
+        color:#24796D;
+        font-size:.74rem;
+        white-space:nowrap;
+        touch-action:manipulation;
+      }
+      .home-shell .hub-main {margin-top:1.7rem;gap:2rem;}
+      .home-shell .home-section-header {margin-bottom:.85rem;}
+      .home-shell .home-section-title {
+        font-size:.73rem;
+        letter-spacing:.075em;
+        color:#397A6F;
+      }
+      .home-shell .acessos-grid {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:.75rem;
+      }
+      .home-shell .acesso {
+        position:relative;
+        display:flex;
+        flex-direction:column;
+        align-items:flex-start;
+        justify-content:flex-start;
+        min-width:0;
+        min-height:142px;
+        padding:1rem;
+        gap:.8rem;
+        border:1px solid #DDEAE6 !important;
+        border-radius:15px !important;
+        background:#FFFFFF !important;
+        box-shadow:0 4px 15px rgba(32,71,65,.045) !important;
+        transition:border-color .15s,box-shadow .15s,transform .15s;
+        touch-action:manipulation;
+      }
+      .home-shell .acesso__icon {
+        width:47px;
+        height:47px;
+        flex:0 0 47px;
+        border-radius:13px;
+      }
+      .home-shell .acesso__icon svg {
+        width:24px;
+        height:24px;
+      }
+      .home-shell .acesso__body {width:100%;min-width:0;}
+      .home-shell .acesso__name {
+        font-size:.91rem;
+        line-height:1.35;
+        color:#263F43;
+        white-space:normal;
+        overflow-wrap:anywhere;
+      }
+      .home-shell .acesso__desc {
+        font-size:.73rem;
+        line-height:1.35;
+        margin-top:.23rem;
+        color:#71868D;
+        white-space:normal;
+        overflow:visible;
+        text-overflow:clip;
+      }
+      .home-shell .home-learning__intro {
+        align-items:flex-start;
+        gap:.9rem;
+        margin-bottom:1rem;
+      }
+      .home-shell .home-learning__intro h2 {
+        font-size:clamp(1.38rem,5.5vw,1.75rem);
+        color:#263F43;
+        line-height:1.2;
+        margin:.35rem 0 .6rem;
+      }
+      .home-shell .home-learning__intro p {
+        font-size:.86rem;
+        line-height:1.6;
+        color:#71868D;
+      }
+      .home-shell .home-learning__cta {
+        min-height:44px;
+        max-width:100%;
+        padding:.65rem .8rem;
+        border:1px solid #D7E9E3;
+        border-radius:10px;
+        background:#F0F8F5;
+        color:#267A6E;
+        font-size:.78rem;
+        white-space:normal;
+      }
+      .home-shell .home-insight {
+        margin-bottom:.9rem;
+        min-height:88px;
+        padding:.9rem;
+        align-items:center;
+        gap:.85rem;
+        border-radius:14px;
+        border-color:#DDEAE6;
+        background:#F7FCFA;
+      }
+      .home-shell .home-insight__symbol {
+        flex:0 0 42px;
+        width:42px;
+        height:42px;
+        border-radius:12px;
+      }
+      .home-shell .home-insight__label {font-size:.65rem;color:#438579;}
+      .home-shell .home-insight__track {height:2.8rem;}
+      .home-shell .home-insight__message {
+        font-size:.78rem;
+        line-height:1.35rem;
+        color:#344E51;
+      }
+      .home-shell .home-learning__layout {grid-template-columns:minmax(0,1fr);gap:.85rem;}
+      .home-shell .home-learning__panel {
+        min-width:0;
+        padding:1.2rem 1.05rem;
+        border-radius:15px;
+        border-color:#DDEAE6;
+      }
+      .home-shell .home-learning__panel-head h3 {
+        font-size:1.08rem;
+        line-height:1.3;
+      }
+      .home-shell .home-learning__eyebrow {font-size:.68rem;}
+      .home-shell .home-learning__skills {grid-template-columns:1fr;gap:.6rem;}
+      .home-shell .home-learning__skill {
+        padding:.8rem;
+        border-radius:11px;
+        gap:.75rem;
+      }
+      .home-shell .home-learning__skill-copy strong {font-size:.85rem;}
+      .home-shell .home-learning__skill-copy p {font-size:.76rem;}
+      .home-shell .home-learning__bloom {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:.55rem;
+      }
+      .home-shell .home-learning__bloom li {
+        padding:.7rem .65rem;
+        min-height:45px;
+      }
+      .home-shell .home-learning__bloom li strong {font-size:.76rem;white-space:normal;}
+      .home-shell .home-learning__note,
+      .home-shell .home-learning__foot {font-size:.73rem;line-height:1.55;}
+      .home-shell .home-learning__bncc-tags span {font-size:.68rem;padding:.38rem .58rem;}
+      .home-shell .hub-footer {padding-bottom:env(safe-area-inset-bottom,0px);}
+      .home-shell .hub-footer__inner {padding:1.1rem .9rem;}
+      .home-shell .hub-footer__center {font-size:.69rem;line-height:1.45;text-align:center;}
+    }
+    @media (min-width:540px) and (max-width:700px) {
+      .home-shell .home-feature {min-height:260px;grid-template-columns:minmax(0,1fr) 34%;}
+      .home-shell .home-feature__copy {padding:1.75rem 0 1.75rem 1.65rem;}
+      .home-shell .home-feature__title {font-size:1.55rem;}
+      .home-shell .home-robot img {max-height:230px;}
+      .home-shell .home-learning__skills {grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
+    @media (max-width:380px) {
+      .home-shell .home-content {padding:1.1rem .85rem 2.4rem;}
+      .home-shell .hero-date {max-width:115px;padding:.4rem .5rem;font-size:.62rem;}
+      .home-shell .home-feature {
+        grid-template-columns:minmax(0,1fr) minmax(86px,31%);
+        min-height:242px;
+      }
+      .home-shell .home-feature__copy {padding:1.2rem 0 1.2rem 1rem;}
+      .home-shell .home-feature__title {font-size:1.08rem;}
+      .home-shell .home-feature__sub {font-size:.73rem;}
+      .home-shell .hero-event-card {display:flex;flex-direction:column;align-items:flex-start;gap:.2rem;}
+      .home-shell .hero-event-link {align-self:flex-start;margin-top:.45rem;}
+      .home-shell .acessos-grid {gap:.6rem;}
+      .home-shell .acesso {padding:.85rem;min-height:138px;}
+      .home-shell .acesso__name {font-size:.84rem;}
+      .home-shell .acesso__desc {font-size:.7rem;}
+    }
+    @media (hover:none) and (pointer:coarse) {
+      .home-shell .acesso:hover {transform:none;}
+    }
+
   </style>
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';
@@ -725,32 +1149,33 @@
     </a>
 
     <a href="index.html" class="sidebar-item ativo">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-7h6v7"/></svg>
       Início
     </a>
     <a href="arena.html" class="sidebar-item">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 4.5c0-.8.85-1.3 1.55-.9l11.1 7.1c.9.58.9 1.97 0 2.55l-11.1 7.1c-.7.45-1.55-.05-1.55-.9z" fill="currentColor" stroke="none"/></svg>
       Arena
     </a>
     <a href="turma.html" class="sidebar-item">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1.5 13.5c0-2.5 2-4 4-4"/><circle cx="11" cy="5.5" r="2"/><path d="M10 13.5c0-2 1.5-3.5 3.5-3.5"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a6 6 0 0 1 12 0v1"/><path d="M16 5a3 3 0 0 1 0 6m1 3a5 5 0 0 1 4 5v1"/></svg>
       Minha Turma
     </a>
     <a href="juizes.html" class="sidebar-item">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11.5" rx="1.5"/><path d="M6 2.5a2 2 0 014 0"/><path d="M5.5 7.5h5M5.5 10.5h3"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8.5 12l2 2 5-5M9 18h6"/></svg>
       Juízes
     </a>
     <a href="coordenacao.html" class="sidebar-item">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="5" r="2.5"/><path d="M1.5 14c0-2.8 2.2-5 5-5"/><path d="M11.5 2l.55 1.6H13.7l-1.4 1 .55 1.6-1.35-1-1.35 1 .55-1.6-1.4-1h1.65z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 16v-4m5 4V8m5 8v-6"/></svg>
       Coordenação
     </a>
     <div class="sidebar-sep"></div>
     <a href="ranking.html" class="sidebar-item">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13V9M8 13V6M13 13V3"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16M5 17v-5h4v5m3 0V7h4v10m3 0V4h2v13"/></svg>
       Ranking
     </a>
+  <a href="documentos.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6m-6 4h6m-6 4h4"/></svg> Documentos</a>
     <a href="cronograma.html" class="sidebar-item">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="13" height="10.5" rx="1.5"/><path d="M1.5 7.5h13M5.5 1.5v3M10.5 1.5v3"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18m-13 4h3m-3 4h3m4-4h3"/></svg>
       Cronograma
     </a>
   </nav>
@@ -763,7 +1188,7 @@
       </a>
       <div class="topbar__event">
         <div class="home-event-icon">
-          <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 11h5M8 15h7"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6m-6 4h6m-6 4h4"/></svg>
         </div>
         <div>
           <div class="topbar__event-name">Torneio Interno de Robótica</div>
@@ -774,7 +1199,7 @@
       <div class="topbar__badge">
         <span id="badge-nome" class="text-sm"></span>
         <button id="btn-sessao" class="btn-entrar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
           Entrar
         </button>
       </div>
@@ -828,10 +1253,7 @@
             <div class="acessos-grid">
               <a href="arena.html" class="acesso acesso--arena">
                 <div class="acesso__icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="9"/>
-                    <path d="M9 8.5 16 12l-7 3.5z" fill="currentColor" stroke="none"/>
-                  </svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 4.5c0-.8.85-1.3 1.55-.9l11.1 7.1c.9.58.9 1.97 0 2.55l-11.1 7.1c-.7.45-1.55-.05-1.55-.9z" fill="currentColor" stroke="none"/></svg>
                 </div>
                 <div class="acesso__body">
                   <div class="acesso__name">Arena</div>
@@ -841,10 +1263,7 @@
 
               <a href="turma.html" class="acesso acesso--turma">
                 <div class="acesso__icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2M17 4a4 4 0 0 1 0 7"/>
-                  </svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a6 6 0 0 1 12 0v1"/><path d="M16 5a3 3 0 0 1 0 6m1 3a5 5 0 0 1 4 5v1"/></svg>
                 </div>
                 <div class="acesso__body">
                   <div class="acesso__name">Minha Turma</div>
@@ -854,10 +1273,7 @@
 
               <a href="juizes.html" class="acesso acesso--juizes">
                 <div class="acesso__icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="5" y="3" width="14" height="18" rx="2"/>
-                    <path d="M9 3.5h6M8 9h8M8 13h8M8 17h5"/>
-                  </svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8.5 12l2 2 5-5M9 18h6"/></svg>
                 </div>
                 <div class="acesso__body">
                   <div class="acesso__name">Juízes</div>
@@ -867,10 +1283,7 @@
 
               <a href="coordenacao.html" class="acesso acesso--coord">
                 <div class="acesso__icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="4" y="5" width="16" height="14" rx="3"/>
-                    <path d="M8 9h8M8 13h5"/>
-                  </svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 16v-4m5 4V8m5 8v-6"/></svg>
                 </div>
                 <div class="acesso__body">
                   <div class="acesso__name">Coordenação</div>
@@ -880,52 +1293,50 @@
             </div>
           </section>
 
-          <section class="home-section">
-            <div class="home-section-header">
-              <div class="home-section-title">Próximas atividades</div>
-              <a href="cronograma.html" class="home-section-link">
-                Ver cronograma
-                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-              </a>
+          
+          <section class="home-section home-learning" aria-labelledby="learning-heading">
+            <div class="home-learning__intro">
+              <div>
+                <div class="home-section-title">Além do resultado</div>
+                <h2 id="learning-heading">Da competição à aprendizagem</h2>
+                <p>Os desafios de robótica mobilizam competências que vão além da pontuação. Conheça os referenciais que orientam a leitura pedagógica das avaliações.</p>
+              </div>
+              <a class="home-learning__cta" href="coordenacao.html">Ver acompanhamento da coordenação <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a>
             </div>
 
-            <div class="atividades-list">
-              <div class="atividade">
-                <div class="ativ-time">07:00</div>
-                <div class="ativ-nome">Credenciamento</div>
-                <div class="ativ-local">Entrada principal</div>
+            <div class="home-insight" aria-label="Orientações pedagógicas">
+              <div class="home-insight__symbol" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-3 11.2V17h6v-2.8A6 6 0 0 0 12 3Z"/><path d="M9 20h6M10 17h4"/></svg>
               </div>
-              <div class="atividade">
-                <div class="ativ-time">07:30</div>
-                <div class="ativ-nome">Abertura oficial &amp; Round 1</div>
-                <div class="ativ-local">Audit&oacute;rio · Arena A e Arena B</div>
+              <div class="home-insight__copy">
+                <span class="home-insight__label">Perspectivas de aprendizagem</span>
+                <div class="home-insight__track" aria-live="off">
+                  <span class="home-insight__message">As rubricas registram evidências do percurso das equipes, além da classificação.</span>
+                  <span class="home-insight__message">Pensamento crítico, criatividade, comunicação e colaboração orientam a leitura dos 4Cs.</span>
+                  <span class="home-insight__message">BNCC e Taxonomia de Bloom apoiam a reflexão pedagógica sobre os desafios da robótica.</span>
+                </div>
               </div>
-              <div class="atividade">
-                <div class="ativ-time">08:05</div>
-                <div class="ativ-nome">Avalia&ccedil;&otilde;es em sala</div>
-                <div class="ativ-local">Sala 1 e Sala 2 &middot; paralelo aos rounds</div>
+              <span class="home-insight__signal" aria-hidden="true"><i></i><i></i><i></i></span>
+            </div>
+            <div class="home-learning__layout">
+              <div class="home-learning__panel home-learning__panel--skills">
+                <div class="home-learning__panel-head"><div><span class="home-learning__eyebrow">Competências do Século XXI</span><h3>Quatro habilidades em ação</h3></div><span class="home-learning__pill">4Cs</span></div>
+                <div class="home-learning__skills">
+                  <div class="home-learning__skill"><div class="home-learning__skill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a5 5 0 0 0-5 5c-2 .5-4 2.5-4 4.5A4.5 4.5 0 0 0 7.5 17H9m3-14a5 5 0 0 1 5 5c2 .5 4 2.5 4 4.5a4.5 4.5 0 0 1-4.5 4.5H15M12 3v18m-5-9 5 3 5-3"/></svg></div><div class="home-learning__skill-copy"><strong>Pensamento crítico</strong><p>Investigar desafios, testar hipóteses e justificar escolhas.</p></div></div>
+                  <div class="home-learning__skill"><div class="home-learning__skill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6m-5 3h4M8 15a7 7 0 1 1 8 0c-.8.7-1 1.4-1 3H9c0-1.6-.2-2.3-1-3Z"/><path d="M12 1v1m9 9h1M2 11h1"/></svg></div><div class="home-learning__skill-copy"><strong>Criatividade</strong><p>Explorar ideias e desenvolver soluções originais.</p></div></div>
+                  <div class="home-learning__skill"><div class="home-learning__skill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a7 7 0 0 1-7 7H8l-4 3v-5a7 7 0 1 1 16-5Z"/><path d="M8 10h8m-8 4h5"/></svg></div><div class="home-learning__skill-copy"><strong>Comunicação</strong><p>Explicar estratégias e compartilhar descobertas.</p></div></div>
+                  <div class="home-learning__skill"><div class="home-learning__skill-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2.5 20v-2a5.5 5.5 0 0 1 11 0v2m1.5-7a5 5 0 0 1 6.5 4.8V20"/></svg></div><div class="home-learning__skill-copy"><strong>Colaboração</strong><p>Construir soluções em equipe e negociar caminhos.</p></div></div>
+                </div>
+                <p class="home-learning__note">As rubricas registram desempenhos observáveis, interpretados conforme critérios e contextos de cada modalidade.</p>
               </div>
-              <div class="atividade">
-                <div class="ativ-time">08:50</div>
-                <div class="ativ-nome">Round 2 &ndash; Arena</div>
-                <div class="ativ-local">Arena A e Arena B &middot; 13 equipes</div>
-              </div>
-              <div class="atividade">
-                <div class="ativ-time">09:55</div>
-                <div class="ativ-nome">Round 3 &ndash; Arena</div>
-                <div class="ativ-local">Arena A e Arena B &middot; &uacute;ltima corrida</div>
-              </div>
-              <div class="atividade">
-                <div class="ativ-time">11:00</div>
-                <div class="ativ-nome">Delibera&ccedil;&atilde;o dos ju&iacute;zes</div>
-                <div class="ativ-local">Sala reservada &middot; at&eacute; 11:30</div>
-              </div>
-              <div class="atividade">
-                <div class="ativ-time">11:30</div>
-                <div class="ativ-nome">Premia&ccedil;&atilde;o e encerramento</div>
-                <div class="ativ-local">Audit&oacute;rio &middot; todas as equipes</div>
+              <div class="home-learning__panel home-learning__panel--bloom">
+                <div class="home-learning__panel-head"><div><span class="home-learning__eyebrow">Taxonomia de Bloom</span><h3>Do conhecimento à criação</h3></div></div>
+                <p class="home-learning__bloom-desc">Os desafios podem mobilizar diferentes processos cognitivos.</p>
+                <ol class="home-learning__bloom"><li><span>01</span><strong>Lembrar</strong></li><li><span>02</span><strong>Compreender</strong></li><li><span>03</span><strong>Aplicar</strong></li><li><span>04</span><strong>Analisar</strong></li><li><span>05</span><strong>Avaliar</strong></li><li><span>06</span><strong>Criar</strong></li></ol>
+                <div class="home-learning__bncc"><span class="home-learning__eyebrow">Diálogo com a BNCC</span><div class="home-learning__bncc-tags"><span>1 · Conhecimento</span><span>2 · Pensamento científico</span><span>4 · Comunicação</span><span>5 · Cultura digital</span><span>9 · Cooperação</span></div></div>
               </div>
             </div>
+            <p class="home-learning__foot">Referenciais: P21 (4Cs), Taxonomia de Bloom revisada e BNCC. As notas dos torneios não representam, isoladamente, uma medida completa de aprendizagem.</p>
           </section>
 
         </div>
@@ -970,8 +1381,8 @@
         'radial-gradient(circle at 83% 30%,rgba(74,196,222,.26),transparent 28%),' +
         'linear-gradient(135deg,#10243B 0%,#183A5E 64%,#1A4F75 100%)',
       'OBR':
-        'radial-gradient(circle at 83% 30%,rgba(47,128,237,.28),transparent 28%),' +
-        'linear-gradient(135deg,#0D2140 0%,#153368 64%,#1A4490 100%)',
+        'radial-gradient(circle at 83% 30%,rgba(39,155,112,.28),transparent 28%),' +
+        'linear-gradient(135deg,#0C3329 0%,#155440 64%,#1D7355 100%)',
       'Steam Racing':
         'radial-gradient(circle at 83% 30%,rgba(139,92,246,.30),transparent 28%),' +
         'linear-gradient(135deg,#140D2E 0%,#22164A 64%,#2E1D65 100%)'
@@ -991,6 +1402,12 @@
     }
     if (img && HERO_IMG[comp]) {
       img.src = HERO_IMG[comp];
+    }
+    var HOME_THEME = {'FLL':['#2F80ED','#EAF3FD'],'OBR':['#279B70','#E9F7F0'],'Steam Racing':['#8B5CF6','#F2EEFC']};
+    var homeShell = document.querySelector('.home-shell');
+    if (homeShell && HOME_THEME[comp]) {
+      homeShell.style.setProperty('--home-competition-accent', HOME_THEME[comp][0]);
+      homeShell.style.setProperty('--home-competition-soft', HOME_THEME[comp][1]);
     }
   })();
 

@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#12355B">
-  <link rel="stylesheet" href="css/styles.css?v=13">
+  <link rel="stylesheet" href="css/styles.css?v=17">
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';
   </script>
@@ -1654,6 +1654,222 @@
     .gauge-wrap.gauge-total .gauge-label { font-size: .92rem; }
     .gauge-sublabel { font-size: .72rem; font-weight: 600; margin-top: .18rem; text-align: center; }
 
+
+
+    /* Perfil de equipe — revisão visual; mantém todos os IDs e cálculos */
+    .team-shell .container { max-width: 1220px; padding: 1.55rem clamp(1rem,2.6vw,2.5rem) 3rem; }
+    .team-workspace-head { align-items: center; margin-bottom: 1.15rem; gap: 1.25rem; }
+    .team-workspace-kicker { color: #75869A; font-size: .72rem; font-weight: 680; margin-bottom: .35rem; }
+    .team-workspace-head h1 { font-size: clamp(1.75rem,2.6vw,2.15rem); line-height:1.15; letter-spacing:-.04em; }
+    .team-workspace-sub { font-size:.79rem; line-height:1.55; max-width:690px; }
+    .team-head-link {
+      min-height:40px; border-radius:10px; padding:.65rem .85rem; border-color:#D8E3ED;
+      background:#fff; font-size:.73rem; gap:.45rem;
+      box-shadow:0 1px 3px rgba(15,31,51,.03);
+    }
+    .team-head-link:hover { background:#F5F9FC; border-color:#B8CBDD; }
+    .team-head-link:focus-visible, .ttab:focus-visible { outline:3px solid #9BC4E8; outline-offset:3px; }
+
+    .turma-feed { background:transparent; border:0; box-shadow:none; overflow:visible; margin-bottom:1.3rem; }
+    .turma-feed .eq-profile {
+      overflow:hidden!important; margin:0 0 1rem!important; border:1px solid #E0E8EF!important;
+      border-radius:18px!important; background:#fff!important;
+      box-shadow:0 3px 18px rgba(15,31,51,.045)!important;
+    }
+    .eq-profile__banner {
+      min-height:166px; padding:1.6rem 1.9rem; gap:1.4rem; isolation:isolate;
+      border-bottom:1px solid rgba(46,89,125,.09);
+    }
+    .eq-profile__banner::after {
+      content:""; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.36;
+      background-image:radial-gradient(circle at 1px 1px,rgba(66,111,147,.12) 1px,transparent 0);
+      background-size:24px 24px; mask-image:linear-gradient(90deg,transparent 32%,black 100%);
+    }
+    .eq-profile__avatar, .eq-profile__avatar-ph {
+      width:104px;height:104px; border-radius:21px; border:4px solid rgba(255,255,255,.95);
+      box-shadow:0 7px 23px rgba(27,54,78,.12),0 0 0 1px rgba(39,73,101,.11);
+    }
+    .eq-profile__avatar { object-fit:cover; object-position:center; }
+    .eq-profile__avatar-ph {
+      background:rgba(255,255,255,.74); color:#627F9D;
+    }
+    .eq-profile__info::before {
+      content:"PERFIL DA EQUIPE"; display:block; color:#687F96; font-size:.62rem; font-weight:800;
+      letter-spacing:.105em; line-height:1.35; margin-bottom:.42rem;
+    }
+    .eq-profile__name {
+      color:#1A2B40; font-size:clamp(1.38rem,2.3vw,1.9rem); letter-spacing:-.035em;
+      line-height:1.16; white-space:normal; overflow:visible; text-overflow:clip;
+    }
+    .eq-profile__meta { margin-top:.43rem; color:#61758C; font-size:.81rem; font-weight:650; line-height:1.35; }
+    .eq-profile__actions { margin-top:.8rem; }
+    .eq-banner__sesi {
+      filter:brightness(0) saturate(100%); opacity:.72; height:22px; top:17px; right:20px;
+    }
+
+    .turma-feed__content {
+      padding:1rem 1.15rem 1.6rem; border:1px solid #E0E8EF; border-radius:16px;
+      background:#fff; box-shadow:0 3px 18px rgba(15,31,51,.035);
+    }
+    .turma-feed .coord-team-picker {
+      display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;
+      margin:0 0 1.1rem!important; padding:.9rem 1rem;
+      border:1px solid #E4EBF2!important; border-radius:12px!important;
+      background:#F8FAFC!important;
+    }
+    .coord-team-picker__label { font-size:.78rem; font-weight:760; color:#1E334D; }
+    .coord-team-picker__hint { font-size:.69rem; color:#75869A; line-height:1.4; }
+    .turma-feed .coord-team-picker .cs-wrap { width:min(340px,100%); flex:0 1 340px; }
+    .turma-feed .coord-team-picker select, .turma-feed .coord-team-picker .cs-btn {
+      width:100%; min-height:41px; border-radius:10px; border:1px solid #CFDDE9;
+      background:#fff; color:#263950; font-size:.75rem; font-weight:700;
+    }
+    .turma-feed .turma-tabs {
+      display:flex; gap:.28rem; padding:.26rem; width:fit-content; max-width:100%;
+      overflow-x:auto; border:1px solid #E7EDF3; border-radius:11px;
+      background:#F4F7FA; margin:0 0 1.25rem;
+      scrollbar-width:thin;
+    }
+    .turma-feed .ttab {
+      min-height:38px; margin:0; padding:.58rem .98rem; border:0; border-radius:8px;
+      background:transparent; font-size:.73rem; color:#64758A; font-weight:730;
+    }
+    .turma-feed .ttab.ativo { background:#fff; color:#1B324D; box-shadow:0 2px 7px rgba(24,44,63,.10); }
+    .turma-feed .ttab:hover:not(.ativo) { background:rgba(255,255,255,.60); color:#274D72; }
+    .team-section-kicker { font-size:.67rem; font-weight:800; letter-spacing:.065em; margin-bottom:.8rem; }
+    #ranking-row { margin-bottom:1.05rem; }
+    #ranking-badges { gap:.52rem; }
+    .rank-badge { padding:.42rem .65rem; border-radius:9px; }
+
+    /* Resultados existentes: corrigir o posicionamento dos indicadores sem alterar números */
+    #scores-grid.scores-grid {
+      display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.85rem; align-items:stretch; padding:0; margin:0;
+    }
+    #scores-grid > .gauge-wrap {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      width:auto; min-width:0; min-height:185px; padding:1.1rem .55rem;
+      border:1px solid #E6EDF3; border-radius:13px; background:#FBFCFE;
+      transition:border-color .17s ease,box-shadow .17s ease;
+    }
+    #scores-grid > .gauge-wrap:hover { border-color:#D0E1EC; box-shadow:0 5px 15px rgba(22,43,68,.055); }
+    #scores-grid > .gauge-wrap.gauge-total {
+      flex-basis:auto; grid-column:auto; border-color:#E9DEC1;
+      background:linear-gradient(155deg,#FFFDF6,#FFFFFF 72%);
+    }
+    #scores-grid .gauge-svg { width:112px; height:112px; transform:none; overflow:visible; }
+    #scores-grid .gauge-wrap.gauge-total .gauge-svg { width:125px; height:125px; }
+    #scores-grid .gauge-ring {
+      transform:rotate(-90deg); transform-origin:44px 44px;
+    }
+    #scores-grid .gauge-pct, #scores-grid .gauge-sub { transform:none; text-anchor:middle; dominant-baseline:middle; }
+    #scores-grid .gauge-pct { font-size:18px; }
+    #scores-grid .gauge-wrap.gauge-total .gauge-pct { font-size:21px; }
+    #scores-grid .gauge-sub { font-size:9px; fill:#697B90; }
+    #scores-grid .gauge-wrap.gauge-total .gauge-sub { font-size:10px; }
+    #scores-grid .gauge-label {
+      margin-top:.48rem; color:#23364B; font-size:.76rem; line-height:1.35;
+      max-width:none; padding:0 .45rem;
+    }
+    #scores-grid .gauge-sublabel { font-size:.65rem; margin-top:.23rem; }
+    #scores-grid > p { grid-column:1/-1; padding:1.5rem; background:#F8FAFC; border:1px solid #E6EDF3; border-radius:12px; }
+    #ttab-metodologia, #ttab-documentos, #ttab-feedback { line-height:1.58; }
+    .turma-feed .met-card, .turma-feed .doc-item, .turma-feed .cat-accordion { transition:background .16s ease,border-color .16s ease; }
+
+    @media (max-width:960px) {
+      #scores-grid.scores-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .turma-feed .coord-team-picker .cs-wrap { flex:1 1 240px; }
+    }
+    @media (max-width:700px) {
+      .team-shell .container { padding:1.05rem .9rem 2.4rem; }
+      .team-workspace-head { align-items:flex-start; gap:.8rem; }
+      .team-workspace-sub { font-size:.76rem; }
+      .eq-profile__banner { min-height:146px; padding:1.15rem 1.1rem; gap:.85rem; }
+      .eq-profile__avatar, .eq-profile__avatar-ph { width:76px; height:76px; border-radius:16px; border-width:3px; }
+      .eq-profile__name { font-size:1.2rem; }
+      .eq-profile__meta { font-size:.69rem; }
+      .eq-banner__sesi { height:16px; top:11px; right:11px; max-width:58px; }
+      .turma-feed__content { padding:.9rem .8rem 1.2rem; }
+      #scores-grid.scores-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:.6rem; }
+      #scores-grid > .gauge-wrap { min-height:163px; padding:.8rem .3rem; }
+      #scores-grid .gauge-svg { width:102px; height:102px; }
+      .turma-feed .coord-team-picker { align-items:stretch; padding:.8rem; }
+      .turma-feed .coord-team-picker .cs-wrap { width:100%; flex:1 1 100%; }
+    }
+    @media (max-width:370px) {
+      .eq-profile__banner { flex-wrap:wrap; }
+      #scores-grid.scores-grid { grid-template-columns:1fr; }
+      #scores-grid > .gauge-wrap { min-height:150px; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      #scores-grid > .gauge-wrap, .turma-feed .met-card, .turma-feed .doc-item { transition:none; }
+      #scores-grid .gauge-ring { transition:none; }
+    }
+
+  
+    /* Contexto pedagógico — descrição, não novo indicador */
+    .met-context {
+      margin:0 0 1.15rem; padding:1rem 1.1rem;
+      border:1px solid #E2EAF1; border-radius:12px;
+      background:linear-gradient(105deg,#F7FAFD 0%,#FFFFFF 100%);
+    }
+    .met-context__eyebrow {
+      margin-bottom:.42rem; color:#56738F; font-size:.67rem;
+      font-weight:800; letter-spacing:.065em; text-transform:uppercase;
+    }
+    .met-context p { margin:.35rem 0 .55rem; color:#50667C; font-size:.75rem; line-height:1.65; }
+    .met-context p:last-child { margin-bottom:0; }
+    .met-context strong { color:#1B3C5C; font-weight:760; }
+    @media(max-width:700px) { .met-context {padding:.85rem;} .met-context p {font-size:.72rem;} }
+
+  
+    /* Metodologia: aproximar sequência, categoria e descrição com ritmo consistente */
+    .team-shell #ttab-metodologia .met-grid {
+      display:flex; flex-direction:column; gap:0; margin-bottom:1rem;
+    }
+    .team-shell #ttab-metodologia .met-card {
+      display:grid;
+      grid-template-columns:36px minmax(155px,190px) minmax(0,1fr);
+      column-gap:1rem;row-gap:.4rem;align-items:center;
+      padding:1.02rem 1.1rem;
+      min-height:82px;
+      border:0 !important;border-bottom:1px solid #E9EEF3 !important;
+      border-radius:0 !important;background:transparent !important;
+    }
+    .team-shell #ttab-metodologia .met-card__num {
+      width:34px;height:34px;font-size:.82rem;box-shadow:0 2px 5px rgba(32,55,67,.08);
+    }
+    .team-shell #ttab-metodologia .met-card__icon-col {
+      min-width:0;max-width:190px;gap:.16rem;
+    }
+    .team-shell #ttab-metodologia .met-card__badge {
+      max-width:100%;padding:.3rem .48rem;
+      border-radius:6px;font-size:.62rem;
+      letter-spacing:.055em;
+    }
+    .team-shell #ttab-metodologia .met-card__titulo {
+      font-size:.78rem;line-height:1.35;margin:0;
+      font-weight:770;color:#233C53;
+    }
+    .team-shell #ttab-metodologia .met-card__desc {
+      display:block;-webkit-line-clamp:unset;overflow:visible;
+      min-width:0;font-size:.76rem;color:#607489;
+      line-height:1.58;text-align:left;
+    }
+    @media(max-width:880px) {
+      .team-shell #ttab-metodologia .met-card {
+        grid-template-columns:34px minmax(0,1fr);
+        gap:.3rem .8rem;padding:.92rem .65rem;
+      }
+      .team-shell #ttab-metodologia .met-card__num {grid-column:1;grid-row:1;}
+      .team-shell #ttab-metodologia .met-card__icon-col {grid-column:2;grid-row:1;max-width:none;}
+      .team-shell #ttab-metodologia .met-card__desc {grid-column:2;grid-row:2;font-size:.73rem;}
+    }
+    @media(max-width:430px) {
+      .team-shell #ttab-metodologia .met-card {grid-template-columns:30px minmax(0,1fr);column-gap:.7rem;}
+      .team-shell #ttab-metodologia .met-card__num {width:29px;height:29px;font-size:.72rem;}
+    }
+
   </style>
 </head>
 <body>
@@ -1664,14 +1880,15 @@
   <a href="turma.html" class="sidebar-brand" aria-label="HUB Circuito">
     <img src="logo-horizontal.svg" alt="HUB Circuito" class="sidebar-brand__img">
   </a>
-  <a href="index.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg> Início</a>
-  <a href="arena.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg> Arena</a>
-  <a href="turma.html" class="sidebar-item ativo"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1.5 13.5c0-2.5 2-4 4-4"/><circle cx="11" cy="5.5" r="2"/><path d="M10 13.5c0-2 1.5-3.5 3.5-3.5"/></svg> Minha Turma</a>
-  <a href="juizes.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11.5" rx="1.5"/><path d="M6 2.5a2 2 0 014 0"/><path d="M5.5 7.5h5M5.5 10.5h3"/></svg> Juízes</a>
-  <a href="coordenacao.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="5" r="2.5"/><path d="M1.5 14c0-2.8 2.2-5 5-5"/><path d="M11.5 2l.55 1.6H13.7l-1.4 1 .55 1.6-1.35-1-1.35 1 .55-1.6-1.4-1h1.65z"/></svg> Coordenação</a>
+  <a href="index.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-7h6v7"/></svg> Início</a>
+  <a href="arena.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 4.5c0-.8.85-1.3 1.55-.9l11.1 7.1c.9.58.9 1.97 0 2.55l-11.1 7.1c-.7.45-1.55-.05-1.55-.9z" fill="currentColor" stroke="none"/></svg> Arena</a>
+  <a href="turma.html" class="sidebar-item ativo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a6 6 0 0 1 12 0v1"/><path d="M16 5a3 3 0 0 1 0 6m1 3a5 5 0 0 1 4 5v1"/></svg> Minha Turma</a>
+  <a href="juizes.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8.5 12l2 2 5-5M9 18h6"/></svg> Juízes</a>
+  <a href="coordenacao.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 16v-4m5 4V8m5 8v-6"/></svg> Coordenação</a>
   <div class="sidebar-sep"></div>
-  <a href="ranking.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13V9M8 13V6M13 13V3"/></svg> Ranking</a>
-  <a href="cronograma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="13" height="10.5" rx="1.5"/><path d="M1.5 7.5h13M5.5 1.5v3M10.5 1.5v3"/></svg> Cronograma</a>
+  <a href="ranking.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16M5 17v-5h4v5m3 0V7h4v10m3 0V4h2v13"/></svg> Ranking</a>
+  <a href="documentos.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6m-6 4h6m-6 4h4"/></svg> Documentos</a>
+  <a href="cronograma.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18m-13 4h3m-3 4h3m4-4h3"/></svg> Cronograma</a>
 </nav>
 
 <div class="team-stage">
@@ -1785,8 +2002,10 @@
 
     <!-- ── ABA: Metodologia ─────────────────────────────────────── -->
     <div class="ttab-panel" id="ttab-metodologia">
-      <div style="font-size:.72rem;color:#66778B;line-height:1.55;padding:.6rem .1rem .5rem;border-bottom:1px solid #EEF2F7;margin-bottom:.65rem">
-        O torneio integra Ciência, Tecnologia, Engenharia, Artes e Matemática (STEAM). Cada categoria vale <strong style="color:#12355B">20% da pontuação total</strong>.
+      <div class="met-context">
+        <div class="met-context__eyebrow">Como interpretar a avaliação</div>
+        <p>Os desafios de robótica integram conhecimentos de Ciência, Tecnologia, Engenharia, Artes e Matemática (STEAM). Nesta modalidade, as cinco categorias contribuem com <strong>20% da pontuação total cada</strong>, considerando os critérios definidos para o torneio.</p>
+        <p>Os registros de projeto, programação, construção e trabalho em equipe ajudam professores e estudantes a refletir sobre estratégias, decisões e processos de resolução de problemas. Essa leitura pode dialogar com os 4Cs, a Taxonomia de Bloom e a BNCC, sem reduzir a aprendizagem à classificação final.</p>
       </div>
       <div class="met-grid">
 
@@ -2299,9 +2518,9 @@
   });
 
   var COMP_GRAD = {
-    'FLL':          'linear-gradient(135deg,#7EC8FF 0%,#2F80ED 100%)',
-    'OBR':          'linear-gradient(135deg,#6FCF97 0%,#27AE60 100%)',
-    'Steam Racing': 'linear-gradient(135deg,#FF9090 0%,#EB5757 100%)'
+    'FLL':          'linear-gradient(115deg,#E9F3FF 0%,#F6F9FF 62%,#DCEAFF 100%)',
+    'OBR':          'linear-gradient(115deg,#E5F7EE 0%,#F5FAF5 62%,#DCF2E3 100%)',
+    'Steam Racing': 'linear-gradient(115deg,#F1EBFF 0%,#FAF8FF 62%,#E8DDFF 100%)'
   };
 
   function compDaEquipe(id) {

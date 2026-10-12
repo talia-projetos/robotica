@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#12355B">
-  <link rel="stylesheet" href="css/styles.css?v=13">
+  <link rel="stylesheet" href="css/styles.css?v=14">
   <script>window.API_URL='https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';</script>
   <style>
     /* ── Variáveis ─────────────────────────────────────────── */
@@ -454,6 +454,73 @@
       .ficha-footer  { padding: .5rem 1.4rem; }
       .score-grid { grid-template-columns: repeat(5,1fr); gap: .5rem; }
       .comentarios-grid { grid-template-columns: 1fr 1fr; gap: .5rem; }
+    }
+
+    /* Relatório em tela acompanha a identidade do portal; impressão preservada. */
+    @media screen {
+      body {
+        background:#F2F7F5;
+        color:#263F43;
+      }
+      .toolbar {
+        min-height:64px;
+        background:#FFFFFF;
+        border-bottom:1px solid #DFEAE7;
+        box-shadow:0 1px 5px rgba(29,67,63,.045);
+        gap:.75rem;
+      }
+      .toolbar a,
+      .toolbar__title {
+        color:#294C4A;
+      }
+      .toolbar a:hover {
+        color:#237F72;
+      }
+      .toolbar__sep {
+        color:#BFCDC9;
+      }
+      .tb-select {
+        min-height:40px;
+        border:1px solid #D2E1DC;
+        border-radius:10px;
+        background:#FFFFFF;
+        color:#263F43;
+        font-weight:660;
+      }
+      .tb-select option {
+        background:#FFFFFF;
+        color:#263F43;
+      }
+      .tb-select:focus-visible,
+      .tb-btn:focus-visible {
+        outline:3px solid #89CCB9;
+        outline-offset:2px;
+      }
+      .tb-btn {
+        min-height:40px;
+        border-radius:10px;
+        padding:.58rem 1rem;
+      }
+      .tb-btn--print {
+        background:#2F9D8C;
+        color:#FFFFFF;
+      }
+      .tb-btn--print:hover {
+        background:#257F74;
+      }
+      .tb-btn--outline {
+        background:#F7FAF9;
+        border:1px solid #D2E1DC;
+        color:#395956;
+      }
+      .login-wrap {
+        border:1px solid #DFEAE7;
+        border-radius:14px;
+        box-shadow:0 5px 22px rgba(30,73,70,.055);
+      }
+      .login-wrap h2 {
+        color:#263F43;
+      }
     }
   </style>
 </head>

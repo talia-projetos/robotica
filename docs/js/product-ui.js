@@ -337,7 +337,7 @@
 
   var COMP_CSS_ID = 'comp-sel-styles';
   var COMP_LABELS = { 'FLL': 'FLL', 'OBR': 'OBR', 'Steam Racing': 'Steam' };
-  var COMP_COLORS = { 'FLL': '#3979B8', 'OBR': '#00A651', 'Steam Racing': '#C0392B' };
+  var COMP_COLORS = { 'FLL': '#2F80ED', 'OBR': '#279B70', 'Steam Racing': '#8B5CF6' };
 
   function setupCompSelector() {
     var topbar = document.querySelector('.topbar');

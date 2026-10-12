@@ -7,7 +7,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#12355B">
-  <link rel="stylesheet" href="css/styles.css?v=13">
+  <link rel="stylesheet" href="css/styles.css?v=17">
   <script>
     window.API_URL = 'https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';
   </script>
@@ -968,6 +968,74 @@
       .steam-lower{grid-template-columns:1fr}
     }
 
+  
+    /* Revisão de superfície e hierarquia da Coordenação — somente tela */
+    #view-coord { max-width:1220px; padding:1.55rem clamp(1rem,2.6vw,2.5rem) 3rem; }
+    .coord-workspace-head { align-items:center; gap:1.25rem; margin-bottom:1.2rem!important; }
+    .coord-workspace-kicker { font-size:.72rem; font-weight:680; margin-bottom:.34rem; }
+    .coord-workspace-head h1 { font-size:clamp(1.75rem,2.6vw,2.15rem); line-height:1.15; }
+    .coord-workspace-sub { max-width:690px; font-size:.78rem; line-height:1.52; }
+    .coord-head-actions { gap:.55rem; }
+    .coord-head-link { min-height:40px; padding:.62rem .82rem; border-radius:10px; font-size:.72rem; }
+    .coord-head-link:focus-visible { outline:3px solid #9BC4E8; outline-offset:3px; }
+    .coord-toolbar { gap:.7rem; margin-bottom:1.15rem; padding:.6rem; border-radius:13px; box-shadow:0 2px 12px rgba(18,40,61,.025); }
+    .tab-bar { gap:.25rem; }
+    .tab-btn { min-height:39px; padding:.58rem .86rem; border-radius:9px; font-size:.72rem; }
+    .tab-btn.ativo { background:#EAF3FB; color:#1C5B94; }
+    .tab-btn:focus-visible { outline:2px solid #8DB9DC; outline-offset:-2px; }
+    #filtro-busca { min-height:39px; width:min(225px,36vw); min-width:0!important; padding:.62rem .75rem; border-radius:9px; font-size:.73rem; }
+    .coord-section-head { margin:.2rem 0 .72rem; }
+    .coord-section-title { font-size:.66rem; }
+    .coord-section-note { color:#77899C; font-size:.65rem; }
+    .coord-summary { gap:.8rem; margin-bottom:1.15rem; }
+    .summary-chip { min-height:83px; padding:1rem .95rem; gap:.65rem; border-radius:13px; font-size:.69rem; box-shadow:0 2px 11px rgba(15,31,51,.025); }
+    .summary-chip strong { font-size:1.33rem!important; }
+    .summary-chip__dot { width:8px; height:8px; }
+    .eq-cards { gap:.64rem; }
+    .eq-card { border-radius:12px!important; box-shadow:0 2px 12px rgba(15,31,51,.025)!important; }
+    .eq-card__header { min-height:72px; padding:.95rem 1rem; gap:.85rem; }
+    .eq-card__header:hover { background:#F7FAFD; }
+    .eq-card__id { font-size:.78rem; }
+    .eq-card__nome { font-size:.66rem; line-height:1.45; }
+    .eq-card__pos { font-size:.72rem; }
+    .eq-score-mini { min-width:43px; }
+    .eq-score-mini__val { font-size:.8rem; }
+    .eq-score-mini__label { font-size:.58rem; }
+    .eq-score-total { font-size:.94rem; }
+    .eq-card__body { padding:1.1rem; background:#FAFCFE!important; }
+    .detail-grid { gap:.65rem; margin-bottom:1.05rem; }
+    .detail-score { padding:.85rem; border-radius:10px; }
+    .detail-score__label { font-size:.62rem; line-height:1.3; }
+    .detail-score__val { font-size:1.13rem; }
+    .comments-cols { gap:.7rem; }
+    .comment-block { padding:.8rem; border-radius:10px; }
+    .comment-text { font-size:.71rem; line-height:1.55; text-align:left; }
+    #view-cat .table-wrap, .steam-matrix-wrap, .steam-panel { border-radius:12px; overflow:hidden; }
+    #view-cat thead th { padding:.75rem .85rem; font-size:.66rem; }
+    #view-cat tbody td { padding:.78rem .85rem; font-size:.72rem; }
+    .steam-kpis { gap:.7rem; margin-bottom:.9rem; }
+    .steam-kpi { border-radius:12px; padding:.95rem; }
+    .steam-kpi__label { font-size:.62rem; }
+    .steam-kpi__val { font-size:1.17rem; }
+    .bloom-label, .bloom-count { font-size:.7rem; }
+    @media (max-width:980px) {
+      .coord-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .steam-kpis { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    }
+    @media (max-width:700px) {
+      #view-coord { padding:1.05rem .9rem 2.4rem; }
+      .coord-workspace-head { align-items:flex-start; }
+      .coord-head-actions { justify-content:flex-start; }
+      .coord-toolbar { flex-direction:column; align-items:stretch; }
+      .tab-bar { max-width:100%; }
+      #filtro-busca { width:100%; }
+      .eq-card__header { padding:.8rem; gap:.55rem; }
+      .eq-card__scores { gap:.45rem; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      .eq-card, .coord-head-link, .tab-btn { transition:none; }
+    }
+
   </style>
 </head>
 <body>
@@ -978,14 +1046,15 @@
   <a href="index.html" class="sidebar-brand" aria-label="HUB Circuito">
     <img src="logo-horizontal.svg" alt="HUB Circuito" class="sidebar-brand__img">
   </a>
-  <a href="index.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.5L8 1.5l6.5 5V13a1 1 0 01-1 1H2.5a1 1 0 01-1-1z"/><path d="M6 14V9h4v5"/></svg> Início</a>
-  <a href="arena.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><polygon points="6.5,5.5 11,8 6.5,10.5" fill="currentColor" stroke="none"/></svg> Arena</a>
-  <a href="turma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1.5 13.5c0-2.5 2-4 4-4"/><circle cx="11" cy="5.5" r="2"/><path d="M10 13.5c0-2 1.5-3.5 3.5-3.5"/></svg> Minha Turma</a>
-  <a href="juizes.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="2.5" width="9" height="11.5" rx="1.5"/><path d="M6 2.5a2 2 0 014 0"/><path d="M5.5 7.5h5M5.5 10.5h3"/></svg> Juízes</a>
-  <a href="coordenacao.html" class="sidebar-item ativo"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.5" cy="5" r="2.5"/><path d="M1.5 14c0-2.8 2.2-5 5-5"/><path d="M11.5 2l.55 1.6H13.7l-1.4 1 .55 1.6-1.35-1-1.35 1 .55-1.6-1.4-1h1.65z"/></svg> Coordenação</a>
+  <a href="index.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-7h6v7"/></svg> Início</a>
+  <a href="arena.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 4.5c0-.8.85-1.3 1.55-.9l11.1 7.1c.9.58.9 1.97 0 2.55l-11.1 7.1c-.7.45-1.55-.05-1.55-.9z" fill="currentColor" stroke="none"/></svg> Arena</a>
+  <a href="turma.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a6 6 0 0 1 12 0v1"/><path d="M16 5a3 3 0 0 1 0 6m1 3a5 5 0 0 1 4 5v1"/></svg> Minha Turma</a>
+  <a href="juizes.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V3h6v1M8.5 12l2 2 5-5M9 18h6"/></svg> Juízes</a>
+  <a href="coordenacao.html" class="sidebar-item ativo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M7 16v-4m5 4V8m5 8v-6"/></svg> Coordenação</a>
   <div class="sidebar-sep"></div>
-  <a href="ranking.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13V9M8 13V6M13 13V3"/></svg> Ranking</a>
-  <a href="cronograma.html" class="sidebar-item"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3.5" width="13" height="10.5" rx="1.5"/><path d="M1.5 7.5h13M5.5 1.5v3M10.5 1.5v3"/></svg> Cronograma</a>
+  <a href="ranking.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16M5 17v-5h4v5m3 0V7h4v10m3 0V4h2v13"/></svg> Ranking</a>
+  <a href="documentos.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6m-6 4h6m-6 4h4"/></svg> Documentos</a>
+  <a href="cronograma.html" class="sidebar-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 10h18m-13 4h3m-3 4h3m4-4h3"/></svg> Cronograma</a>
 </nav>
 
 <div class="coord-stage">
@@ -1353,8 +1422,7 @@
       <th>Pos.</th>
       <th>Equipe</th>
       <th>Turno</th>
-      <th style="text-align:right">Nota (20pts)</th>
-      <th>Juízes</th>
+      <th style="text-align:right">Nota</th>
       <th>Bom trabalho!</th>
       <th>Reflitam sobre...</th>
     </tr>`;
@@ -1393,7 +1461,6 @@
         <td><strong>${NOMES_MAP[eq.id] || eq.id}</strong><br><span class="text-sm">${eq.id}</span></td>
         <td class="text-sm">${eq.turno || '—'}</td>
         <td style="text-align:right;font-weight:700">${nota}</td>
-        <td class="text-sm">${jz}</td>
         <td class="cat-comments-cell">${bomCell}</td>
         <td class="cat-comments-cell">${refCell}</td>
       </tr>`;
