@@ -3344,3 +3344,35 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     width:100% !important;
   }
 }
+
+/* ── OVERRIDE FINAL: topbar sempre escura ──────────────────────────────────────
+   Qualquer bloco anterior que force background:#fff é sobreposto aqui.
+   Colocado por último para garantir precedência em cascata. */
+@media screen {
+  html body .topbar,
+  html body.claro .topbar,
+  html body .app-body .topbar,
+  html body > header.topbar {
+    background: #101720 !important;
+    color: rgba(255,255,255,.85) !important;
+    border-bottom: 1px solid rgba(255,255,255,.065) !important;
+    box-shadow: 0 1px 0 rgba(0,0,0,.18) !important;
+  }
+  html body .topbar .topbar__event-name,
+  html body .topbar .topbar-avatar__name,
+  html body .topbar .topbar__brand-name,
+  html body .topbar .av-btn {
+    color: rgba(255,255,255,.9) !important;
+  }
+  html body .topbar .topbar__event-org,
+  html body .topbar .topbar-avatar__role {
+    color: rgba(255,255,255,.45) !important;
+    font-weight: normal !important;
+  }
+  html body .topbar .av-chevron { stroke: rgba(255,255,255,.55) !important; }
+  /* Ícone de contexto na topbar: negativo para fundo escuro */
+  html body > header.topbar > .topbar__event::before {
+    background-color: rgba(255,255,255,.08) !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255%2C255%2C255%2C.7)' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='3' width='14' height='18' rx='2'/%3E%3Cpath d='M9 7h6m-6 4h6m-6 4h4'/%3E%3C/svg%3E") !important;
+  }
+}
