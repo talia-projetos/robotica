@@ -197,26 +197,26 @@ function TORNEIO_corrigirNomes() {
     ['TUR11', '7° F - Poseidon',          'Marilia',    'FLL'],
     ['TUR12', '7° G - Arara Azul',        'Reinalda',   'FLL'],
     ['TUR13', '7° H - Nexos',             'Rute',       'FLL'],
-    ['TUR14', '8° A',                     '',              'OBR'],
-    ['TUR15', '8° B',                     '',              'OBR'],
-    ['TUR16', '8° C',                     '',              'OBR'],
-    ['TUR17', '8° D',                     'Ricardo',       'OBR'],
-    ['TUR18', '8° E',                     'Rosela',        'OBR'],
-    ['TUR19', '8° F',                     '',              'OBR'],
-    ['TUR20', '8° G',                     'Camila',        'OBR'],
-    ['TUR21', '8° H',                     'Eric',          'OBR'],
-    ['TUR22', '8° I',                     '',              'OBR'],
-    ['TUR23', '8° J',                     '',              'OBR'],
-    ['TUR24', '9° A',                     'Max',           'Steam Racing'],
-    ['TUR25', '9° B',                     'José Grimaldo', 'Steam Racing'],
-    ['TUR26', '9° C',                     'Elias',         'Steam Racing'],
-    ['TUR27', '9° D',                     'Luciana',       'Steam Racing'],
-    ['TUR28', '9° E',                     'Anderson',      'Steam Racing'],
-    ['TUR29', '9° F',                     'Vanessa',       'Steam Racing'],
-    ['TUR30', '9° G',                     '',              'Steam Racing'],
-    ['TUR31', '9° H',                     'Lucyene',       'Steam Racing'],
-    ['TUR32', '9° I',                     '',              'Steam Racing'],
-    ['TUR33', '9° J',                     '',              'Steam Racing']
+    ['TUR14', '8° A • Shadow Robotics',    'Juliana',        'OBR'],
+    ['TUR15', '8° B • Sharktech',          'Sabrina',        'OBR'],
+    ['TUR16', '8° C • Thunderbots',        'Ana Paula Suzart','OBR'],
+    ['TUR17', '8° D • Spider Bot',         'Ricardo',        'OBR'],
+    ['TUR18', '8° E • Lince Tec',          'Rosela',         'OBR'],
+    ['TUR19', '8° F • Cyberfoxys',         'Nadja',          'OBR'],
+    ['TUR20', '8° G • Inova Tech',         'Camila',         'OBR'],
+    ['TUR21', '8° H • Robótica 8H',        'Erick',          'OBR'],
+    ['TUR22', '8° I • Los Minions',        'Bruno',          'OBR'],
+    ['TUR23', '8° J • Sem nome 1',         '',               'OBR'],
+    ['TUR24', '9° A • Biene',              'Max',            'Steam Racing'],
+    ['TUR25', '9° B • A Lua',              'José Grimaldo',  'Steam Racing'],
+    ['TUR26', '9° C • Bolt Engineering',   'Elias',          'Steam Racing'],
+    ['TUR27', '9° D • Supernova',          'Luciana',        'Steam Racing'],
+    ['TUR28', '9° E • Pantera Negra',      'Wesley',         'Steam Racing'],
+    ['TUR29', '9° F • Ímola',             'Marcelo',        'Steam Racing'],
+    ['TUR30', '9° G • Waitheri',           'Anderson',       'Steam Racing'],
+    ['TUR31', '9° H • Sem nome 2',         'Lucyene',        'Steam Racing'],
+    ['TUR32', '9° I • Sem nome 3',         'Luciana',        'Steam Racing'],
+    ['TUR33', '9° J • Sem nome 4',         'Daniel',         'Steam Racing']
   ];
 
   const dados = aba.getDataRange().getValues();
@@ -245,7 +245,7 @@ function TORNEIO_corrigirNomes() {
     }
   });
 
-  SpreadsheetApp.getActiveSpreadsheet().toast('Equipes atualizadas: FLL (TUR01–13) · OBR (TUR14–23) · Steam Racing (TUR24–33)', 'Torneio', 8);
+  SpreadsheetApp.getActiveSpreadsheet().toast('Equipes atualizadas: FLL (TUR01–13) · OBR (TUR14–23) · Steam Racing (TUR24–33). Execute também Corrigir nomes para atualizar a planilha.', 'Torneio', 10);
 }
 
 // Popula a aba TAMPINHAS com os dados reais de quantidade (10/10/2026).
@@ -273,29 +273,32 @@ function TORNEIO_popularTampinhas() {
     [agora,'TUR05',10784,2868,  'Yulo'],
     [agora,'TUR06', 8345,1271,  'João'],
     [agora,'TUR07', 5328,1180,  'Joseli'],
-    [agora,'TUR08',  522, 250,  ''],
-    [agora,'TUR09',  879, 150,  ''],
+    [agora,'TUR08',  522, 250,  'Ana Claudia'],
+    [agora,'TUR09',  879, 150,  'Diego Lopes'],
     [agora,'TUR10',11712,1498,  'Fabiana'],
-    [agora,'TUR11', 2740, 472,  ''],
-    [agora,'TUR12', 1045, 582,  ''],
-    [agora,'TUR13',  453,  68,  ''],
-    [agora,'TUR14',  496,  40,  ''],
-    [agora,'TUR15',  503, 273,  ''],
-    [agora,'TUR16',  864, 694,  ''],
-    [agora,'TUR17', 1170, 784,  'Ricardo'],
-    [agora,'TUR18',17194,3232,  'Rosela'],
-    [agora,'TUR19',   21, 645,  ''],
-    [agora,'TUR20',16643, 121,  'Camila'],
-    [agora,'TUR21', 6602,1403,  'Eric'],
-    [agora,'TUR22',  120, 322,  ''],
-    [agora,'TUR24', 7555,  71,  'Max'],
-    [agora,'TUR25', 3222, 177,  'José Grimaldo'],
-    [agora,'TUR26',  328,  53,  'Elias'],
-    [agora,'TUR27',  292,1599,  'Luciana'],
-    [agora,'TUR28',    1, 473,  'Anderson'],
-    [agora,'TUR29', 1989, 824,  'Vanessa'],
-    [agora,'TUR30',    5,   0,  ''],
-    [agora,'TUR31', 4116,  83,  'Lucyene']
+    [agora,'TUR11', 2740, 472,  'Marilia'],
+    [agora,'TUR12', 1045, 582,  'Reinalda'],
+    [agora,'TUR13',  453,  68,  'Rute'],
+    [agora,'TUR14',  496,  40,  'Juliana'],       // 8° A • Shadow Robotics
+    [agora,'TUR15',  503, 273,  'Sabrina'],        // 8° B • Sharktech
+    [agora,'TUR16',  864, 694,  'Ana Paula Suzart'],// 8° C • Thunderbots
+    [agora,'TUR17', 1170, 784,  'Ricardo'],        // 8° D • Spider Bot
+    [agora,'TUR18',17194,3232,  'Rosela'],         // 8° E • Lince Tec
+    [agora,'TUR19',   21, 645,  'Nadja'],          // 8° F • Cyberfoxys
+    [agora,'TUR20',16643, 121,  'Camila'],         // 8° G • Inova Tech
+    [agora,'TUR21', 6602,1403,  'Erick'],          // 8° H • Robótica 8H
+    [agora,'TUR22',  120, 322,  'Bruno'],          // 8° I • Los Minions
+    [agora,'TUR23',    0,   0,  ''],               // 8° J • Sem nome 1
+    [agora,'TUR24', 7555,  71,  'Max'],            // 9° A • Biene
+    [agora,'TUR25', 3222, 177,  'José Grimaldo'],  // 9° B • A Lua
+    [agora,'TUR26',  328,  53,  'Elias'],          // 9° C • Bolt Engineering
+    [agora,'TUR27',  292,1599,  'Luciana'],        // 9° D • Supernova
+    [agora,'TUR28',    1, 473,  'Wesley'],         // 9° E • Pantera Negra
+    [agora,'TUR29', 1989, 824,  'Marcelo'],        // 9° F • Ímola
+    [agora,'TUR30',    5,   0,  'Anderson'],       // 9° G • Waitheri
+    [agora,'TUR31', 4116,  83,  'Lucyene'],        // 9° H • Sem nome 2
+    [agora,'TUR32',    0,   0,  'Luciana'],        // 9° I • Sem nome 3
+    [agora,'TUR33',    0,   0,  'Daniel']          // 9° J • Sem nome 4
   ];
 
   aba.getRange(lDados, 1, dados.length, cab.length).setValues(dados);
