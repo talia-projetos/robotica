@@ -864,7 +864,10 @@ function renderCriterios() {
 }
 
 /* ─── Draft offline ──────────────────────────────────────────── */
-function _draftKey() { return 'hub_draft_' + (CAT || 'arena'); }
+function _draftKey() {
+  var j = (Sessao && Sessao.juiz) ? Sessao.juiz : (localStorage.getItem('hub_juiz') || 'anon');
+  return 'hub_draft_' + j.toLowerCase().replace(/\s+/g, '_') + '_' + (CAT || 'arena');
+}
 
 function salvarDraft() {
   if (!CAT) return;
