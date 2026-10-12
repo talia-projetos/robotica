@@ -3329,15 +3329,15 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     content:"";
     display:block;
     width:30px !important;
-    height:34px !important;
+    height:38px !important;
     flex:0 0 30px !important;
-    background:url("../logo-u-fll.svg?v=5") center/contain no-repeat;
+    background:url("../logo-u-fll.svg?v=6") center/contain no-repeat;
   }
   html[data-hub-competition="obr"] body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand::before {
-    background-image:url("../logo-u-obr.svg?v=5");
+    background-image:url("../logo-u-obr.svg?v=6");
   }
   html[data-hub-competition="steam"] body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand::before {
-    background-image:url("../logo-u-steam.svg?v=5");
+    background-image:url("../logo-u-steam.svg?v=6");
   }
 }
 @media screen and (max-width:700px) {
