@@ -3346,3 +3346,118 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
 @media screen and (max-width:700px) {
   html body > header.topbar {width:100% !important;margin-left:0 !important;}
 }
+
+
+/* Correção definitiva da identidade visual compartilhada — 2026-10.
+   A mesma topbar branca acompanha todos os módulos, sem alterar JS. */
+@media screen {
+  html body > header.topbar,
+  html body .app-body .topbar,
+  html body.claro > header.topbar {
+    box-sizing:border-box !important;
+    height:64px !important;
+    min-height:64px !important;
+    max-height:64px !important;
+    padding:0 clamp(.85rem,2vw,1.4rem) !important;
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    background:#fff !important;
+    color:#29414A !important;
+    border-bottom:1px solid #DCE6EB !important;
+    box-shadow:0 1px 4px rgba(31,66,77,.045) !important;
+    position:sticky !important;
+    top:0 !important;
+    z-index:120 !important;
+  }
+  html body .topbar .topbar__event-name,
+  html body .topbar .topbar-avatar__name {color:#29414A !important;}
+  html body .topbar .topbar__event-org,
+  html body .topbar .topbar-avatar__role {color:#7A8D98 !important;}
+  html body .topbar .topbar__badge {min-width:0;}
+}
+@media screen and (min-width:701px) {
+  /* Mesma linha horizontal: logo no menu, seletores e título ao lado. */
+  html body:has(> .app-body:not(.sidebar-collapsed)) > header.topbar {
+    margin-left:190px !important;
+    width:calc(100% - 190px) !important;
+  }
+  html body:has(> .app-body.sidebar-collapsed) > header.topbar {
+    margin-left:72px !important;
+    width:calc(100% - 72px) !important;
+  }
+  html body:has(> header.topbar) > .app-body > nav.app-sidebar {
+    margin-top:-64px !important;
+    height:100vh !important;
+    height:100dvh !important;
+    top:0 !important;
+    z-index:121;
+  }
+  html body > header.topbar > .topbar__event {
+    display:grid;
+    align-items:center;
+    justify-content:start;
+    grid-template-columns:34px minmax(0,1fr);
+    grid-template-rows:auto auto;
+    column-gap:10px;
+    text-align:left !important;
+    padding:0 !important;
+  }
+  html body > header.topbar > .topbar__event::before {
+    content:"";
+    grid-row:1 / 3;
+    grid-column:1;
+    display:block;
+    width:34px;height:34px;
+    background:#EDF5FC url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233979B8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='3' width='14' height='18' rx='2'/%3E%3Cpath d='M9 7h6m-6 4h6m-6 4h4'/%3E%3C/svg%3E") center/17px 17px no-repeat;
+    border-radius:9px;
+  }
+  html body > header.topbar > .topbar__event > .topbar__event-name {
+    grid-column:2;grid-row:1;align-self:end;
+  }
+  html body > header.topbar > .topbar__event > .topbar__event-org {
+    grid-column:2;grid-row:2;align-self:start;
+  }
+  /* Símbolo próprio no menu recolhido, sem utilizar content:url no <img>.
+     Impede deformação/corte por conflito entre dimensões de imagem. */
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand {
+    display:flex !important;
+    flex-direction:row;
+    align-items:center !important;
+    justify-content:center !important;
+    min-height:78px !important;
+    height:78px !important;
+    flex:0 0 78px !important;
+    padding:10px 0 !important;
+    overflow:visible !important;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+    display:none !important;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand::before {
+    content:"";
+    display:block;
+    width:42px;
+    height:45px;
+    flex:0 0 42px;
+    background-image:url("../logo-u-fll.svg?v=3");
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:contain;
+  }
+  html[data-hub-competition="obr"] body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand::before {
+    background-image:url("../logo-u-obr.svg?v=3");
+  }
+  html[data-hub-competition="steam"] body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand::before {
+    background-image:url("../logo-u-steam.svg?v=3");
+  }
+}
+@media screen and (max-width:700px) {
+  html body > header.topbar {
+    margin-left:0 !important;
+    width:100% !important;
+    height:60px !important;
+    min-height:60px !important;
+    max-height:60px !important;
+  }
+}
