@@ -3258,3 +3258,91 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     content:url("../logo-u-steam.svg") !important;
   }
 }
+
+
+/* Unificacao 2026: topbar branca e sidebar alinhadas em todos os modulos.
+   Camada de apresentacao: nenhuma alteracao de componentes ou eventos. */
+@media screen {
+  html body .topbar,
+  html body.claro .topbar,
+  html body .app-body .topbar {
+    position:sticky !important;
+    top:0 !important;
+    z-index:120 !important;
+    background:#fff !important;
+    color:#263B4E !important;
+    border-bottom:1px solid #DCE6EB !important;
+    box-shadow:0 1px 4px rgba(31,66,77,.045) !important;
+  }
+  html body .topbar .topbar__event-name,
+  html body .topbar .topbar-avatar__name {color:#29414A !important;font-weight:740;}
+  html body .topbar .topbar__event-org,
+  html body .topbar .topbar-avatar__role {color:#7A8D98 !important;}
+}
+@media screen and (min-width:701px) {
+  /* Modulos com header fora do app-body: topbar ao lado do menu, como na Avaliacao. */
+  html body:has(> .app-body) > header.topbar {
+    margin-left:var(--hub-sidebar-open) !important;
+    width:calc(100% - var(--hub-sidebar-open)) !important;
+  }
+  html body:has(> .app-body.sidebar-collapsed) > header.topbar {
+    margin-left:var(--hub-sidebar-closed) !important;
+    width:calc(100% - var(--hub-sidebar-closed)) !important;
+  }
+  html body:has(> header.topbar) > .app-body > nav.app-sidebar {
+    margin-top:calc(-1 * var(--hub-topbar-height)) !important;
+    top:0 !important;
+    height:100vh !important;
+    height:100dvh !important;
+    align-self:flex-start;
+    z-index:121;
+  }
+  html body > header.topbar > .topbar__event {
+    display:grid;
+    flex:1 1 auto;
+    min-width:0;
+    grid-template-columns:34px minmax(0,1fr);
+    grid-template-rows:auto auto;
+    column-gap:10px;
+    align-content:center;
+    padding:0 !important;
+    text-align:left !important;
+    line-height:1.3;
+  }
+  html body > header.topbar > .topbar__event::before {
+    content:"";
+    grid-column:1;grid-row:1 / span 2;
+    width:34px;height:34px;border-radius:9px;
+    background:#EDF5FC url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233979B8' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='3' width='14' height='18' rx='2'/%3E%3Cpath d='M9 7h6m-6 4h6m-6 4h4'/%3E%3C/svg%3E") center / 17px 17px no-repeat;
+  }
+  html body > header.topbar > .topbar__event > .topbar__event-name {
+    grid-column:2;grid-row:1;align-self:end;
+  }
+  html body > header.topbar > .topbar__event > .topbar__event-org {
+    grid-column:2;grid-row:2;align-self:start;margin-top:2px;
+  }
+  /* Simbolo do menu fechado: margens e proporcao preservadas. */
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand {
+    display:flex !important;
+    align-items:center !important;justify-content:center !important;
+    padding:8px 0 11px !important;overflow:visible !important;
+  }
+  html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+    content:url("../logo-u-fll.svg?v=2") !important;
+    display:block !important;
+    width:38px !important;min-width:0 !important;max-width:38px !important;
+    height:43px !important;min-height:0 !important;max-height:43px !important;
+    padding:0 !important;margin:0 auto !important;
+    object-fit:contain !important;object-position:center !important;
+    filter:none !important;
+  }
+  html[data-hub-competition="obr"] body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+    content:url("../logo-u-obr.svg?v=2") !important;
+  }
+  html[data-hub-competition="steam"] body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand .sidebar-brand__img {
+    content:url("../logo-u-steam.svg?v=2") !important;
+  }
+}
+@media screen and (max-width:700px) {
+  html body > header.topbar {width:100% !important;margin-left:0 !important;}
+}
