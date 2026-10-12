@@ -206,17 +206,16 @@ function TORNEIO_corrigirNomes() {
     ['TUR20', '8° G • Inova Tech',        'Camila',           'OBR',          38],
     ['TUR21', '8° H • Robótica 8H',       'Erick',            'OBR',          37],
     ['TUR22', '8° I • Los Minions',       'Bruno',            'OBR',          36],
-    ['TUR23', '8° J • Sem nome 1',        '',                 'OBR',           0],
-    ['TUR24', '9° A • Biene',             'Max',              'Steam Racing', 39],
-    ['TUR25', '9° B • A Lua',             'José Grimaldo',    'Steam Racing', 39],
-    ['TUR26', '9° C • Bolt Engineering',  'Elias',            'Steam Racing', 39],
-    ['TUR27', '9° D • Supernova',         'Luciana',          'Steam Racing', 38],
-    ['TUR28', '9° E • Pantera Negra',     'Wesley',           'Steam Racing', 38],
-    ['TUR29', '9° F • Ímola',            'Marcelo',          'Steam Racing', 39],
-    ['TUR30', '9° G • Waitheri',          'Anderson',         'Steam Racing', 39],
-    ['TUR31', '9° H • Sem nome 2',        'Lucyene',          'Steam Racing', 38],
-    ['TUR32', '9° I • Sem nome 3',        'Luciana',          'Steam Racing', 38],
-    ['TUR33', '9° J • Sem nome 4',        'Daniel',           'Steam Racing', 39]
+    ['TUR23', '9° A • Biene',             'Max',              'Steam Racing', 39],
+    ['TUR24', '9° B • A Lua',             'José Grimaldo',    'Steam Racing', 39],
+    ['TUR25', '9° C • Bolt Engineering',  'Elias',            'Steam Racing', 39],
+    ['TUR26', '9° D • Supernova',         'Luciana',          'Steam Racing', 38],
+    ['TUR27', '9° E • Pantera Negra',     'Wesley',           'Steam Racing', 38],
+    ['TUR28', '9° F • Ímola',            'Marcelo',          'Steam Racing', 39],
+    ['TUR29', '9° G • Waitheri',          'Anderson',         'Steam Racing', 39],
+    ['TUR30', '9° H • Sem nome 2',        'Lucyene',          'Steam Racing', 38],
+    ['TUR31', '9° I • Sem nome 3',        'Luciana',          'Steam Racing', 38],
+    ['TUR32', '9° J • Sem nome 4',        'Daniel',           'Steam Racing', 39]
   ];
 
   const dados = aba.getDataRange().getValues();
@@ -247,7 +246,7 @@ function TORNEIO_corrigirNomes() {
     }
   });
 
-  SpreadsheetApp.getActiveSpreadsheet().toast('Equipes atualizadas: FLL (TUR01–13) · OBR (TUR14–23) · Steam Racing (TUR24–33). Nomes, tutores e nº de alunos gravados.', 'Torneio', 10);
+  SpreadsheetApp.getActiveSpreadsheet().toast('Equipes atualizadas: FLL (TUR01–13) · OBR (TUR14–22) · Steam Racing (TUR23–32). Nomes, tutores e nº de alunos gravados.', 'Torneio', 10);
 }
 
 // Popula a aba TAMPINHAS com os dados reais de quantidade (10/10/2026).
@@ -290,24 +289,23 @@ function TORNEIO_popularTampinhas() {
     [agora,'TUR20',16643, 121,  'Camila'],         // 8° G • Inova Tech
     [agora,'TUR21', 6602,1403,  'Erick'],          // 8° H • Robótica 8H
     [agora,'TUR22',  120, 322,  'Bruno'],          // 8° I • Los Minions
-    [agora,'TUR23',    0,   0,  ''],               // 8° J • Sem nome 1
-    [agora,'TUR24', 7555,  71,  'Max'],            // 9° A • Biene
-    [agora,'TUR25', 3222, 177,  'José Grimaldo'],  // 9° B • A Lua
-    [agora,'TUR26',  328,  53,  'Elias'],          // 9° C • Bolt Engineering
-    [agora,'TUR27',  292,1599,  'Luciana'],        // 9° D • Supernova
-    [agora,'TUR28',    1, 473,  'Wesley'],         // 9° E • Pantera Negra
-    [agora,'TUR29', 1989, 824,  'Marcelo'],        // 9° F • Ímola
-    [agora,'TUR30',    5,   0,  'Anderson'],       // 9° G • Waitheri
-    [agora,'TUR31', 4116,  83,  'Lucyene'],        // 9° H • Sem nome 2
-    [agora,'TUR32',    0,   0,  'Luciana'],        // 9° I • Sem nome 3
-    [agora,'TUR33',    0,   0,  'Daniel']          // 9° J • Sem nome 4
+    [agora,'TUR23', 7555,  71,  'Max'],            // 9° A • Biene
+    [agora,'TUR24', 3222, 177,  'José Grimaldo'],  // 9° B • A Lua
+    [agora,'TUR25',  328,  53,  'Elias'],          // 9° C • Bolt Engineering
+    [agora,'TUR26',  292,1599,  'Luciana'],        // 9° D • Supernova
+    [agora,'TUR27',    1, 473,  'Wesley'],         // 9° E • Pantera Negra
+    [agora,'TUR28', 1989, 824,  'Marcelo'],        // 9° F • Ímola
+    [agora,'TUR29',    5,   0,  'Anderson'],       // 9° G • Waitheri
+    [agora,'TUR30', 4116,  83,  'Lucyene'],        // 9° H • Sem nome 2
+    [agora,'TUR31',    0,   0,  'Luciana'],        // 9° I • Sem nome 3
+    [agora,'TUR32',    0,   0,  'Daniel']          // 9° J • Sem nome 4
   ];
 
   aba.getRange(lDados, 1, dados.length, cab.length).setValues(dados);
   aba.getRange(lDados, 1, dados.length, 1).setNumberFormat('dd/mm/yyyy');
 
   SpreadsheetApp.getActiveSpreadsheet().toast(
-    dados.length + ' turmas carregadas. TUR23 (8° J), TUR32 (9° I), TUR33 (9° J) permanecem com zero.',
+    dados.length + ' turmas carregadas. TUR31 (9° I) e TUR32 (9° J) permanecem com zero.',
     'Tampinhas', 8
   );
 
@@ -352,46 +350,46 @@ function TORNEIO_criarCronograma() {
   const DADOS = [
     ['Dia','Horário','Evento','Equipe','Nome Equipe','Atividade'],
     // ── 08/10 · Steam Racing ──────────────────────────────────────
-    ['08/10','07:30','Steam Racing','TUR24','9° A','1. ROUND A'],
-    ['08/10','07:30','Steam Racing','TUR29','9° F','1. ROUND B'],
-    ['08/10','07:35','Steam Racing','TUR25','9° B','1. ROUND A'],
-    ['08/10','07:35','Steam Racing','TUR30','9° G','1. ROUND B'],
-    ['08/10','07:40','Steam Racing','TUR26','9° C','1. ROUND A'],
-    ['08/10','07:40','Steam Racing','TUR31','9° H','1. ROUND B'],
-    ['08/10','07:45','Steam Racing','TUR27','9° D','1. ROUND A'],
-    ['08/10','07:45','Steam Racing','TUR32','9° I','1. ROUND B'],
-    ['08/10','07:50','Steam Racing','TUR28','9° E','1. ROUND A'],
-    ['08/10','07:50','Steam Racing','TUR33','9° J','1. ROUND B'],
-    ['08/10','08:00','Steam Racing','TUR24','9° A','Sala A'],
-    ['08/10','08:00','Steam Racing','TUR29','9° F','Sala B'],
-    ['08/10','08:15','Steam Racing','TUR25','9° B','Sala A'],
-    ['08/10','08:15','Steam Racing','TUR30','9° G','Sala B'],
-    ['08/10','08:30','Steam Racing','TUR26','9° C','Sala A'],
-    ['08/10','08:30','Steam Racing','TUR31','9° H','Sala B'],
-    ['08/10','08:45','Steam Racing','TUR27','9° D','Sala A'],
-    ['08/10','08:45','Steam Racing','TUR32','9° I','Sala B'],
-    ['08/10','09:00','Steam Racing','TUR28','9° E','Sala A'],
-    ['08/10','09:00','Steam Racing','TUR33','9° J','Sala B'],
-    ['08/10','09:15','Steam Racing','TUR24','9° A','2. ROUND A'],
-    ['08/10','09:15','Steam Racing','TUR25','9° B','2. ROUND B'],
-    ['08/10','09:20','Steam Racing','TUR26','9° C','2. ROUND A'],
-    ['08/10','09:20','Steam Racing','TUR27','9° D','2. ROUND B'],
-    ['08/10','09:25','Steam Racing','TUR28','9° E','2. ROUND A'],
-    ['08/10','09:25','Steam Racing','TUR29','9° F','2. ROUND B'],
-    ['08/10','09:30','Steam Racing','TUR30','9° G','2. ROUND A'],
-    ['08/10','09:30','Steam Racing','TUR31','9° H','2. ROUND B'],
-    ['08/10','09:35','Steam Racing','TUR32','9° I','2. ROUND A'],
-    ['08/10','09:35','Steam Racing','TUR33','9° J','2. ROUND B'],
-    ['08/10','09:50','Steam Racing','TUR29','9° F','3. ROUND A'],
-    ['08/10','09:50','Steam Racing','TUR24','9° A','3. ROUND B'],
-    ['08/10','09:55','Steam Racing','TUR30','9° G','3. ROUND A'],
-    ['08/10','09:55','Steam Racing','TUR25','9° B','3. ROUND B'],
-    ['08/10','10:00','Steam Racing','TUR31','9° H','3. ROUND A'],
-    ['08/10','10:00','Steam Racing','TUR26','9° C','3. ROUND B'],
-    ['08/10','10:05','Steam Racing','TUR32','9° I','3. ROUND A'],
-    ['08/10','10:05','Steam Racing','TUR27','9° D','3. ROUND B'],
-    ['08/10','10:10','Steam Racing','TUR33','9° J','3. ROUND A'],
-    ['08/10','10:10','Steam Racing','TUR28','9° E','3. ROUND B'],
+    ['08/10','07:30','Steam Racing','TUR23','9° A','1. ROUND A'],
+    ['08/10','07:30','Steam Racing','TUR28','9° F','1. ROUND B'],
+    ['08/10','07:35','Steam Racing','TUR24','9° B','1. ROUND A'],
+    ['08/10','07:35','Steam Racing','TUR29','9° G','1. ROUND B'],
+    ['08/10','07:40','Steam Racing','TUR25','9° C','1. ROUND A'],
+    ['08/10','07:40','Steam Racing','TUR30','9° H','1. ROUND B'],
+    ['08/10','07:45','Steam Racing','TUR26','9° D','1. ROUND A'],
+    ['08/10','07:45','Steam Racing','TUR31','9° I','1. ROUND B'],
+    ['08/10','07:50','Steam Racing','TUR27','9° E','1. ROUND A'],
+    ['08/10','07:50','Steam Racing','TUR32','9° J','1. ROUND B'],
+    ['08/10','08:00','Steam Racing','TUR23','9° A','Sala A'],
+    ['08/10','08:00','Steam Racing','TUR28','9° F','Sala B'],
+    ['08/10','08:15','Steam Racing','TUR24','9° B','Sala A'],
+    ['08/10','08:15','Steam Racing','TUR29','9° G','Sala B'],
+    ['08/10','08:30','Steam Racing','TUR25','9° C','Sala A'],
+    ['08/10','08:30','Steam Racing','TUR30','9° H','Sala B'],
+    ['08/10','08:45','Steam Racing','TUR26','9° D','Sala A'],
+    ['08/10','08:45','Steam Racing','TUR31','9° I','Sala B'],
+    ['08/10','09:00','Steam Racing','TUR27','9° E','Sala A'],
+    ['08/10','09:00','Steam Racing','TUR32','9° J','Sala B'],
+    ['08/10','09:15','Steam Racing','TUR23','9° A','2. ROUND A'],
+    ['08/10','09:15','Steam Racing','TUR24','9° B','2. ROUND B'],
+    ['08/10','09:20','Steam Racing','TUR25','9° C','2. ROUND A'],
+    ['08/10','09:20','Steam Racing','TUR26','9° D','2. ROUND B'],
+    ['08/10','09:25','Steam Racing','TUR27','9° E','2. ROUND A'],
+    ['08/10','09:25','Steam Racing','TUR28','9° F','2. ROUND B'],
+    ['08/10','09:30','Steam Racing','TUR29','9° G','2. ROUND A'],
+    ['08/10','09:30','Steam Racing','TUR30','9° H','2. ROUND B'],
+    ['08/10','09:35','Steam Racing','TUR31','9° I','2. ROUND A'],
+    ['08/10','09:35','Steam Racing','TUR32','9° J','2. ROUND B'],
+    ['08/10','09:50','Steam Racing','TUR28','9° F','3. ROUND A'],
+    ['08/10','09:50','Steam Racing','TUR23','9° A','3. ROUND B'],
+    ['08/10','09:55','Steam Racing','TUR29','9° G','3. ROUND A'],
+    ['08/10','09:55','Steam Racing','TUR24','9° B','3. ROUND B'],
+    ['08/10','10:00','Steam Racing','TUR30','9° H','3. ROUND A'],
+    ['08/10','10:00','Steam Racing','TUR25','9° C','3. ROUND B'],
+    ['08/10','10:05','Steam Racing','TUR31','9° I','3. ROUND A'],
+    ['08/10','10:05','Steam Racing','TUR26','9° D','3. ROUND B'],
+    ['08/10','10:10','Steam Racing','TUR32','9° J','3. ROUND A'],
+    ['08/10','10:10','Steam Racing','TUR27','9° E','3. ROUND B'],
     // ── 09/10 · OBR ──────────────────────────────────────────────
     ['09/10','07:30','OBR','TUR14','8° A','1. ROUND A'],
     ['09/10','07:30','OBR','TUR19','8° F','1. ROUND B'],
