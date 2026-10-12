@@ -182,41 +182,41 @@ function TORNEIO_corrigirNomes() {
   const aba = ss.getSheetByName(T.ABAS.EQUIPES);
   if (!aba) { SpreadsheetApp.getUi().alert('Aba EQUIPES não encontrada.'); return; }
 
-  // [ID, Nome_Equipe, Tutor, Competicao]
+  // [ID, Nome_Equipe, Tutor, Competicao, Qtde_Alunos]
   const corretos = [
-    ['TUR01', '6° A - Cyber Panter',      'Éverton',    'FLL'],
-    ['TUR02', '6° B - Liga do Choque',    'Izabela',    'FLL'],
-    ['TUR03', '6° C - Alpha Tech',        'Patrícia',   'FLL'],
-    ['TUR04', '6° D - Pheonics Mecanics', 'Moaci',      'FLL'],
-    ['TUR05', '6° E - TecShark',          'Yulo',       'FLL'],
-    ['TUR06', '7° A - Hoppin Robots',     'João',       'FLL'],
-    ['TUR07', '7° B - Bivoltx',           'Joseli',     'FLL'],
-    ['TUR08', '7° C - Ecoshift',          'Ana Claudia','FLL'],
-    ['TUR09', '7° D - Pantera Lego Team', 'Diego Lopes','FLL'],
-    ['TUR10', '7° E - Império das Onças', 'Fabiana',    'FLL'],
-    ['TUR11', '7° F - Poseidon',          'Marilia',    'FLL'],
-    ['TUR12', '7° G - Arara Azul',        'Reinalda',   'FLL'],
-    ['TUR13', '7° H - Nexos',             'Rute',       'FLL'],
-    ['TUR14', '8° A • Shadow Robotics',    'Juliana',        'OBR'],
-    ['TUR15', '8° B • Sharktech',          'Sabrina',        'OBR'],
-    ['TUR16', '8° C • Thunderbots',        'Ana Paula Suzart','OBR'],
-    ['TUR17', '8° D • Spider Bot',         'Ricardo',        'OBR'],
-    ['TUR18', '8° E • Lince Tec',          'Rosela',         'OBR'],
-    ['TUR19', '8° F • Cyberfoxys',         'Nadja',          'OBR'],
-    ['TUR20', '8° G • Inova Tech',         'Camila',         'OBR'],
-    ['TUR21', '8° H • Robótica 8H',        'Erick',          'OBR'],
-    ['TUR22', '8° I • Los Minions',        'Bruno',          'OBR'],
-    ['TUR23', '8° J • Sem nome 1',         '',               'OBR'],
-    ['TUR24', '9° A • Biene',              'Max',            'Steam Racing'],
-    ['TUR25', '9° B • A Lua',              'José Grimaldo',  'Steam Racing'],
-    ['TUR26', '9° C • Bolt Engineering',   'Elias',          'Steam Racing'],
-    ['TUR27', '9° D • Supernova',          'Luciana',        'Steam Racing'],
-    ['TUR28', '9° E • Pantera Negra',      'Wesley',         'Steam Racing'],
-    ['TUR29', '9° F • Ímola',             'Marcelo',        'Steam Racing'],
-    ['TUR30', '9° G • Waitheri',           'Anderson',       'Steam Racing'],
-    ['TUR31', '9° H • Sem nome 2',         'Lucyene',        'Steam Racing'],
-    ['TUR32', '9° I • Sem nome 3',         'Luciana',        'Steam Racing'],
-    ['TUR33', '9° J • Sem nome 4',         'Daniel',         'Steam Racing']
+    ['TUR01', '6° A - Cyber Panter',      'Éverton',          'FLL',          37],
+    ['TUR02', '6° B - Liga do Choque',    'Izabela',          'FLL',          36],
+    ['TUR03', '6° C - Alpha Tech',        'Patrícia',         'FLL',          35],
+    ['TUR04', '6° D - Pheonics Mecanics', 'Moaci',            'FLL',          36],
+    ['TUR05', '6° E - TecShark',          'Yulo',             'FLL',          36],
+    ['TUR06', '7° A - Hoppin Robots',     'João',             'FLL',          36],
+    ['TUR07', '7° B - Bivoltx',           'Joseli',           'FLL',          36],
+    ['TUR08', '7° C - Ecoshift',          'Ana Claudia',      'FLL',          24],
+    ['TUR09', '7° D - Pantera Lego Team', 'Diego Lopes',      'FLL',          36],
+    ['TUR10', '7° E - Império das Onças', 'Fabiana',          'FLL',          36],
+    ['TUR11', '7° F - Poseidon',          'Marilia',          'FLL',          37],
+    ['TUR12', '7° G - Arara Azul',        'Reinalda',         'FLL',          37],
+    ['TUR13', '7° H - Nexos',             'Rute',             'FLL',          36],
+    ['TUR14', '8° A • Shadow Robotics',   'Juliana',          'OBR',          37],
+    ['TUR15', '8° B • Sharktech',         'Sabrina',          'OBR',          37],
+    ['TUR16', '8° C • Thunderbots',       'Ana Paula Suzart', 'OBR',          37],
+    ['TUR17', '8° D • Spider Bot',        'Ricardo',          'OBR',          37],
+    ['TUR18', '8° E • Lince Tec',         'Rosela',           'OBR',          36],
+    ['TUR19', '8° F • Cyberfoxys',        'Nadja',            'OBR',          37],
+    ['TUR20', '8° G • Inova Tech',        'Camila',           'OBR',          38],
+    ['TUR21', '8° H • Robótica 8H',       'Erick',            'OBR',          37],
+    ['TUR22', '8° I • Los Minions',       'Bruno',            'OBR',          36],
+    ['TUR23', '8° J • Sem nome 1',        '',                 'OBR',           0],
+    ['TUR24', '9° A • Biene',             'Max',              'Steam Racing', 39],
+    ['TUR25', '9° B • A Lua',             'José Grimaldo',    'Steam Racing', 39],
+    ['TUR26', '9° C • Bolt Engineering',  'Elias',            'Steam Racing', 39],
+    ['TUR27', '9° D • Supernova',         'Luciana',          'Steam Racing', 38],
+    ['TUR28', '9° E • Pantera Negra',     'Wesley',           'Steam Racing', 38],
+    ['TUR29', '9° F • Ímola',            'Marcelo',          'Steam Racing', 39],
+    ['TUR30', '9° G • Waitheri',          'Anderson',         'Steam Racing', 39],
+    ['TUR31', '9° H • Sem nome 2',        'Lucyene',          'Steam Racing', 38],
+    ['TUR32', '9° I • Sem nome 3',        'Luciana',          'Steam Racing', 38],
+    ['TUR33', '9° J • Sem nome 4',        'Daniel',           'Steam Racing', 39]
   ];
 
   const dados = aba.getDataRange().getValues();
@@ -225,6 +225,7 @@ function TORNEIO_corrigirNomes() {
   const iId   = achaCab_(cab, ['id equipe','id_equipe','id'], 0);
   const iNome = achaCab_(cab, ['nome equipe','nome_equipe','turma'], 1);
   const iTutor= achaCab_(cab, ['tutor','professor'], 3);
+  const iQtd  = achaCab_(cab, ['qtde alunos','qtd alunos','quantidade alunos','alunos'], 4);
   const iComp = achaCab_(cab, ['competicao','competição'], 6);
 
   const existentes = {};
@@ -240,12 +241,13 @@ function TORNEIO_corrigirNomes() {
       aba.getRange(linha, iNome + 1).setValue(c[1]);
       if (c[2]) aba.getRange(linha, iTutor + 1).setValue(c[2]);
       if (iComp >= 0) aba.getRange(linha, iComp + 1).setValue(c[3]);
+      if (iQtd >= 0 && c[4] > 0) aba.getRange(linha, iQtd + 1).setValue(c[4]);
     } else {
-      aba.appendRow([id, c[1], '', c[2], '', '', c[3]]);
+      aba.appendRow([id, c[1], '', c[2], c[4] || 0, '', c[3]]);
     }
   });
 
-  SpreadsheetApp.getActiveSpreadsheet().toast('Equipes atualizadas: FLL (TUR01–13) · OBR (TUR14–23) · Steam Racing (TUR24–33). Execute também Corrigir nomes para atualizar a planilha.', 'Torneio', 10);
+  SpreadsheetApp.getActiveSpreadsheet().toast('Equipes atualizadas: FLL (TUR01–13) · OBR (TUR14–23) · Steam Racing (TUR24–33). Nomes, tutores e nº de alunos gravados.', 'Torneio', 10);
 }
 
 // Popula a aba TAMPINHAS com os dados reais de quantidade (10/10/2026).
