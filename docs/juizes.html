@@ -1399,6 +1399,11 @@
     };
     aplicarCompJuiz(cachedOffline);
     mostrarPainel(cachedOffline);
+    /* Bloqueia os cards durante a verificação via API — evita clicar no card errado
+       enquanto os dados em cache (possivelmente de outro juiz) ainda estão visíveis */
+    document.querySelectorAll('.form-card[data-cat]').forEach(function(c) {
+      c.style.pointerEvents = 'none'; c.style.opacity = '.35';
+    });
     try {
       const r = await API.verificarJuiz(Sessao.juiz, Sessao.pin);
       if (r.ok) {
@@ -1409,6 +1414,10 @@
         document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
         aplicarCompJuiz(r);
         travarChipComp();
+        /* Reabilita cards antes de filtrar — configurarWorkspaceJuiz oculta os não atribuídos */
+        document.querySelectorAll('.form-card[data-cat]').forEach(function(c) {
+          c.style.pointerEvents = ''; c.style.opacity = '';
+        });
         configurarWorkspaceJuiz(r.categoria || '');
         iniciarSalaProgress(r.categoria || '');
         return;
@@ -1417,15 +1426,18 @@
       document.getElementById('view-painel').style.display = 'none';
       document.getElementById('view-login').style.display  = '';
     } catch(_) {
-      // erro de rede: mantém sessão, juiz continua logado com dados em cache
+      /* Erro de rede: mantém sessão com dados em cache; reabilita cards */
+      document.querySelectorAll('.form-card[data-cat]').forEach(function(c) {
+        c.style.pointerEvents = ''; c.style.opacity = '';
+      });
     }
   }
 
   /* Aplica competição ao Comp global: "Geral" ou coordenador sem comp = livre para trocar */
   function aplicarCompJuiz(r) {
     if (!r.competicao || r.competicao === 'Geral') return;
-    if (r.coordenador || !!localStorage.getItem('coord_nome')) return;
-    Comp.set(r.competicao);
+    if (r.coordenador) return; // coordenador: livre para trocar
+    Comp.set(r.competicao);   // juiz: sempre fixa a sua competição
   }
 
   async function entrar() {
@@ -1531,6 +1543,8 @@
   function travarChipComp() {
     var compFixa = localStorage.getItem('hub_comp') || '';
     var isCoord  = !!localStorage.getItem('hub_coord') || !!localStorage.getItem('coord_nome');
+    /* Garante que torneio_comp (usado por Comp.val e pela API) fique em sincronia com hub_comp */
+    if (compFixa && compFixa !== 'Geral' && !isCoord) Comp.set(compFixa);
     var chipEl   = document.querySelector('.comp-chip');
     var LABELS   = { 'FLL': 'FLL', 'OBR': 'OBR', 'Steam Racing': 'SR' };
     var COLORS   = { 'FLL': '#3979B8', 'OBR': '#00A651', 'Steam Racing': '#C0392B' };
