@@ -127,6 +127,7 @@ function TORNEIO_instalar() {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     criarAbaConfig_(ss);
     criarAbaEquipes_(ss);
+    TORNEIO_corrigirNomes();   // preenche/atualiza nomes, tutores, IDs e competições
     criarAbaTampinhas_(ss);
     const pinCriado = criarAbaHubJuizes_(ss);
     COMPS.forEach(function(comp) { atualizarInterno_(ss, comp); });
@@ -227,16 +228,35 @@ function TORNEIO_corrigirNomes() {
   const iQtd  = achaCab_(cab, ['qtde alunos','qtd alunos','quantidade alunos','alunos'], 4);
   const iComp = achaCab_(cab, ['competicao','competição'], 6);
 
+  // Extrai prefixo de turma: "8° A", "9° B" etc. (aceita ° ou o)
+  function extraiClasse_(s) {
+    const m = String(s || '').trim().match(/^(\d+\s*[°o]\s*[A-J])/i);
+    return m ? norm_(m[1]) : null;
+  }
+
+  // Índice por TUR ID e fallback por prefixo de turma
   const existentes = {};
+  const porClasse  = {};
   dados.slice(off + 1).forEach(function(r, i) {
-    const id = String(r[iId] || '').trim().toUpperCase();
-    if (id) existentes[id] = i + off + 2;
+    const linhaNr = i + off + 2;
+    const idVal = String(r[iId] || '').trim().toUpperCase();
+    if (idVal) existentes[idVal] = linhaNr;
+    [r[iId], iNome >= 0 ? r[iNome] : ''].forEach(function(v) {
+      const k = extraiClasse_(v);
+      if (k && !porClasse[k]) porClasse[k] = linhaNr;
+    });
   });
 
   corretos.forEach(function(c) {
     const id = c[0];
-    if (existentes[id]) {
-      const linha = existentes[id];
+    let linha = existentes[id];
+    // Fallback: localiza pelo prefixo de turma extraído do nome da equipe
+    if (!linha) {
+      const k = extraiClasse_(c[1]);
+      if (k) linha = porClasse[k];
+    }
+    if (linha) {
+      if (iId >= 0) aba.getRange(linha, iId + 1).setValue(id);  // garante TUR ID na coluna ID
       aba.getRange(linha, iNome + 1).setValue(c[1]);
       if (c[2]) aba.getRange(linha, iTutor + 1).setValue(c[2]);
       if (iComp >= 0) aba.getRange(linha, iComp + 1).setValue(c[3]);
@@ -400,7 +420,6 @@ function TORNEIO_criarCronograma() {
     ['09/10','07:45','OBR','TUR17','8° D','1. ROUND A'],
     ['09/10','07:45','OBR','TUR22','8° I','1. ROUND B'],
     ['09/10','07:50','OBR','TUR18','8° E','1. ROUND A'],
-    ['09/10','07:50','OBR','TUR23','8° J','1. ROUND B'],
     ['09/10','08:00','OBR','TUR14','8° A','Sala A'],
     ['09/10','08:00','OBR','TUR19','8° F','Sala B'],
     ['09/10','08:15','OBR','TUR15','8° B','Sala A'],
@@ -410,7 +429,6 @@ function TORNEIO_criarCronograma() {
     ['09/10','08:45','OBR','TUR17','8° D','Sala A'],
     ['09/10','08:45','OBR','TUR22','8° I','Sala B'],
     ['09/10','09:00','OBR','TUR18','8° E','Sala A'],
-    ['09/10','09:00','OBR','TUR23','8° J','Sala B'],
     ['09/10','09:15','OBR','TUR14','8° A','2. ROUND A'],
     ['09/10','09:15','OBR','TUR15','8° B','2. ROUND B'],
     ['09/10','09:20','OBR','TUR16','8° C','2. ROUND A'],
@@ -420,7 +438,6 @@ function TORNEIO_criarCronograma() {
     ['09/10','09:30','OBR','TUR20','8° G','2. ROUND A'],
     ['09/10','09:30','OBR','TUR21','8° H','2. ROUND B'],
     ['09/10','09:35','OBR','TUR22','8° I','2. ROUND A'],
-    ['09/10','09:35','OBR','TUR23','8° J','2. ROUND B'],
     ['09/10','09:50','OBR','TUR19','8° F','3. ROUND A'],
     ['09/10','09:50','OBR','TUR14','8° A','3. ROUND B'],
     ['09/10','09:55','OBR','TUR20','8° G','3. ROUND A'],
@@ -429,7 +446,6 @@ function TORNEIO_criarCronograma() {
     ['09/10','10:00','OBR','TUR16','8° C','3. ROUND B'],
     ['09/10','10:05','OBR','TUR22','8° I','3. ROUND A'],
     ['09/10','10:05','OBR','TUR17','8° D','3. ROUND B'],
-    ['09/10','10:10','OBR','TUR23','8° J','3. ROUND A'],
     ['09/10','10:10','OBR','TUR18','8° E','3. ROUND B'],
     // ── 10/10 · FLL ──────────────────────────────────────────────
     ['10/10','07:30','FLL','TUR01','6° A - Cyber Panter','1. ROUND A'],
