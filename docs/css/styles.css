@@ -3313,14 +3313,14 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     display:flex !important;
     width:100% !important;
     min-width:0 !important;
-    height:78px !important;
-    min-height:78px !important;
-    flex:0 0 78px !important;
+    height:64px !important;
+    min-height:64px !important;
+    flex:0 0 64px !important;
     align-items:center !important;
     justify-content:center !important;
-    padding:8px 0 !important;
-    margin:0 0 8px !important;
-    overflow:visible !important;
+    padding:0 !important;
+    margin:0 !important;
+    overflow:hidden !important;
   }
   html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand > .sidebar-brand__img {
     display:none !important;
@@ -3328,9 +3328,9 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
   html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand::before {
     content:"";
     display:block;
-    width:40px !important;
-    height:47px !important;
-    flex:0 0 40px !important;
+    width:30px !important;
+    height:34px !important;
+    flex:0 0 30px !important;
     background:url("../logo-u-fll.svg?v=5") center/contain no-repeat;
   }
   html[data-hub-competition="obr"] body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand::before {
