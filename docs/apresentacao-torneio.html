@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circuito Integrado de Robótica · SESI</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #0f172a; color: #0f172a; overflow: hidden; }
+
+/* ── Slides ── */
+.slide { display: none; width: 100vw; height: 100vh; overflow: hidden; position: relative; }
+.slide.active { display: flex; flex-direction: column; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+/* ── Nav ── */
+#nav {
+  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 10px; z-index: 900;
+  background: rgba(15,23,42,.88); backdrop-filter: blur(14px);
+  border-radius: 999px; padding: 8px 22px; border: 1px solid rgba(255,255,255,.13);
+}
+#nav button {
+  background: rgba(255,255,255,.13); border: none; color: #fff;
+  border-radius: 50%; width: 32px; height: 32px; cursor: pointer;
+  font-size: 14px; display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+#nav button:hover { background: rgba(255,255,255,.28); }
+#slide-num { color: rgba(255,255,255,.5); font-size: 11px; min-width: 54px; text-align: center; letter-spacing: .04em; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,.22); cursor: pointer; transition: background .15s; }
+.dot.active { background: #fff; }
+
+/* ── Slide base ── */
+.bg-dark  { background: #0f172a; color: #fff; }
+.bg-white { background: #fff; }
+.bg-slate { background: #f8fafc; }
+.bg-fll   { background: linear-gradient(135deg,#0d1f3c 0%,#1a3a6c 100%); color: #fff; }
+.bg-obr   { background: linear-gradient(135deg,#062714 0%,#145a2e 100%); color: #fff; }
+.bg-steam { background: linear-gradient(135deg,#2a0a06 0%,#7f1d1d 100%); color: #fff; }
+.bg-hub   { background: linear-gradient(135deg,#0c1445 0%,#1e3a8a 60%,#1e40af 100%); color: #fff; }
+
+/* ── Layout helpers ── */
+.page { flex: 1; display: flex; flex-direction: column; padding: 48px 72px 90px; max-width: 1140px; margin: 0 auto; width: 100%; }
+.page-wide { max-width: 1260px; padding: 40px 64px 90px; }
+
+/* ── Typography ── */
+.eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: #64748b; margin-bottom: 10px; }
+.eyebrow-light { color: rgba(255,255,255,.5); }
+.h1 { font-size: 56px; font-weight: 900; letter-spacing: -.03em; line-height: 1.05; }
+.h2 { font-size: 38px; font-weight: 800; letter-spacing: -.025em; line-height: 1.1; }
+.h3 { font-size: 22px; font-weight: 700; letter-spacing: -.015em; }
+.lead { font-size: 17px; color: #475569; margin-top: 12px; line-height: 1.65; font-weight: 400; }
+.lead-light { color: rgba(255,255,255,.7); }
+.divider { width: 48px; height: 3px; border-radius: 2px; margin: 20px 0; }
+.div-blue { background: #3b82f6; }
+.div-green { background: #22c55e; }
+.div-red { background: #f87171; }
+.div-gold { background: #f59e0b; }
+.div-white { background: rgba(255,255,255,.5); }
+
+/* ── Grid ── */
+.cols { display: grid; gap: 20px; }
+.g2 { grid-template-columns: 1fr 1fr; }
+.g3 { grid-template-columns: 1fr 1fr 1fr; }
+.g4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.g21 { grid-template-columns: 2fr 1fr; }
+.g12 { grid-template-columns: 1fr 2fr; }
+
+/* ── Cards ── */
+.card {
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 14px;
+  padding: 22px 24px; transition: box-shadow .2s;
+}
+.card-dark { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 14px; padding: 22px 24px; }
+.card h3 { font-size: 15px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+.card-dark h3 { color: #fff; }
+.card p, .card li { font-size: 13px; color: #475569; line-height: 1.65; }
+.card-dark p, .card-dark li { color: rgba(255,255,255,.7); }
+.card ul { padding-left: 16px; margin-top: 6px; }
+.card-top { border-top: 3px solid; }
+.card-fll  { border-top-color: #3b82f6; }
+.card-obr  { border-top-color: #22c55e; }
+.card-steam{ border-top-color: #f87171; }
+.card-gold { border-top-color: #f59e0b; }
+.card-red  { border-top-color: #ef4444; }
+
+/* ── Metric ── */
+.metric-wrap { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 20px; }
+.metric-val { font-size: 52px; font-weight: 900; letter-spacing: -.04em; line-height: 1; }
+.metric-lbl { font-size: 12px; font-weight: 600; color: #64748b; margin-top: 6px; text-transform: uppercase; letter-spacing: .07em; }
+.metric-val-light { color: #fff; }
+.metric-lbl-light { color: rgba(255,255,255,.55); }
+
+/* ── Pill / Badge ── */
+.pill { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .05em;
+  padding: 3px 11px; border-radius: 999px; text-transform: uppercase; }
+.pill-blue  { background: #dbeafe; color: #1d4ed8; }
+.pill-green { background: #dcfce7; color: #15803d; }
+.pill-red   { background: #fee2e2; color: #b91c1c; }
+.pill-gold  { background: #fef9c3; color: #92400e; }
+.pill-gray  { background: #f1f5f9; color: #475569; }
+.pill-white { background: rgba(255,255,255,.15); color: #fff; border: 1px solid rgba(255,255,255,.25); }
+
+/* ── Melhoria (improvement callout) ── */
+.melhoria-box {
+  background: #fffbeb; border: 1.5px solid #fbbf24; border-left: 4px solid #f59e0b;
+  border-radius: 10px; padding: 14px 18px; margin-top: 10px;
+}
+.melhoria-box .melhoria-title {
+  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em;
+  color: #92400e; margin-bottom: 6px;
+}
+.melhoria-box ul { padding-left: 16px; }
+.melhoria-box li { font-size: 12.5px; color: #78350f; line-height: 1.7; }
+
+.melhoria-dark {
+  background: rgba(251,191,36,.1); border: 1.5px solid rgba(251,191,36,.35);
+  border-left: 4px solid #f59e0b;
+  border-radius: 10px; padding: 14px 18px; margin-top: 10px;
+}
+.melhoria-dark .melhoria-title { color: #fbbf24; }
+.melhoria-dark li { font-size: 12.5px; color: rgba(255,255,255,.75); line-height: 1.7; }
+
+/* ── Process flow ── */
+.flow { display: flex; align-items: stretch; gap: 0; }
+.flow-step { flex: 1; background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
+  padding: 18px 16px; text-align: center; position: relative; }
+.flow-step .fs-num { font-size: 10px; font-weight: 800; letter-spacing: .1em; color: #3b82f6; text-transform: uppercase; }
+.flow-step .fs-name { font-size: 13px; font-weight: 700; color: #0f172a; margin-top: 6px; }
+.flow-step .fs-desc { font-size: 11px; color: #64748b; margin-top: 4px; line-height: 1.5; }
+.flow-arrow { width: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  color: #cbd5e1; font-size: 16px; }
+
+/* ── Header stripe ── */
+.stripe { height: 5px; background: linear-gradient(90deg,#3b82f6 0%,#22c55e 50%,#ef4444 100%); }
+
+/* ── Step list ── */
+.steps { display: flex; flex-direction: column; gap: 14px; }
+.step { display: flex; align-items: flex-start; gap: 14px; }
+.step-num { width: 30px; height: 30px; border-radius: 50%; background: #1d4ed8; color: #fff;
+  font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px; }
+.step-body h4 { font-size: 14px; font-weight: 700; color: #0f172a; }
+.step-body p { font-size: 12px; color: #64748b; margin-top: 3px; line-height: 1.55; }
+
+/* ── Comp block ── */
+.comp-block {
+  flex: 1; border-radius: 16px; padding: 28px 26px; position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.comp-block::before {
+  content: attr(data-icon);
+  position: absolute; right: 16px; top: 12px;
+  font-size: 52px; opacity: .08; line-height: 1;
+}
+.comp-block h2 { font-size: 20px; font-weight: 800; }
+.comp-block .comp-tag { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 10px; opacity: .7; }
+.comp-block .comp-sub { font-size: 13px; margin-top: 8px; line-height: 1.6; opacity: .85; }
+.comp-block ul { margin-top: 14px; padding-left: 16px; }
+.comp-block li { font-size: 12.5px; line-height: 1.7; opacity: .8; }
+
+.cb-fll   { background: linear-gradient(135deg,#1e3a8a,#2563eb); color:#fff; }
+.cb-obr   { background: linear-gradient(135deg,#14532d,#16a34a); color:#fff; }
+.cb-steam { background: linear-gradient(135deg,#7f1d1d,#dc2626); color:#fff; }
+
+/* ── Table ── */
+table { width: 100%; border-collapse: collapse; }
+thead th { background: #f1f5f9; font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; color: #64748b; padding: 10px 14px; text-align: left;
+  border-bottom: 2px solid #e2e8f0; }
+tbody td { padding: 11px 14px; font-size: 13px; color: #334155; border-bottom: 1px solid #f1f5f9; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) td { background: #f8fafc; }
+
+/* ── Cover ── */
+#s1 { background: #070d1f; }
+#s1 .logo-row { display: flex; align-items: center; gap: 16px; margin-bottom: 40px; }
+#s1 .logo-badge {
+  background: rgba(59,130,246,.15); border: 1px solid rgba(59,130,246,.3);
+  border-radius: 10px; padding: 8px 18px; font-size: 13px; font-weight: 700;
+  color: #93c5fd; letter-spacing: .03em;
+}
+#s1 .h1 { color: #fff; font-size: 64px; }
+#s1 .accent { color: #60a5fa; }
+#s1 .lead { color: rgba(255,255,255,.6); font-size: 18px; max-width: 600px; }
+#s1 .tag { display: inline-block; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.14);
+  color: rgba(255,255,255,.65); font-size: 12px; font-weight: 600; border-radius: 6px;
+  padding: 5px 14px; margin-right: 8px; margin-bottom: 8px; }
+#s1 .cover-metrics { margin-top: 52px; display: flex; gap: 48px; border-top: 1px solid rgba(255,255,255,.1); padding-top: 28px; }
+#s1 .cm-val { font-size: 40px; font-weight: 900; color: #fff; letter-spacing: -.03em; }
+#s1 .cm-lbl { font-size: 12px; color: rgba(255,255,255,.45); margin-top: 4px; text-transform: uppercase; letter-spacing: .07em; }
+
+/* ── BG stars decoration ── */
+#s1::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 70% 30%, rgba(59,130,246,.15) 0%, transparent 55%),
+              radial-gradient(ellipse at 20% 80%, rgba(139,92,246,.1) 0%, transparent 45%);
+  pointer-events: none;
+}
+
+/* ── Architecture slide ── */
+.arch-layer {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 12px;
+}
+.arch-label { width: 130px; font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em; color: #64748b; text-align: right; flex-shrink: 0; }
+.arch-items { display: flex; gap: 10px; flex: 1; flex-wrap: wrap; }
+.arch-item {
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 8px;
+  padding: 8px 14px; font-size: 12px; font-weight: 600; color: #334155;
+  white-space: nowrap;
+}
+.arch-item.ai { background: #eff6ff; border-color: #bfdbfe; color: #1d4ed8; }
+.arch-item.gs { background: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
+.arch-item.ui { background: #fdf4ff; border-color: #e9d5ff; color: #7c3aed; }
+.arch-item.db { background: #fff7ed; border-color: #fed7aa; color: #c2410c; }
+.arch-connector { width: 130px; flex-shrink: 0; display: flex; justify-content: flex-end; padding-right: 6px; }
+.arch-line { width: 1px; height: 16px; background: #e2e8f0; margin-right: 66px; margin-bottom: -4px; }
+
+/* ── Roadmap ── */
+.road-row { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+.road-when { width: 110px; font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; color: #94a3b8; text-align: right; flex-shrink: 0; padding-top: 12px; }
+.road-line { width: 2px; background: #e2e8f0; margin: 0 10px; border-radius: 2px; flex-shrink: 0; min-height: 60px; }
+.road-dot { width: 12px; height: 12px; border-radius: 50%; background: #3b82f6; flex-shrink: 0; margin-top: 13px; margin-right: 2px; }
+.road-content h4 { font-size: 14px; font-weight: 700; color: #0f172a; padding-top: 9px; }
+.road-content p  { font-size: 12px; color: #64748b; margin-top: 3px; line-height: 1.55; }
+
+/* ── Encerramento ── */
+#s12 { background: #0f172a; }
+#s12 .big-cta { font-size: 48px; font-weight: 900; color: #fff; letter-spacing: -.03em; line-height: 1.1; }
+#s12 .cta-sub { font-size: 18px; color: rgba(255,255,255,.55); margin-top: 14px; }
+#s12 .contact { margin-top: 36px; display: flex; flex-direction: column; gap: 10px; }
+#s12 .contact-item { font-size: 14px; color: rgba(255,255,255,.65); }
+#s12 .contact-item strong { color: #fff; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 1 · CAPA -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide active bg-dark" id="s1">
+  <div class="page" style="justify-content:center; min-height:100vh; gap:0; position:relative; z-index:1;">
+    <div class="logo-row">
+      <div class="logo-badge">SESI · Foz do Iguaçu</div>
+      <div class="logo-badge" style="background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.25);color:#86efac;">2026</div>
+    </div>
+    <div class="eyebrow eyebrow-light">Circuito Integrado de Gestão Educacional</div>
+    <h1 class="h1" style="color:#fff;font-size:60px;">Torneio de<br><span class="accent">Robótica SESI</span></h1>
+    <div class="divider div-blue" style="margin:24px 0;"></div>
+    <p class="lead" style="color:rgba(255,255,255,.62);font-size:17px;max-width:580px;">
+      Três competições. Uma plataforma. Gestão educacional digital do pit ao pódio.
+    </p>
+    <div style="margin-top:28px;">
+      <span class="tag">FLL — 6° e 7° ano</span>
+      <span class="tag">OBR — 8° ano</span>
+      <span class="tag">Steam Racing — 9° ano</span>
+      <span class="tag">HUB Digital de Avaliação</span>
+      <span class="tag">Tempo real</span>
+    </div>
+    <div class="cover-metrics">
+      <div>
+        <div class="cm-val">33</div>
+        <div class="cm-lbl">Equipes participantes</div>
+      </div>
+      <div>
+        <div class="cm-val">3</div>
+        <div class="cm-lbl">Competições integradas</div>
+      </div>
+      <div>
+        <div class="cm-val">~300</div>
+        <div class="cm-lbl">Alunos envolvidos</div>
+      </div>
+      <div>
+        <div class="cm-val">0</div>
+        <div class="cm-lbl">Papel no processo de avaliação</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 2 · ANTES E DEPOIS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide bg-white" id="s2">
+  <div class="stripe"></div>
+  <div class="page" style="padding-top:44px;">
+    <div class="eyebrow">O Ponto de Partida</div>
+    <h2 class="h2">Como era antes — e o que mudou</h2>
+    <div class="divider div-blue"></div>
+    <div class="cols g2" style="margin-top:28px; gap:28px; flex:1; align-items:start;">
+      <div>
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#ef4444;margin-bottom:14px;">Antes</div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num" style="background:#ef4444;">1</div>
+            <div class="step-body">
+              <h4>Notas em papel ou planilha separada</h4>
+              <p>Cada juiz anotava em folha própria. Consolidação manual após o evento, sujeita a erros de transcrição.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:#ef4444;">2</div>
+            <div class="step-body">
+              <h4>Sem visibilidade em tempo real</h4>
+              <p>Coordenação não sabia quantas equipes tinham sido avaliadas, quais estavam pendentes ou qual era o ranking parcial.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:#ef4444;">3</div>
+            <div class="step-body">
+              <h4>Três competições, três sistemas diferentes</h4>
+              <p>FLL, OBR e Steam Racing gerenciados com ferramentas distintas — sem histórico comparativo entre anos ou modalidades.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:#ef4444;">4</div>
+            <div class="step-body">
+              <h4>Ranking calculado manualmente</h4>
+              <p>Ponderação de categorias feita em planilha, sem automação, divulgação demorada ao final do dia.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#16a34a;margin-bottom:14px;">Agora · HUB Digital</div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num" style="background:#16a34a;">1</div>
+            <div class="step-body">
+              <h4>Avaliação 100% digital no celular do juiz</h4>
+              <p>Formulário web com critérios, salvamento automático de rascunho, envio via API segura.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:#16a34a;">2</div>
+            <div class="step-body">
+              <h4>Ranking atualizado ao vivo</h4>
+              <p>A cada envio de nota, o sistema recalcula e publica automaticamente o ranking geral e por categoria.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:#16a34a;">3</div>
+            <div class="step-body">
+              <h4>Uma plataforma, três competições</h4>
+              <p>FLL, OBR e Steam Racing integradas na mesma planilha e no mesmo HUB, com credenciais únicas por juiz.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num" style="background:#16a34a;">4</div>
+            <div class="step-body">
+              <h4>Transparência e rastreabilidade</h4>
+              <p>Cada avaliação tem juiz, timestamp e equipe registrados. Histórico completo auditável.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 3 · AS TRÊS COMPETIÇÕES -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide bg-slate" id="s3">
+  <div class="stripe"></div>
+  <div class="page" style="padding-top:44px;">
+    <div class="eyebrow">O Circuito</div>
+    <h2 class="h2">Três modalidades integradas</h2>
+    <div class="divider div-blue"></div>
+    <div style="display:flex; gap:20px; flex:1; margin-top:24px; align-items:stretch;">
+
+      <div class="comp-block cb-fll" data-icon="🤖">
+        <div class="comp-tag">6° e 7° ano · 13 equipes</div>
+        <h2>FLL</h2>
+        <div style="font-size:13px;opacity:.7;margin-top:2px;">First Lego League</div>
+        <div class="comp-sub">Desafio multidisciplinar com robô LEGO e projeto de inovação. Avalia ciência, tecnologia e trabalho em equipe.</div>
+        <ul>
+          <li>Arena de missões (robô autônomo)</li>
+          <li>Projeto de Inovação</li>
+          <li>Design do Robô</li>
+          <li>Core Values</li>
+          <li>Tampinhas que Transformam</li>
+        </ul>
+        <div style="margin-top:auto;padding-top:16px;">
+          <span class="pill pill-white">550 pts Arena</span>
+          <span class="pill pill-white" style="margin-left:6px;">40 pts por rubrica</span>
+        </div>
+      </div>
+
+      <div class="comp-block cb-obr" data-icon="&#128295;">
+        <div class="comp-tag">8° ano · 10 equipes</div>
+        <h2>OBR</h2>
+        <div style="font-size:13px;opacity:.7;margin-top:2px;">Olimpíada Brasileira de Robótica</div>
+        <div class="comp-sub">Resgate autônomo: robô navega labirinto, evita obstáculos e salva vítimas. Foco em programação e hardware.</div>
+        <ul>
+          <li>Arena de Resgate (melhor round)</li>
+          <li>Projeto de Inovação</li>
+          <li>Design do Robô</li>
+          <li>Core Values</li>
+          <li>Tampinhas que Transformam</li>
+        </ul>
+        <div style="margin-top:auto;padding-top:16px;">
+          <span class="pill pill-white">Regulamento OBR</span>
+          <span class="pill pill-white" style="margin-left:6px;">Robô autônomo</span>
+        </div>
+      </div>
+
+      <div class="comp-block cb-steam" data-icon="&#127955;">
+        <div class="comp-tag">9° ano · 10 equipes</div>
+        <h2>Steam Racing</h2>
+        <div style="font-size:13px;opacity:.7;margin-top:2px;">Engenharia e Velocidade</div>
+        <div class="comp-sub">Duas pistas simultâneas (A e B), tempo de reação medido. Integra engenharia mecânica e eletrônica.</div>
+        <ul>
+          <li>Pista de Corridas (2 pistas)</li>
+          <li>Projeto de Inovação</li>
+          <li>Engenharia (Design)</li>
+          <li>Core Values</li>
+          <li>Tampinhas que Transformam</li>
+        </ul>
+        <div style="margin-top:auto;padding-top:16px;">
+          <span class="pill pill-white">Tempo de reação</span>
+          <span class="pill pill-white" style="margin-left:6px;">Melhor round</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 4 · O HUB DIGITAL -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide bg-hub" id="s4">
+  <div class="page" style="padding-top:44px;">
+    <div class="eyebrow eyebrow-light">A Plataforma</div>
+    <h2 class="h2" style="color:#fff;">HUB Digital de Avaliação</h2>
+    <div class="divider div-white"></div>
+    <div class="cols g2" style="margin-top:28px; gap:22px; flex:1; align-items:start;">
+      <div class="cols" style="grid-template-columns:1fr; gap:14px;">
+        <div class="card-dark">
+          <h3>&#128274; Acesso por credenciais</h3>
+          <p>Cada juiz recebe nome e PIN. Login único para todas as categorias e competições. Coordenação tem acesso total.</p>
+        </div>
+        <div class="card-dark">
+          <h3>&#128203; Formulários por categoria</h3>
+          <p>Arena, Projeto, Design/Engenharia e Core Values — cada um com rubrica específica (1 a 4 por critério), salvamento de rascunho offline.</p>
+        </div>
+        <div class="card-dark">
+          <h3>&#128202; Ranking em tempo real</h3>
+          <p>A cada envio, o Apps Script recalcula ponderação (20% por categoria), atualiza BASE e publica o ranking geral e por modalidade.</p>
+        </div>
+        <div class="card-dark">
+          <h3>&#128064; Painel de Coordenação</h3>
+          <p>Visão de todas as equipes, status de avaliações, comentários de juízes e deliberação em tempo real via chat integrado.</p>
+        </div>
+      </div>
+      <div>
+        <div class="card-dark" style="margin-bottom:14px;">
+          <h3>&#128241; Funciona no celular</h3>
+          <p>PWA instalável. Funciona mesmo em conexão instável. Rascunhos salvos localmente, enviados quando a conexão retorna.</p>
+        </div>
+        <div class="card-dark" style="margin-bottom:14px;">
+          <h3>&#128279; API Google Apps Script</h3>
+          <p>Backend 100% em Google Apps Script. Sem servidor adicional. Dados na planilha Google Sheets — acessível à coordenação em tempo real.</p>
+        </div>
+        <div class="card-dark" style="margin-bottom:14px;">
+          <h3>&#127941; Turma individual</h3>
+          <p>Cada equipe acessa a própria página de perfil com gauge de pontuação por categoria e foto da turma.</p>
+        </div>
+        <div class="melhoria-dark">
+          <div class="melhoria-title">&#9888; Pontos de melhoria</div>
+          <ul>
+            <li>Fotos de equipes OBR e Steam Racing ainda a cadastrar</li>
+            <li>Deliberação ainda sem persistência cross-session</li>
+            <li>Notificações push quando avaliação é enviada</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 5 · SISTEMA DE AVALIAÇÃO (METODOLOGIA) -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide bg-white" id="s5">
+  <div class="stripe"></div>
+  <div class="page" style="padding-top:44px;">
+    <div class="eyebrow">Metodologia</div>
+    <h2 class="h2">Como a pontuação é calculada</h2>
+    <div class="divider div-blue"></div>
+    <div class="cols g2" style="margin-top:24px; gap:28px; flex:1; align-items:start;">
+      <div>
+        <div class="flow" style="flex-direction:column; gap:10px; margin-bottom:20px;">
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px 18px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#1d4ed8;margin-bottom:6px;">Cada categoria vale 20%</div>
+            <div style="font-size:13px;color:#1e40af;line-height:1.6;">Arena · Projeto · Design/Engenharia · Core Values · Tampinhas</div>
+          </div>
+          <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:14px 18px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#15803d;margin-bottom:6px;">Rubricas: critérios 1–4</div>
+            <div style="font-size:13px;color:#166534;line-height:1.6;">10 critérios por rubrica. Nota 1 (Inicial) → 4 (Exemplar). Média de todos os juízes.</div>
+          </div>
+          <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;padding:14px 18px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#c2410c;margin-bottom:6px;">Arena: melhor round</div>
+            <div style="font-size:13px;color:#9a3412;line-height:1.6;">Pontuação bruta máx 550 pts. Normalizada para 0–100. Apenas o melhor resultado conta.</div>
+          </div>
+          <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:10px;padding:14px 18px;">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#7c3aed;margin-bottom:6px;">Tampinhas: meta por aluno</div>
+            <div style="font-size:13px;color:#5b21b6;line-height:1.6;">Meta de 0,5 kg por aluno. Atingir a meta = nota máxima. Proporcional abaixo.</div>
+          </div>
+        </div>
+        <div style="background:#0f172a;border-radius:10px;padding:16px 18px;">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin-bottom:8px;">Fórmula Final</div>
+          <div style="font-size:14px;color:#e2e8f0;font-family:monospace;line-height:1.8;">
+            TOTAL = (Arena × 0,20)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ (Projeto × 0,20)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ (Design × 0,20)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ (Core × 0,20)<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+ (Tampinhas × 0,20)
+          </div>
+        </div>
+      </div>
+      <div>
+        <table>
+          <thead>
+            <tr><th>Nota</th><th>Nível</th><th>Descrição</th></tr>
+          </thead>
+          <tbody>
+            <tr><td style="font-weight:800;color:#dc2626;">1</td><td>Inicial</td><td>Abaixo do esperado, em desenvolvimento</td></tr>
+            <tr><td style="font-weight:800;color:#f59e0b;">2</td><td>Em Desenvolvimento</td><td>Atende parcialmente os requisitos</td></tr>
+            <tr><td style="font-weight:800;color:#16a34a;">3</td><td>Realizado</td><td>Atende os requisitos com competência</td></tr>
+            <tr><td style="font-weight:800;color:#1d4ed8;">4</td><td>Exemplar</td><td>Supera expectativas, referência positiva</td></tr>
+          </tbody>
+        </table>
+        <div class="melhoria-box" style="margin-top:20px;">
+          <div class="melhoria-title">&#9888; Pontos de melhoria — Metodologia</div>
+          <ul>
+            <li>Pesos ainda não foram calibrados com dados históricos reais</li>
+            <li>Ausência de calibração entre juízes (sem sessão de alinhamento pré-torneio)</li>
+            <li>Rubricas de Arena OBR e Steam Racing diferem da FLL — padronização futura recomendada</li>
+            <li>Tampinhas: meta de 0,5 kg/aluno definida sem benchmarking prévio</li>
+            <li>Critérios de desempate no ranking ainda não formalizados</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 6 · IMPACTO EM NÚMEROS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide bg-dark" id="s6">
+  <div class="page" style="padding-top:44px; justify-content:center;">
+    <div class="eyebrow eyebrow-light">Escala do Projeto</div>
+    <h2 class="h2" style="color:#fff;">O que o sistema opera</h2>
+    <div class="divider div-blue"></div>
+    <div class="cols g4" style="margin-top:32px; gap:18px;">
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:22px 18px;text-align:center;">
+        <div class="metric-val metric-val-light">33</div>
+        <div class="metric-lbl metric-lbl-light">Equipes cadastradas</div>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:22px 18px;text-align:center;">
+        <div class="metric-val metric-val-light" style="color:#60a5fa;">~300</div>
+        <div class="metric-lbl metric-lbl-light">Alunos participantes</div>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:22px 18px;text-align:center;">
+        <div class="metric-val metric-val-light" style="color:#4ade80;">5</div>
+        <div class="metric-lbl metric-lbl-light">Categorias de avaliação</div>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:22px 18px;text-align:center;">
+        <div class="metric-val metric-val-light" style="color:#f87171;">12</div>
+        <div class="metric-lbl metric-lbl-light">Formulários integrados</div>
+      </div>
+    </div>
+    <div class="cols g4" style="margin-top:16px; gap:18px;">
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:22px 18px;text-align:center;">
+        <div class="metric-val metric-val-light" style="color:#fbbf24;">3</div>
+        <div class="metric-lbl metric-lbl-light">Competições simultâneas</div>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:22px 18px;text-align:center;">
+        <div class="metric-val metric-val-light" style="color:#a78bfa;">5min</div>
+        <div class="metric-lbl metric-lbl-light">Intervalo de recálculo automático</div>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:22px 18px;text-align:center;">
+        <div class="metric-val metric-val-light" style="color:#34d399;">0</div>
+        <div class="metric-lbl metric-lbl-light">Custo de licença (open-source)</div>
+      </div>
+      <div style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:22px 18px;text-align:center;">
+        <div class="metric-val metric-val-light" style="color:#f472b6;">100%</div>
+        <div class="metric-lbl metric-lbl-light">Digital — zero papel na avaliação</div>
+      </div>
+    </div>
+    <div style="margin-top:28px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:16px 22px;text-align:center;">
+      <p style="color:rgba(255,255,255,.55);font-size:13px;line-height:1.7;">
+        O sistema substitui por completo a gestão manual. Um juiz avalia do celular, o ranking atualiza em tempo real,<br>
+        a coordenacao ve tudo no painel — sem nenhum software instalado, sem custo por usuario.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 7 · FLUXO DO TORNEIO (dia do evento) -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide bg-slate" id="s7">
+  <div class="stripe"></div>
+  <div class="page" style="padding-top:44px;">
+    <div class="eyebrow">Dia do Evento</div>
+    <h2 class="h2">Fluxo operacional — do pit ao pódio</h2>
+    <div class="divider div-blue"></div>
+    <div class="flow" style="margin-top:32px; gap:0; align-items:stretch;">
+      <div class="flow-step">
+        <div class="fs-num">Manhã</div>
+        <div class="fs-name">Credenciamento</div>
+        <div class="fs-desc">Juízes recebem nome e PIN. Login no HUB via celular ou tablet.</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step" style="border-top:3px solid #3b82f6;">
+        <div class="fs-num">Pit Lane</div>
+        <div class="fs-name">Inspeção técnica</div>
+        <div class="fs-desc">Verificação de robô, projeto e tampinhas. Dados de tampinhas inseridos na planilha.</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step" style="border-top:3px solid #22c55e;">
+        <div class="fs-num">Arena</div>
+        <div class="fs-name">Rounds de competição</div>
+        <div class="fs-desc">Três rounds. Sistema registra pontuação de cada round via formulário dedicado.</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step" style="border-top:3px solid #f59e0b;">
+        <div class="fs-num">Salas</div>
+        <div class="fs-name">Apresentações de rubrica</div>
+        <div class="fs-desc">Juízes avaliam Projeto, Design e Core Values no HUB. Rascunho salvo offline.</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step" style="border-top:3px solid #a855f7;">
+        <div class="fs-num">Deliberação</div>
+        <div class="fs-name">Revisão e ranking</div>
+        <div class="fs-desc">Coordenação revisa notas, analisa ranking ao vivo e delibera via chat integrado.</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step" style="border-top:3px solid #ef4444;background:#fff8f0;">
+        <div class="fs-num">Pódio</div>
+        <div class="fs-name">Cerimônia de premiação</div>
+        <div class="fs-desc">Ranking final publicado no HUB. Equipes e famílias acompanham em tempo real.</div>
+      </div>
+    </div>
+    <div class="melhoria-box" style="margin-top:28px;">
+      <div class="melhoria-title">&#9888; Pontos de melhoria — Operação</div>
+      <ul>
+        <li>Cronograma de avaliações ainda gerenciado fora do HUB (planilha separada ou papel)</li>
+        <li>Ausência de notificação automática quando uma equipe está pronta para ser avaliada</li>
+        <li>Chat de deliberação sem histórico persistente entre sessões</li>
+        <li>Tela de acompanhamento pública (TV/telão) ainda não implementada</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 8 · ARQUITETURA TÉCNICA -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide bg-white" id="s8">
+  <div class="stripe"></div>
+  <div class="page" style="padding-top:44px;">
+    <div class="eyebrow">Arquitetura</div>
+    <h2 class="h2">Como o sistema é construído</h2>
+    <div class="divider div-blue"></div>
+    <div class="cols g21" style="margin-top:28px; gap:28px; flex:1; align-items:start;">
+      <div>
+        <div class="arch-layer">
+          <div class="arch-label">Interface</div>
+          <div class="arch-items">
+            <div class="arch-item ui">HUB (avaliacao.html)</div>
+            <div class="arch-item ui">Painel turma.html</div>
+            <div class="arch-item ui">Ranking (index.html)</div>
+            <div class="arch-item ui">Rubricas (rubrica-print.html)</div>
+            <div class="arch-item ui">Cronograma + Arena</div>
+          </div>
+        </div>
+        <div class="arch-line" style="margin-left:157px;"></div>
+        <div class="arch-layer">
+          <div class="arch-label">PWA / Cache</div>
+          <div class="arch-items">
+            <div class="arch-item ai">Service Worker hub-v1</div>
+            <div class="arch-item ai">Cache offline de assets</div>
+            <div class="arch-item ai">Rascunho em localStorage</div>
+          </div>
+        </div>
+        <div class="arch-line" style="margin-left:157px;"></div>
+        <div class="arch-layer">
+          <div class="arch-label">API</div>
+          <div class="arch-items">
+            <div class="arch-item gs">Google Apps Script</div>
+            <div class="arch-item gs">doGet (leitura)</div>
+            <div class="arch-item gs">doPost (escrita)</div>
+            <div class="arch-item gs">LockService (concorrência)</div>
+          </div>
+        </div>
+        <div class="arch-line" style="margin-left:157px;"></div>
+        <div class="arch-layer">
+          <div class="arch-label">Dados</div>
+          <div class="arch-items">
+            <div class="arch-item db">Google Sheets</div>
+            <div class="arch-item db">FLL · OBR · Steam (abas)</div>
+            <div class="arch-item db">BASE_RESULTADOS snapshot</div>
+          </div>
+        </div>
+        <div class="arch-line" style="margin-left:157px;"></div>
+        <div class="arch-layer">
+          <div class="arch-label">Hospedagem</div>
+          <div class="arch-items">
+            <div class="arch-item" style="background:#f1f5f9;border-color:#e2e8f0;">GitHub Pages (estático)</div>
+            <div class="arch-item" style="background:#f1f5f9;border-color:#e2e8f0;">CDN gratuito</div>
+            <div class="arch-item" style="background:#f1f5f9;border-color:#e2e8f0;">Sem servidor dedicado</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card card-top card-fll" style="margin-bottom:14px;">
+          <h3>Escala estimada</h3>
+          <p>Google Apps Script tem limite de 6 min de execução e ~50.000 chamadas/dia. Para o volume do torneio (centenas de envios), a margem é ampla.</p>
+        </div>
+        <div class="card card-top card-obr" style="margin-bottom:14px;">
+          <h3>Custo total: R$ 0</h3>
+          <p>Google Sheets, Apps Script e GitHub Pages são gratuitos. A única dependência paga seria um domínio customizado — opcional.</p>
+        </div>
+        <div class="melhoria-box">
+          <div class="melhoria-title">&#9888; Pontos de melhoria — Arquitetura</div>
+          <ul>
+            <li>Apps Script tem latência variável (cold start ~1–3s) — afeta percepção de velocidade</li>
+            <li>Sem autenticação OAuth — baseado em PIN, vulnerável a tentativas repetidas</li>
+            <li>Sem banco de dados estruturado — Sheets como BD tem limitações para relatórios complexos</li>
+            <li>Ausência de ambiente de staging (produção = planilha real)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 9 · EIXO EDUCACIONAL -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide bg-slate" id="s9">
+  <div class="stripe"></div>
+  <div class="page" style="padding-top:44px;">
+    <div class="eyebrow">Propósito</div>
+    <h2 class="h2">O que está em jogo além da competição</h2>
+    <div class="divider div-green"></div>
+    <div class="cols g3" style="margin-top:28px; gap:20px;">
+      <div class="card card-top card-fll">
+        <span class="pill pill-blue" style="margin-bottom:10px;">Desenvolvimento</span>
+        <h3>Competências STEAM</h3>
+        <p>Robótica, programação, física experimental e trabalho em equipe — integradas na prática, não no papel. Alunos do 6° ao 9° ano.</p>
+      </div>
+      <div class="card card-top card-obr">
+        <span class="pill pill-green" style="margin-bottom:10px;">Inclusão</span>
+        <h3>Todas as turmas participam</h3>
+        <p>33 equipes de 7 turmas do 6° ao 9° ano. O torneio não é seletivo — é curricular. Toda turma tem uma equipe representante.</p>
+      </div>
+      <div class="card card-top card-steam">
+        <span class="pill pill-red" style="margin-bottom:10px;">Impacto social</span>
+        <h3>Tampinhas que Transformam</h3>
+        <p>Coleta de tampinhas plásticas para reciclagem. Critério avaliativo que conecta competição a responsabilidade ambiental.</p>
+      </div>
+    </div>
+    <div class="cols g2" style="margin-top:20px; gap:20px;">
+      <div class="card card-top" style="border-top-color:#7c3aed;">
+        <span class="pill" style="background:#f5f3ff;color:#7c3aed;margin-bottom:10px;">Gestão educacional</span>
+        <h3>Dados para tomada de decisão</h3>
+        <p>O sistema gera histórico por equipe, por juiz e por categoria. Em anos seguintes, será possível identificar padrões, evoluções e gaps pedagógicos com evidências.</p>
+      </div>
+      <div>
+        <div class="melhoria-box">
+          <div class="melhoria-title">&#9888; Pontos de melhoria — Eixo Pedagógico</div>
+          <ul>
+            <li>Feedback individual para equipes ainda não formalizado no sistema</li>
+            <li>Integração com sistema de gestão escolar (notas, faltas) ausente</li>
+            <li>Sem relatório de evolução entre edições (dados desta é a primeira base)</li>
+            <li>Formação de juízes ainda informal — sem calibração pré-evento documentada</li>
+            <li>Critérios de avaliação não co-criados com alunos ou famílias</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 10 · ROADMAP -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide bg-white" id="s10">
+  <div class="stripe"></div>
+  <div class="page" style="padding-top:44px;">
+    <div class="eyebrow">Próximos Passos</div>
+    <h2 class="h2">Roadmap do Circuito</h2>
+    <div class="divider div-gold"></div>
+    <div class="cols g2" style="margin-top:24px; gap:28px; flex:1; align-items:start;">
+      <div>
+        <div class="road-row">
+          <div class="road-when">Imediato</div>
+          <div style="display:flex;flex-direction:column;align-items:center;margin:0 10px;">
+            <div class="road-dot" style="background:#ef4444;"></div>
+            <div class="road-line"></div>
+          </div>
+          <div class="road-content">
+            <h4>Calibrar com dados reais</h4>
+            <p>Revisar pesos e metas de tampinhas com base nos resultados da primeira edição.</p>
+          </div>
+        </div>
+        <div class="road-row">
+          <div class="road-when">Nov 2026</div>
+          <div style="display:flex;flex-direction:column;align-items:center;margin:0 10px;">
+            <div class="road-dot" style="background:#f59e0b;"></div>
+            <div class="road-line"></div>
+          </div>
+          <div class="road-content">
+            <h4>Relatório por equipe</h4>
+            <p>Exportar PDF com desempenho detalhado por categoria para cada equipe, entregue ao tutor.</p>
+          </div>
+        </div>
+        <div class="road-row">
+          <div class="road-when">Dez 2026</div>
+          <div style="display:flex;flex-direction:column;align-items:center;margin:0 10px;">
+            <div class="road-dot" style="background:#22c55e;"></div>
+            <div class="road-line"></div>
+          </div>
+          <div class="road-content">
+            <h4>Tela pública (telão)</h4>
+            <p>Página de ranking ao vivo para exibição em TV durante o evento — sem autenticação, atualiza automático.</p>
+          </div>
+        </div>
+        <div class="road-row">
+          <div class="road-when">2027</div>
+          <div style="display:flex;flex-direction:column;align-items:center;margin:0 10px;">
+            <div class="road-dot" style="background:#3b82f6;"></div>
+            <div class="road-line" style="min-height:30px;"></div>
+          </div>
+          <div class="road-content">
+            <h4>Histórico multi-edição</h4>
+            <p>Comparar desempenho entre edições. Identificar evolução das equipes e impacto pedagógico ao longo do tempo.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card card-top card-gold" style="margin-bottom:16px;">
+          <h3>Expansão para outras unidades SESI</h3>
+          <p style="margin-top:6px;">A plataforma é replicável. Uma nova instalação em outra unidade leva menos de 2 horas — sem desenvolvimento adicional. Basta duplicar a planilha e ajustar nomes de equipes.</p>
+        </div>
+        <div class="card card-top card-fll" style="margin-bottom:16px;">
+          <h3>Integração com App SESI</h3>
+          <p style="margin-top:6px;">Futuramente, expor a API de ranking e resultados via endpoint público para integração com sistemas corporativos SESI/SENAI.</p>
+        </div>
+        <div class="melhoria-box">
+          <div class="melhoria-title">&#9888; Riscos no roadmap</div>
+          <ul>
+            <li>Dependência do Google Apps Script: mudanças de política podem afetar o acesso</li>
+            <li>Escalabilidade para 100+ equipes exigiria migração para banco de dados real</li>
+            <li>Continuidade do projeto depende de responsável técnico interno</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 11 · ENCERRAMENTO -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide bg-dark" id="s11">
+  <div class="page" style="justify-content:center; min-height:100vh; gap:0; position:relative; z-index:1;">
+    <div class="eyebrow eyebrow-light" style="margin-bottom:24px;">Circuito Integrado de Gestão Educacional</div>
+    <h1 class="big-cta" style="font-size:52px;font-weight:900;color:#fff;letter-spacing:-.03em;line-height:1.1;">
+      Robótica como<br>metodologia de ensino.<br><span style="color:#60a5fa;">Tecnologia como ferramenta de gestão.</span>
+    </h1>
+    <div class="divider div-blue" style="margin:28px 0;"></div>
+    <p style="font-size:17px;color:rgba(255,255,255,.55);max-width:560px;line-height:1.7;">
+      Uma iniciativa construída dentro das escolas SESI, para as escolas SESI — com zero custo de licença e impacto direto na experiência de ~300 alunos por edição.
+    </p>
+    <div style="margin-top:40px;display:flex;gap:14px;flex-wrap:wrap;">
+      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;padding:14px 22px;text-align:center;min-width:120px;">
+        <div style="font-size:28px;font-weight:900;color:#fff;">33</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;text-transform:uppercase;letter-spacing:.07em;">Equipes</div>
+      </div>
+      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;padding:14px 22px;text-align:center;min-width:120px;">
+        <div style="font-size:28px;font-weight:900;color:#60a5fa;">3</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;text-transform:uppercase;letter-spacing:.07em;">Competições</div>
+      </div>
+      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;padding:14px 22px;text-align:center;min-width:120px;">
+        <div style="font-size:28px;font-weight:900;color:#4ade80;">R$0</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;text-transform:uppercase;letter-spacing:.07em;">Licença</div>
+      </div>
+      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-radius:10px;padding:14px 22px;text-align:center;min-width:120px;">
+        <div style="font-size:28px;font-weight:900;color:#fbbf24;">100%</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;text-transform:uppercase;letter-spacing:.07em;">Digital</div>
+      </div>
+    </div>
+    <div style="margin-top:36px;font-size:13px;color:rgba(255,255,255,.35);">
+      SESI · Foz do Iguaçu · 2026 · Circuito Integrado de Robótica
+    </div>
+  </div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 70% 30%,rgba(59,130,246,.12) 0%,transparent 55%),radial-gradient(ellipse at 20% 80%,rgba(139,92,246,.08) 0%,transparent 45%);pointer-events:none;"></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- NAV -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div id="nav">
+  <button id="btn-prev" onclick="navTo(cur-1)">&#8592;</button>
+  <span id="slide-num"></span>
+  <div id="dots"></div>
+  <button id="btn-next" onclick="navTo(cur+1)">&#8594;</button>
+</div>
+
+<script>
+const slides = Array.from(document.querySelectorAll('.slide'));
+const N = slides.length;
+let cur = 0;
+
+const dotsEl = document.getElementById('dots');
+slides.forEach(function(_, i) {
+  var d = document.createElement('div');
+  d.className = 'dot' + (i === 0 ? ' active' : '');
+  d.addEventListener('click', function() { navTo(i); });
+  dotsEl.appendChild(d);
+});
+
+function navTo(i) {
+  i = Math.max(0, Math.min(N - 1, i));
+  slides[cur].classList.remove('active');
+  dotsEl.children[cur].classList.remove('active');
+  cur = i;
+  slides[cur].classList.add('active');
+  dotsEl.children[cur].classList.add('active');
+  document.getElementById('slide-num').textContent = (cur + 1) + ' / ' + N;
+}
+
+navTo(0);
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+    e.preventDefault(); navTo(cur + 1);
+  } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+    e.preventDefault(); navTo(cur - 1);
+  } else if (e.key === 'Home') {
+    navTo(0);
+  } else if (e.key === 'End') {
+    navTo(N - 1);
+  }
+});
+
+// Swipe
+var touchX = 0;
+document.addEventListener('touchstart', function(e) { touchX = e.touches[0].clientX; }, { passive: true });
+document.addEventListener('touchend', function(e) {
+  var dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) navTo(dx < 0 ? cur + 1 : cur - 1);
+}, { passive: true });
+</script>
+</body>
+</html>

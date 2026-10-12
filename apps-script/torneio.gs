@@ -112,6 +112,7 @@ function onOpen() {
     .addItem('Reinstalar gatilho Forms', 'TORNEIO_instalarGatilho')
     .addSeparator()
     .addItem('Colorir e ordenar abas de rubrica', 'TORNEIO_colorirRubricas')
+    .addItem('Formatar toda a planilha (visual)', 'TORNEIO_formatarPlanilha')
     .addToUi();
 }
 
@@ -1469,6 +1470,437 @@ function TORNEIO_colorirRubricas() {
   });
   ordenarAbas_(ss);
   ss.toast(atualizadas + ' aba(s) colorida(s) e ordenadas (FLL → OBR → Steam).', 'Torneio', 5);
+}
+
+
+// ── Formatação visual completa da planilha ─────────────────────────────────────
+function TORNEIO_formatarPlanilha() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  ss.toast('Formatando...', '🏆 Torneio', 2);
+
+  _fmtConfig_(ss);
+  _fmtEquipes_(ss);
+  _fmtTampinhas_(ss);
+  _fmtJuizes_(ss);
+  ['BASE_RESULTADOS','BASE_OBR','BASE_STEAM'].forEach(function(n) { _fmtBase_(ss, n); });
+  ['RANKING_GERAL','RANKING_OBR','RANKING_STEAM'].forEach(function(n) { _fmtRanking_(ss, n); });
+  ['RANKING_CATEGORIAS','RANKING_CAT_OBR','RANKING_CAT_STEAM'].forEach(function(n) { _fmtRankCat_(ss, n); });
+  ['STATUS_AVALIACOES','STATUS_OBR','STATUS_STEAM'].forEach(function(n) { _fmtStatus_(ss, n); });
+  _fmtTodasRubricas_(ss);
+  _fmtCores_(ss);
+  ordenarAbas_(ss);
+
+  ss.toast('Planilha formatada com sucesso! Todas as abas organizadas.', '🏆 Torneio', 6);
+}
+
+/* ── helpers de formatação ──────────────────────────────────────── */
+
+// Paleta central
+var _FMT = {
+  MARINHO:    '#12355B',
+  AZUL:       '#2F80ED',
+  VERDE:      '#27AE60',
+  CORAL:      '#E04A3A',
+  CINZA_ESC:  '#455A64',
+  BRANCO:     '#FFFFFF',
+  ZEBRA:      '#F3F7FF',
+  OURO:       '#FFF8DC',
+  PRATA:      '#F5F6FA',
+  BRONZE:     '#FFF3EC',
+  OURO_TAB:   '#F9A825',
+  PRATA_TAB:  '#90A4AE',
+  BRONZE_TAB: '#BCAAA4',
+  HD_FLL:     '#1A4F8A',
+  HD_OBR:     '#1B6E40',
+  HD_STEAM:   '#8B1A10',
+  HD_ADMIN:   '#2D3A4A'
+};
+
+function _cab_(aba, linha, colunas, texto, corFundo, corTexto, tamanho) {
+  corFundo  = corFundo  || _FMT.MARINHO;
+  corTexto  = corTexto  || _FMT.BRANCO;
+  tamanho   = tamanho   || 11;
+  aba.getRange(linha, 1, 1, colunas)
+    .setBackground(corFundo).setFontColor(corTexto)
+    .setFontWeight('bold').setFontSize(tamanho)
+    .setVerticalAlignment('middle').setWrap(true);
+  if (texto) {
+    aba.getRange(linha, 1, 1, colunas).mergeAcross().setValue(texto)
+      .setHorizontalAlignment('center');
+  }
+}
+
+function _titulo_(aba, texto, subtexto, cor) {
+  cor = cor || _FMT.MARINHO;
+  // linha 1 — título principal
+  var nCols = aba.getLastColumn() || 6;
+  aba.getRange(1, 1, 1, nCols).mergeAcross()
+    .setValue(texto)
+    .setBackground(cor).setFontColor(_FMT.BRANCO)
+    .setFontSize(14).setFontWeight('bold')
+    .setHorizontalAlignment('center').setVerticalAlignment('middle');
+  aba.setRowHeight(1, 48);
+  if (subtexto) {
+    aba.getRange(2, 1, 1, nCols).mergeAcross()
+      .setValue(subtexto)
+      .setBackground(_adjustHex_(cor, 20)).setFontColor('rgba(255,255,255,0.8)')
+      .setFontSize(9).setHorizontalAlignment('center').setVerticalAlignment('middle');
+    aba.setRowHeight(2, 20);
+  }
+}
+
+function _adjustHex_(hex, pct) {
+  // escurece levemente para subtítulo
+  try {
+    var r = parseInt(hex.slice(1,3),16);
+    var g = parseInt(hex.slice(3,5),16);
+    var b = parseInt(hex.slice(5,7),16);
+    r = Math.max(0, Math.round(r * (1 - pct/100)));
+    g = Math.max(0, Math.round(g * (1 - pct/100)));
+    b = Math.max(0, Math.round(b * (1 - pct/100)));
+    return '#' + r.toString(16).padStart(2,'0') + g.toString(16).padStart(2,'0') + b.toString(16).padStart(2,'0');
+  } catch(e) { return hex; }
+}
+
+function _zebraRows_(aba, primeiraLinhaDados, ultimaLinha, nCols) {
+  for (var i = primeiraLinhaDados; i <= ultimaLinha; i++) {
+    var bg = (i % 2 === 0) ? _FMT.ZEBRA : _FMT.BRANCO;
+    aba.getRange(i, 1, 1, nCols).setBackground(bg);
+  }
+}
+
+function _medalRow_(aba, linha, pos, nCols) {
+  var bg = pos === 1 ? _FMT.OURO : (pos === 2 ? _FMT.PRATA : (pos === 3 ? _FMT.BRONZE : null));
+  if (bg) aba.getRange(linha, 1, 1, nCols).setBackground(bg).setFontWeight(pos <= 3 ? 'bold' : 'normal');
+}
+
+function _cabHeader_(aba, linha, cols, corFundo) {
+  corFundo = corFundo || _FMT.MARINHO;
+  aba.getRange(linha, 1, 1, cols)
+    .setBackground(corFundo).setFontColor(_FMT.BRANCO)
+    .setFontWeight('bold').setFontSize(10)
+    .setVerticalAlignment('middle').setHorizontalAlignment('center')
+    .setWrap(false);
+  aba.setRowHeight(linha, 34);
+}
+
+function _bordas_(aba, linha, col, numLinhas, numCols) {
+  aba.getRange(linha, col, numLinhas, numCols)
+    .setBorder(true, true, true, true, true, true, '#D0D8E8', SpreadsheetApp.BorderStyle.SOLID);
+}
+
+/* CONFIG */
+function _fmtConfig_(ss) {
+  var aba = ss.getSheetByName('CONFIG');
+  if (!aba) return;
+  var nLinhas = Math.max(aba.getLastRow(), 1);
+  var nCols   = 3;
+
+  _titulo_(aba, 'CONFIGURAÇÕES DO SISTEMA · TORNEIO DE ROBÓTICA', 'Parâmetros gerais — editar apenas os valores da coluna B', _FMT.HD_ADMIN);
+
+  // cabeçalho de colunas (linha 3)
+  aba.getRange(3, 1, 1, nCols)
+    .setValues([['Parâmetro', 'Valor', 'Descrição']])
+    .setBackground(_FMT.CINZA_ESC).setFontColor(_FMT.BRANCO)
+    .setFontWeight('bold').setFontSize(10).setHorizontalAlignment('left');
+  aba.setRowHeight(3, 30);
+
+  // zebra nos dados
+  if (nLinhas > 3) _zebraRows_(aba, 4, nLinhas, nCols);
+
+  // alinhamento coluna B (valores)
+  aba.getRange(4, 2, Math.max(nLinhas - 3, 1), 1).setHorizontalAlignment('center');
+  // descrição: fonte pequena e wrap
+  aba.getRange(4, 3, Math.max(nLinhas - 3, 1), 1).setFontSize(9).setFontColor('#5A6A7A').setWrap(true);
+
+  aba.setColumnWidth(1, 280);
+  aba.setColumnWidth(2, 220);
+  aba.setColumnWidth(3, 520);
+  aba.setFrozenRows(3);
+  aba.setHiddenGridlines(true);
+}
+
+/* EQUIPES */
+function _fmtEquipes_(ss) {
+  var aba = ss.getSheetByName('EQUIPES');
+  if (!aba) return;
+  var nLinhas = Math.max(aba.getLastRow(), 1);
+  var nCols   = aba.getLastColumn() || 7;
+
+  _titulo_(aba, 'EQUIPES CADASTRADAS', 'FLL · OBR · Steam Racing — ' + (nLinhas - 1) + ' equipes', _FMT.HD_ADMIN);
+  _cabHeader_(aba, 3, nCols, _FMT.CINZA_ESC);
+
+  if (nLinhas > 3) {
+    _zebraRows_(aba, 4, nLinhas, nCols);
+    // destaca por competição
+    var dados = aba.getRange(4, 1, nLinhas - 3, nCols).getValues();
+    dados.forEach(function(row, i) {
+      var comp = String(row[nCols - 1] || '').trim();
+      var cor  = comp === 'FLL' ? '#EBF2FF' : (comp === 'OBR' ? '#E8F5E9' : (comp.indexOf('Steam') >= 0 ? '#FBE9E7' : null));
+      if (cor) aba.getRange(4 + i, 1, 1, nCols).setBackground(cor);
+    });
+  }
+
+  aba.setColumnWidth(1, 100); // ID
+  aba.setColumnWidth(2, 240); // Nome
+  aba.setColumnWidth(3, 100); // Turno
+  aba.setColumnWidth(4, 200); // Tutor
+  aba.setColumnWidth(5, 110); // Alunos
+  aba.setColumnWidth(6,  90); // PIN
+  if (nCols >= 7) aba.setColumnWidth(7, 140); // Competição
+  aba.setFrozenRows(3);
+  aba.setHiddenGridlines(true);
+}
+
+/* TAMPINHAS */
+function _fmtTampinhas_(ss) {
+  var aba = ss.getSheetByName('TAMPINHAS');
+  if (!aba) return;
+  var nLinhas = Math.max(aba.getLastRow(), 1);
+  var nCols   = aba.getLastColumn() || 5;
+
+  _titulo_(aba, 'TAMPINHAS QUE TRANSFORMAM', 'Peso coletado por equipe — meta: 0,5 kg por aluno', _FMT.VERDE);
+  _cabHeader_(aba, 3, nCols, _FMT.VERDE);
+
+  if (nLinhas > 3) _zebraRows_(aba, 4, nLinhas, nCols);
+  aba.setColumnWidth(1, 100);
+  aba.setColumnWidth(2, 240);
+  if (nCols >= 3) aba.setColumnWidth(3, 120);
+  if (nCols >= 4) aba.setColumnWidth(4, 120);
+  if (nCols >= 5) aba.setColumnWidth(5, 140);
+  aba.setFrozenRows(3);
+  aba.setHiddenGridlines(true);
+}
+
+/* HUB_JUIZES */
+function _fmtJuizes_(ss) {
+  var aba = ss.getSheetByName('HUB_JUIZES');
+  if (!aba) return;
+  var nLinhas = Math.max(aba.getLastRow(), 1);
+  var nCols   = aba.getLastColumn() || 5;
+
+  _titulo_(aba, 'CREDENCIAIS DE JUÍZES · HUB DIGITAL', 'Credenciais de acesso ao sistema de avaliação', _FMT.HD_ADMIN);
+  _cabHeader_(aba, 3, nCols, _FMT.CINZA_ESC);
+
+  if (nLinhas > 3) _zebraRows_(aba, 4, nLinhas, nCols);
+
+  // destaca coordenação
+  if (nLinhas > 3) {
+    var dados = aba.getRange(4, 1, nLinhas - 3, nCols).getValues();
+    dados.forEach(function(row, i) {
+      var cat = String(row[2] || '').toLowerCase();
+      if (cat.indexOf('coord') >= 0) {
+        aba.getRange(4 + i, 1, 1, nCols).setBackground('#E8EAF6').setFontWeight('bold');
+      }
+    });
+  }
+
+  aba.setColumnWidth(1, 200);
+  aba.setColumnWidth(2, 100);
+  aba.setColumnWidth(3, 200);
+  aba.setColumnWidth(4, 100);
+  if (nCols >= 5) aba.setColumnWidth(5, 160);
+  aba.setFrozenRows(3);
+  aba.setHiddenGridlines(true);
+}
+
+/* BASE_RESULTADOS */
+function _fmtBase_(ss, nomeAba) {
+  var aba = ss.getSheetByName(nomeAba);
+  if (!aba) return;
+  var nLinhas = Math.max(aba.getLastRow(), 1);
+  var nCols   = aba.getLastColumn() || 12;
+  var comp    = nomeAba.indexOf('OBR') >= 0 ? 'OBR' : (nomeAba.indexOf('STEAM') >= 0 ? 'Steam Racing' : 'FLL');
+  var corHd   = comp === 'OBR' ? _FMT.HD_OBR : (comp === 'Steam Racing' ? _FMT.HD_STEAM : _FMT.HD_FLL);
+
+  _titulo_(aba, 'BASE DE RESULTADOS · ' + comp, 'Snapshot calculado automaticamente a cada 5 min', corHd);
+  _cabHeader_(aba, 3, nCols, corHd);
+
+  if (nLinhas > 3) _zebraRows_(aba, 4, nLinhas, nCols);
+
+  // número format nas colunas de nota (colunas 4 em diante)
+  if (nLinhas > 3 && nCols > 3) {
+    aba.getRange(4, 4, nLinhas - 3, Math.max(nCols - 3, 1)).setNumberFormat('0.00');
+  }
+
+  aba.setColumnWidth(1, 100); // ID
+  aba.setColumnWidth(2, 240); // Nome
+  aba.setColumnWidth(3, 120); // Competição
+  for (var c = 4; c <= Math.min(nCols, 14); c++) aba.setColumnWidth(c, 90);
+  aba.setFrozenRows(3);
+  aba.setFrozenColumns(2);
+  aba.setHiddenGridlines(true);
+}
+
+/* RANKING_GERAL */
+function _fmtRanking_(ss, nomeAba) {
+  var aba = ss.getSheetByName(nomeAba);
+  if (!aba) return;
+  var nLinhas = Math.max(aba.getLastRow(), 1);
+  var nCols   = aba.getLastColumn() || 9;
+  var comp    = nomeAba.indexOf('OBR') >= 0 ? 'OBR' : (nomeAba.indexOf('STEAM') >= 0 ? 'Steam Racing' : 'FLL');
+  var corHd   = comp === 'OBR' ? _FMT.HD_OBR : (comp === 'Steam Racing' ? _FMT.HD_STEAM : _FMT.HD_FLL);
+
+  _titulo_(aba, 'RANKING GERAL · ' + comp, 'Classificação ponderada: Arena + Projeto + Design + Core + Tampinhas', corHd);
+  _cabHeader_(aba, 3, nCols, corHd);
+
+  if (nLinhas > 3) {
+    for (var i = 4; i <= nLinhas; i++) {
+      var posVal = aba.getRange(i, 1).getValue();
+      var pos    = parseInt(posVal, 10);
+      if (!isNaN(pos) && pos >= 1 && pos <= 3) {
+        _medalRow_(aba, i, pos, nCols);
+      } else {
+        var bg = (i % 2 === 0) ? _FMT.ZEBRA : _FMT.BRANCO;
+        aba.getRange(i, 1, 1, nCols).setBackground(bg).setFontWeight('normal');
+      }
+    }
+    // coluna TOTAL: negrito e cor de destaque
+    aba.getRange(4, nCols, nLinhas - 3, 1).setFontWeight('bold').setFontColor('#1A3A6B');
+    // nota format
+    if (nCols > 3) aba.getRange(4, 4, nLinhas - 3, Math.max(nCols - 3, 1)).setNumberFormat('0.00');
+  }
+
+  aba.setColumnWidth(1, 50);  // Pos
+  aba.setColumnWidth(2, 90);  // ID
+  aba.setColumnWidth(3, 220); // Nome
+  for (var c2 = 4; c2 <= Math.min(nCols, 9); c2++) aba.setColumnWidth(c2, 85);
+  aba.setFrozenRows(3);
+  aba.setHiddenGridlines(true);
+}
+
+/* RANKING_CATEGORIAS */
+function _fmtRankCat_(ss, nomeAba) {
+  var aba = ss.getSheetByName(nomeAba);
+  if (!aba) return;
+  var nLinhas = Math.max(aba.getLastRow(), 1);
+  var nCols   = aba.getLastColumn() || 6;
+  var comp    = nomeAba.indexOf('OBR') >= 0 ? 'OBR' : (nomeAba.indexOf('STEAM') >= 0 ? 'Steam Racing' : 'FLL');
+  var corHd   = comp === 'OBR' ? _FMT.HD_OBR : (comp === 'Steam Racing' ? _FMT.HD_STEAM : _FMT.HD_FLL);
+
+  _titulo_(aba, 'RANKING POR CATEGORIA · ' + comp, 'Melhor desempenho por categoria de avaliação', corHd);
+  _cabHeader_(aba, 3, nCols, corHd);
+
+  if (nLinhas > 3) {
+    _zebraRows_(aba, 4, nLinhas, nCols);
+    aba.getRange(4, nCols, nLinhas - 3, 1).setFontWeight('bold');
+  }
+  aba.setColumnWidth(1, 50);
+  aba.setColumnWidth(2, 90);
+  aba.setColumnWidth(3, 220);
+  for (var c3 = 4; c3 <= Math.min(nCols, 8); c3++) aba.setColumnWidth(c3, 90);
+  aba.setFrozenRows(3);
+  aba.setHiddenGridlines(true);
+}
+
+/* STATUS_AVALIACOES */
+function _fmtStatus_(ss, nomeAba) {
+  var aba = ss.getSheetByName(nomeAba);
+  if (!aba) return;
+  var nLinhas = Math.max(aba.getLastRow(), 1);
+  var nCols   = aba.getLastColumn() || 8;
+  var comp    = nomeAba.indexOf('OBR') >= 0 ? 'OBR' : (nomeAba.indexOf('STEAM') >= 0 ? 'Steam Racing' : 'FLL');
+  var corHd   = comp === 'OBR' ? _FMT.HD_OBR : (comp === 'Steam Racing' ? _FMT.HD_STEAM : _FMT.HD_FLL);
+
+  _titulo_(aba, 'STATUS DE AVALIAÇÕES · ' + comp, 'Progresso das avaliações por equipe e categoria', corHd);
+  _cabHeader_(aba, 3, nCols, corHd);
+
+  if (nLinhas > 3) {
+    var dados = aba.getRange(4, 1, nLinhas - 3, nCols).getValues();
+    dados.forEach(function(row, i) {
+      // heurística: se última col é "COMPLETO" usa verde, "PARCIAL" usa amarelo, senão zebra
+      var status = String(row[nCols - 1] || '').toUpperCase();
+      var bg;
+      if (status === 'COMPLETO' || status === 'OK') {
+        bg = '#E8F5E9';
+      } else if (status === 'PARCIAL' || status === 'PENDENTE') {
+        bg = '#FFF9C4';
+      } else {
+        bg = (i % 2 === 0) ? _FMT.ZEBRA : _FMT.BRANCO;
+      }
+      aba.getRange(4 + i, 1, 1, nCols).setBackground(bg);
+    });
+  }
+
+  aba.setColumnWidth(1, 100);
+  aba.setColumnWidth(2, 220);
+  for (var c4 = 3; c4 <= Math.min(nCols, 10); c4++) aba.setColumnWidth(c4, 100);
+  aba.setFrozenRows(3);
+  aba.setHiddenGridlines(true);
+}
+
+/* FORM_* — abas de resposta de formulário */
+function _fmtTodasRubricas_(ss) {
+  var RUBRICAS = [
+    { nome: 'FORM_ARENA',              comp: 'FLL',          cat: 'Arena' },
+    { nome: 'FORM_PROJETO',            comp: 'FLL',          cat: 'Projeto de Inovação' },
+    { nome: 'FORM_DESIGN',             comp: 'FLL',          cat: 'Design do Robô' },
+    { nome: 'FORM_CORE',               comp: 'FLL',          cat: 'Core Values' },
+    { nome: 'FORM_ARENA_OBR',          comp: 'OBR',          cat: 'Arena' },
+    { nome: 'FORM_PROJETO_OBR',        comp: 'OBR',          cat: 'Projeto de Inovação' },
+    { nome: 'FORM_DESIGN_OBR',         comp: 'OBR',          cat: 'Design do Robô' },
+    { nome: 'FORM_CORE_OBR',           comp: 'OBR',          cat: 'Core Values' },
+    { nome: 'FORM_ARENA_STEAM',        comp: 'Steam Racing', cat: 'Pista de Corridas' },
+    { nome: 'FORM_PROJETO_STEAM',      comp: 'Steam Racing', cat: 'Projeto de Inovação' },
+    { nome: 'FORM_ENGENHARIA_STEAM',   comp: 'Steam Racing', cat: 'Engenharia' },
+    { nome: 'FORM_CORE_STEAM',         comp: 'Steam Racing', cat: 'Core Values' }
+  ];
+
+  RUBRICAS.forEach(function(r) {
+    var aba = ss.getSheetByName(r.nome);
+    if (!aba) return;
+    var nLinhas = Math.max(aba.getLastRow(), 1);
+    var nCols   = Math.max(aba.getLastColumn(), 1);
+    var corHd   = r.comp === 'OBR' ? _FMT.HD_OBR : (r.comp === 'Steam Racing' ? _FMT.HD_STEAM : _FMT.HD_FLL);
+
+    _titulo_(aba, r.comp + ' · ' + r.cat, 'Respostas do formulário Google — não editar manualmente', corHd);
+    // cabeçalho de colunas (linha 3 ou linha 1 original — aqui linha 1 já é o cabeçalho original do Forms)
+    // O Forms coloca o cabeçalho na linha 1 — vamos apenas recolorir sem mover dados
+    aba.getRange(1, 1, 1, nCols)
+      .setBackground(corHd).setFontColor(_FMT.BRANCO)
+      .setFontWeight('bold').setFontSize(10).setWrap(false);
+    aba.setRowHeight(1, 36);
+
+    if (nLinhas > 1) _zebraRows_(aba, 2, nLinhas, nCols);
+
+    aba.setColumnWidth(1, 160); // Timestamp
+    if (nCols >= 2) aba.setColumnWidth(2, 180); // Juiz
+    if (nCols >= 3) aba.setColumnWidth(3, 120); // ID Equipe
+    for (var c = 4; c <= Math.min(nCols, 20); c++) aba.setColumnWidth(c, 110);
+    aba.setFrozenRows(1);
+    aba.setHiddenGridlines(false); // mantém grid para formulário
+  });
+}
+
+/* Cores das abas por tipo */
+function _fmtCores_(ss) {
+  var CORES_ABAS = {
+    // Admin (cinza escuro)
+    'CONFIG':    '#455A64', 'EQUIPES': '#455A64', 'TAMPINHAS': '#37474F', 'HUB_JUIZES': '#37474F',
+    // Painéis (dourado)
+    'PAINEL':       '#F57F17', 'PAINEL_OBR':   '#E65100', 'PAINEL_STEAM': '#880E4F',
+    // Rankings (azul/verde/vermelho mais claro)
+    'RANKING_GERAL':     '#1565C0', 'RANKING_OBR':       '#2E7D32', 'RANKING_STEAM':      '#B71C1C',
+    'RANKING_CATEGORIAS':'#1976D2', 'RANKING_CAT_OBR':   '#388E3C', 'RANKING_CAT_STEAM':  '#C62828',
+    'STATUS_AVALIACOES': '#0277BD', 'STATUS_OBR':        '#00695C', 'STATUS_STEAM':       '#AD1457',
+    // Base (tom mais escuro)
+    'BASE_RESULTADOS':   '#0D47A1', 'BASE_OBR':          '#1B5E20', 'BASE_STEAM':         '#7F1D1D',
+    // Diagnostico
+    'DIAGNOSTICO': '#4527A0', 'DIAGNOSTICO_OBR': '#4527A0', 'DIAGNOSTICO_STEAM': '#4527A0',
+    // Rubricas FLL (azul)
+    'FORM_ARENA': '#1565C0', 'FORM_PROJETO': '#1976D2', 'FORM_DESIGN': '#1E88E5', 'FORM_CORE': '#2196F3',
+    // Rubricas OBR (verde)
+    'FORM_ARENA_OBR': '#1B5E20', 'FORM_PROJETO_OBR': '#2E7D32', 'FORM_DESIGN_OBR': '#388E3C', 'FORM_CORE_OBR': '#43A047',
+    // Rubricas Steam (vermelho)
+    'FORM_ARENA_STEAM': '#B71C1C', 'FORM_PROJETO_STEAM': '#C62828', 'FORM_ENGENHARIA_STEAM': '#D32F2F', 'FORM_CORE_STEAM': '#E53935',
+    // Cronograma
+    'CRONOGRAMA': '#4E342E'
+  };
+
+  Object.keys(CORES_ABAS).forEach(function(nome) {
+    var aba = ss.getSheetByName(nome);
+    if (aba) aba.setTabColor(CORES_ABAS[nome]);
+  });
 }
 
 
