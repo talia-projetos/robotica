@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#12355B">
-  <link rel="stylesheet" href="css/styles.css?v=12">
+  <link rel="stylesheet" href="css/styles.css?v=13">
   <script>window.API_URL='https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';</script>
   <style>
     body { background: #F0F4F8; }
@@ -820,115 +820,78 @@
       font-size:.63rem;
     }
 
-    /* ── Chat juízes ↔ coordenação ─────────────────────────────── */
-    .judge-chat-card{
+    /* ── Painel de conduta ─────────────────────────────────────── */
+    .conduct-card{
       margin-top:.65rem;
       border:1px solid #E1E9F0;
       border-radius:9px;
       overflow:hidden;
+      background:#fff;
     }
-    .judge-chat-header{
+    .conduct-header{
       padding:.52rem .72rem;
       background:#F0F5FA;
       border-bottom:1px solid #E1E9F0;
-      font-size:.62rem;
-      font-weight:700;
+      font-size:.59rem;
+      font-weight:800;
       color:#3D5368;
-      letter-spacing:.04em;
+      letter-spacing:.08em;
       text-transform:uppercase;
-      display:flex;
-      align-items:center;
-      gap:.4rem;
     }
-    .judge-chat-header::before{
-      content:'';
-      width:6px;height:6px;
-      border-radius:50%;
-      background:#22C55E;
-      flex-shrink:0;
+    .conduct-body{
+      padding:.78rem .82rem .6rem;
+      min-height:100px;
     }
-    .judge-chat-msgs{
-      display:flex;
-      flex-direction:column;
-      gap:.35rem;
-      padding:.55rem .62rem;
-      max-height:200px;
-      overflow-y:auto;
-      background:#fff;
-      scroll-behavior:smooth;
-    }
-    .chat-bubble{
-      padding:.38rem .6rem;
+    .conduct-slide{ display:none; }
+    .conduct-slide.ativo{ display:block; }
+    .conduct-slide-icon{
+      width:30px;height:30px;
+      display:flex;align-items:center;justify-content:center;
       border-radius:8px;
-      font-size:.68rem;
-      line-height:1.42;
-      max-width:88%;
-      word-break:break-word;
-    }
-    .chat-bubble--coord{
       background:#EDF5FC;
-      color:#1A3A5C;
-      align-self:flex-start;
-      border-bottom-left-radius:2px;
+      margin-bottom:.45rem;
     }
-    .chat-bubble--juiz{
-      background:#12355B;
-      color:#fff;
-      align-self:flex-end;
-      border-bottom-right-radius:2px;
+    .conduct-slide-icon svg{
+      width:15px;height:15px;
+      fill:none;stroke:#3979B8;
+      stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
     }
-    .chat-bubble__who{
-      font-size:.54rem;
-      font-weight:700;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      opacity:.6;
-      margin-bottom:.12rem;
+    .conduct-slide-title{
+      color:#23364D;
+      font-size:.72rem;
+      font-weight:780;
+      margin-bottom:.2rem;
     }
-    .chat-bubble__time{
-      font-size:.54rem;
-      opacity:.45;
-      margin-top:.1rem;
+    .conduct-slide-body{
+      color:#7A899B;
+      font-size:.63rem;
+      line-height:1.48;
     }
-    .chat-empty-msg{
-      font-size:.68rem;
-      color:#94A3B8;
-      text-align:center;
-      padding:.7rem 0;
-      font-style:italic;
+    .conduct-footer{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:.45rem .72rem .55rem;
+      border-top:1px solid #F0F4F8;
     }
-    .judge-chat-input{
-      display:flex;
-      gap:.38rem;
-      padding:.5rem .62rem;
-      border-top:1px solid #E1E9F0;
-      background:#F7FAFC;
+    .conduct-dots{
+      display:flex;gap:.3rem;align-items:center;
     }
-    .judge-chat-input input{
-      flex:1;
-      padding:.38rem .58rem;
-      border:1px solid #D0DCE8;
-      border-radius:7px;
-      font-size:.7rem;
-      font-family:inherit;
-      outline:none;
-      background:#fff;
-      min-width:0;
+    .conduct-dot{
+      width:5px;height:5px;border-radius:50%;
+      background:#D1DBE5;transition:background .2s;
     }
-    .judge-chat-input input:focus{ border-color:#2F80ED; }
-    .judge-chat-input button{
-      padding:.38rem .75rem;
-      background:#12355B;
-      color:#fff;
-      border:none;
-      border-radius:7px;
-      font-size:.7rem;
-      font-weight:700;
-      cursor:pointer;
-      font-family:inherit;
-      flex-shrink:0;
+    .conduct-dot.ativo{background:#3979B8;}
+    .conduct-nav{
+      display:flex;gap:.28rem;
     }
-    .judge-chat-input button:disabled{ opacity:.5; cursor:default; }
+    .conduct-nav button{
+      width:24px;height:24px;
+      border:1px solid #DDE6EF;border-radius:6px;
+      background:#F7FAFC;color:#5F6F83;
+      font-size:.78rem;font-weight:700;
+      cursor:pointer;display:flex;align-items:center;justify-content:center;
+      line-height:1;padding:0;
+    }
+    .conduct-nav button:hover{background:#EDF5FC;border-color:#C4D5E5;color:#3979B8;}
 
     /* ── Progresso por sala ─────────────────────────────────────── */
     .sala-progress-card{
@@ -1065,10 +1028,6 @@
       }
 
       .acao-card{align-items:flex-start;flex-direction:column}
-
-      /* Chat */
-      .judge-chat-input button{min-height:40px;padding:.5rem .9rem}
-      .judge-chat-input input{font-size:.82rem}
 
       /* Login */
       .judge-login-card{padding:1.75rem 1.25rem}
@@ -1273,14 +1232,15 @@
         Consulte a rubrica antes da avaliação. O HUB destaca a categoria vinculada ao seu perfil e mantém os demais módulos fora do seu fluxo.
       </div>
 
-      <div class="judge-chat-card">
-        <div class="judge-chat-header">Chat com a Coordenação</div>
-        <div class="judge-chat-msgs" id="chat-msgs">
-          <div class="chat-empty-msg">Nenhuma mensagem ainda.</div>
-        </div>
-        <div class="judge-chat-input">
-          <input id="chat-input" type="text" placeholder="Mensagem para a coordenação…" maxlength="200" autocomplete="off">
-          <button id="chat-send" onclick="chatEnviar()">Enviar</button>
+      <div class="conduct-card" id="conduct-card">
+        <div class="conduct-header">Guia de conduta</div>
+        <div class="conduct-body" id="conduct-body"></div>
+        <div class="conduct-footer">
+          <div class="conduct-dots" id="conduct-dots"></div>
+          <div class="conduct-nav">
+            <button onclick="conductNav(-1)" aria-label="Anterior">&#8249;</button>
+            <button onclick="conductNav(1)"  aria-label="Próximo">&#8250;</button>
+          </div>
         </div>
       </div>
     </aside>
@@ -1508,7 +1468,6 @@
     if (bs) bs.style.display = '';
     document.getElementById('jh-ini').textContent = (r.nome || 'J').trim()[0].toUpperCase();
     configurarWorkspaceJuiz(r.categoria || '');
-    if (!_chatTimer) chatIniciar(r.nome);
     iniciarSalaProgress(r.categoria || '');
   }
 
@@ -1564,7 +1523,6 @@
 
   function sair() {
     Sessao.clear();
-    if (_chatTimer) clearInterval(_chatTimer);
     if (_salaTimer) { clearInterval(_salaTimer); _salaTimer = null; }
     var card = document.getElementById('sala-progress-card');
     if (card) card.style.display = 'none';
@@ -1578,70 +1536,81 @@
     document.getElementById('l-pin').value  = '';
   }
 
-  /* ── Chat juízes ↔ coordenação ──────────────────────────────── */
-  var _chatNome = '';
-  var _chatTimer = null;
-  var _chatUltimo = 0;
+  /* ── Painel de conduta (slides) ─────────────────────────────── */
+  var _conductIdx   = 0;
+  var _conductTimer = null;
 
-  function chatIniciar(nome) {
-    _chatNome = nome || Sessao.juiz || localStorage.getItem('coord_nome') || '';
-    if (!_chatNome) return;
-    chatCarregar();
-    _chatTimer = setInterval(chatCarregar, 8000);
-    document.getElementById('chat-input').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') chatEnviar();
-    });
-  }
-
-  async function chatCarregar() {
-    try {
-      const r = await API.chatReceber(_chatNome);
-      if (r && r.ok && Array.isArray(r.mensagens)) renderChat(r.mensagens);
-    } catch(_) {}
-  }
-
-  function renderChat(msgs) {
-    var box = document.getElementById('chat-msgs');
-    if (!box) return;
-    var atBottom = box.scrollHeight - box.scrollTop <= box.clientHeight + 24;
-    if (!msgs.length) {
-      box.innerHTML = '<div class="chat-empty-msg">Nenhuma mensagem ainda.</div>';
-      return;
+  var _CONDUCT_SLIDES = [
+    {
+      icon: '<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+      title: 'Avalie o que observou',
+      body: 'Registre apenas o que você efetivamente viu durante a apresentação. Não preencha lacunas com suposições.'
+    },
+    {
+      icon: '<svg viewBox="0 0 24 24"><path d="M3 3h18M3 9h18M3 15h12M3 21h8"/></svg>',
+      title: 'Use toda a escala',
+      body: 'Nível 1 = Início · 2 = Desenvolvimento · 3 = Proficiência · 4 = Excelência. Leia o descritor de cada nível antes de pontuar.'
+    },
+    {
+      icon: '<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+      title: 'Postura encorajadora',
+      body: 'As equipes são estudantes. Mantenha linguagem respeitosa e encorajadora em toda interação com eles.'
+    },
+    {
+      icon: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+      title: 'Duvida? Fale com a coordenação',
+      body: 'Qualquer dúvida sobre critérios ou pontuação: consulte a coordenação antes de finalizar a avaliação.'
+    },
+    {
+      icon: '<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+      title: 'Calibração entre juízes',
+      body: 'Divergências grandes na mesma categoria devem ser alinhadas com o outro juiz antes do encerramento.'
+    },
+    {
+      icon: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+      title: 'Respeite o cronograma',
+      body: 'Cada sessão tem duração prevista. Conclua dentro do tempo para não atrasar as equipes seguintes.'
     }
-    box.innerHTML = msgs.map(function(m) {
-      var isJuiz = m.de !== 'Coordenação';
-      var horaFmt = '';
-      if (m.hora) {
-        try { horaFmt = new Date(m.hora).toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' }); } catch(_) {}
-      }
-      return '<div class="chat-bubble ' + (isJuiz ? 'chat-bubble--juiz' : 'chat-bubble--coord') + '">'
-        + '<div class="chat-bubble__who">' + (m.de || '?') + '</div>'
-        + '<div>' + (m.msg || m.texto || '') + '</div>'
-        + (horaFmt ? '<div class="chat-bubble__time">' + horaFmt + '</div>' : '')
+  ];
+
+  function conductRender() {
+    var body = document.getElementById('conduct-body');
+    var dots = document.getElementById('conduct-dots');
+    if (!body || !dots) return;
+    var n = _CONDUCT_SLIDES.length;
+    body.innerHTML = _CONDUCT_SLIDES.map(function(s, i) {
+      return '<div class="conduct-slide' + (i === _conductIdx ? ' ativo' : '') + '">'
+        + '<div class="conduct-slide-icon">' + s.icon + '</div>'
+        + '<div class="conduct-slide-title">' + s.title + '</div>'
+        + '<div class="conduct-slide-body">' + s.body + '</div>'
         + '</div>';
     }).join('');
-    if (atBottom) box.scrollTop = box.scrollHeight;
+    dots.innerHTML = _CONDUCT_SLIDES.map(function(_, i) {
+      return '<div class="conduct-dot' + (i === _conductIdx ? ' ativo' : '') + '"></div>';
+    }).join('');
   }
 
-  async function chatEnviar() {
-    var input = document.getElementById('chat-input');
-    var btn   = document.getElementById('chat-send');
-    var txt   = (input.value || '').trim();
-    if (!txt || !_chatNome) return;
-    input.value = '';
-    btn.disabled = true;
-    try {
-      var r = await API.chatEnviar(_chatNome, txt);
-      if (r && !r.ok) throw new Error(r.erro || 'Erro ao enviar');
-      await chatCarregar();
-    } catch(e) {
-      input.value = txt;
-      toast('Chat: ' + e.message, 'err');
-    } finally {
-      btn.disabled = false;
-      input.focus();
-    }
+  function conductNav(dir) {
+    var n = _CONDUCT_SLIDES.length;
+    _conductIdx = (_conductIdx + dir + n) % n;
+    conductRender();
+    conductResetTimer();
   }
+
+  function conductResetTimer() {
+    if (_conductTimer) clearInterval(_conductTimer);
+    _conductTimer = setInterval(function() { conductNav(1); }, 7000);
+  }
+
+  (function conductInit() {
+    conductRender();
+    conductResetTimer();
+    var card = document.getElementById('conduct-card');
+    if (card) {
+      card.addEventListener('mouseenter', function() { if (_conductTimer) clearInterval(_conductTimer); });
+      card.addEventListener('mouseleave', function() { conductResetTimer(); });
+    }
+  })();
 
 </script>
 <script>if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js");</script>

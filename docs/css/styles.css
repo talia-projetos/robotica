@@ -1017,7 +1017,8 @@ a, button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
 .topbar {
   min-height: 68px;
   padding: .45rem 1.25rem;
-  background: #101720;
+  background: #101720 !important;
+  color: rgba(255,255,255,.85);
   border-bottom: 1px solid rgba(255,255,255,.065);
   box-shadow: 0 1px 0 rgba(0,0,0,.18);
 }
@@ -1093,6 +1094,11 @@ a, button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
   min-height: 40px;
   margin: .08rem .4rem;
   border-radius: 9px;
+}
+.app-body.sidebar-collapsed .sidebar-brand {
+  padding-left: 0;
+  padding-right: 0;
+  overflow: hidden;
 }
 .app-body.sidebar-collapsed .sidebar-brand__img {
   width: 30px;
