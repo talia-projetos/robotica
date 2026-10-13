@@ -147,10 +147,11 @@ function criarAbaHubJuizes_(ss) {
     aba = ss.insertSheet('HUB_JUIZES');
     aba.getRange(1,1,1,5).setValues([['Nome','PIN','Categoria','Ativo','Competição']]);
   } else {
-    // Garante coluna Competição se aba já existia
-    const cab = aba.getRange(1,1,1,aba.getLastColumn()).getValues()[0];
+    // Garante coluna Competição se aba já existia (usa _headerOffset_ para ignorar linhas de título)
+    const off = _headerOffset_(aba);
+    const cab = aba.getRange(off + 1, 1, 1, aba.getLastColumn()).getValues()[0];
     const temComp = cab.some(function(h){ return String(h).toLowerCase().indexOf('competi') >= 0; });
-    if (!temComp) aba.getRange(1, cab.length + 1).setValue('Competição');
+    if (!temComp) aba.getRange(off + 1, cab.length + 1).setValue('Competição');
   }
   // Verifica se já existe algum coordenador
   const dados = aba.getLastRow() > 1 ? aba.getDataRange().getValues() : [[]];
@@ -183,40 +184,40 @@ function TORNEIO_corrigirNomes() {
   const aba = ss.getSheetByName(T.ABAS.EQUIPES);
   if (!aba) { SpreadsheetApp.getUi().alert('Aba EQUIPES não encontrada.'); return; }
 
-  // [ID, Nome_Equipe, Tutor, Competicao, Qtde_Alunos]
+  // [ID, Nome_Equipe, Tutor, Competicao, Qtde_Alunos, Disciplina]
   const corretos = [
-    ['TUR01', '6° A - Cyber Panter',      'Éverton',          'FLL',          37],
-    ['TUR02', '6° B - Liga do Choque',    'Izabela',          'FLL',          36],
-    ['TUR03', '6° C - Alpha Tech',        'Patrícia',         'FLL',          35],
-    ['TUR04', '6° D - Pheonics Mecanics', 'Moaci',            'FLL',          36],
-    ['TUR05', '6° E - TecShark',          'Yulo',             'FLL',          36],
-    ['TUR06', '7° A - Hoppin Robots',     'João',             'FLL',          36],
-    ['TUR07', '7° B - Bivoltx',           'Joseli',           'FLL',          36],
-    ['TUR08', '7° C - Ecoshift',          'Ana Claudia',      'FLL',          24],
-    ['TUR09', '7° D - Pantera Lego Team', 'Diego Lopes',      'FLL',          36],
-    ['TUR10', '7° E - Império das Onças', 'Fabiana',          'FLL',          36],
-    ['TUR11', '7° F - Poseidon',          'Marilia',          'FLL',          37],
-    ['TUR12', '7° G - Arara Azul',        'Reinalda',         'FLL',          37],
-    ['TUR13', '7° H - Nexos',             'Rute',             'FLL',          36],
-    ['TUR14', '8° A • Shadow Robotics',   'Juliana',          'OBR',          37],
-    ['TUR15', '8° B • Sharktech',         'Sabrina',          'OBR',          37],
-    ['TUR16', '8° C • Thunderbots',       'Ana Paula Suzart', 'OBR',          37],
-    ['TUR17', '8° D • Spider Bot',        'Ricardo',          'OBR',          37],
-    ['TUR18', '8° E • Lince Tec',         'Rosela',           'OBR',          36],
-    ['TUR19', '8° F • Cyberfoxys',        'Nadja',            'OBR',          37],
-    ['TUR20', '8° G • Inova Tech',        'Camila',           'OBR',          38],
-    ['TUR21', '8° H • Robótica 8H',       'Erick',            'OBR',          37],
-    ['TUR22', '8° I • Los Minions',       'Bruno',            'OBR',          36],
-    ['TUR23', '9° A • Biene',             'Max',              'Steam Racing', 39],
-    ['TUR24', '9° B • A Lua',             'José Grimaldo',    'Steam Racing', 39],
-    ['TUR25', '9° C • Bolt Engineering',  'Elias',            'Steam Racing', 39],
-    ['TUR26', '9° D • Supernova',         'Luciana',          'Steam Racing', 38],
-    ['TUR27', '9° E • Pantera Negra',     'Wesley',           'Steam Racing', 38],
-    ['TUR28', '9° F • Ímola',            'Marcelo',          'Steam Racing', 39],
-    ['TUR29', '9° G • Waitheri',          'Anderson',         'Steam Racing', 39],
-    ['TUR30', '9° H • Sem nome 2',        'Lucyene',          'Steam Racing', 38],
-    ['TUR31', '9° I • Sem nome 3',        'Luciana',          'Steam Racing', 38],
-    ['TUR32', '9° J • Sem nome 4',        'Daniel',           'Steam Racing', 39]
+    ['TUR01', '6° A - Cyber Panter',        'Éverton Silva Soares',              'FLL',          37, 'Matemática'],
+    ['TUR02', '6° B - Liga do Choque',      'Izabela Santana de Alcantara',      'FLL',          36, 'Linguagem'],
+    ['TUR03', '6° C - Alpha Tech',          'Patrícia Rosa dos S Miranda Silva', 'FLL',          35, 'Linguagem'],
+    ['TUR04', '6° D - Pheonics Mecanics',   'Moacir Emídio da Silva Júnior',     'FLL',          36, 'Ciências Humanas'],
+    ['TUR05', '6° E - TecShark',            'Yulo Augusto Silva Freitas',        'FLL',          36, 'CTEC'],
+    ['TUR06', '7° A - Hoppin Robots',       'João Luís Alves Júnior',            'FLL',          36, 'Educação Física'],
+    ['TUR07', '7° B - Bivoltx',             'Joseli Santos Ribeiro',             'FLL',          36, 'Linguagem'],
+    ['TUR08', '7° C - Ecoshift',            'Ana Claudia da Silva Barreto',      'FLL',          24, 'Linguagem'],
+    ['TUR09', '7° D - Pantera Lego Team',   'Diego Eduardo Lopes Santos',        'FLL',          36, 'Ciências Humanas'],
+    ['TUR10', '7° E - Império das Onças',   'Fabiana Dunham Macêdo Sousa',       'FLL',          36, 'Matemática'],
+    ['TUR11', '7° F - Poseidon',            'Marilia Lima Menezes dos Santos',   'FLL',          37, 'Ciências Humanas'],
+    ['TUR12', '7° G - Arara Azul',          'Reinalda Alves de Jesus',           'FLL',          37, 'Ciências da Natureza'],
+    ['TUR13', '7° H - Nexos',              'Rute Santana da Silva',             'FLL',          36, 'Linguagem'],
+    ['TUR14', '8° A • Shadow Robotics',     'Carlson Guerreiro',                 'OBR',          37, 'Matemática'],
+    ['TUR15', '8° B • Sharktech',           'Sabrina dos Reis de Jesus',         'OBR',          37, 'Linguagem'],
+    ['TUR16', '8° C • Thunderbots',         'Ana Paula Suzart Moreira Silva',    'OBR',          37, 'Ciências da Natureza'],
+    ['TUR17', '8° D • Spider Bot',          'Ricardo Ferreira Silva Souza',      'OBR',          37, 'Educação Física'],
+    ['TUR18', '8° E • Lince Tec',           'Rosela Silva Oliveira',             'OBR',          36, 'Matemática'],
+    ['TUR19', '8° F • Cyberfoxys',          'Nadja Alves Santos',                'OBR',          37, 'Linguagem'],
+    ['TUR20', '8° G • Inova Tech',          'Camila Franquetto de Oliveira',     'OBR',          38, 'CTEC'],
+    ['TUR21', '8° H • Robótica',            'Erick Gomes Conceição',             'OBR',          37, 'Ciências Humanas'],
+    ['TUR22', '8° I • Los Minions',         'Bruno Dias',                        'OBR',          36, 'Linguagem'],
+    ['TUR23', '9° A - Shadow Robotics',     'Max Miranda de Campos',             'Steam Racing', 39, 'Matemática'],
+    ['TUR24', '9° B - Sharktech',           'José Grimaldo da Silva',            'Steam Racing', 39, 'CTEC'],
+    ['TUR25', '9° C - Thunderbots',         'Elias Purificação Pereira',         'Steam Racing', 39, 'Ciências Humanas'],
+    ['TUR26', '9° D - Spider Bot',          'Luciana Acácio dos Santos Rocha',   'Steam Racing', 38, 'Educação Física'],
+    ['TUR27', '9° E - Lince Tec',           'Wesley Magalhães de Almeida',       'Steam Racing', 38, 'Linguagem'],
+    ['TUR28', '9° F - Cyberfoxys',          'Marcelo Barroso Barreto',           'Steam Racing', 39, 'Ciências da Natureza'],
+    ['TUR29', '9° G - Inova Tech',          'Anderson dos Santos Rodrigues',     'Steam Racing', 39, 'Ciências Humanas'],
+    ['TUR30', '9° H - Sem nome 1',          'Lucyene Maria Santos Lima',         'Steam Racing', 38, 'Matemática'],
+    ['TUR31', '9° I - Sem nome 2',          'Luciana Onety da Gama Sobral',      'Steam Racing', 38, 'Ciências Humanas'],
+    ['TUR32', '9° J - Sem nome 3',          'Daniel Oliveira de A Tourinho',     'Steam Racing', 39, 'Linguagem']
   ];
 
   const dados = aba.getDataRange().getValues();
@@ -227,6 +228,7 @@ function TORNEIO_corrigirNomes() {
   const iTutor= achaCab_(cab, ['tutor','professor'], 3);
   const iQtd  = achaCab_(cab, ['qtde alunos','qtd alunos','quantidade alunos','alunos'], 4);
   const iComp = achaCab_(cab, ['competicao','competição'], 6);
+  const iDisc = achaCab_(cab, ['disciplina','area','componente'], -1);
 
   // Extrai prefixo de turma: "8° A", "9° B" etc. (aceita ° ou o)
   function extraiClasse_(s) {
@@ -261,10 +263,21 @@ function TORNEIO_corrigirNomes() {
       if (c[2]) aba.getRange(linha, iTutor + 1).setValue(c[2]);
       if (iComp >= 0) aba.getRange(linha, iComp + 1).setValue(c[3]);
       if (iQtd >= 0 && c[4] > 0) aba.getRange(linha, iQtd + 1).setValue(c[4]);
+      if (iDisc >= 0 && c[5]) aba.getRange(linha, iDisc + 1).setValue(c[5]);
     } else {
-      aba.appendRow([id, c[1], '', c[2], c[4] || 0, '', c[3]]);
+      aba.appendRow([id, c[1], '', c[2], c[4] || 0, '', c[3], c[5] || '']);
     }
   });
+
+  // Remove linhas com TUR IDs não reconhecidos (ex: TUR33 criado por engano)
+  const idsValidos = corretos.map(function(c) { return c[0]; });
+  const totalLinhas = aba.getLastRow();
+  for (let ln = totalLinhas; ln >= off + 2; ln--) {
+    const idCel = String(aba.getRange(ln, iId + 1).getValue() || '').trim().toUpperCase();
+    if (idCel && idCel.match(/^TUR\d+$/) && idsValidos.indexOf(idCel) === -1) {
+      aba.deleteRow(ln);
+    }
+  }
 
   SpreadsheetApp.getActiveSpreadsheet().toast('Equipes atualizadas: FLL (TUR01–13) · OBR (TUR14–22) · Steam Racing (TUR23–32). Nomes, tutores e nº de alunos gravados.', 'Torneio', 10);
 }
@@ -584,29 +597,40 @@ function criarAbaEquipes_(ss) {
   let aba = ss.getSheetByName(T.ABAS.EQUIPES);
   if (!aba) {
     aba = ss.insertSheet(T.ABAS.EQUIPES);
-    aba.getRange(1, 1, 1, 7).setValues([['ID_Equipe', 'Nome_Equipe', 'Turno', 'Tutor', 'Qtde_Alunos', 'PIN', 'Competicao']]);
-    aba.getRange(1, 1, 1, 7).setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
+    aba.getRange(1, 1, 1, 8).setValues([['ID_Equipe', 'Nome_Equipe', 'Turno', 'Tutor', 'Qtde_Alunos', 'PIN', 'Competicao', 'Disciplina']]);
+    aba.getRange(1, 1, 1, 8).setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
     aba.setColumnWidth(1, 110);
     aba.setColumnWidth(2, 240);
     aba.setColumnWidth(3, 120);
-    aba.setColumnWidth(4, 200);
+    aba.setColumnWidth(4, 220);
     aba.setColumnWidth(5, 120);
     aba.setColumnWidth(6, 100);
     aba.setColumnWidth(7, 140);
+    aba.setColumnWidth(8, 180);
     aba.setFrozenRows(1);
   } else {
-    const cab = aba.getRange(1, 1, 1, aba.getLastColumn()).getValues()[0];
+    // Usa _headerOffset_ para ler a linha de cabeçalho real (ignora título/subtítulo)
+    const off = _headerOffset_(aba);
+    const cab = aba.getRange(off + 1, 1, 1, aba.getLastColumn()).getValues()[0];
     const temPin = cab.some(function(h) { return norm_(String(h)) === 'pin' || norm_(String(h)) === 'senha'; });
     if (!temPin) {
       const col = aba.getLastColumn() + 1;
-      aba.getRange(1, col).setValue('PIN').setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
+      aba.getRange(off + 1, col).setValue('PIN').setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
       aba.setColumnWidth(col, 100);
     }
-    const temComp = cab.some(function(h) { return norm_(String(h)).indexOf('competicao') >= 0 || norm_(String(h)).indexOf('competição') >= 0; });
+    const cab2 = aba.getRange(off + 1, 1, 1, aba.getLastColumn()).getValues()[0];
+    const temComp = cab2.some(function(h) { return norm_(String(h)).indexOf('competicao') >= 0 || norm_(String(h)).indexOf('competição') >= 0; });
     if (!temComp) {
       const col = aba.getLastColumn() + 1;
-      aba.getRange(1, col).setValue('Competicao').setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
+      aba.getRange(off + 1, col).setValue('Competicao').setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
       aba.setColumnWidth(col, 140);
+    }
+    const cab3 = aba.getRange(off + 1, 1, 1, aba.getLastColumn()).getValues()[0];
+    const temDisc = cab3.some(function(h) { return norm_(String(h)).indexOf('disciplina') >= 0 || norm_(String(h)).indexOf('area') >= 0; });
+    if (!temDisc) {
+      const col = aba.getLastColumn() + 1;
+      aba.getRange(off + 1, col).setValue('Disciplina').setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
+      aba.setColumnWidth(col, 180);
     }
   }
 }
@@ -781,6 +805,7 @@ function lerEquipes_(ss, cfg, diag, comp) {
   const iQtd  = achaCab_(cab, ['qtde alunos', 'qtd alunos', 'quantidade alunos', 'alunos'], 4);
   const iPin  = achaCab_(cab, ['pin', 'senha'], -1);
   const iComp = achaCab_(cab, ['competicao', 'competição'], 6);
+  const iDisc = achaCab_(cab, ['disciplina', 'area', 'componente'], -1);
   const compFiltro = comp ? normComp_(comp) : null;
 
   const lista   = [];
@@ -803,7 +828,8 @@ function lerEquipes_(ss, cfg, diag, comp) {
       tutor:      String(r[iTutor] || '').trim(),
       alunos:     Math.max(0, num_(r[iQtd])),
       pin:        iPin >= 0 ? String(r[iPin] || '').trim() : '',
-      competicao: compEq
+      competicao: compEq,
+      disciplina: iDisc >= 0 ? String(r[iDisc] || '').trim() : ''
     };
 
     lista.push(eq);
@@ -897,7 +923,7 @@ function apiTurma_(p) {
   comentarios[T.CAT.CORE]    = lerComentariosRubrica_(ss, cfgEq.abaCore, id, eq);
   return {
     ok: true,
-    equipe: { id: equipe.id, nome: equipe.nome, turno: equipe.turno, tutor: equipe.tutor, competicao: equipe.competicao },
+    equipe: { id: equipe.id, nome: equipe.nome, turno: equipe.turno, tutor: equipe.tutor, competicao: equipe.competicao, disciplina: equipe.disciplina || '' },
     scores: scores,
     comentarios: comentarios
   };

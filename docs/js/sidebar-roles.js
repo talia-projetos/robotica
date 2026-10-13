@@ -18,6 +18,7 @@
     if (teamNumber >= 23) visualCompetition = 'Steam Racing';
     else if (teamNumber >= 14) visualCompetition = 'OBR';
     else if (teamNumber > 0) visualCompetition = 'FLL';
+    if (teamNumber > 0) localStorage.setItem('torneio_comp', visualCompetition);
   }
   var brandComp = /steam/i.test(visualCompetition) ? 'steam' : visualCompetition === 'OBR' ? 'obr' : 'fll';
   document.documentElement.setAttribute('data-hub-competition', brandComp);
@@ -52,7 +53,7 @@
 
   /* ── Logout global ───────────────────────────────────── */
   function sair() {
-    ['coord_nome','coord_pin','hub_juiz','hub_pin','turma_id','turma_pin'].forEach(function (k) {
+    ['coord_nome','coord_pin','hub_juiz','hub_pin','turma_id','turma_pin','turma_tutor'].forEach(function (k) {
       localStorage.removeItem(k);
     });
     location.replace('login.html');
@@ -189,7 +190,7 @@
       color = '#7C3AED';
     } else if (isTurma) {
       name  = localStorage.getItem('turma_id') || 'T';
-      role  = 'Professor';
+      role  = localStorage.getItem('turma_tutor') || 'Professor';
       color = '#059669';
     } else {
       return;
@@ -254,7 +255,17 @@
     TUR07:'7° B - Bivoltx',         TUR08:'7° C - Ecoshift',
     TUR09:'7° D - Pantera Lego Team', TUR10:'7° E - Império das Onças',
     TUR11:'7° F - Poseidon',        TUR12:'7° G - Arara Azul',
-    TUR13:'7° H - Nexos'
+    TUR13:'7° H - Nexos',
+    TUR14:'8° A - Shadow Robotics', TUR15:'8° B - Sharktech',
+    TUR16:'8° C - Thunderbots',     TUR17:'8° D - Spider Bot',
+    TUR18:'8° E - Lince Tec',       TUR19:'8° F - Cyberfoxys',
+    TUR20:'8° G - Inova Tech',      TUR21:'8° H - Robótica',
+    TUR22:'8° I - Los Minions',
+    TUR23:'9° A - Shadow Robotics', TUR24:'9° B - Sharktech',
+    TUR25:'9° C - Thunderbots',     TUR26:'9° D - Spider Bot',
+    TUR27:'9° E - Lince Tec',       TUR28:'9° F - Cyberfoxys',
+    TUR29:'9° G - Inova Tech',      TUR30:'9° H - Sem nome 1',
+    TUR31:'9° I - Sem nome 2',      TUR32:'9° J - Sem nome 3'
   };
 
   /* ── Logo no topo da sidebar ────────────────────────── */

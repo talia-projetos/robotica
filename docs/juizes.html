@@ -1414,6 +1414,15 @@
         document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
         aplicarCompJuiz(r);
         travarChipComp();
+        /* Força chip com os dados reais vindos da API, evitando stale de sessão anterior */
+        (function() {
+          var chipEl = document.querySelector('.comp-chip');
+          if (!chipEl || !r.competicao || r.competicao === 'Geral') return;
+          var CLABELS = { 'FLL':'FLL', 'OBR':'OBR', 'Steam Racing':'Steam' };
+          var CCOLORS = { 'FLL':'#2F80ED', 'OBR':'#279B70', 'Steam Racing':'#8B5CF6' };
+          chipEl.textContent      = CLABELS[r.competicao] || r.competicao;
+          chipEl.style.background = CCOLORS[r.competicao] || '#3979B8';
+        })();
         /* Reabilita cards antes de filtrar — configurarWorkspaceJuiz oculta os não atribuídos */
         document.querySelectorAll('.form-card[data-cat]').forEach(function(c) {
           c.style.pointerEvents = ''; c.style.opacity = '';
@@ -1426,10 +1435,11 @@
       document.getElementById('view-painel').style.display = 'none';
       document.getElementById('view-login').style.display  = '';
     } catch(_) {
-      /* Erro de rede: mantém sessão com dados em cache; reabilita cards */
+      /* Erro de rede: mantém sessão com dados em cache; reabilita cards e sincroniza chip */
       document.querySelectorAll('.form-card[data-cat]').forEach(function(c) {
         c.style.pointerEvents = ''; c.style.opacity = '';
       });
+      travarChipComp();
     }
   }
 

@@ -2383,6 +2383,7 @@
     document.getElementById('view-resultados').classList.remove('hidden');
 
     var eq = data.equipe || {};
+    if (eq.tutor) localStorage.setItem('turma_tutor', eq.tutor);
     var raw        = nomesMap[eq.id] || eq.nome || eq.id;
     var partes     = raw.split(/\s+[·-]\s+/);
     var nomeExibido = partes.length > 1 ? partes[1].trim() : raw;
@@ -2474,6 +2475,7 @@
   function sair() {
     localStorage.removeItem(STORAGE_KEY_ID);
     localStorage.removeItem(STORAGE_KEY_PIN);
+    localStorage.removeItem('turma_tutor');
     document.getElementById('view-resultados').classList.add('hidden');
     document.getElementById('view-login').classList.remove('hidden');
     var _bt = document.getElementById('badge-turma');
@@ -2554,13 +2556,13 @@
     TUR14:'8º A · Shadow Robotics',   TUR15:'8º B · Sharktech',
     TUR16:'8º C · Thunderbots',       TUR17:'8º D · Spider Bot',
     TUR18:'8º E · Lince Tec',         TUR19:'8º F · Cyberfoxys',
-    TUR20:'8º G · Inova Tech',        TUR21:'8º H · Robótica 8H',
+    TUR20:'8º G · Inova Tech',        TUR21:'8º H · Robótica',
     TUR22:'8º I · Los Minions',
-    TUR23:'9º A · Biene',             TUR24:'9º B · A Lua',
-    TUR25:'9º C · Bolt Engineering',  TUR26:'9º D · Supernova',
-    TUR27:'9º E · Pantera Negra',     TUR28:'9º F · Ímola',
-    TUR29:'9º G · Waitheri',          TUR30:'9º H · Sem nome 2',
-    TUR31:'9º I · Sem nome 3',        TUR32:'9º J · Sem nome 4'
+    TUR23:'9º A · Shadow Robotics',   TUR24:'9º B · Sharktech',
+    TUR25:'9º C · Thunderbots',       TUR26:'9º D · Spider Bot',
+    TUR27:'9º E · Lince Tec',         TUR28:'9º F · Cyberfoxys',
+    TUR29:'9º G · Inova Tech',        TUR30:'9º H · Sem nome 1',
+    TUR31:'9º I · Sem nome 2',        TUR32:'9º J · Sem nome 3'
   };
 
   async function carregarEquipes() {
