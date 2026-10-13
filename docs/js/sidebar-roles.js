@@ -261,10 +261,10 @@
     TUR18:'8° E - Lince Tec',       TUR19:'8° F - Cyberfoxys',
     TUR20:'8° G - Inova Tech',      TUR21:'8° H - Robótica',
     TUR22:'8° I - Los Minions',
-    TUR23:'9° A - Shadow Robotics', TUR24:'9° B - Sharktech',
-    TUR25:'9° C - Thunderbots',     TUR26:'9° D - Spider Bot',
-    TUR27:'9° E - Lince Tec',       TUR28:'9° F - Cyberfoxys',
-    TUR29:'9° G - Inova Tech',      TUR30:'9° H - Sem nome 1',
+    TUR23:'9° A - Biene',           TUR24:'9° B - A Lua',
+    TUR25:'9° C - Bolt Engineering',TUR26:'9° D - Supernova',
+    TUR27:'9° E - Pantera Negra',   TUR28:'9° F - Ímola',
+    TUR29:'9° G - Waitheri',        TUR30:'9° H - Sem nome 1',
     TUR31:'9° I - Sem nome 2',      TUR32:'9° J - Sem nome 3'
   };
 

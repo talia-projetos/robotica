@@ -208,16 +208,16 @@ function TORNEIO_corrigirNomes() {
     ['TUR20', '8° G • Inova Tech',          'Camila Franquetto de Oliveira',     'OBR',          38, 'CTEC'],
     ['TUR21', '8° H • Robótica',            'Erick Gomes Conceição',             'OBR',          37, 'Ciências Humanas'],
     ['TUR22', '8° I • Los Minions',         'Bruno Dias',                        'OBR',          36, 'Linguagem'],
-    ['TUR23', '9° A - Shadow Robotics',     'Max Miranda de Campos',             'Steam Racing', 39, 'Matemática'],
-    ['TUR24', '9° B - Sharktech',           'José Grimaldo da Silva',            'Steam Racing', 39, 'CTEC'],
-    ['TUR25', '9° C - Thunderbots',         'Elias Purificação Pereira',         'Steam Racing', 39, 'Ciências Humanas'],
-    ['TUR26', '9° D - Spider Bot',          'Luciana Acácio dos Santos Rocha',   'Steam Racing', 38, 'Educação Física'],
-    ['TUR27', '9° E - Lince Tec',           'Wesley Magalhães de Almeida',       'Steam Racing', 38, 'Linguagem'],
-    ['TUR28', '9° F - Cyberfoxys',          'Marcelo Barroso Barreto',           'Steam Racing', 39, 'Ciências da Natureza'],
-    ['TUR29', '9° G - Inova Tech',          'Anderson dos Santos Rodrigues',     'Steam Racing', 39, 'Ciências Humanas'],
-    ['TUR30', '9° H - Sem nome 1',          'Lucyene Maria Santos Lima',         'Steam Racing', 38, 'Matemática'],
-    ['TUR31', '9° I - Sem nome 2',          'Luciana Onety da Gama Sobral',      'Steam Racing', 38, 'Ciências Humanas'],
-    ['TUR32', '9° J - Sem nome 3',          'Daniel Oliveira de A Tourinho',     'Steam Racing', 39, 'Linguagem']
+    ['TUR23', '9° A - Biene',               'Max Miranda de Campos',             'Steam Racing', 39, 'Matemática'],
+    ['TUR24', '9° B - A Lua',              'José Grimaldo da Silva',            'Steam Racing', 39, 'CTEC'],
+    ['TUR25', '9° C - Bolt Engineering',   'Elias Purificação Pereira',         'Steam Racing', 39, 'Ciências Humanas'],
+    ['TUR26', '9° D - Supernova',          'Luciana Acácio dos Santos Rocha',   'Steam Racing', 38, 'Educação Física'],
+    ['TUR27', '9° E - Pantera Negra',      'Wesley Magalhães de Almeida',       'Steam Racing', 38, 'Linguagem'],
+    ['TUR28', '9° F - Ímola',              'Marcelo Barroso Barreto',           'Steam Racing', 39, 'Ciências da Natureza'],
+    ['TUR29', '9° G - Waitheri',           'Anderson dos Santos Rodrigues',     'Steam Racing', 39, 'Ciências Humanas'],
+    ['TUR30', '9° H - Sem nome 1',         'Lucyene Maria Santos Lima',         'Steam Racing', 38, 'Matemática'],
+    ['TUR31', '9° I - Sem nome 2',         'Luciana Onety da Gama Sobral',      'Steam Racing', 38, 'Ciências Humanas'],
+    ['TUR32', '9° J - Sem nome 3',         'Daniel Oliveira de A Tourinho',     'Steam Racing', 39, 'Linguagem']
   ];
 
   const dados = aba.getDataRange().getValues();

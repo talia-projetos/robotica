@@ -145,11 +145,6 @@
       <p class="page-meta">Classificação geral e desempenho por categoria.</p>
     </div>
     <div class="workspace-head-actions" style="display:flex;gap:.45rem;align-items:center;flex-wrap:wrap">
-      <div style="display:flex;gap:.3rem;margin-right:.6rem;border-right:1px solid #E2EBF4;padding-right:.6rem">
-        <button class="schedule-head-link" id="btn-comp-fll"          onclick="trocarComp('FLL')">FLL</button>
-        <button class="schedule-head-link" id="btn-comp-obr"          onclick="trocarComp('OBR')">OBR</button>
-        <button class="schedule-head-link" id="btn-comp-steam"        onclick="trocarComp('Steam Racing')">Steam</button>
-      </div>
       <button class="schedule-head-link" id="btn-geral" onclick="mostrarView('geral')">Geral</button>
       <button class="schedule-head-link" id="btn-cat" onclick="mostrarView('categorias')">Por Categoria</button>
     </div>
@@ -377,29 +372,7 @@
     }
   }
 
-  // ── Troca de competição ───────────────────────────────────────────
-  function trocarComp(c) {
-    Comp.set(c);
-    var map = { 'FLL': 'btn-comp-fll', 'OBR': 'btn-comp-obr', 'Steam Racing': 'btn-comp-steam' };
-    ['btn-comp-fll','btn-comp-obr','btn-comp-steam'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) el.classList.toggle('schedule-head-link--ativo', id === map[c]);
-    });
-    buildUI();
-    carregar();
-  }
-
-  function marcarCompAtual() {
-    var map = { 'FLL': 'btn-comp-fll', 'OBR': 'btn-comp-obr', 'Steam Racing': 'btn-comp-steam' };
-    var cur = Comp.val;
-    Object.keys(map).forEach(function(k) {
-      var el = document.getElementById(map[k]);
-      if (el) el.classList.toggle('schedule-head-link--ativo', k === cur);
-    });
-  }
-
   // ── Init ──────────────────────────────────────────────────────────
-  marcarCompAtual();
   buildUI();
   if (location.hash === '#categorias') mostrarView('categorias');
   else mostrarView('geral');
