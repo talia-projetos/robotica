@@ -2255,8 +2255,8 @@
     {
       label: 'Tampinhas', campo: 'tamp20', max: 20, color: '#0D9488',
       sub: function(e) {
-        var kg = parseFloat(e.tampKg) || 0;
-        return kg > 0 ? kg.toFixed(2) + ' kg' : null;
+        var unid = Math.round(parseFloat(e.tampKg) || 0);
+        return unid > 0 ? unid.toLocaleString('pt-BR') + ' unid.' : null;
       }
     }
   ];
