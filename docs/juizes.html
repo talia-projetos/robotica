@@ -9,7 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#12355B">
-  <link rel="stylesheet" href="css/styles.css?v=23">
+  <link rel="stylesheet" href="css/styles.css?v=24">
   <script>window.API_URL='https://script.google.com/macros/s/AKfycbySccrFmufdTM9STXXFcMquZnYSv6ullNfJ-OYyJakdKOgcfwCpae5VpV4BFBqy7pGR/exec';</script>
   <style>
     body { background: #F0F4F8; }
@@ -1388,10 +1388,17 @@
     if (e.key === 'Enter') document.getElementById('l-pin').focus();
   });
 
-  /* Dispositivos compartilhados: nunca auto-abre o painel — cada juiz deve fazer login.
-     Limpa competição/categoria em cache (valores reais vêm da API após entrar()). */
-  ['hub_comp','hub_cat','hub_coord','torneio_comp'].forEach(function(k){ localStorage.removeItem(k); });
-  if (Sessao.juiz) document.getElementById('l-nome').value = Sessao.juiz;
+  /* Coordenador com sessão ativa no hub entra direto (sem segundo login).
+     Juízes comuns: limpa cache de competição para forçar login individual. */
+  var _coordAtivo = localStorage.getItem('hub_coord') === '1' && localStorage.getItem('hub_juiz');
+  if (_coordAtivo) {
+    document.getElementById('l-nome').value = localStorage.getItem('hub_juiz');
+    document.getElementById('l-pin').value  = localStorage.getItem('hub_pin') || '';
+    setTimeout(entrar, 0);
+  } else {
+    ['hub_comp','hub_cat','hub_coord','torneio_comp'].forEach(function(k){ localStorage.removeItem(k); });
+    if (Sessao.juiz) document.getElementById('l-nome').value = Sessao.juiz;
+  }
 
   async function verificarSessao() {
     var cachedOffline = {
