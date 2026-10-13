@@ -898,10 +898,10 @@
     window.location.href = 'index.html';
   });
 
-  // Auto-login
+  // Auto-login — usa credenciais salvas aqui ou as do hub (hub_juiz/hub_pin)
   (async function(){
-    var nome = localStorage.getItem(SK_NOME);
-    var pin  = localStorage.getItem(SK_PIN);
+    var nome = localStorage.getItem(SK_NOME) || localStorage.getItem('hub_juiz');
+    var pin  = localStorage.getItem(SK_PIN)  || localStorage.getItem('hub_pin');
     if (!nome) return;
     document.getElementById('l-nome').value = nome;
     await entrar(nome, pin || '');
