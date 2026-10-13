@@ -1639,6 +1639,7 @@
 
   function sair() {
     Sessao.clear();
+    ['hub_comp','hub_cat','hub_coord','torneio_comp'].forEach(function(k){ localStorage.removeItem(k); });
     if (_salaTimer) { clearInterval(_salaTimer); _salaTimer = null; }
     var card = document.getElementById('sala-progress-card');
     if (card) card.style.display = 'none';

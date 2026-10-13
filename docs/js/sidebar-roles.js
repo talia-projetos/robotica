@@ -12,6 +12,7 @@
   var assignedCompetition = localStorage.getItem('hub_comp') || '';
   if (role === 'juiz' && assignedCompetition && assignedCompetition !== 'Geral') {
     visualCompetition = assignedCompetition;
+    localStorage.setItem('torneio_comp', assignedCompetition);
   }
   if (role === 'professor') {
     var teamNumber = parseInt((localStorage.getItem('turma_id') || '').replace(/\D/g, ''), 10) || 0;
