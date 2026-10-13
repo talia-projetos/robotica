@@ -757,7 +757,7 @@ function lerConfig_(ss, diag, comp) {
     cfg.abaProj  = s('Aba Form Projeto OBR', 'FORM_PROJETO_OBR');
     cfg.abaDes   = s('Aba Form Design OBR',  'FORM_DESIGN_OBR');
     cfg.abaCore  = s('Aba Form Core OBR',    'FORM_CORE_OBR');
-    cfg.maxArena = n('Pontuação Máxima Arena OBR', 160); // OBR: Perigos = máx 160 pts
+    cfg.maxArena = n('Pontuação Máxima Arena OBR', 205); // OBR: Design C = máx 205 pts (5×Obs+3×Lomb+GAP+2×T+Rampa+Passagem)
   } else if (c === 'Steam Racing') {
     cfg.abaArena = s('Aba Form Arena Steam',   'FORM_ARENA_STEAM');
     cfg.abaProj  = s('Aba Form Projeto Steam', 'FORM_PROJETO_STEAM');

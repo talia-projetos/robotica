@@ -727,6 +727,29 @@ var MISSOES_OBR = [
       + '<polygon points="5,36 53,50 53,54 5,40" fill="#93C5FD" stroke="#1D4ED8" stroke-width="1.5"/>'
       + '<polygon points="5,36 9,32 57,46 53,50" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="1.5"/>'
       + '<polygon points="53,50 57,46 57,50 53,54" fill="#60A5FA" stroke="#1D4ED8" stroke-width="1"/>'
+  },
+  {
+    cod:'OBR7', nome:'Rampa', pts: 30,
+    desc:'O robô sobe a rampa e chega ao topo sem escorregar ou cair. <strong>0</strong> = não completou. <strong>30</strong> = completou.',
+    opts:[0,30],
+    svg:'<line x1="3" y1="52" x2="57" y2="52" stroke="#CBD5E1" stroke-width="1.5"/>'
+      + '<polygon points="8,52 52,52 52,18" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="1.5"/>'
+      + '<polygon points="8,52 52,18 56,14 12,48" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="1"/>'
+      + '<polygon points="52,52 56,48 56,14 52,18" fill="#93C5FD" stroke="#1D4ED8" stroke-width="1"/>'
+      + '<line x1="20" y1="47" x2="52" y2="29" stroke="#BFDBFE" stroke-width="1" opacity="0.7"/>'
+      + '<line x1="32" y1="43" x2="52" y2="33" stroke="#BFDBFE" stroke-width="1" opacity="0.7"/>'
+      + '<path d="M47 13 L53 19 L47 25" fill="none" stroke="#1D4ED8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
+  },
+  {
+    cod:'OBR8', nome:'Passagem', pts: 15,
+    desc:'O robô atravessa completamente a passagem/túnel sem tocar as paredes ou o teto. <strong>0</strong> = não atravessou / tocou. <strong>15</strong> = atravessou.',
+    opts:[0,15],
+    svg:'<line x1="3" y1="52" x2="57" y2="52" stroke="#CBD5E1" stroke-width="1.5"/>'
+      + '<rect x="8" y="28" width="44" height="24" rx="1" fill="#DBEAFE" stroke="#1D4ED8" stroke-width="1.5"/>'
+      + '<polygon points="8,28 12,23 56,23 52,28" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="1"/>'
+      + '<polygon points="52,28 56,23 56,47 52,52" fill="#93C5FD" stroke="#1D4ED8" stroke-width="1"/>'
+      + '<rect x="14" y="35" width="32" height="17" rx="1" fill="#F8FAFC" stroke="#93C5FD" stroke-width="1"/>'
+      + '<path d="M38 40 L44 46 L38 52" fill="none" stroke="#1D4ED8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'
   }
 ];
 
@@ -736,19 +759,25 @@ var PERIGOS_OBR = {
     { cod:'P1', nome:'Obstáculo Sólido', ptsCada:20, max:4 },
     { cod:'P2', nome:'Lombada',          ptsCada:10, max:4 },
     { cod:'P3', nome:'GAP',              ptsCada:10, max:2 },
-    { cod:'P4', nome:'Interseção em T',  ptsCada:10, max:2 }
+    { cod:'P4', nome:'Interseção em T',  ptsCada:10, max:2 },
+    { cod:'P5', nome:'Rampa',            ptsCada:30, max:1 },
+    { cod:'P6', nome:'Passagem',         ptsCada:15, max:1 }
   ],
   B: [
     { cod:'P1', nome:'Obstáculo Sólido', ptsCada:20, max:3 },
     { cod:'P2', nome:'Lombada',          ptsCada:10, max:4 },
     { cod:'P3', nome:'GAP',              ptsCada:10, max:3 },
-    { cod:'P4', nome:'Interseção em T',  ptsCada:10, max:3 }
+    { cod:'P4', nome:'Interseção em T',  ptsCada:10, max:3 },
+    { cod:'P5', nome:'Rampa',            ptsCada:30, max:1 },
+    { cod:'P6', nome:'Passagem',         ptsCada:15, max:1 }
   ],
   C: [
     { cod:'P1', nome:'Obstáculo Sólido', ptsCada:20, max:5 },
     { cod:'P2', nome:'Lombada',          ptsCada:10, max:3 },
     { cod:'P3', nome:'GAP',              ptsCada:10, max:1 },
-    { cod:'P4', nome:'Interseção em T',  ptsCada:10, max:2 }
+    { cod:'P4', nome:'Interseção em T',  ptsCada:10, max:2 },
+    { cod:'P5', nome:'Rampa',            ptsCada:30, max:1 },
+    { cod:'P6', nome:'Passagem',         ptsCada:15, max:1 }
   ]
 };
 
