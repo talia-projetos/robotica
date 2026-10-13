@@ -413,9 +413,11 @@
     document.body.appendChild(drop);
 
     chip.addEventListener('click', function(e) {
-      var compNow  = localStorage.getItem('hub_comp') || '';
-      var coordNow = !!localStorage.getItem('hub_coord') || !!localStorage.getItem('coord_nome');
-      if (compNow && !coordNow) { drop.classList.remove('open'); return; }
+      var compNow     = localStorage.getItem('hub_comp') || '';
+      var listaNow    = localStorage.getItem('hub_comp_lista') || '';
+      var isMultiNow  = !!(listaNow && listaNow.indexOf(';') >= 0);
+      var coordNow    = !!localStorage.getItem('hub_coord') || !!localStorage.getItem('coord_nome');
+      if (compNow && !coordNow && !isMultiNow) { drop.classList.remove('open'); return; }
       e.stopPropagation();
       var r = chip.getBoundingClientRect();
       drop.style.top = (r.bottom + 6) + 'px';

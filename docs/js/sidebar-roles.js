@@ -95,7 +95,7 @@
 
   /* ── Visibilidade da sidebar ─────────────────────────── */
   function hide(href) {
-    var el = document.querySelector('.app-sidebar a[href="' + href + '"]');
+    var el = document.querySelector('.app-sidebar .sidebar-item[href="' + href + '"]');
     if (el) el.style.display = 'none';
   }
 
