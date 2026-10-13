@@ -1120,11 +1120,11 @@
 
     <div class="coord-toolbar">
       <div class="tab-bar" id="tab-bar" style="border:none;margin:0">
-        <button class="tab-btn ativo" onclick="mudarTab('todas')">Todas as turmas</button>
-        <button class="tab-btn" onclick="mudarTab('projeto')">Projeto</button>
-        <button class="tab-btn" onclick="mudarTab('design')">Design</button>
-        <button class="tab-btn" onclick="mudarTab('core')">Core Values</button>
-        <button class="tab-btn tab-btn--steam" onclick="mudarTab('indicadores')">Indicadores STEAM</button>
+        <button class="tab-btn ativo" data-tab="todas"       onclick="mudarTab('todas')">Todas as turmas</button>
+        <button class="tab-btn"       data-tab="projeto"    onclick="mudarTab('projeto')">Projeto</button>
+        <button class="tab-btn"       data-tab="design"     onclick="mudarTab('design')">Design</button>
+        <button class="tab-btn"       data-tab="core"       onclick="mudarTab('core')">Core Values</button>
+        <button class="tab-btn tab-btn--steam" data-tab="indicadores" onclick="mudarTab('indicadores')">Indicadores STEAM</button>
       </div>
       <input id="filtro-busca" type="search" placeholder="Buscar equipe…" oninput="filtrar()" style="min-width:160px">
       <div class="coord-logout">
@@ -1268,12 +1268,26 @@
     return `<span class="status-pill status-${cls}">${s || 'Sem dados'}</span>`;
   }
 
+  // ── Configuração de tabs por competição ───────────────────────
+  function configurarTabs() {
+    var comp    = Comp.val;
+    var isSteam = comp === 'Steam Racing';
+    var isOBR   = comp === 'OBR';
+    var btnProj  = document.querySelector('.tab-btn[data-tab="projeto"]');
+    var btnDes   = document.querySelector('.tab-btn[data-tab="design"]');
+    var btnIndic = document.querySelector('.tab-btn[data-tab="indicadores"]');
+    if (btnProj)  btnProj.textContent  = isSteam ? 'Amostra STEAM' : 'Projeto';
+    if (btnDes)   { btnDes.textContent = isSteam ? 'Engenharia'    : 'Design'; btnDes.style.display = isOBR ? 'none' : ''; }
+    if (btnIndic) btnIndic.style.display = isSteam ? '' : 'none';
+    CAT_MAP.projeto.label = isSteam ? 'Amostra STEAM'         : 'Projeto de Inovação';
+    CAT_MAP.design.label  = isSteam ? 'Projeto de Engenharia' : 'Design do Robô';
+  }
+
   // ── Tabs ──────────────────────────────────────────────────────
   function mudarTab(tab) {
     tabAtual = tab;
-    var prefixes = { todas:'todas', projeto:'proj', design:'des', core:'core', indicadores:'indic', cronometro:'cron' };
     document.querySelectorAll('.tab-btn').forEach(function(b) {
-      b.classList.toggle('ativo', b.textContent.trim().toLowerCase().startsWith(prefixes[tab] || tab));
+      b.classList.toggle('ativo', b.dataset.tab === tab);
     });
     document.getElementById('view-todas').classList.toggle('hidden', tab !== 'todas');
     document.getElementById('view-cat').classList.toggle('hidden', tab !== 'projeto' && tab !== 'design' && tab !== 'core');
@@ -1298,6 +1312,8 @@
 
   // ── Render todas ───────────────────────────────────────────────
   function renderTodas(equipes) {
+    var comp = Comp.val;
+    equipes = equipes.filter(function(item) { return item.equipe.comp === comp; });
     const container = document.getElementById('lista-cards');
     if (!equipes.length) {
       container.innerHTML = '<p class="text-sm" style="color:var(--texto-sm)">Nenhuma equipe encontrada.</p>';
@@ -1392,18 +1408,20 @@
   function renderSummary() {
     var el = document.getElementById('coord-summary');
     if (!el) return;
+    var comp = Comp.val;
+    var lista = dadosEquipes.filter(function(i){ return i.equipe.comp === comp; });
     function avalCount(item) {
       var sc = item.scores;
       return sc ? [sc.arena20, sc.proj20, sc.des20, sc.core20]
         .filter(function(v){ return Number(v||0) > 0; }).length : 0;
     }
-    var sem      = dadosEquipes.filter(function(i){ return avalCount(i) === 0; }).length;
-    var parcial  = dadosEquipes.filter(function(i){ var c = avalCount(i); return c > 0 && c < 4; }).length;
-    var completas = dadosEquipes.length - sem - parcial;
+    var sem      = lista.filter(function(i){ return avalCount(i) === 0; }).length;
+    var parcial  = lista.filter(function(i){ var c = avalCount(i); return c > 0 && c < 4; }).length;
+    var completas = lista.length - sem - parcial;
 
     el.innerHTML =
       '<span class="summary-chip"><strong style="color:#0F172A;margin-right:.1rem">'
-        + dadosEquipes.length + '</strong> equipes</span>'
+        + lista.length + '</strong> equipes</span>'
       + (sem > 0
         ? '<span class="summary-chip summary-chip--alert">'
           + '<span class="summary-chip__dot" style="background:#D97706"></span>'
@@ -1441,8 +1459,11 @@
     const posField   = catKey === 'projeto' ? 'posProj': catKey === 'design' ? 'posDes': catKey === 'core' ? 'posCore': 'posGeral';
     const jzField    = catKey === 'projeto' ? 'projJuizes': catKey === 'design' ? 'desJuizes': 'coreJuizes';
 
+    var comp = Comp.val;
+    var lista = dadosEquipes.filter(function(item) { return item.equipe.comp === comp; });
+
     // Ranking dinâmico por score da categoria (desc), sem dados vai ao final
-    const sorted = dadosEquipes.slice().sort(function(a, b) {
+    const sorted = lista.slice().sort(function(a, b) {
       const sa = a.scores ? Number(a.scores[scoreField] || 0) : -1;
       const sb = b.scores ? Number(b.scores[scoreField] || 0) : -1;
       return sb - sa;
@@ -1570,12 +1591,14 @@
     await entrar(nome, pin || '');
   }
 
+  configurarTabs();
   tentarResumir();
   setInterval(tentarResumir, 20000);
 
   // ── Indicadores Educacionais STEAM ─────────────────────────────
   function renderIndicadores() {
-    var equipes = dadosEquipes;
+    var comp = Comp.val;
+    var equipes = dadosEquipes.filter(function(i){ return i.equipe.comp === comp; });
 
     // Mapeamento FLL → STEAM
     var STEAM = [
