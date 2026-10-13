@@ -1348,7 +1348,7 @@
 
 <div id="toast"></div>
 <script src="js/api.js?v=5"></script>
-<script src="js/sidebar-roles.js?v=6"></script>
+<script src="js/sidebar-roles.js?v=7"></script>
 <script src="js/product-ui.js?v=11"></script>
 <script>
   /* ── Sidebar mobile toggle ──────────────────────────────────── */
@@ -1388,7 +1388,10 @@
     if (e.key === 'Enter') document.getElementById('l-pin').focus();
   });
 
-  if (Sessao.logado()) verificarSessao();
+  /* Dispositivos compartilhados: nunca auto-abre o painel — cada juiz deve fazer login.
+     Limpa competição/categoria em cache (valores reais vêm da API após entrar()). */
+  ['hub_comp','hub_cat','hub_coord','torneio_comp'].forEach(function(k){ localStorage.removeItem(k); });
+  if (Sessao.juiz) document.getElementById('l-nome').value = Sessao.juiz;
 
   async function verificarSessao() {
     var cachedOffline = {
