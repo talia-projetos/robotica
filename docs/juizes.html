@@ -1396,15 +1396,17 @@
     document.getElementById('l-pin').value  = localStorage.getItem('hub_pin') || '';
     setTimeout(entrar, 0);
   } else {
-    ['hub_comp','hub_cat','hub_coord','torneio_comp'].forEach(function(k){ localStorage.removeItem(k); });
+    ['hub_comp','hub_comp_lista','hub_cat','hub_coord','torneio_comp'].forEach(function(k){ localStorage.removeItem(k); });
     if (Sessao.juiz) document.getElementById('l-nome').value = Sessao.juiz;
   }
 
   async function verificarSessao() {
+    var _listaOff = localStorage.getItem('hub_comp_lista');
     var cachedOffline = {
       nome:        Sessao.juiz,
       categoria:   localStorage.getItem('hub_cat')   || '',
       competicao:  localStorage.getItem('hub_comp')  || '',
+      competicoes: _listaOff ? _listaOff.split(';') : undefined,
       coordenador: !!localStorage.getItem('hub_coord')
     };
     aplicarCompJuiz(cachedOffline);
@@ -1453,11 +1455,23 @@
     }
   }
 
-  /* Aplica competição ao Comp global: "Geral" ou coordenador sem comp = livre para trocar */
+  /* Aplica competição ao Comp global: "Geral" ou coordenador sem comp = livre para trocar.
+     Multi-comp ("FLL; OBR"): salva lista e permite troca apenas entre elas. */
   function aplicarCompJuiz(r) {
+    if (r.coordenador) return;
+    var lista = r.competicoes && r.competicoes.length ? r.competicoes : (r.competicao ? [r.competicao] : []);
+    if (lista.length > 1) {
+      // Preserva seleção atual se ainda estiver na lista permitida
+      var curSel = Comp.val; // torneio_comp não é resetado pelo código chamador
+      var best = (curSel && lista.indexOf(curSel) >= 0) ? curSel : lista[0];
+      localStorage.setItem('hub_comp_lista', lista.join(';'));
+      localStorage.setItem('hub_comp', best);
+      Comp.set(best);
+      return;
+    }
+    localStorage.removeItem('hub_comp_lista');
     if (!r.competicao || r.competicao === 'Geral') return;
-    if (r.coordenador) return; // coordenador: livre para trocar
-    Comp.set(r.competicao);   // juiz: sempre fixa a sua competição
+    Comp.set(r.competicao);
   }
 
   async function entrar() {
@@ -1480,10 +1494,12 @@
     } catch(e) {
       /* Fallback offline: se o nome e PIN batem com sessão anterior, entra */
       if (Sessao.logado() && Sessao.juiz.toLowerCase() === nome.toLowerCase() && Sessao.pin === pin) {
+        var _listaOff2 = localStorage.getItem('hub_comp_lista');
         var cached = {
           nome:        Sessao.juiz,
           categoria:   localStorage.getItem('hub_cat')  || '',
           competicao:  localStorage.getItem('hub_comp') || '',
+          competicoes: _listaOff2 ? _listaOff2.split(';') : undefined,
           coordenador: !!localStorage.getItem('hub_coord')
         };
         aplicarCompJuiz(cached);
@@ -1649,7 +1665,7 @@
 
   function sair() {
     Sessao.clear();
-    ['hub_comp','hub_cat','hub_coord','torneio_comp'].forEach(function(k){ localStorage.removeItem(k); });
+    ['hub_comp','hub_comp_lista','hub_cat','hub_coord','torneio_comp'].forEach(function(k){ localStorage.removeItem(k); });
     if (_salaTimer) { clearInterval(_salaTimer); _salaTimer = null; }
     var card = document.getElementById('sala-progress-card');
     if (card) card.style.display = 'none';

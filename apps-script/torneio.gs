@@ -963,11 +963,22 @@ function apiVerificarJuiz_(p) {
     const p2    = p2raw.replace(/^0+/, '') || '0'; // normaliza zeros à esquerda (ex: 219 == 0219)
     const cat   = String(dados[i][2] || '').trim();
     const ativo = dados[i][3] !== false && dados[i][3] !== 'Não';
-    const comp  = String(dados[i][4] || '').trim(); // coluna Competição (pode ser vazia)
+    const comp  = String(dados[i][4] || '').trim(); // coluna Competição (pode ser "FLL; OBR" para multi)
     if (!ativo) return { ok: false, erro: 'Usuário inativo.' };
     if (p2 && p2 !== pin.replace(/^0+/, '') && p2raw !== pin) return { ok: false, erro: 'PIN incorreto.' };
     const isCoord = norm_(cat).indexOf('coord') >= 0;
-    return { ok: true, nome: dados[i][0], categoria: cat, coordenador: isCoord, competicao: comp };
+    // Parseia lista de competições separada por ";" (ex: "FLL; OBR")
+    const competicoes = comp ? comp.split(';').map(function(s) {
+      var t = s.trim();
+      var low = t.toLowerCase();
+      if (low === 'obr') return 'OBR';
+      if (low.indexOf('steam') >= 0) return 'Steam Racing';
+      if (low === 'fll') return 'FLL';
+      return t; // preserva 'Geral' e outros
+    }).filter(Boolean) : [];
+    const competicao = competicoes.length === 1 ? competicoes[0] : '';
+    return { ok: true, nome: dados[i][0], categoria: cat, coordenador: isCoord,
+             competicao: competicao, competicoes: competicoes };
   }
   return { ok: false, erro: 'Usuário não encontrado.' };
 }

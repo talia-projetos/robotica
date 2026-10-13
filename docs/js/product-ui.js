@@ -361,14 +361,17 @@
 
     var cur      = Comp.val;
     /* Juiz com competição fixa ou técnico de turma: chip visível mas sem dropdown */
-    var compFixa  = localStorage.getItem('hub_comp') || '';
-    var compGeral = compFixa === 'Geral'; // "Geral" = livre para trocar como coordenador
-    var isCoord   = !!localStorage.getItem('hub_coord') || !!localStorage.getItem('coord_nome');
-    var isJuiz    = !!localStorage.getItem('hub_juiz') && !isCoord;
-    var isTurma   = !!localStorage.getItem('turma_id') && !localStorage.getItem('hub_juiz') && !localStorage.getItem('coord_nome');
-    var travado   = (compFixa && !isCoord && !compGeral) || isTurma || (isJuiz && !compGeral);
+    var compFixa    = localStorage.getItem('hub_comp') || '';
+    var compLista   = localStorage.getItem('hub_comp_lista') || ''; // "FLL;OBR" para multi-comp
+    var isMultiComp = !!(compLista && compLista.indexOf(';') >= 0);
+    var compGeral   = compFixa === 'Geral'; // "Geral" = livre para trocar como coordenador
+    var isCoord     = !!localStorage.getItem('hub_coord') || !!localStorage.getItem('coord_nome');
+    var isJuiz      = !!localStorage.getItem('hub_juiz') && !isCoord;
+    var isTurma     = !!localStorage.getItem('turma_id') && !localStorage.getItem('hub_juiz') && !localStorage.getItem('coord_nome');
+    /* Multi-comp: chip desbloqueado, dropdown restrito à lista permitida */
+    var travado     = !isMultiComp && ((compFixa && !isCoord && !compGeral) || isTurma || (isJuiz && !compGeral));
     /* Usa hub_comp para exibição quando o juiz tem competição fixa — evita mostrar FLL antes da API responder */
-    var display   = (compFixa && travado) ? compFixa : cur;
+    var display     = (compFixa && (travado || isMultiComp)) ? compFixa : cur;
 
     var chip = document.createElement('button');
     chip.type = 'button';
@@ -391,7 +394,8 @@
     var drop = document.createElement('div');
     drop.className = 'comp-drop';
     drop.setAttribute('role', 'menu');
-    Comp.LISTA.forEach(function(c) {
+    var opcoes = isMultiComp ? compLista.split(';') : Comp.LISTA;
+    opcoes.forEach(function(c) {
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'comp-opt' + (c === cur ? ' ativo' : '');
@@ -399,6 +403,7 @@
       btn.textContent = c;
       btn.setAttribute('role', 'menuitem');
       btn.addEventListener('click', function() {
+        localStorage.setItem('hub_comp', c);
         Comp.set(c);
         drop.classList.remove('open');
         location.reload();
