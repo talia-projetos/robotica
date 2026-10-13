@@ -1422,8 +1422,8 @@
         localStorage.setItem('hub_cat',   r.categoria   || '');
         localStorage.setItem('hub_comp',  r.competicao  || '');
         localStorage.setItem('hub_coord', r.coordenador ? '1' : '');
-        document.getElementById('juiz-cat').textContent     = r.categoria || 'Geral';
-        document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
+        document.getElementById('juiz-cat').textContent     = nomeCompletoCat(r.categoria);
+        document.getElementById('juiz-cat-top').textContent = nomeCompletoCat(r.categoria);
         aplicarCompJuiz(r);
         travarChipComp();
         /* Força chip com os dados reais vindos da API, evitando stale de sessão anterior */
@@ -1459,6 +1459,11 @@
      Multi-comp ("FLL; OBR"): salva lista e permite troca apenas entre elas. */
   function aplicarCompJuiz(r) {
     if (r.coordenador) return;
+    /* Fallback: GS legado retorna o campo bruto "FLL; OBR" em r.competicao sem r.competicoes */
+    if (!r.competicoes && r.competicao && r.competicao.indexOf(';') >= 0) {
+      r.competicoes = r.competicao.split(';').map(function(s){ return s.trim(); }).filter(Boolean);
+      r.competicao  = '';
+    }
     var lista = r.competicoes && r.competicoes.length ? r.competicoes : (r.competicao ? [r.competicao] : []);
     if (lista.length > 1) {
       // Preserva seleção atual se ainda estiver na lista permitida
@@ -1520,6 +1525,12 @@
     if (c.indexOf('core') >= 0 || c.indexOf('valor') >= 0) return 'core';
     if (c.indexOf('arena') >= 0 || c.indexOf('desafio') >= 0 || c.indexOf('robô') >= 0 || c.indexOf('robo') >= 0) return 'arena';
     return '';
+  }
+
+  var _NOMES_CAT = { arena:'Desafio do Robô', projeto:'Projeto de Inovação', design:'Design do Robô', core:'Core Values', coord:'Coordenação' };
+  function nomeCompletoCat(cat) {
+    var key = normalizarCategoriaJuiz(cat);
+    return _NOMES_CAT[key] || cat || 'Geral';
   }
 
   function configurarWorkspaceJuiz(cat) {
@@ -1612,10 +1623,10 @@
     document.getElementById('view-login').style.display  = 'none';
     document.getElementById('view-painel').style.display = '';
     document.getElementById('juiz-nome').textContent = r.nome;
-    document.getElementById('juiz-cat').textContent  = r.categoria || 'Geral';
+    document.getElementById('juiz-cat').textContent  = nomeCompletoCat(r.categoria);
     travarChipComp();
     document.getElementById('juiz-nome-top').textContent = r.nome || 'Juiz';
-    document.getElementById('juiz-cat-top').textContent = r.categoria || 'Geral';
+    document.getElementById('juiz-cat-top').textContent = nomeCompletoCat(r.categoria);
     var bj = document.getElementById('badge-juiz');
     if (bj) bj.textContent = r.nome;
     var bs = document.getElementById('btn-sair');
