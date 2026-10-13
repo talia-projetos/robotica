@@ -973,6 +973,8 @@ async function carregarEquipes() {
   if (CAT === 'arena') { initArena(); return; }
 
   DEF = (CAT === 'design' && Comp.val === 'Steam Racing') ? RUBRICA_ENGENHARIA : RUBRICAS[CAT];
+  if (DEF && CAT === 'projeto' && Comp.val === 'Steam Racing')
+    DEF = Object.assign({}, DEF, { titulo: 'Amostra STEAM' });
 
   if (!DEF) {
     document.getElementById('av-head-nome').textContent = 'Categoria inválida';

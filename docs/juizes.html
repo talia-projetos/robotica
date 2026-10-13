@@ -1527,10 +1527,17 @@
     return '';
   }
 
-  var _NOMES_CAT = { arena:'Desafio do Robô', projeto:'Projeto de Inovação', design:'Design do Robô', core:'Core Values', coord:'Coordenação' };
   function nomeCompletoCat(cat) {
-    var key = normalizarCategoriaJuiz(cat);
-    return _NOMES_CAT[key] || cat || 'Geral';
+    var key     = normalizarCategoriaJuiz(cat);
+    var isSteam = (typeof Comp !== 'undefined') && Comp.val === 'Steam Racing';
+    var NOMES = {
+      arena:   'Desafio do Robô',
+      projeto: isSteam ? 'Amostra STEAM'        : 'Projeto de Inovação',
+      design:  isSteam ? 'Projeto de Engenharia' : 'Design do Robô',
+      core:    'Core Values',
+      coord:   'Coordenação'
+    };
+    return NOMES[key] || cat || 'Geral';
   }
 
   function configurarWorkspaceJuiz(cat) {
@@ -1551,6 +1558,16 @@
       designCard.querySelector('.fc-desc').textContent  = isSteam
         ? 'Construção, acabamento e criatividade do carro STEM Racing.'
         : 'Estrutura, mecanismos e estratégia de programação.';
+    }
+
+    /* Ajusta card de Projeto conforme competição */
+    var projetoCard = document.getElementById('link-projeto');
+    if (projetoCard) {
+      var isSteamP = Comp.val === 'Steam Racing';
+      projetoCard.querySelector('.fc-title').textContent = isSteamP ? 'Amostra STEAM' : 'Projeto de Inovação';
+      projetoCard.querySelector('.fc-desc').textContent  = isSteamP
+        ? 'Apresentação e argumentação do projeto STEAM da equipe.'
+        : 'Problema identificado, solução proposta e impacto.';
     }
 
     /* Ajusta card de Desafio do Robô conforme competição */
