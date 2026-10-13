@@ -1472,6 +1472,8 @@
       localStorage.setItem('hub_comp_lista', lista.join(';'));
       localStorage.setItem('hub_comp', best);
       Comp.set(best);
+      /* Chip foi criado travado (DOMContentLoaded antes do login); reconstrói desbloqueado */
+      if (typeof window._reinitCompChip === 'function') window._reinitCompChip();
       return;
     }
     localStorage.removeItem('hub_comp_lista');

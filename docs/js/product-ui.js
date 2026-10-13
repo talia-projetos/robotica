@@ -427,6 +427,15 @@
     document.addEventListener('click', function() { drop.classList.remove('open'); });
   }
 
+  /* Permite reconstrução do chip após login assíncrono (ex: multi-comp em juizes.html) */
+  window._reinitCompChip = function() {
+    var old = document.querySelector('.comp-sel');
+    if (old) old.remove();
+    var oldDrop = document.querySelector('.comp-drop');
+    if (oldDrop) oldDrop.remove();
+    setupCompSelector();
+  };
+
   /* ── CustomSelect: substitui <select> nativo por dropdown estilizado ── */
   var CS_CHEVRON = '<svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l4 4 4-4"/></svg>';
   var CS_CHECK   = '<svg viewBox="0 0 12 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l4 4L11 1"/></svg>';
