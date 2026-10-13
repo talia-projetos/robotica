@@ -1,6 +1,7 @@
 /* Controle de visibilidade da sidebar, avatar e logout */
 (function () {
-  var isCoord = !!(localStorage.getItem('coord_nome') && localStorage.getItem('coord_pin'));
+  var isCoord = !!(localStorage.getItem('coord_nome') && localStorage.getItem('coord_pin'))
+               || localStorage.getItem('hub_coord') === '1';
   var isJuiz  = !!(localStorage.getItem('hub_juiz')   && localStorage.getItem('hub_pin'));
   var isTurma = !!(localStorage.getItem('turma_id')   && localStorage.getItem('turma_pin'));
   var role    = isCoord ? 'coord' : isJuiz ? 'juiz' : isTurma ? 'professor' : '';
