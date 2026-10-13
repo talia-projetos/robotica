@@ -611,26 +611,39 @@ function criarAbaEquipes_(ss) {
   } else {
     // Usa _headerOffset_ para ler a linha de cabeçalho real (ignora título/subtítulo)
     const off = _headerOffset_(aba);
+
+    // Deleta colunas extras (> 8) que são duplicatas dos primeiros 8 cabeçalhos ou vazias
+    (function() {
+      var nLast = aba.getLastColumn();
+      if (nLast <= 8) return;
+      var cabAll = aba.getRange(off + 1, 1, 1, nLast).getValues()[0];
+      var vistos = {};
+      for (var i = 0; i < 8 && i < cabAll.length; i++) {
+        var n = norm_(String(cabAll[i] || ''));
+        if (n) vistos[n] = true;
+      }
+      for (var ci = nLast; ci > 8; ci--) {
+        var extra = norm_(String(cabAll[ci - 1] || ''));
+        if (!extra || vistos[extra]) aba.deleteColumn(ci);
+      }
+    })();
+
+    // Garante PIN em F (col 6), Competicao em G (col 7), Disciplina em H (col 8)
     const cab = aba.getRange(off + 1, 1, 1, aba.getLastColumn()).getValues()[0];
-    const temPin = cab.some(function(h) { return norm_(String(h)) === 'pin' || norm_(String(h)) === 'senha'; });
+    const temPin  = cab.some(function(h){ return norm_(String(h)) === 'pin' || norm_(String(h)) === 'senha'; });
+    const temComp = cab.some(function(h){ return norm_(String(h)).indexOf('competicao') >= 0 || norm_(String(h)).indexOf('competição') >= 0; });
+    const temDisc = cab.some(function(h){ return norm_(String(h)).indexOf('disciplina') >= 0; });
     if (!temPin) {
-      const col = aba.getLastColumn() + 1;
-      aba.getRange(off + 1, col).setValue('PIN').setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
-      aba.setColumnWidth(col, 100);
+      aba.getRange(off + 1, 6).setValue('PIN').setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
+      aba.setColumnWidth(6, 100);
     }
-    const cab2 = aba.getRange(off + 1, 1, 1, aba.getLastColumn()).getValues()[0];
-    const temComp = cab2.some(function(h) { return norm_(String(h)).indexOf('competicao') >= 0 || norm_(String(h)).indexOf('competição') >= 0; });
     if (!temComp) {
-      const col = aba.getLastColumn() + 1;
-      aba.getRange(off + 1, col).setValue('Competicao').setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
-      aba.setColumnWidth(col, 140);
+      aba.getRange(off + 1, 7).setValue('Competicao').setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
+      aba.setColumnWidth(7, 140);
     }
-    const cab3 = aba.getRange(off + 1, 1, 1, aba.getLastColumn()).getValues()[0];
-    const temDisc = cab3.some(function(h) { return norm_(String(h)).indexOf('disciplina') >= 0 || norm_(String(h)).indexOf('area') >= 0; });
     if (!temDisc) {
-      const col = aba.getLastColumn() + 1;
-      aba.getRange(off + 1, col).setValue('Disciplina').setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
-      aba.setColumnWidth(col, 180);
+      aba.getRange(off + 1, 8).setValue('Disciplina').setBackground(T.CORES.MARINHO).setFontColor('#FFF').setFontWeight('bold');
+      aba.setColumnWidth(8, 180);
     }
   }
 }
