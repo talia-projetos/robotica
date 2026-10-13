@@ -1523,11 +1523,14 @@
   }
 
   function configurarWorkspaceJuiz(cat) {
-    var key = normalizarCategoriaJuiz(cat);
-    var cards = Array.prototype.slice.call(document.querySelectorAll('.form-card[data-cat]'));
-    var isCoord = key === 'coord' || !!localStorage.getItem('coord_nome') || localStorage.getItem('hub_comp') === 'Geral';
+    var key         = normalizarCategoriaJuiz(cat);
+    var cards       = Array.prototype.slice.call(document.querySelectorAll('.form-card[data-cat]'));
+    var compLista   = localStorage.getItem('hub_comp_lista') || '';
+    var isMultiComp = !!(compLista && compLista.indexOf(';') >= 0);
+    var isCoord     = key === 'coord' || !!localStorage.getItem('coord_nome')
+                      || (!isMultiComp && localStorage.getItem('hub_comp') === 'Geral');
 
-    document.body.classList.toggle('is-coordination', isCoord);
+    document.body.classList.toggle('is-coordination', isCoord && !isMultiComp);
 
     /* Ajusta card de Design conforme competição */
     var designCard = document.getElementById('link-design');
@@ -1558,6 +1561,12 @@
       card.style.display = '';
     });
 
+    if (isMultiComp) {
+      document.getElementById('judge-area-value').textContent = 'Juiz · visão completa';
+      document.getElementById('judge-area-note').textContent  = 'Competições atribuídas: ' + compLista.split(';').join(', ') + '.';
+      return;
+    }
+
     if (isCoord || !key) {
       document.getElementById('judge-area-value').textContent = isCoord ? 'Coordenação · visão completa' : (cat || 'Geral');
       document.getElementById('judge-area-note').textContent = isCoord ? 'Acesso a todas as categorias e à deliberação.' : 'Todas as categorias permanecem disponíveis.';
@@ -1577,8 +1586,10 @@
   }
 
   function travarChipComp() {
-    var compFixa = localStorage.getItem('hub_comp') || '';
-    var isCoord  = !!localStorage.getItem('hub_coord') || !!localStorage.getItem('coord_nome');
+    var compFixa   = localStorage.getItem('hub_comp') || '';
+    var compLista  = localStorage.getItem('hub_comp_lista') || '';
+    var isMultiComp = !!(compLista && compLista.indexOf(';') >= 0);
+    var isCoord    = !!localStorage.getItem('hub_coord') || !!localStorage.getItem('coord_nome');
     /* Garante que torneio_comp (usado por Comp.val e pela API) fique em sincronia com hub_comp */
     if (compFixa && compFixa !== 'Geral' && !isCoord) Comp.set(compFixa);
     var chipEl   = document.querySelector('.comp-chip');
@@ -1589,7 +1600,8 @@
       chipEl.textContent       = LABELS[compFixa] || compFixa;
       chipEl.style.background  = COLORS[compFixa] || '#3979B8';
     }
-    if (compFixa && compFixa !== 'Geral' && !isCoord) {
+    /* Multi-comp: chip desbloqueado (dropdown gerenciado por product-ui.js) */
+    if (!isMultiComp && compFixa && compFixa !== 'Geral' && !isCoord) {
       var dropEl = document.querySelector('.comp-drop');
       if (chipEl) { chipEl.style.cursor = 'default'; chipEl.setAttribute('title', 'Competição atribuída ao seu perfil'); }
       if (dropEl) dropEl.remove();
