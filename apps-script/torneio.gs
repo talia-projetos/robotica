@@ -914,10 +914,11 @@ function apiTurma_(p) {
   const abaBase = ss.getSheetByName(abasComp_(compEq).BASE);
   if (abaBase && abaBase.getLastRow() >= 2) {
     const dados = abaBase.getDataRange().getValues();
+    const off = _headerOffset_(abaBase);
     const idx = {};
-    dados[0].forEach(function(h, i) { if (h) idx[String(h).trim()] = i; });
+    dados[off].forEach(function(h, i) { if (h) idx[String(h).trim()] = i; });
     function g(r, col) { return idx[col] !== undefined ? r[idx[col]] : ''; }
-    const row = dados.slice(1).find(function(r) {
+    const row = dados.slice(off + 1).find(function(r) {
       return String(r[idx['ID']] || '').trim().toUpperCase() === id;
     });
     if (row) scores = {
@@ -1005,10 +1006,11 @@ function apiTodasTurmas_(p) {
   const abaBase = ss.getSheetByName(abasComp_(comp).BASE);
   if (abaBase && abaBase.getLastRow() >= 2) {
     const dados = abaBase.getDataRange().getValues();
+    const off = _headerOffset_(abaBase);
     const idx = {};
-    dados[0].forEach(function(h, i) { if (h) idx[String(h).trim()] = i; });
+    dados[off].forEach(function(h, i) { if (h) idx[String(h).trim()] = i; });
     function g(r, col) { return idx[col] !== undefined ? r[idx[col]] : ''; }
-    dados.slice(1).forEach(function(r) {
+    dados.slice(off + 1).forEach(function(r) {
       const id = String(r[idx['ID']] || '').trim().toUpperCase();
       if (!id) return;
       scoresMap[id] = {
@@ -2257,10 +2259,11 @@ function apiRanking_(p) {
   const aba  = ss.getSheetByName(abas.BASE);
   if (!aba || aba.getLastRow() < 2) return { ok: true, equipes: [] };
   const dados = aba.getDataRange().getValues();
+  const off   = _headerOffset_(aba);
   const idx   = {};
-  dados[0].forEach(function(h, i) { idx[h] = i; });
+  dados[off].forEach(function(h, i) { idx[h] = i; });
   function g(r, col) { return r[idx[col]] !== undefined ? r[idx[col]] : ''; }
-  const equipes = dados.slice(1).map(function(r) { return {
+  const equipes = dados.slice(off + 1).map(function(r) { return {
     id: g(r,'ID'), nome: g(r,'Nome'), turno: g(r,'Turno'), tutor: g(r,'Tutor'),
     arena20: num_(g(r,'Arena_20')), proj20: num_(g(r,'Proj_20')),
     des20: num_(g(r,'Des_20')),     core20: num_(g(r,'Core_20')),
