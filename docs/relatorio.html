@@ -694,6 +694,8 @@
     var agora = new Date().toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
 
     // ── Cabeçalho ──────────────────────────────────────────
+    var COMP_LABEL = { 'FLL': 'First Lego League', 'OBR': 'OBR · Robótica', 'Steam Racing': 'Steam Racing' };
+    var compLabel = COMP_LABEL[eq.comp] || eq.comp || 'First Lego League';
     var header = '<div class="ficha-header">'
       +'<img src="logo-print.svg" alt="HUB Circuito">'
       +'<div class="ficha-header-text">'
@@ -702,7 +704,7 @@
       +'<div class="ficha-header-sub">Escola SESI Reitor Miguel Calmon · Salvador, BA</div>'
       +'</div>'
       +'<div class="ficha-header-right">'
-      +'<div class="fll-badge">First Lego League</div>'
+      +'<div class="fll-badge">'+compLabel+'</div>'
       +'<div class="fll-year">2026 / 2027</div>'
       +'</div>'
       +'</div>';

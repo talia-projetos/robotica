@@ -998,13 +998,16 @@ function apiTodasTurmas_(p) {
   if (!auth.ok) return auth;
   if (!auth.coordenador) return { ok: false, erro: 'Acesso restrito à coordenação.' };
   const ss   = SpreadsheetApp.getActiveSpreadsheet();
-  const diag = [];
-  const comp = p.comp || 'FLL';
-  const cfg  = lerConfig_(ss, diag, comp);
-  const eq   = lerEquipes_(ss, cfg, diag, comp);
+
+  // Carrega todas as equipes de todas as competições
+  const cfgBase = lerConfig_(ss, [], 'FLL');
+  const eqAll   = lerEquipes_(ss, cfgBase, [], null);
+
+  // Scores de todos os BASE sheets (FLL, OBR, Steam Racing)
   const scoresMap = {};
-  const abaBase = ss.getSheetByName(abasComp_(comp).BASE);
-  if (abaBase && abaBase.getLastRow() >= 2) {
+  COMPS.forEach(function(c) {
+    const abaBase = ss.getSheetByName(abasComp_(c).BASE);
+    if (!abaBase || abaBase.getLastRow() < 2) return;
     const dados = abaBase.getDataRange().getValues();
     const off = _headerOffset_(abaBase);
     const idx = {};
@@ -1023,15 +1026,21 @@ function apiTodasTurmas_(p) {
         posGeral: num_(g(r,'Pos_Geral'))
       };
     });
-  }
-  const equipes = eq.lista.map(function(e) {
+  });
+
+  // Configurações por competição (para leitura de rubricas)
+  const cfgPorComp = {};
+  COMPS.forEach(function(c) { cfgPorComp[c] = lerConfig_(ss, [], c); });
+
+  const equipes = eqAll.lista.map(function(e) {
+    const cfg = cfgPorComp[e.competicao] || cfgBase;
     return {
-      equipe: { id: e.id, nome: e.nome, turno: e.turno, tutor: e.tutor },
+      equipe: { id: e.id, nome: e.nome, turno: e.turno, tutor: e.tutor, comp: e.competicao },
       scores: scoresMap[e.id] || null,
       comentarios: {
-        projeto: lerComentariosRubrica_(ss, cfg.abaProj, e.id, eq),
-        design:  lerComentariosRubrica_(ss, cfg.abaDes,  e.id, eq),
-        core:    lerComentariosRubrica_(ss, cfg.abaCore, e.id, eq)
+        projeto: lerComentariosRubrica_(ss, cfg.abaProj, e.id, eqAll),
+        design:  lerComentariosRubrica_(ss, cfg.abaDes,  e.id, eqAll),
+        core:    lerComentariosRubrica_(ss, cfg.abaCore, e.id, eqAll)
       }
     };
   }).sort(function(a, b) {
