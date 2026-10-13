@@ -783,6 +783,7 @@ function lerConfig_(ss, diag, comp) {
     // Não herdar o maxArena do FLL (550 pts): fallback fixo de 120 000 ms (~2 min)
     cfg.maxArena  = n('Pontuação Máxima Arena Steam', 120000);
     cfg.pistaTempo = true; // flag: score = tempo (menor é melhor), invert na normalização
+    cfg.rounds    = Math.max(1, Math.round(n('Rounds Esperados Arena Steam', 2)));
   }
 
   const soma = cfg.pArena + cfg.pProj + cfg.pDes + cfg.pCore + cfg.pTamp;
