@@ -341,7 +341,7 @@
     document.getElementById('spinner').style.display = '';
     if (stEl) { stEl.classList.add('sync-tag--syncing'); stEl.style.display = ''; }
     try {
-      var r = await API.ranking();
+      var r = await API.ranking(Comp.val);
       if (!r.ok) throw new Error(r.erro);
       dadosEquipes = r.equipes || [];
 

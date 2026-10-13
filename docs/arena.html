@@ -1067,7 +1067,7 @@
     if (FASE_CONFIG && _rankingEquipes.length === 0) {
       /* Busca ranking e auto-semeia */
       try {
-        var r = await API.ranking();
+        var r = await API.ranking(Comp.val);
         if (r && r.ok && Array.isArray(r.equipes)) {
           _rankingEquipes = r.equipes
             .filter(function(e) { return e.id; })
@@ -1101,7 +1101,7 @@
 
   async function ressemearFase() {
     try {
-      var r = await API.ranking();
+      var r = await API.ranking(Comp.val);
       if (r && r.ok && Array.isArray(r.equipes)) {
         _rankingEquipes = r.equipes
           .filter(function(e) { return e.id; })

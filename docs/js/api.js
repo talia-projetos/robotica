@@ -54,7 +54,7 @@ const API = (function () {
   }
 
   return {
-    ranking:      () => get({ action: 'ranking' }),
+    ranking:      (comp) => get({ action: 'ranking', comp: comp || '' }),
     equipes:      () => get({ action: 'equipes' }),
     deliberacao:  () => get({ action: 'deliberacao' }),
     config:       () => get({ action: 'config' }),
