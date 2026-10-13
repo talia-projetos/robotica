@@ -1277,7 +1277,7 @@
     var btnDes   = document.querySelector('.tab-btn[data-tab="design"]');
     var btnIndic = document.querySelector('.tab-btn[data-tab="indicadores"]');
     if (btnProj)  btnProj.textContent  = isSteam ? 'Amostra STEAM' : 'Projeto';
-    if (btnDes)   { btnDes.textContent = isSteam ? 'Engenharia'    : 'Design'; btnDes.style.display = isOBR ? 'none' : ''; }
+    if (btnDes)   { btnDes.textContent = isSteam ? 'Engenharia'    : 'Design'; }
     if (btnIndic) btnIndic.style.display = isSteam ? '' : 'none';
     CAT_MAP.projeto.label = isSteam ? 'Amostra STEAM'         : 'Projeto de Inovação';
     CAT_MAP.design.label  = isSteam ? 'Projeto de Engenharia' : 'Design do Robô';
