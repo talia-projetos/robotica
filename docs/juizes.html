@@ -1395,9 +1395,13 @@
     document.getElementById('l-nome').value = localStorage.getItem('hub_juiz');
     document.getElementById('l-pin').value  = localStorage.getItem('hub_pin') || '';
     setTimeout(entrar, 0);
+  } else if (Sessao.juiz) {
+    /* Juiz com sessão ativa (ex: voltou após trocar competição): preserva seleção */
+    ['hub_cat','hub_coord'].forEach(function(k){ localStorage.removeItem(k); });
+    document.getElementById('l-nome').value = Sessao.juiz;
   } else {
+    /* Sem sessão: limpa tudo para permitir login de outro juiz */
     ['hub_comp','hub_comp_lista','hub_cat','hub_coord','torneio_comp'].forEach(function(k){ localStorage.removeItem(k); });
-    if (Sessao.juiz) document.getElementById('l-nome').value = Sessao.juiz;
   }
 
   async function verificarSessao() {
