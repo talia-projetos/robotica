@@ -301,17 +301,9 @@
       tbody.innerHTML = '<tr><td colspan="' + span + '" style="text-align:center;padding:1.5rem;color:var(--texto-sm)">Nenhuma equipe ainda.</td></tr>';
       return;
     }
-    var anyRanked = equipes.some(function(e) { return Number(e.posGeral) > 0; });
-    var sorted = equipes.slice().sort(function(a, b) {
-      if (anyRanked) {
-        var pa = Number(a.posGeral) || 9999;
-        var pb = Number(b.posGeral) || 9999;
-        return pa - pb || (Number(b.total)||0) - (Number(a.total)||0);
-      }
-      return (Number(b.total)||0) - (Number(a.total)||0);
-    });
+    var sorted = equipes.slice().sort(function(a, b) { return (Number(b.total)||0) - (Number(a.total)||0); });
     tbody.innerHTML = sorted.map(function(e, i) {
-      var pos = Number(e.posGeral) || (!anyRanked && Number(e.total) > 0 ? i + 1 : null);
+      var pos = Number(e.total) > 0 ? i + 1 : null;
       return '<tr>'
         + '<td>' + posBadge(pos) + '</td>'
         + '<td><strong>' + nomeEquipe(e) + '</strong><br><span class="text-sm">' + e.id + '</span></td>'
