@@ -1136,8 +1136,8 @@ function lerArena_(ss, cfg, eq, diag) {
 
   Object.values(melhor).forEach(function(l) {
     if (!res.porEquipe[l.idEq]) res.porEquipe[l.idEq] = { totais: [], rounds: [] };
-    res.porEquipe[l.idEq].totais.push(l.total);
     res.porEquipe[l.idEq].rounds.push(l.round);
+    if (!/^m/i.test(l.round)) res.porEquipe[l.idEq].totais.push(l.total); // M1-M4 = mata-mata, só registro
   });
 
   const _isSteamArena = cfg.pistaTempo;
