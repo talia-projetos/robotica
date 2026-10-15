@@ -844,10 +844,12 @@
   }
 
   function imprimirTodas() {
-    var comp  = Comp.val;
-    var lista = dadosEquipes.filter(function(e){ return e.equipe.comp === comp; });
-    if (!lista.length) lista = dadosEquipes;
-    lista.sort(function(a, b){ return (a.equipe.id||'').localeCompare(b.equipe.id||''); });
+    var lista = dadosEquipes.slice();
+    lista.sort(function(a, b){
+      var na = parseInt((a.equipe.id||'').replace(/\D/g,'')) || 0;
+      var nb = parseInt((b.equipe.id||'').replace(/\D/g,'')) || 0;
+      return na - nb;
+    });
     document.getElementById('ficha-container').innerHTML =
       lista.map(function(item, i){
         return fichaHtml(item) + (i < lista.length - 1 ? '<div class="ficha-page-break"></div>' : '');
