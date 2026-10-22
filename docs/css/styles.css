@@ -3245,10 +3245,23 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     top:0 !important;
     z-index:120 !important;
   }
+  /* Mesmo alinhamento e escala no shell interno e nos módulos externos. */
+  html body .topbar {gap:12px !important;}
+  html body .topbar .topbar__event {min-width:0;line-height:1.25;}
   html body .topbar .topbar__event-name,
-  html body .topbar .topbar-avatar__name {color:#29414A !important;font-weight:740;}
+  html body .topbar .topbar-avatar__name {
+    color:#29414A !important;
+    font-size:.74rem;
+    font-weight:740;
+    line-height:1.22;
+  }
   html body .topbar .topbar__event-org,
-  html body .topbar .topbar-avatar__role {color:#7A8D98 !important;}
+  html body .topbar .topbar-avatar__role {
+    color:#7A8D98 !important;
+    font-size:.61rem;
+    line-height:1.25;
+  }
+  html body .topbar .topbar__badge {min-width:0;}
 }
 @media screen and (min-width:701px) {
   html body:has(>header.topbar) > .app-body {
@@ -3307,20 +3320,22 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     grid-column:2;grid-row:2;align-self:start;
     margin-top:2px;
   }
-  /* Uma única miniatura, com dimensões controladas pelo contêiner.
-     O img original não participa do layout recolhido. */
+  /* Símbolo U: sem recorte, com proporção e centro constantes em todas as páginas.
+     A imagem original é mantida no HTML e apenas ocultada ao recolher. */
   html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand {
+    box-sizing:border-box !important;
     display:flex !important;
     width:100% !important;
     min-width:0 !important;
-    height:64px !important;
-    min-height:64px !important;
-    flex:0 0 64px !important;
+    height:76px !important;
+    min-height:76px !important;
+    max-height:76px !important;
+    flex:0 0 76px !important;
     align-items:center !important;
     justify-content:center !important;
-    padding:0 !important;
-    margin:0 !important;
-    overflow:hidden !important;
+    padding:8px 0 !important;
+    margin:0 0 9px !important;
+    overflow:visible !important;
   }
   html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand > .sidebar-brand__img {
     display:none !important;
@@ -3328,9 +3343,9 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
   html body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand::before {
     content:"";
     display:block;
-    width:30px !important;
-    height:38px !important;
-    flex:0 0 30px !important;
+    width:34px !important;
+    height:44px !important;
+    flex:0 0 34px !important;
     background:url("../logo-u-fll.svg?v=6") center/contain no-repeat;
   }
   html[data-hub-competition="obr"] body .app-body.sidebar-collapsed > nav.app-sidebar > .sidebar-brand::before {
@@ -3345,4 +3360,7 @@ body .comp-drop .comp-opt:focus-visible { outline: 2px solid #8AA9C9; outline-of
     margin-left:0 !important;
     width:100% !important;
   }
+  html body .topbar {gap:8px !important;}
+  html body .topbar .topbar__brand {min-width:0;}
+  html body .topbar .topbar__brand img {max-width:min(37vw,140px) !important;}
 }
